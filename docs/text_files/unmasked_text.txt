@@ -1,0 +1,894 @@
+00000000: b'AMBUSH AT MOS EISLEY'
+00000001: b'*RENDEZVOUS ON BARKHESH'
+00000002: b'*THE SEARCH FOR THE NONNAH'
+00000003: b'DEFECTION AT CORELLIA'
+00000004: b'LIBERATION OF GERRARD V'
+00000005: b'THE JADE MOON'
+00000006: b'IMPERIAL CONSTRUCTION YARDS'
+00000007: b'ASSAULT ON KILE II'
+00000008: b'*RESCUE ON KESSEL'
+00000009: b'*PRISONS OF KESSEL'
+0000000a: b'BATTLE ABOVE TALORAAN'
+0000000b: b'ESCAPE FROM FEST'
+0000000c: b'*BLOCKADE ON CHANDRILA'
+0000000d: b'RAID ON SULLUST'
+0000000e: b"MOFF SEERDON'S REVENGE"
+0000000f: b'*THE BATTLE OF CALAMARI'
+00000010: b"*BEGGAR'S CANYON"
+00000011: b'THE DEATH STAR TRENCH RUN'
+00000012: b'BATTLE OF HOTH'
+00000013: b'*LEC LOGO'
+00000014: b'*RECRUIT'
+00000015: b'ROGUE'
+00000016: b'VETERAN'
+00000017: b'ACE'
+00000018: b'X-WING'
+00000019: b'*Y-WING'
+0000001a: b'*A-WING'
+0000001b: b'*V-WING'
+0000001c: b'*SPEEDER'
+0000001d: b'MILLENNIUM FALCON'
+0000001e: b'TIE INTERCEPTOR'
+0000001f: b'T-16'
+00000020: b'*NABOO STARFIGHTER'
+00000021: b'TAKE AN EARLY-MORNING RUN OVER MOS EISLEY WITH WEDGE ANTILLES, BUT KEEP YOUR EYES OPEN FOR ANY SUSPICIOUS ACTIVITY.'
+00000022: b'ESCORT VALUABLE REBEL SUPPLIES THROUGH DANGEROUS IMPERIAL TERRITORY, OVER THE HUMID LANDS OF BARKHESH.'
+00000023: b'*RACE AGAINST TIME TO RECOVER THE CREW AND CARGO OF A DOWNED REBEL SHIP - BEFORE THE IMPERIALS BEAT YOU TO IT!'
+00000024: b'IMPERIAL OFFICER CRIX MADINE WISHES TO JOIN THE REBEL ALLIANCE, BUT THE EMPIRE WILL DO ANYTHING TO STOP HIM.\n\nPROTECT CORELLIA FROM DESTRUCTION AS MADINE MAKES GOOD HIS ESCAPE.'
+00000025: b'*THE COWARDLY IMPERIAL GOVERNOR IS LOOTING THE CITY, USING HIS LUXURY YACHTS TO TRANSPORT STOLEN GOODS.\n\nHELP THE CITIZENS OF GERRARD V KEEP THEIR RIGHTFUL TREASURES, AND STOP THE EMPIRE IN ITS TRACKS.'
+00000026: b'*LT. KASAN MOOR HAS SUPPLIED ROGUE SQUADRON WITH THE LOCATION OF AN IMPERIAL MOON BASE.\n\nGENERAL MADINE WILL LEAD THE GROUND RAID, ROGUE SQUADRON PROVIDES AIR SUPPORT.'
+00000027: b"*KASAN MOOR'S INFORMATION HAS ONCE AGAIN PROVIDED THE LOCATION OF A HIDDEN ENEMY BASE, RESPONSIBLE FOR THE PRODUCTION OF IMPERIAL WALKERS.\n\nWATCH OUT FOR THE GROUND SCANNERS."
+00000028: b"THE DEEP CANYONS OF KILE II HIDE THE IMPERIAL ENCLAVE, A SPRAWLING FACILITY SUPPORTING THE EMPIRE'S NAVY THROUGHOUT THIS SECTOR.\n\nDESTROY KEY ELEMENTS AND HELP BREAK THE EMPIRE'S HOLD ON THE LOCAL PLANETS."
+00000029: b'YOU MUST FIND WEDGE BEFORE THE IMPERIALS DELIVER HIM TO THE PRISON FACILITIES - AND CERTAIN DEATH!'
+0000002a: b'*NOW THAT WEDGE IS SAFE, HELP GENERAL MADINE FREE OTHER REBELS FROM THE NOTORIOUS PRISONS OF KESSEL.'
+0000002b: b'IN THE SKIES ABOVE TALORAAN, FIGHT THE EMPIRE FOR CONTROL OF THE TIBANNA GAS PLATFORMS, BUT BE CAREFUL NOT TO HARM THE CIVILIAN OPERATIONS THERE!'
+0000002c: b"DURING THE TALORAAN OPERATION, A TEAM OF REBEL COMMANDOES STOLE SEVERAL AT-PT'S FROM AN IMPERIAL BASE ON FEST.\n\nUNFORTUNATELY, THEIR ESCAPE DID NOT PROCEED AS WELL AS THEY EXPECTED..."
+0000002d: b'MOFF SEERDON HAS CHOSEN TO HOLD CHANDRILA HOSTAGE, IN AN ATTEMPT TO MAKE THE REBELLION PAY FOR ITS RAID ON FEST.\n\nYOU MUST HELP THE INNOCENT PEOPLE OF CHANDRILA, PROTECT THE SUPPLY TRAIN, AND STOP THE EMPIRE!'
+0000002e: b'*KASAN MOOR IS ENGINEERING AN ASSAULT ON A VOLCANO BASE AT SULLUST, IN A RETALIATORY ATTACK FOR THE BLOCKADE ON CHANDRILA.'
+0000002f: b'BY LEADING ROGUE SQUADRON TO SULLUST, MOFF SEERDON HAS SECRETLY CAPTURED THE BACTA SUPPLIES OF THYFERRA, AND NOW INTENDS TO CUT OFF MEDICAL SUPPLIES TO THE ALLIANCE.\n\nFREE THYFERRA, AND DEFEAT SEERDON ONCE AND FOR ALL!'
+00000030: b'*THE WORLD DEVASTATORS ARE RAINING DESTRUCTION ON THE PEACEFUL WORLD OF MON CALAMARI.\n\nFLY AS WEDGE ANTILLES, AND BATTLE AGAINST ALL ODDS TO STOP THEIR EVIL CONQUEST.'
+00000031: b"RACE THROUGH BEGGAR'S CANYON IN YOUR T-16 SKYHOPPER!\n\nTEST YOUR SKILL AGAINST ZEV, DACK OR WEDGE."
+00000032: b"TRAVEL DOWN THE DEATH STAR TRENCH ELIMINATING AS MANY LASER CANNONS AS POSSIBLE. IF THE TRENCH GUNS STOP FIRING, YOU CAN BET THE DEATH STAR'S COMPLIMENT OF TIES WILL BE IN CLOSE PURSUIT.\n\nCONTINUE DOWN THE TRENCH UNTIL YOU REACH THE EXHAUST PORT AREA. GOOD LUCK, AND MAY THE FORCE BE WITH YOU."
+00000033: b'EXPERIENCE THE BATTLE OF HOTH FROM THE COCKPIT OF YOUR SNOWSPEEDER, AS YOU HOLD OFF IMPERIAL FORCES AND HELP THE REBEL TRANSPORTS ESCAPE.'
+00000034: b'PRESS \x01 FOR CRAFT DESCRIPTION'
+00000035: b'PRESS SPACEBAR FOR CRAFT DESCRIPTION OR ESC TO CANCEL'
+00000036: b'PRESS \x01 FOR LEVEL DESCRIPTION'
+00000037: b'PRESS SPACEBAR FOR LEVEL DESCRIPTION OR ESC TO CANCEL'
+00000038: b'SELECT YOUR CRAFT'
+00000039: b'SELECT LEVEL'
+0000003a: b'*AVAILABLE CRAFT'
+0000003b: b'ARE YOU SURE YOU\nWANT TO ABORT THE CURRENT GAME?'
+0000003c: b'*YES!'
+0000003d: b'*NO.'
+0000003e: b"*}Chapter I\n\n*{THE REBEL OPPOSITION\n\nSix months have passed since the Battle of Yavin. The Death Star has been destroyed, but the fight for freedom is far from over.\n\nAs the war against the Empire rages across the vastness of space, Luke Skywalker forms the legendary Rogue Squadron from the Rebel Alliance's most skilled X-Wing pilots.\n\nTheir mission: to defend the struggling Rebel Alliance against a still powerful and battle hardened Imperial foe, in a last ditch effort to control the galaxy..."
+0000003f: b'*}Chapter II\n\n*{ROGUE SQUADRON\n\nKasan Moor, Imperial Ace and leader of the dreaded 128th TIE Interceptor Squadron has now defected to the Rebel Alliance.\n\nAs a loyal soldier for the Empire, Moor witnessed both its cruelty and hypocrisy in the destruction of her home world, Alderaan.\n\nConvinced to join Rogue Squadron, Moor offers her flight expertise in addition to knowledge of hidden Imperial strongholds...'
+00000040: b'**}Chapter III\n\n*{THE NEW THREAT\n\nWith the rescue of Wedge Antilles and Rogue Squadron at full strength, the Rebel Alliance turns its attention to a new Imperial threat - Moff Kohl Seerdon.\n\nPreparing to capture Thyferra, with its precious supply of the healing Bacta, Seerdon is now consolidating his power for a massive attack. His success could very well break the fledgling Rebellion and surely doom the galaxy to Imperial rule.\n\nLuke Skywalker and Rogue Squadron are assigned to disrupt his operations with swift hit and run missions against key targets such as the Imperial mining operation near Taloraan...'
+00000041: b'**}Chapter IV\n\n*{DARK EMPIRE\n\nSix years after the Battle of Endor, the fight for freedom continues. Even without the thousands of Jedi Knights who formed the backbone of the Old Republic, the Rebel Alliance has managed to control three quarters of the galaxy.\n\nDarth Vader is dead but a reborn Empire, under a mysterious new leader, strikes back at the struggling Rebel Alliance, hoping to crush the fledgling New Republic.\n\nMassive World Devastators, more powerful and unstoppable than the Death Star, ravage entire planets.\n\nRogue Squadron, which is now commanded by Wedge Antilles, persists in mounting daring missions throughout the galaxy...'
+00000042: b"DACK IS ONE OF THE NEWER, YOUNGER PILOTS, AND I DON'T KNOW HIM AS WELL. HE REPLACED BIGGS AFTER THE BATTLE OF YAVIN, AND IS SHOWING PROMISE AS AN X-WING PILOT.\n\nHE'S STILL NEW, THOUGH, BUT WHAT HE LACKS IN EXPERIENCE, HE MAKES UP IN ENTHUSIASM.\n\nHE SORT OF REMINDS ME OF MYSELF, BACK WHEN ALL I WANTED WAS A LITTLE EXCITEMENT, A CHANCE TO TAKE ON THE EMPIRE."
+00000043: b"*HOBBIE IS THE SKEPTIC OF ROGUE GROUP. HE DOESN'T WARM UP QUICKLY TO NEW IDEAS, BUT HE NEVER CHALLENGES THE AUTHORITY OF HIS SUPERIORS.\n\nHOBBIE JUST DOES MOST OF HIS THINKING ON THE INSIDE - YOU NEVER HEAR FROM HIM UNLESS HE HAS SOMETHING ABSOLUTELY CRUCIAL TO SAY. HE ORIGINALLY TRAINED AT THE IMPERIAL ACADEMY, WITH BIGGS AND PORKINS - AND HE JUMPED SHIP AT THE SAME TIME THEY DID, TOO.\n\nSINCE THEN, HE'S BEEN WORKING IN THE SULLUST SYSTEM, RUNNING GUNS, BUT NOW HE'S BEEN CHOSEN TO FLY WITH ROGUE SQUADRON."
+00000044: b"*I'VE ONLY SEEN JANSON TRULY HAPPY WHEN HE WAS MANNING THE GUNS OF A Y-WING OR SNOWSPEEDER. HE'S A GUNNER, FIRST AND FOREMOST.\n\nWEDGE SWEARS BY HIS ACCURACY AND KNACK FOR HITTING SMALL MOVING TARGETS; LIKE TIE FIGHTERS. JANSON ALWAYS HAS A SHORT TEMPER, THOUGH.\n\nMANY IS THE TIME WE'VE HAD TO PULL HIM OUT OF A CANTINA FIGHT; BUT I WOULD TRUST HIM WITH MY LIFE."
+00000045: b"*KASAN WAS BORN ON ALDERAAN, AND JOINED THE ACADEMY AT A PRETTY YOUNG AGE. SHE FLEW TIE INTERCEPTORS FOR THE EMPIRE AND EVENTUALLY THEY GAVE HER THE 128TH TIE INTERCEPTOR SQUADRON.\n\nSHE WAS LOYAL TO THE EMPEROR, BUT WHEN THE DEATH STAR DESTROYED ALDERAAN, HER FEELINGS BEGAN TO CHANGE. WHEN WE MET UP ON GERRARD V, SHE DECIDED TO DEFECT AND JOIN THE REBEL ALLIANCE.\n\nGOOD THING. KASAN IS AN ACE PILOT, DEFINITELY ONE OF OUR BEST. I THINK SHE AND WEDGE ARE SECRETLY IN COMPETITION FOR THE TOP SLOT, BUT I WOULDN'T WANT TO BET ON THAT RACE."
+00000046: b"WEDGE ANTILLES, BORN ON CORELLIA, HAD A HARD LIFE GROWING UP. HIS PARENTS WERE FREIGHTER PILOTS, KILLED TRYING TO SAVE A SPACE STATION WHEN WEDGE WAS YOUNG.\n\nHE'S GOT A NATURAL ABILITY TO LEAD, AND I WOULDN'T BE SURPRISED IF SOMEDAY WEDGE BECAME ROGUE LEADER - BUT HE'D MUCH RATHER BE FLYING MISSIONS THAN ATTENDING PARADES.\n\nAN EXCELLENT PILOT, WEDGE SAVED MY LIFE AT THE DEATH STAR, AND I OWE HIM.\n\nI EXPECT TO SEE WEDGE DO GREAT THINGS FOR THE REBELLION."
+00000047: b"ZEV IS A LITTLE OLDER THAN THE REST OF US, HE'S PROBABLY GOT A FEW STORIES TO TELL, BUT HE KEEPS PRETTY QUIET.\n\nHE JOINED UP SOME TIME AGO, AFTER THE EMPIRE KILLED HIS PARENTS FOR SECRETLY SUPPLYING THE REBELLION.\n\nSINCE THEN, HE'S BEEN A GREAT ASSET, ONCE HOLDING OFF 3 TIE FIGHTERS, WHILE AN ALLIANCE TRANSPORT FLED INTO HYPERSPACE."
+00000048: b'*PRIMARY WEAPON: '
+00000049: b'*SECONDARY WEAPON: '
+0000004a: b'*DEFENSE: '
+0000004b: b'ADVANCED '
+0000004c: b'SHIELD'
+0000004d: b'*BLASTERS'
+0000004e: b'*ION CANNON'
+0000004f: b'*TOW CABLE'
+00000050: b'MISSILES'
+00000051: b'*SEEKER MISSILES'
+00000052: b'BOMBS'
+00000053: b'PROTON TORPEDOES'
+00000054: b'*CLUSTER MISSILES'
+00000055: b'*SEEKER TORPEDOES'
+00000056: b'*SEEKER CLUSTER MISSILES'
+00000057: b'NONE'
+00000058: b'*BRONZE'
+00000059: b'*SILVER'
+0000005a: b'*GOLD'
+0000005b: b'*WEDGE ANTILLES'
+0000005c: b'*DACK RALTER'
+0000005d: b'DEREK KLIVIAN'
+0000005e: b'ZEV SENESCA'
+0000005f: b'WES JANSON'
+00000060: b'*KASAN MOOR'
+00000061: b'*WEDGE'
+00000062: b'DACK'
+00000063: b'*ZEV'
+00000064: b'ABSOLUTE CONTROLS'
+00000065: b'RELATIVE CONTROLS'
+00000066: b'AUTO ROLL: OFF'
+00000067: b'*AUTO ROLL: ON'
+00000068: b'AUTO LEVEL: OFF'
+00000069: b'AUTO LEVEL: ON'
+0000006a: b'*FREE CAMERA: ON'
+0000006b: b'FREE CAMERA: OFF'
+0000006c: b'*CROSSHAIRS: OFF'
+0000006d: b'CROSSHAIRS: ON'
+0000006e: b'*NORMAL RESOLUTION'
+0000006f: b'HIGH RESOLUTION'
+00000070: b'MUSIC: ON'
+00000071: b'MUSIC: OFF'
+00000072: b'*SOUND FX: ON'
+00000073: b'*SOUND FX: OFF'
+00000074: b'STEREO'
+00000075: b'*MONO'
+00000076: b'*SPEECH: ON'
+00000077: b'*SPEECH: OFF'
+00000078: b'SUBTITLES: ON'
+00000079: b'SUBTITLES: OFF'
+0000007a: b'*ENGLISH'
+0000007b: b'DEUTSCH'
+0000007c: b'FRANCAIS'
+0000007d: b'*ITALIANO'
+0000007e: b'*ESPANOL'
+0000007f: b"LUKE'S"
+00000080: b"*WEDGE'S"
+00000081: b"JANSON'S"
+00000082: b"*HOBBIE'S"
+00000083: b'*SETTINGS'
+00000084: b'*PAUSE'
+00000085: b'SWITCH VIEW'
+00000086: b'DROP CAMERA'
+00000087: b'LOOK AROUND'
+00000088: b'COCKPIT VIEW'
+00000089: b'*CLOSE VIEW'
+0000008a: b'*STANDARD VIEW'
+0000008b: b'BRAKES'
+0000008c: b'*THRUST'
+0000008d: b'*FIRE BLASTERS'
+0000008e: b'FIRE SECONDARY'
+0000008f: b'*FIRE MODE'
+00000090: b'ROLL'
+00000091: b'*SPECIAL'
+00000092: b'-TRAINEE-'
+00000093: b'-CADET-'
+00000094: b'-ENSIGN-'
+00000095: b'*-OFFICER-'
+00000096: b'-LIEUTENANT-'
+00000097: b'*-FLIGHT LEADER-'
+00000098: b'-CAPTAIN-'
+00000099: b'-SQUAD LEADER-'
+0000009a: b'*-GOLD LEADER-'
+0000009b: b'-MAJOR-'
+0000009c: b'-COMMANDER-'
+0000009d: b'-COLONEL-'
+0000009e: b'-GENERAL-'
+0000009f: b'-LINE ADMIRAL-'
+000000a0: b'*-FLEET ADMIRAL-'
+000000a1: b'-SUPREME ALLIED COMMANDER-'
+000000a2: b'*START'
+000000a3: b'OPTIONS'
+000000a4: b'BACK'
+000000a5: b'*ABORT'
+000000a6: b'NEXT'
+000000a7: b'*PREV'
+000000a8: b'*SELECT GAME'
+000000a9: b'ERASE GAME'
+000000aa: b'*ENTER NAME'
+000000ab: b'*BIOGRAPHIES'
+000000ac: b'ELITE ROGUES'
+000000ad: b'*PASSCODES'
+000000ae: b'GAME SETTINGS'
+000000af: b'SOUND SETTINGS'
+000000b0: b'*CONTROLLER SETTINGS'
+000000b1: b'SETTINGS'
+000000b2: b'*LANGUAGE'
+000000b3: b'*RESTORE DEFAULT SETTINGS'
+000000b4: b'*MUSIC VOLUME'
+000000b5: b'*SOUND FX VOLUME'
+000000b6: b'SPEECH VOLUME'
+000000b7: b'OFF'
+000000b8: b'MAX'
+000000b9: b'ENTER CODE'
+000000ba: b'*ARE YOU SURE?'
+000000bb: b'ARE YOU REALLY SURE?'
+000000bc: b'*YES'
+000000bd: b'NO'
+000000be: b'*NO CONTROLLER'
+000000bf: b'ST'
+000000c0: b'*ND'
+000000c1: b'*RD'
+000000c2: b'*TH'
+000000c3: b'*NEEDED FOR\n%s'
+000000c4: b'COMPLETION TIME:\nENEMIES DESTROYED:\nACCURACY:\nFRIENDLY SAVES:\nBONUS COLLECTED:'
+000000c5: b'*\n\nCOMPETITOR BEATEN:\n'
+000000c6: b'\t%ld:%02ld'
+000000c7: b'*\t%d'
+000000c8: b'\t%d%%'
+000000c9: b'\t%d'
+000000ca: b'\t%d'
+000000cb: b'\t\t\t%ld:%02ld\n'
+000000cc: b'\t\t\t%d\n'
+000000cd: b'*\t\t\t%d%%\n'
+000000ce: b'*\t\t\t%d\n'
+000000cf: b'*\t\t\t%d'
+000000d0: b'%d SHIPS REMAINING'
+000000d1: b'*%d SHIP REMAINING'
+000000d2: b'YOU HAVE FOUND'
+000000d3: b'*YOU HAVE BEEN AWARDED'
+000000d4: b'YOU HAVE BEEN\nAWARDED A %s MEDAL\n\n'
+000000d5: b'*NO NEW MEDAL AWARDED\n\n'
+000000d6: b'*%sYOU HAVE BEEN PROMOTED TO'
+000000d7: b'%sYOUR RANK IS'
+000000d8: b'*MISSION FAILED'
+000000d9: b'*MISSION COMPLETE'
+000000da: b'*GAME OVER'
+000000db: b'SHOWROOM'
+000000dc: b'*CONCERT HALL'
+000000dd: b'*AT THE MOVIES'
+000000de: b''
+
+
+00000000: b'AMBUSH AT MOS EISLEY'
+00000001: b'*RENDEZVOUS ON BARKHESH'
+00000002: b'*THE SEARCH FOR THE NONNAH'
+00000003: b'DEFECTION AT CORELLIA'
+00000004: b'LIBERATION OF GERRARD V'
+00000005: b'THE JADE MOON'
+00000006: b'IMPERIAL CONSTRUCTION YARDS'
+00000007: b'ASSAULT ON KILE II'
+00000008: b'*RESCUE ON KESSEL'
+00000009: b'*PRISONS OF KESSEL'
+0000000a: b'BATTLE ABOVE TALORAAN'
+0000000b: b'ESCAPE FROM FEST'
+0000000c: b'*BLOCKADE ON CHANDRILA'
+0000000d: b'RAID ON SULLUST'
+0000000e: b"MOFF SEERDON'S REVENGE"
+0000000f: b'*THE BATTLE OF CALAMARI'
+00000010: b"*BEGGAR'S CANYON"
+00000011: b'THE DEATH STAR TRENCH RUN'
+00000012: b'BATTLE OF HOTH'
+00000013: b'*LEC LOGO'
+00000014: b'*RECRUIT'
+00000015: b'ROGUE'
+00000016: b'VETERAN'
+00000017: b'ACE'
+00000018: b'X-WING'
+00000019: b'*Y-WING'
+0000001a: b'*A-WING'
+0000001b: b'*V-WING'
+0000001c: b'*SPEEDER'
+0000001d: b'MILLENNIUM FALCON'
+0000001e: b'TIE INTERCEPTOR'
+0000001f: b'T-16'
+00000020: b'*PAUSED'
+00000021: b'*CONTINUE'
+00000022: b'*ABORT LEVEL'
+00000023: b'ABORT GAME'
+00000024: b'*MISSION GOALS'
+00000025: b'AUTO ROLL'
+00000026: b'AUTO LEVEL'
+00000027: b'*CROSSHAIRS'
+00000028: b'*FREE CAMERA'
+00000029: b'SUBTITLES'
+0000002a: b'COCKPIT'
+0000002b: b'DISPLAYS'
+0000002c: b'*ON'
+0000002d: b'*OFF'
+0000002e: b'GAME SETTINGS'
+0000002f: b'SOUND SETTINGS'
+00000030: b'*ARE YOU SURE?'
+00000031: b'YES'
+00000032: b'NO'
+00000033: b'*MUSIC VOLUME'
+00000034: b'*SOUND FX VOLUME'
+00000035: b'SPEECH VOLUME'
+00000036: b'OFF'
+00000037: b'MAX'
+00000038: b'STEREO'
+00000039: b'*BACK'
+0000003a: b'*DEBUG'
+0000003b: b'NO DAMAGE MODE'
+0000003c: b'*FREE ROLL MODE'
+0000003d: b'*PERFORMANCE DISPLAY'
+0000003e: b'COORDS DISPLAY'
+0000003f: b'*COLOR FORCED LOD'
+00000040: b'*SCRIPT DEBUG CONSOLE'
+00000041: b'*INFO OVERLOAD'
+00000042: b'SHOW RANGES'
+00000043: b'PROTECT THE HOMESTEADS'
+00000044: b'*DESTROY THE PROBE DROIDS'
+00000045: b'*PROTECT MOS EISLEY'
+00000046: b'*ELIMINATE THE IMPERIAL FORCES'
+00000047: b'ESCORT SUPPLY CONVOY TO SAFETY'
+00000048: b'*LOCATE CRASHED REBEL SHIP'
+00000049: b'PROTECT THE SHIP FROM INVADING IMPERIAL FORCES'
+0000004a: b'*INVESTIGATE STRANGE READINGS'
+0000004b: b'*PROTECT THE CAPITAL TOWER'
+0000004c: b'PROTECT THE TECH CENTER'
+0000004d: b'PROTECT THE EVACUATION SHUTTLES'
+0000004e: b'ESCORT Y-WINGS TO THEIR TARGETS'
+0000004f: b'DISABLE CIVILIAN YACHTS'
+00000050: b'DESTROY BIG GUN TURRET'
+00000051: b'*USE TRENCH TO AVOID MISSILE TURRETS'
+00000052: b'LOCATE AND DESTROY THE SHIELD GENERATOR'
+00000053: b"ESCORT AND PROTECT MADINE'S TROOPS"
+00000054: b'*APPROACH THE BASE UNDETECTED BY RADARS'
+00000055: b'*LOCATE AND DESTROY THE AT-ST FACTORY'
+00000056: b'*LOCATE AND DESTROY THE AT-AT FACTORY'
+00000057: b'*LOCATE AND DESTROY THE SENSOR ARRAY'
+00000058: b'LOCATE AND DESTROY THE IMPERIAL SPACEPORT'
+00000059: b'LOCATE AND DESTROY THE IMPERIAL GARRISONS'
+0000005a: b'LOCATE AND DISABLE THE TRAIN'
+0000005b: b'*RESCUE WEDGE'
+0000005c: b"*PROTECT AND ESCORT MADINE'S SHUTTLE"
+0000005d: b'DESTROY THE POWER GENERATOR'
+0000005e: b'LOCATE AND DESTROY THE IMPERIAL TIBANNA GAS CONTAINERS'
+0000005f: b'*AVOID CIVILIAN CASUALTIES'
+00000060: b'LOCATE CAPTURED AT-PTS'
+00000061: b'*DESTROY IMPERIAL RESEARCH FACILITY'
+00000062: b'*FREE THE AT-PTS'
+00000063: b'ESCORT REBEL AT-PTS TO THE LANDING ZONE'
+00000064: b'ESCORT AND PROTECT SUPPLY TRAIN'
+00000065: b'PROTECT THE CITY'
+00000066: b'*DESTROY THE CAPACITOR'
+00000067: b'DESTROY THE TRANSMITTERS'
+00000068: b'*PROTECT THE BACTA CONTAINERS'
+00000069: b'*AVOID CIVILIAN CASUALTIES'
+0000006a: b'DESTROY ALL IMPERIAL BUNKERS, FIGHTERS AND BOMBERS'
+0000006b: b'*LOCATE AND DESTROY MOFF SEERDON'
+0000006c: b'DESTROY THE WORLD DEVASTATORS'
+0000006d: b'PROTECT THE CITY'
+0000006e: b'*WIN THE RACE'
+0000006f: b'*CHASE THE IMPERIALS THROUGH THE TRENCH'
+00000070: b'*DESTROY THE POWER PLANT AT THE END OF THE TRENCH'
+00000071: b'*CHASE AND DESTROY SLAVE 1'
+00000072: b'DESTROY PROBE DROIDS'
+00000073: b'*DEFEND ROGUE TEN FROM AT-ST ATTACK'
+00000074: b'*DEFEND THE GENERATOR FROM THE IMPERIAL ATTACK'
+00000075: b''
+
+
+b' \x00'
+b'Raowr!\x00\xa7'
+b'Romf.\x00'
+b'Romf.\x00'
+b"Can you hear me?  Rogue Squadron, this is Crix Madine.  The attack came before I could reach Rieekan and I'm pinned down in the Tech Center, can you get me out?\x00\xff"
+b"Rogues! I've got trouble over here.  They just dropped a pair of scout walkers outside my building!\x00"
+b' \x00'
+b"Thanks, Rogue Group.  I'm clear!\x00\x98"
+b"Don't worry, we're not so helpless.\x00"
+b"Ha!  Like shooting Y-wings, do ya?  Here's a little message from Gold Squadron!\x00"
+b"One down... let's keep up the good work.\x00\xe5"
+b"Rogue Squadron!  Where's our cover?!!\x00"
+b"Rogue Leader, we DON'T want to destroy those shuttles!\x00\x83"
+b"We can't get past the base shield!\x00\xe0"
+b"The base shield is down.  We're beginning our attack... \x00\x8f"
+b'Did Skywalker make that shot?\x00'
+b'Rogue Squadron, we need air cover, now.  Skywalker, where are you--- aahhhh! \x00'
+b"We are receiving the data from your R2. Rebels located. We're on our way!\x00"
+b"Rogue group, we have a problem.  They have some sort of energy shield we can't get through.  My guess is that they have some sort of generator nearby.  Do you think you can help us out?\x00"
+b'That got it.  Shields down.  Commencing rescue.\x00'
+b'Rescue complete.\x00\xef'
+b'Last group scanned.  Here we come.\x00\xd6'
+b"That's it.  We are all done here.\x00"
+b"You're on, Commander Skywalker.  Good luck.\x00"
+b"We're taking heavy fire!\x00\xb9"
+b"We can't shake these TIEs!\x00\xc3"
+b"Wedge!  I, I don't think I can....argh!.....\x00\xd6"
+b'Aaah!\x00'
+b'Yarrr!\x00\xb4'
+b'Yaaahh!\x00'
+b'Yaaarrr!\x00\xb4'
+b'Aarrr!\x00\xac'
+b'Help me out here.\x00'
+b"I'm clear, but my fighter is down.\x00\xbb"
+b'I copy.\x00'
+b"I'm hit! I'm hit!\x00"
+b'Nice shot!\x00\xff'
+b'Good work!\x00\xfc'
+b'Rear shields down!\x00\xa4'
+b'Rogue Ten standing by.\x00\xd3'
+b"Luke?  We've already got trouble.  Probe droids.\x00\xf1"
+b"They're the best of the best...\x00"
+b"It's the 128th!  Watch out for Kasan Moor.  She's an Ace, with over 40 confirmed kills.  She specializes in Y-wings.\x00\x9b"
+b'Good job! You captured some Imperial Bombs, there, Luke.\x00\xec'
+b"We can't stop the Imperials without our Y-wings!\x00\xf2"
+b"Gold Squadron's been destroyed.  I guess the Imperials take this one.\x00"
+b'Commander!  The train is under attack!\x00\xcc'
+b'The hovertrain looks real bad, Luke.\x00\x9c'
+b"I...I'll take the left branch, if you don't mind racing against me.\x00"
+b'Whoa!  You lost! Commander,  you must be getting rusty.\x00'
+b'Help me out here.\x00'
+b"I'm clear, but my fighter is down.\x00\xbb"
+b"I'm hit!\x00\xa8"
+b'Rear shields down!\x00\xa4'
+b'Rogue Seven standing by.\x00\xc7'
+b'Yarrr!\x00\xb4'
+b'Sir!  The Devastators are getting close to the city!\x00\xa3'
+b'Kasan Moor, consider yourself a prisoner of the Rebel Alliance.\x00'
+b'Rogue Squadron, this is General Rieekan. One of our shuttles will rendezvous with a small convoy from local resistance on Barkhesh, which must first travel through Imperial territory.  They carry equipment and supplies vital to the Rebellion. \x00'
+b'Your mission is to rendezvous with that convoy, and escort it to the landing zone.  Good luck.\x00\xd8'
+b'All right, Rogue Group.  The supply vehicles have begun moving.  Their escort will follow shortly.  \x00\xeb'
+b"Commander, this is Rieekan.  It's imperative you stay with the supply vehicles.  \x00"
+b"The shuttle is clear.  She'll pick up the rest of this cargo. The Rebel Alliance will appreciate those supplies, especially after we lost Yavin Base. \x00\xaa"
+b'Rogue Group, the convoy has been destroyed.  Your mission has failed.  We really could have used those supplies.\x00\x83'
+b'Rogue Squadron, this is General Rieekan.  A Rebel ship called The Nonnah recently crashed somewhere in this vicinity.  It was carrying a team of Rebel soldiers and stolen Imperial equipment.  You must find them before the Imperials do.\x00'
+b"The Nonnah is reporting that they're under attack. \x00"
+b'Return to base, Commander Skywalker.  We\'ll discuss your "tactics" in private.\x00\x9d'
+b"We've just lost contact with the shuttle.\x00"
+b'The shuttle is away.  Rogue Leader, get your squadron out of there.\x00'
+b"I've received word an Imperial officer, Crix Madine, wants to defect.  Apparently he has a lot of information on the Empire's military ground operations.  I'm gonna contact him after my meeting with the city officials in the Capitol Tower.\x00"
+b'Keep your eyes open for any sign of trouble.\x00\xa5'
+b'....repeat, under attack! Get back here as soon as you can.  Rogue Group, we are under ...\x00\xe5'
+b'Rogue group, those bombers are heading straight for us.  There are lots of innocent people in here!\x00'
+b'More bombers, headed this way. \x00'
+b'Rogue Squadron, mission is a failure.  Abort mission.\x00'
+b"It's all right, Luke.  You held them off long enough. We evacuated everyone, just in time. Thanks to Captain Solo and Chewbacca.\x00\x87"
+b"Gerrard V is attempting to gain its independence, but the Imperial Governor is looting the city.  Rogue Squadron, you must protect Crix Madine's Y-wings while they disable the escaping ships. \x00\xa5"
+b"Kasan Moor said this is one of many small factories where the Empire produces its TIEs and walkers.  This is a straight hit-and-run mission; it's not going to stop them, but it will cripple them for a little bit.\x00\xf6"
+b"Be sure to destroy their scanning posts first. Also, a squadron of TIEs are out on a test flight, so don't waste any time; they could be back at any moment.\x00\xff"
+b'Remember, take out those scanners first.  \x00\xa5'
+b"Good job Rogues, they're blind.  Now take out those factories.\x00\xe7"
+b'The base is alerted, your security is compromised.  Abort the mission.  \x00\xd2'
+b'Rogue Squadron, this is General Rieekan.  Excellent work.  The Sensor Array and Spaceport facilities on Kile II are now inoperable.  Imperial activities are sure to slow down in this sector! \x00'
+b"When you reach your destination, you'll find an Imperial research facility, from which a team of Rebel commandos are attempting to liberate a squad of AT-PTs.\x00\xef"
+b'Their escape has become compromised, and we need your help to get them out of there. The speeders and tow cables will help you with any walkers you may find.  Good luck.\x00'
+b"Excellent work, Rogue Squadron.  Those AT-PTs would have been used by Moff Seerdon, the local Imperial governor.  We believe he's consolidating his forces for an attack on our bacta supplies.\x00"
+b"I know, Wedge.  We're watching him closely.  Good work.  Now head back to base.\x00"
+b'Rogue Squadron!  This is General Rieekan.   Chandrila is under attack.  Imperial forces are attempting to bombard and surround the city with wallbuilders. You must protect the hovertrain.\x00'
+b'The supplies it is carrying must reach Chandrila or we will lose the city!  \x00\xc0'
+b"Rogue Squadron, I'm afraid you'll have to cut your celebration short.  Moff Seerdon has begun his attack on Thyferra.\x00"
+b'In honor of the bravery and courage of Rogue Squadron, the Rebel Alliance presents each one of you with a plated insignia, so that all who shall see it, shall know you.\x00\xa8'
+b'Kasan Moor, Zev Senesca, Dack Ralter, Wes Janson, Hobbie Klivan, Lieutenant Wedge Antilles, and you, Commander Luke Skywalker...\x00\x83'
+b'...you have all done your part to strengthen the Rebel Alliance, to offer hope to worlds under the yoke of oppression, and to ensure the freedom of the galaxy.\x00'
+b'May the Force be with you.\x00\xc6'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b"Wedge made it, but he's going to be captured for sure!  I'm under a lot of fire.  \x00\xd0"
+b"There's that Sensor Array.\x00\xad"
+b"There's one of the Garrisons.\x00"
+b'Yee-ha!\x00'
+b"How ya doin', kid?  Thought I might give you a hand.  This is my hometown, after all.\x00"
+b'Chewie says we should start evacuating the people off the top of the Capitol Towers.  \x00\xa5'
+b'Ah, that was never my favorite building anyway.\x00'
+b'Rebel intruders, by order of Moff Seerdon, you are in restricted airspace.  Surrender immediately.\x00\xc6'
+b'Help me out here.\x00'
+b"I'm clear, but my fighter is down.\x00\xbb"
+b"I'm hit!\x00\xa8"
+b'Rear shields down!\x00\xa4'
+b'Rogue Eight standing by.\x00\xdb'
+b'Yarrr!\x00\xb4'
+b'I am picking up multiple signals, TIEs and coming in fast.\x00\xd7'
+b"It sure is nice to take the fight to the Imperials for once.  It seems like we're always playing defense.\x00"
+b'Check your fire! \x00'
+b'Enemy fighters at mark two.\x00'
+b'Fighters at two-seven!\x00\xf1'
+b'Good shooting!\x00\xf2'
+b'Excellent work!\x00'
+b"I can't shake it!\x00"
+b"If you can't handle your starfighter, get back to base! \x00\xbe"
+b'I copy.\x00'
+b'Inbound fighters at ten-thirteen!\x00'
+b"I've crash-landed safely.  Need pick-up.\x00\xd5"
+b"I've got a problem here.\x00\xe0"
+b'More fighters, inbound on one-seven-decimal-two-eight.\x00\xf3'
+b'Skywalker!  What are you doing?!!\x00'
+b'They got my stabilizer!\x00'
+b'Watch for enemy fighters.\x00'
+b'Aaahh!\x00\xbf'
+b'Aahh!\x00'
+b'Aahhh!\x00\xb6'
+b'Aaahhh!\x00'
+b'This is Lieutenant Kasan Moor of the Imperial 128th to unidentified Y-wing.  Are you quite done?  My vehicle has been disabled for a good two minutes now.\x00\x9f'
+b"Well, if you'd quit shooting at me, I have a proposal to make...  One which would serve us all...\x00"
+b"This is the JadeMoon.  There's an Imperial storage base nearby; it's an inventory hub for the local bases in this system.  \x00"
+b"General Madine and his ground troops should find plenty of supplies in the base, as long as we can knock out the shield generator. It's located at the end of a canyon rift somewhere nearby.\x00"
+b"There's the shield generator.  Not an easy target.\x00\x95"
+b' \x00'
+b"They're gone...\x00"
+b"That's all for the Imperial forces!\x00"
+b'It feels strange, though... being on the other side.  I took their orders for a long time.\x00\x84'
+b'Yes...\x00\xbe'
+b"Kessel. It's a mining colony, but the Imperials often keep political prisoners here, too.  There should be an armored hovertrain nearby, transporting captured Rebels to a central station, before moving on to the prison.  I'm sure Wedge is with them. \x00\xe1"
+b"That's not them.  Follow the hovertrain.\x00\x8d"
+b"There's nothing I can say to convince you.  You'll have to make that decision yourself...\x00"
+b"Luke, we're not going to make it!  The hovertrain will escape!\x00\x9f"
+b"Nice job, Skywalker.  I'm beginning to see why they say you're the best.\x00\xf7"
+b'Good to hear from you, Antilles.  How was the hovertrain?\x00'
+b'Unfortunately, the Imperials own it.  They harvest the Tibanna gas to use in their weapons.  It increases their firepower.  They process and store it on these floating platforms.\x00\x90'
+b"Huh.  Now I know what it's like to be on the other side of one of these little raids.\x00"
+b'He may not live to tell about it.  Moff Seerdon is notoriously... unforgiving.\x00\xe9'
+b'This reminds me of Bespin.  My squadron scouted it once, for a possible Imperial takeover.  Too small, though...\x00\xf8'
+b"It's the Tibanna gas.  Calibrate to seven-mark-nine.\x00\xeb"
+b'Check your fire, Skywalker!  Those are civilians!\x00'
+b'Standard Imperial swarm maneuver.  Watch for fighters coming from below. \x00'
+b"There's a lot of Imperial activity up here. \x00\xc1"
+b"Luke, I've lost my stabilizer.\x00\x82"
+b'Moff Seerdon?\x00'
+b'There you are, you coward.   Do you think you can get away in that shuttle?\x00'
+b'There is nothing just about your actions.  \x00'
+b"Yes, the location of this Imperial base was supplied to us by Bothan spies.  It's a crucial link to the rest of the Sullust System, so it's also well-protected, hidden inside this volcano.\x00\x89"
+b'They use the volcanic activity to power a geothermal generator, which is regulated by a shielded central capacitor.  But ... inside the volcano, several transmitters are feeding thermal energy to the capacitor.  Destroy the transmitters...\x00'
+b'That should do it.  The shield should be down.\x00\x93'
+b'Hey!\x00\xaa'
+b'Down on the ground, still waiting for someone to pick me up.\x00\xbb'
+b'Abort mission.\x00\xf7'
+b'Accelerate to attack speed.\x00'
+b'Pick your targets, and go!\x00\xf3'
+b'Form up!\x00\xed'
+b'Hang on back there...\x00'
+b'Increase speed, full throttle!\x00\xaa'
+b"I've lost Artoo!\x00\xc0"
+b'Lock S-Foils in attack position.\x00\xed'
+b'Rogue Squadron, report in.\x00\x9f'
+b'Artoo, see what you can do back there.\x00\xa2'
+b"Artoo, that stabilizer's broken loose again; see if you can't lock it down.\x00"
+b'Artoo, see if you can increase the power.\x00'
+b'Stay low.\x00'
+b'Switching power to front deflector screens.\x00'
+b"I'm hit! \x00"
+b"I'm hit!\x00\xa8"
+b"I'm hit!\x00\xa8"
+b"I'm hit, but not bad.\x00"
+b'Ugh!\x00\xa4'
+b'Uuugh!\x00\xa4'
+b'Nfff!\x00'
+b'Aaaaa!\x00\xbf'
+b'Aaaahh! Aaah!\x00'
+b'Aaaaaaaaahhhhh!\x00'
+b'I copy.\x00'
+b"I'm on it.\x00\xee"
+b'Inbound fighters!\x00'
+b'That was close!\x00'
+b'Stick to the objectives!\x00\xe6'
+b'They may be slow, but they can take a beating.\x00\xaf'
+b"Ha!  Didn't even scratch me!\x00\xce"
+b'Ouch!  Shields are a little weak.\x00'
+b'Activate harpoon.\x00'
+b'Use your harpoons and tow cables.  \x00'
+b'Go for the legs!\x00\xe9'
+b"Cable out!  Let 'er go!\x00"
+b'One more pass... \x00'
+b'Hit your boosters!\x00\xbb'
+b'Rapid-fire mode engaged!\x00\xed'
+b'Hold on... My blasters are still cooling.\x00'
+b'Burnout on cannon 1.\x00\xa7'
+b'Burnout on cannon 2.\x00\xa4'
+b'Boosters recharging.\x00\xf8'
+b'Ah, if Han Solo could see me now...\x00'
+b"Chewie's not gonna be happy...\x00\xfb"
+b'Those quad-guns pack a punch.\x00'
+b"Can't fire, the S-Foils are closed.\x00"
+b"Good morning, Wedge.  The rest of Rogue Squadron is still back at base, but I thought we could take an early morning run through Beggar's Canyon.\x00"
+b'We did it!  We saved Mos Eisley!  Nice work, Rogue Squadron.  We might make a name for ourselves after all...\x00'
+b'Here we go, Dack.\x00'
+b'Throttle up, Rogues.  We have to keep searching for The Nonnah.\x00'
+b"Okay, Rogues.  Let's keep the crew out of danger until our shuttle can pick them up.  \x00\xeb"
+b"Don't get cocky.\x00\xec"
+b'This is Luke Skywalker.  Go ahead.\x00\xd2'
+b"They're attacking the city!\x00"
+b'Han!  Chewie! Wha...What are you doing here?\x00\x8c'
+b'Thanks.\x00'
+b'Thanks, Han.  And good luck.\x00\xe6'
+b'General Rieekan!\x00\xd7'
+b'Watch yourself, both of you.\x00\xe2'
+b"Cut the chatter.  Wedge, hold 'em off as best you can.  Rogues, we're gonna have company real soon!\x00"
+b"That's enough, Dack!\x00\x9c"
+b'Private channel, go ahead.\x00\xb2'
+b'Not now, Wedge....\x00\x84'
+b"I'll handle it, Wedge.\x00\xd0"
+b'That was me.\x00\xb5'
+b' \x00'
+b"Okay Rogues, we're not done here.  Let's clean up the remaining Imperials and go home.\x00\xcf"
+b'We lost good people today. Return to base, team.  \x00\x9b'
+b"Form up, team.  Let's get back to the ship.\x00"
+b'Nice work, Kasan.\x00'
+b"I for one am glad you're here.  You're fighting for your OWN ideals now. \x00"
+b"We're getting a little close to those scanners.\x00"
+b"Thanks to Kasan, we may just turn the tide of this war.  Now, let's head home, I need to paint some TIE fighters on my fuselage.\x00\xf8"
+b"Rogues, listen up.  Kasan has given us another Imperial military location.  It's a large spaceport located at the end of this canyon. We're using Y-wings because of their greater firepower, but they move like a sleepy Hutt, so watch it.  \x00\xa2"
+b'Get out of there, Wedge.  Hobbie, what happened?\x00\xe7'
+b'Hold on, Wedge.\x00'
+b"We'll take out the convoy.\x00\xea"
+b"Here's something!  Advanced lasers!\x00"
+b'There it is.  Rogue Group, use your ion cannons.  We want to disable this train, not destroy it.\x00\xda'
+b'It must be ray-shielded.  Concentrate on the train.\x00'
+b'Thanks, Artoo! The train is slowing down.  Looks like this is working.   \x00'
+b"This isn't gonna work.\x00\xb8"
+b"Artoo says the train is completely shut down.  Bring Wedge's X-wing in!\x00"
+b'Wedge!  \x00\xaa'
+b"I'm beginning to think we should have left you down there...\x00\xf5"
+b"Good work Rogues.  General Madine, we'll buy your boys a round when we get back to the fleet.  \x00"
+b'I found some Advanced Shield technology!\x00\xf2'
+b"We've lost the commandos.  Abort the mission.  Repeat Abort the mission.\x00\xc6"
+b"There are civilians down there too, so make sure what you're shooting at is Imperial. We're here to take out their Tibanna gas supplies and do whatever damage we can to the local TIE Fighter Squadron.  \x00\xfb"
+b"The blue ones are civilian.  Let's check our fire.\x00\xd9"
+b"There they are.  Looks like we'll need to clear a path for 'em.  Rogue Eight and Nine,  concentrate your firepower on that gate.  Everyone else is with me.  We're going after the walkers.\x00"
+b"Let's make sure they get to the landing zone intact.\x00\xa3"
+b'Abort mission.  The AT-PTs have been destroyed.  Repeat:  The AT-PTs have been destroyed.\x00'
+b"Now let's go back and  take care of that research facility.\x00"
+b'Have your R2 unit lock it down, Kasan.\x00\xe2'
+b"Kasan!  Do not pursue that ship! Repeat... do not pursue Seerdon.  We don't know how many ships he has backing him up.  We must remain here to secure Chandrila.\x00\xf6"
+b"All right, here's our chance to hit them back for Chandrila. Kasan, did General Rieekan brief you? \x00"
+b'...and we take the shield down.  Kasan, you lead the way!\x00'
+b"Okay, that's one.  You know what to look for.\x00"
+b"Let's all rendezvous back at the capacitor.  We'll need to  hit it with all our firepower.\x00\x9d"
+b"Let's get out of here before the volcano destabilizes.\x00\xe0"
+b'He used us.  This was all a diversion!\x00\xc8'
+b"This is it. Thyferra.  Be careful, team.  We've got to hit Imperial targets only.  Avoid civilian casualties at all costs.  We can't afford to lose those bacta containers! So be careful. \x00"
+b"Woooo-hoo!  Great job, Rogue Squadron!  The Imperials won't get Thyferra now!\x00"
+b'Hey!  Where are you?\x00\xcd'
+b"I'm on my way, Kasan.\x00"
+b"We've got to protect those civilians!  Not to mention that bacta.  Otherwise, this mission is over!\x00"
+b'Moff Seerdon...\x00'
+b"We've lost too many innocent people down there.  Time to re-think our strategy.\x00"
+b"The bacta's almost gone.  There's no prize to win here.\x00"
+b"This is it, Beggar's Canyon.  It's tricky, so listen up.  The main canyon is fairly simple, but watch out for sandcrawlers taking a shortcut.  The left branch is harder but the right branch is the toughest, lots of twists and turns.\x00\x8d"
+b'Biggs and I used to shoot through it with no brakes...\x00\x91'
+b"I guess you're on the right branch, Wedge?\x00\xd9"
+b'I feel guilty beating you guys. I used to make this run every day in my old T-16.\x00'
+b'Ah, Wedge... Still so much to learn.\x00\xa0'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b'Help me out here.\x00'
+b"I'm clear, but my fighter is down.\x00\xbb"
+b"I'm hit!\x00\xa8"
+b'Rear shields down!\x00\xa4'
+b'Yaaarrrhhh!\x00'
+b'Aaahh!\x00\xbf'
+b'Yarrr!\x00\xb4'
+b'Yarrrgh!\x00\xbb'
+b'Aaarrrgh!\x00'
+b'Yaargh\x00\xfb'
+b'Rebel scum, this is Moff Seerdon.  Your resistance is useless.  As you can see, I have destroyed the hovertrain, and Chandrila is now mine.  You will surrender, or I will shoot you all down.\x00\xfa'
+b'Rebel scum, this is Moff Seerdon.  Your resistance is useless.  As you can see, I have blockaded the city, and Chandrila is now mine.  You will surrender, or I will shoot you all down.\x00\xf5'
+b'Kasan Moor?  Ah, of course.  \x00'
+b'How pathetic...  allying yourself with those Rebel criminals:  Rogue Squadron.  You and your so-called Rogues helped in the absconding of my AT-PTs and the plundering of my research facility.  My retaliation shall be swift and just.\x00\xea'
+b'Ha ha hahaha... coward!\x00'
+b'Do you no longer harbor any loyalty to our Emperor?  Defecting to the Rebel terrorists shall be your undoing, Kasan. \x00'
+b'Unfortunate to lose such a fine officer, but the weak will die off to make room for the strong.  It is the way of the universe.  Farewell, little rodent.\x00'
+b"Greetings, Commander Skywalker.  So, you're the young man who destroyed the Death Star?\x00"
+b'Do you wish to surrender now, or shall I destroy you?\x00'
+b"Ah!  You're a very talented pilot.  You have learned much, Skywalker.\x00"
+b"Too bad you didn't join the Empire.  I could have used a pilot with your skills.\x00\xbd"
+b'Impossible!\x00'
+b'You and Rogue Squadron will all die!\x00\xaa'
+b'Even if you win today, the Empire will crush the Rebellion!\x00'
+b'AAAAHHH!  \x00\xb6'
+b'I copy.\x00'
+b"I'm hit!\x00\xa8"
+b'Inbound fighters at ten-thirteen!\x00'
+b"I've crash-landed safely.  Need pick-up.\x00\xd5"
+b"I've got a problem here.\x00\xe0"
+b'Maintain visual scanning.\x00'
+b'More fighters, inbound on one-seven-decimal-two-eight.\x00\xf3'
+b'Rear shields down!\x00\xa4'
+b'Right with you, boss.\x00'
+b'Skywalker!  What are you doing?!!\x00'
+b"Sorry, I'm out!\x00"
+b'Take out those tanks.\x00'
+b'That was close!\x00'
+b'Ah! They got my stabilizer!\x00'
+b'Watch for enemy fighters.\x00'
+b'Whoa, that got him.\x00'
+b'Yarrr!\x00\xb4'
+b'Warrrggh!\x00'
+b'Aarrrgh!\x00\xa3'
+b'Aarrr!\x00\xac'
+b'Aararrgh!\x00'
+b'Harrrghh!\x00'
+b'They may be slow, but they can take a beating.\x00\xaf'
+b"Ha!  Didn't even scratch me!\x00\xce"
+b'Ouch!  Shields are a little weak.\x00'
+b'Activate harpoon.\x00'
+b"Cable out!  Let 'er go!\x00"
+b'One more pass... \x00'
+b'Hit your boosters!\x00\xbb'
+b'Rapid-fire mode engaged!\x00\xed'
+b'Hold on... My blasters are still cooling.\x00'
+b'Burnout on cannon 1.\x00\xa7'
+b'Burnout on cannon 2.\x00\xa4'
+b'Boosters recharging.\x00\xf8'
+b'Check your fire!\x00\xb1'
+b'Fire proton torpedoes!\x00\xbf'
+b'Good shooting!\x00\xf2'
+b'Good job!\x00'
+b'Excellent work!\x00'
+b'Help me out here.\x00'
+b"I can't shake it!\x00"
+b"Luke, I think we've got a problem.... Is that my imagination, or are those... Imperial probe droids... dead ahead! They're attacking the homesteads!\x00\xed"
+b"Luke, we've got to stay here and protect the farmers!\x00"
+b'Rogue Ten needs our help!\x00'
+b'Mos Eisley is under attack!  We need to assist!\x00'
+b"We've failed.  The homesteads have been destroyed.  Repeat: The homesteads have been destroyed.\x00"
+b"We've failed.  The spaceport has been completely destroyed.  Looks like the Empire got the jump on us!\x00\xd6"
+b"The convoy's not gonna last much longer!\x00\xe9"
+b'We just lost Rogue Nine!\x00\xb6'
+b'Another victory for Rogue Squadron.\x00'
+b"That's the Tech Center.  Crix Madine is inside.\x00"
+b'Our defector must be hotter than we thought.\x00\xe5'
+b'You heard him, full throttle back to the city!\x00\xf2'
+b"Affirmative, Luke I've got my hands full, can you get them?\x00"
+b'They destroyed the building! Madine! Madine can you read me?\x00\xf9'
+b"Luke!  This is Wedge.  I'm on the other side of the planet.  We've got trouble!   It's the 128th TIE Interceptor Squadron!\x00\xef"
+b'Private channel, sir?\x00'
+b"Luke, how do we know Kasan isn't leading us right into a trap?\x00\x9e"
+b"The angle's impossible!\x00"
+b'Good shot, Janson!\x00\xc6'
+b"Luke!  It's an ambush!  I don't know where they came from!  I don't have nav control anymore.  Can't steer her straight!  Main computer off-line.  Targeting computer off-line.  Argh! We just lost Rogue Seven.  I can't...\x00\x86"
+b'Hey, I thought I  was the best.\x00'
+b'Food was good, but the service was lousy.\x00'
+b'Thanks again Rogues, I thought I was done for. \x00'
+b'Unknown.  \x00\xb9'
+b'I can tell you one thing, Luke.  The officer on duty is not going to enjoy explaining this damage to the local Moff.\x00\xd1'
+b"I'm having trouble with my scanners...\x00\xb9"
+b'Incoming TIEs\x00'
+b'Moff Seerdon?\x00'
+b'The gate is down.  Repeat:  The gate is down.\x00'
+b"We've done it!  The AT-PTs have reached the landing zone!  Repeat:  The AT-PTs have reached the landing zone!\x00"
+b'But without bacta, our medical supplies are useless!\x00\xa2'
+b"Great job, Mynock!  We stopped the Devastators!  Now let's take out those TIEs.\x00"
+b"A beautiful world... sacrificed for the Emperor's greed.    We'll keep on fighting, but... how can we win against such destruction?\x00"
+b"They're gone!  We've completely routed the World Devastators! We've taken a lot of damage, Rogues, but I want you to know, we saved another world from the Empire... we did well here today. Let's go home.\x00"
+b'You got it.\x00'
+b'Race you back!\x00\xa3'
+b'Help me out here.\x00'
+b"I'm clear, but my fighter is down.\x00\xbb"
+b'I copy.\x00'
+b"I'm hit!\x00\xa8"
+b'Good work!\x00\xfc'
+b'Rear shields down!\x00\xa4'
+b'Rogue Nine standing by.\x00'
+b'Yarrr!\x00\xb4'
+b'Yarrr!\x00\xb4'
+b'Yarrr!\x00\xb4'
+b"Luke! I'm reading a small convoy at mark four-nine.  I'm also scanning a lot of human life readings.  It could be the prisoners.\x00\x8e"
+b"What's it going to be, Commander?\x00"
+b"I, I don't understand it...  I'm not reading anything.\x00\xf2"
+b'Luke, I just did a long-range scan.  Wedge is definitely on that train!\x00'
+b'Bad news, Rogue Leader.  Imperial transmissions say the train has offloaded its cargo.\x00\xde'
+b'Any idea what we are up against?\x00\xb3'
+b"Taloraan. It's a beauty...\x00\xc3"
+b"Well, I'm an old bantha, so I'd better take the main route.  I'll meet you at the moisture farm on the plateau.\x00"
+b"Someone's cheating out there.  We're gonna have to start this race over.\x00\xd7"
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b"Rebels located. We're on our way!\x00"
+b'Imperial probe droids... dead ahead! \x00'
+b'Listen, while I was on that train, I found out that there are other Rebels at the main prison facility.  Crix Madine and his commandos will follow us in and get them out.\x00\x9c'
+b'Rogue Squadron, this is General Rieekan.  Excellent work.\x00'
+b"Luke!  This is Wedge.   We've got trouble!\x00\x83"
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b'Picking up something strange on my scopes. \x00'
+b'Weapons malfunction.\x00\xe2'
+b"Sir, we've found some advanced bombs!\x00"
+b"Sir, we've found some seeker missiles!\x00\xe6"
+b"Sir, we've found some cluster seeker missiles!\x00\xac"
+b'The smaller craft are the combat vehicles.  Stick with the five transports.\x00'
+b'Commander Skywalker, we are dispatching a shuttle to evacuate Madine. Keep those TIEs off its back.\x00'
+b"We've spotted an Imperial Walker on approach to the Capital Tower!\x00\xf7"
+b"We've got to destroy those missile turrets!  Otherwise, the Y-Wings are done for!\x00"
+b'Remember, let the Y-Wings take care of the yachts.  Rogue Squadron flies cover.\x00'
+b"Make sure to destroy ALL Imperial air cover.  We can't complete the mission unless the commandoes are safe.\x00"
+b'Stay low to avoid that missile fire!\x00\xae'
+b'Commander, we have TIE Bombers and TIE Interceptors on scanners!  \x00\xbb'
+b"There's the Kile II Spaceport. \x00"
+b"We're losing a lot of bacta containers down there.  We've got to be more careful.  \x00"
+b"We've lost a bacta container.  We can't afford to lose much more! \x00\x9c"
+b'Watch out for those bacta containers!  \x00'
+b"Calamari isn't safe until those TIE fighters are destroyed.\x00"
+b"This is Rogue Three.  Sir, my R2 has found a weak spot.  It's a shield generator on top.  If we destroy it, we have a better chance of taking these things down.\x00\xe4"
+b"Let's take out the leg-jets.\x00\xbf"
+b'If we destroy the legs, the Devastator has no propulsion.\x00'
+b'Look at the size of that thing!\x00'
+b'Luke, what about the towers?\x00\xed'
+b"You worry about the fighters, I'll worry about the towers.  (Not sure how this goes)\x00\xe5"
+b"Luke, you've switched off your targeting computer.\x00\xa6"
+b"The transports can't escape unless the probe droids are gone.\x00"
+b'Rogue Ten is DOWN in Sector Lambda.  He needs your assistance!\x00\xb2'
+b"Good work, Rogue Squadron.  The base has been evacuated.  We'll meet you at the rendezvous point.  And Luke.... the Falcon made it out all right.\x00"
+b"Don't do anything foolish, like running off to Dagobah.\x00"
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b' \x00'
+b'Rogue Squadron, Madine and his commandos are heading to the next prison.\x00\xbc'
+b'Proton torpedoes!\x00'
+b'This is Commander Wedge Antilles of Rogue Squadron, we are coming to your assistance\x00\xc4'
+b"Sir, we've found some seeker proton torpedoes!\x00\xa8"
+b"Sir, we've found some advanced proton torpedoes!\x00\xb9"
+b'NO CONTROLLER\x00'
+b'DEMO - PRESS START\x00\xd6'
+b'I copy.\x00\x870\x04NNJJRRXXfg%%\x7f\x7fyy\xa5\xa5\xd1\xd2>>RR\x82\x82\xba'

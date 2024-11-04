@@ -1,0 +1,312 @@
+https://www.timeextension.com/features/interview-factor-5s-julian-eggebrecht-on-star-wars-indiana-jones-and-choosing-n64-over-ps1
+
+Uh oh...
+They claim they made their won software toolchain... did they have their own (modified?) compiler as well?
+Being quote:
+The N64 in the early days was the polar opposite. We saw the turnaround times that the Shadows of the Empire team had to endure and decided that it was so inefficient that we wanted a completely different approach. We reached out to our PlayStation development hardware partners SN Systems, who are a part of Sony nowadays, but were independent then. We proposed to collaborate on an alternative N64 dev kit and software toolchain, completely circumventing Silicon Graphics’ tools. We focussed on the software toolchain, whereas SN Systems was responsible for the hardware – essentially an N64 cartridge with memory connected to a regular PC so we could work as efficiently as we had for all prior platforms. We luckily never had to use the original development environment.
+End quote
+
+https://decomp.me/scratch/AV0PA
+If that is correct, it would seem they used GCC 2.7.2 KMC with "-mips2 -O2 -g2"
+But...
+https://decomp.me/scratch/j3GfH
+That function only matches when using GCC 2.8.1 SN with "-mips2 -O2 -g0"
+So who knows wtf is going on...
+
+See this site for an example of how to decompress MORT files (no compression, unfortunately)
+https://github.com/jombo23/N64-Tools/blob/1e19f4d9fc8265c00abb39b34f15d37aaa3a6a6d/N64SoundListToolUpdated/N64SoundLibrary/MORTDecoder.cpp#L5
+
+There's a table of (const?) data that the link states is at 80048738, but to me looks like its at 8009D978
+Don't know how much of that is a difference in ROMs used or if I have something messed up on the split side of things
+
+https://github.com/AxioDL/amuse
+Might be useful for extracting/interacting with musyx files
+
+Intersting ROM addresses:
+	0x4074 -> Might be a file split?
+		Shouldn't be the case, it's not aligned right
+	0x33B8,0x3F7C,0x4024,0x5F7C,0x655C,0x77FC,0x7F7C,0x80D8,0x8508,0x1A408,0x1CFFC,0x24568, 0x24D28 -> Might indicate the 1720.s partially contiains non-code?
+	0x192D8 -> (ro)data midway through 1720.s
+	0x10eda0 -> Looks ALOT like the beginning of the credits
+	0x110404 -> Might be the end of the credits
+	0x584610 -> First instance of MORT string, indicating a sound file of some variety
+	0x8a0440 -> Final insance of MORT string
+	0xfefff8 -> Lots of HOB, HMT, TM, IMGS, PAL, SNG references in the strings starting here
+	0xff7330
+	0x10cfa8 -> Almost certainly the alphabet used by the passcode/cheat screen
+
+	0x14437C -> Appears to be some sort of RAM/DMA related offset?
+	0x144380 -> Referenced at 80110AC4, might be the start of some RAM stuff?
+				80110AC0 is some kind of ROM address usually, its NOT where the stuff at 80110AC4 get's DMA'd
+					Gets rewritten on "scene change", so its probably an overlay destination?
+
+	0x273C08 -> DMA size 0x1000
+	0x274C08 -> DMA size 0x9D0
+	0x2755D0 -> DMA size 0x1000
+	0x2765D0 -> DMA size 0xD48
+	0x101000 -> DMA size 0xCE00
+	0xff6c10 -> DMA size 0x720
+		If a string at 80787820 is to be believed, this is some sort of debug font getting DMA'd
+	0xff7330 -> DMA size 0x20, appears to contain the size for the DMA done at 0xff6c10
+	0xff3fe8 -> DMA size 0x2C20
+	0xfafb50 -> Contains the string NRSE, seemingly the game's serial/name of some variety?
+
+I think D_8010D200 is the beginning of the BSS segment, with a size of 0x47490. But I no long have any idea where in the rom it starts
+	But if the splitter names variables after they're address, why does the BSS start in a place that looks like the middle of RODATA?
+
+
+D_801132C0 is something 0x1000 big
+Passed as arg0 to func_800078E0
+
+func_800078E0 appears to be a byte-fill function, although it appears to only be used to zero out some array(s)
+
+func_8000525C is a free-like function, based on its usage in zlib
+	Calling func_80001C98 is pretty well all it this function does, so that might be the "real" free function
+
+func_8000527C is a calloc-like function, based on its usage in zlib
+	calloc'ing seems really complicated, for some reason
+
+D_80116400 appears to be 0x1800 big, entries are 12(?) bytes big each
+	Very large list of pointers of some variety by the looks of things
+	- In func_8000A8A0, D_8011A470 appears to act as an index
+	- In func_80012FD0, func_80010014, func_8001108C, D_80128C6C appears to act as an index
+	- Passed as a0 to func_8000DE70
+
+func_800045E8
+	D_801108A0 is an OSMesg
+	D_801108C0 is an OSMesgQueue
+	D_80110980 is an OSMesg
+	D_80110990 is an OSMesgQueue
+
+
+STUFF RELATED TO EARLY DMAs
+
+func_80000B20
+	Seemingly has some struct sitting on the stack ~0x78 bytes big (could be as small as 0x6C)
+	This struct seems to be at least partially responsible for some DMA control
+	For example, when the expansion pack screen comes up, that struct has the source, destination, and total size for some DMA sequence
+	0x0010C2D0, 0x800A5130, 0x283F0 <- this is broken up into 0x4000 sized chunks
+	Looks likes its
+		src_addrs[8]
+		dest_addrs[8]
+		sizes[8]
+		transaction_count
+		# After finishing the transactions, do byte-fill (func_800078E0) dest_addr with size zero's
+		dest_addr
+		size
+
+	B00A5D30, 800A5130, 665A0, 1
+	8010B6D0, 1B30
+
+	B010C2D0, 800A5130, 283F0, 1
+	800CD520, 2EC0
+
+	B0137580, 800A5130, 0B810, 1
+	800B0940, 15B0
+
+func_800033A0
+
+
+See:
+https://stackoverflow.com/questions/20680218/why-are-bgezal-bltzal-basic-instructions-and-not-pseudo-instructions-in-mips
+For an explanation of the shenanigans in the code in 9E3CC.s
+
+
+
+There appears to be a table of jump tables, one for each (playable?) craft starting at 0xA6544 with the X-Wing
+They are read (minimally) in AA780.s, func_800B5434
+
+0x10BFC4 is a series of functions, probably one per craft? It could maybe, possibly, be a vtable? (Was this game written in C++?)
+	func_800B5434 is one such entry
+
+
+
+
+
+For reference:
+https://github.com/madler/zlib/blob/v0.8/adler32.c
+func_800269B0 from 275B0.s pretty well has to be the adler32 hash(?) function used by zlib. Which almost certainly means the rest of zlib (at least, some super old version of it) is in the ROM as well.
+No later than v1.0.8, no earlier than v0.99, but also no later than v0.95?
+
+func_800269B0 -> adler32
+func_80026C7C -> inflateInit2_
+func_800276C4 -> inflate_blocks_new <- require no later (maybe?) than v1.08
+	This one seems to have what would be inflate_blocks_reset inline'd into it, which is interesting
+func_80029A68 -> inflate_trees_free <- requires no earlier than v0.99
+
+
+
+
+func_800556A0 and func_80055978
+	Thes functions seem to be responsible for unmasking the text found in one of the _TXT files
+
+	func_80055978 forces the unmasked text to be capitalized, used by the voice_txt file specifically I think
+
+
+
+I'm (mostly) certain that I know which file is the naboo starfighter HMT file. Its `0018e540_koelsch_hmt`.
+Its interesting that its named after the cheat code for the buick, which in the files is called `rmobile`.
+func_8006AFC0 is the function responsible for decrypting the NS HMT file.
+	`050FE09C` is that starting "key" use for decyphering
+	Take a byte of cipher text, save it in a temp for later
+	XOR it with the lowest byte of the current key
+	Then rotate the key right by a byte. After the first byte this produces `9C050FE0`
+	Then add back the saved cipher text byte. After the first byte this produces  `9C05107C`
+
+
+func_80082544 is a table generator for the "reflected" CRC32
+	0xEDB88320 is a number associated with "reflected" CRC calculation (LSB first rather than MSB)
+
+func_800824F8 is the actual CRC32 caculation function
+	Its plausible this is only ever used by the cheat code screen. The code input is crc'd before being used in other places
+	D_800A0ED0 could be a list of CRC32 values for the various cheatcodes?
+
+	Although, its seeded with an unexpected value, 0xFAC5FAC5 (cute choice on their part though)
+	Normally(?) that's seeded to -1, so I don't know what exactly they're doing here
+		Apprently its normal for different CRC32 implementation to have differen seed values
+		Using 0xFAC5FAC5 as the initial value when using Python's `zlib.crc32` does not produce the same values as this function, so I'm misunderstanding something here
+
+	`TOUGHGUY` produces `9A58A558`
+	`HALIFAX?` produces `8FB7A6F2`
+	When you input `!YNGWIE!` as a passcode (second one needed to unlock the naboo starfighter) you get `050FE09C`, the starting key to needed to decompress the NS HMT file.
+
+
+
+** These memory locations may only be valid on the Search for the Nonna mission **
+8010CA30 is some HUD related stuff, not sure what all it entails so far
+Its a struct that is 0x278 bytes big, func_800FD31C seems very invovled in its innerworkings
+At least partway down in it starts smaller structures 0x30 in size
+	8010CA32 is the secondary weapon count
+	8010CA34 might be the secondary weapon maximum/reset amount?
+	8010CA3A is the start of a u16 array 10(?) elements big. Usage unknown, seems to be handled by func_80022790
+	8010CA54 is an f32 that is used to control the alpha found at 8010CA84+3
+
+	8010CA70/8010CA74/(8010CA78?) are f32's that control the screen X/Y/(Z?) location of the larger targeting reticle
+	8010CA7C/8010CA80 are f32's that control the horizontal/vericle scaling factor of the larger targeting reticle
+	8010CA84 is the RGBA color for the larger reticle. The A value is controlled by the f32 found at 8010CA54, although the logic for that control is a little hazy to me
+
+80351644 seems like the beginning of a simlar structure
+80351694 appears to be the beginning of the 0x30 substructure
+
+	803516F4 is related to the ship shadow/health indicator thing in the top left
+	803516718 is its RGBA color
+
+	80351724 is the outline for the ship shadow/health indicator
+	803516748 is its RGBA color
+
+	80351754 is the secondary weapon count display
+	80351778 is its RGBA color
+
+	80351784 is the secondary weapon shape thing
+	803517A8 is its RGBA color
+
+	803517B4 is the ring secondary weapon shape/count
+	803517D8 is its RGBA color
+
+	803517E4 is the radar's outline color
+	80351808 is its RGBA color
+	The some *pointer entry for this one points to a series of 4 u32s. The outline is seemingly cut into 4 parts, with these numbers being futher offset's from the main Y position value for each part
+
+	80351814 is your marker inside the radar
+	80351838 is its RGBA color
+
+struct sub_struct {
+	// Or is it prev then next?
+	/* 0x00 */ struct sub_struct *next;
+	/* 0x04 */ struct sub_struct *prev;
+	// These seem to control whether the UI element is visible or not, somehow
+	/* 0x08 */ u16 ??;
+	/* 0x0A */ u16 ??;
+	/* 0x0C */ u16 *point_to_entry_in_u16_array;
+	/* 0x10 */ some *pointer; usually NULL, but occasionally not
+		// If not NULL, this is usually a set of u16 x/y pairs that act as extra offsets from the main X/Y position for each sub-element of the main thing-to-display
+	/* 0x14 */ u8 ??;
+	/* 0x15 */ u8 ??;
+	/* 0x16 */ u8 ??;
+	/* 0x17 */ u8 ??;
+	/* 0x18 */ f32 xpos;
+	/* 0x1C */ f32 ypos;
+	/* 0x20 */ f32 zpos?; zero, maybe padding
+	/* 0x24 */ f32 width_scale;
+	/* 0x28 */ f32 height_scale;
+	/* 0x2C */ u32 rgba;
+}
+
+80351854 looks like the beginning of a list of colors that are used by some of the hud-elements. The RGBA values mentioned above will reset to these values if you change them. But if you change these values it sticks
+
+D_8011DC58 is a Gfx*, used minimally to set the color of the subtitles in func_800159B4
+	could be gDisplayListHead???
+
+func_80007640 strcopy/sprint?
+
+First demo X-Wing HMT watch locations
+	8062B830
+	8062BC4C
+	801FB5F0 <- Not really important
+	80018F90
+	80022A00
+	80022B90
+
+func_8005645C is definitely responsible for HMT and HOB handling based on the D_8003AD80 and D_8003AD9C format strings (%s_HMT and %s_HOB)
+	The specifics of the handling appear to be in other functions called by this one
+
+	func_80022B90(material_entry *arg0, texture_entry *arg1, ??? arg2)
+		arg2 is always(?) null in the func_8005645C
+
+	func_80022A00(u32 some_count?, material_entry *arg1, texture_entry *arg2)
+
+	func_8001EB24 looks to be really involved with handling the different image types, the switch/case in it is very clearly chaecking 
+
+	func_8007A260 also appears related to it?
+
+
+
+
+func_80001ACC looks an awful lot like a malloc-like function. It apepars to be return a pointer, takes an argument that resembles a size in bytes it wants allocates. And that argument is rounded up to the next largest multiple of 16. I don't get its other argument though, it seems flag-like but who knows what the flags do,
+
+
+func_80003480 is something of a wrapper around the DMA stuff. Not sure what all the extra stuff inside it is doing though
+"func_80003480(void *src, void *dest, u32 size)"
+
+func_80003A0C is something to the effect of "find_manifest_entry(D_80110A80_index, entry_name)"
+
+80130B68 <- Location where the CRC32 hash of the 2nd Naboo Starfighter cheat code goes
+
+
+func_800FB6C0 seems to be the thing that chooses which player craft HMT/HOB is going to get extracted.
+
+func_800047F4
+
+func_800045E8 seems to be the place where all the DMA related arrays and variables get initialized. Probably in prepartion to start DMA'ing from the main data block
+func_80003824
+func_80003638
+func_80003480 is where DMA appears to start, returns the DMA slot in use by that DMA.
+	There's something of a DMA "context" thing going on where there can be 8 different DMA's in action at once
+		Not in parallel of course, the PI can only support one operation at a time.
+	DMA's appear to happen in steps if they're above some size (although I don't know how that size is decided yet)
+
+	s32 D_80111254 Desired DMA amount
+		Whenever DMA's happen the DMA size is initially set to this value and then get's clipped down to the "real" size if necessary
+		Set to 0x400 in func_800045E8
+		Value is set in func_80005938, always rounded up to the next multiple of 16. Old value is returned
+			But the function goes completely unused
+	OSMesg D_801107A0[8] PI Manager message buffer
+	OSMesgQueue D_801107C0; PI Mangaer queue
+	OSIoMesg D_801107E0[8]
+	OSMesg D_801108A0[8], message """buffer""" fore each message queue (only 1 message long though)
+	OSMesgQueue D_801108C0[8], message queue for that slot
+	OSMesg D_80110980
+	OSMesgQueue D_80110990
+	s32 D_801109A8 is the index of the next open slot, I think?
+	s32 D_801109AC seems like it tracks how many DMA "slots" are open, but nothing ever references it so what's the point?
+    u8 *D_801109B0[8], destination addresses (treated as unsigned bytes for pointer arithmetic reasons)
+    s32 D_801109D0[8], "total amount to be DMA'd", set but never referenced
+    u8 *D_801109F0[8], source addresses (treated as unsigned bytes for pointer arithmetic reasons)
+    s32 D_80110A10[8], "amount DMA'd so far"
+    s32 D_80110A30[8], "amount left to DMA"
+    s32 D_80110A50[8], "amount DMA'd this step"
+    u8  D_80110A70 Almost looks like a mutex around the actual OS DMA calls
+    OSMesgueue D_80110BC0[16]
+
+
+Should look at D_80130B10, its somehow related to things like secondary weapon counts.

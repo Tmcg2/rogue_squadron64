@@ -1,0 +1,39 @@
+This is a list of all cheat codes in the game
+There's 1 listed that doesn't exist in game but is listed most places online, probably PC only
+
+Reference rs_crc32 for the CRC calculation and func_80082544 for the CRC table generation
+CRC codes are stored in D_800A0ED0, except !YNGWIE! (see comments)
+
+ROM      | CRC32      | Code     | 80130B58
+---------------------------------------------
+800A0ED0 | 0xaf6fa05c | GAMEFLO! | 0x00000001
+800A0ED4 | 0x63d0142e | KOELSCH- | 0x00000002
+800A0ED8 | 0x393f8bbf | FARMBOY- | 0x00000004
+800A0EDC | 0xb66a9445 | TIEDUP-- | 0x00000008
+800A0EE0 | 0x8fb7a6f2 | HALIFAX? | 0x00000010
+800A0EE4 | 0x2f696225 | BLAMEUS- | 0x00000020
+800A0EE8 | 0x40c19208 | ACE----- | 0x00000040
+800A0EEC | 0x7dd0cc4b | ICHHELD- | 0x00000080
+800A0EF0 | 0xa789b6ed | PSYLOCK- | 0x00000100
+800A0EF4 | 0xc9278ee5 | WUTZI--- | 0x00000200
+800A0EF8 | 0x3ebf0a20 | BERGLOWE | 0x00000400
+800A0EFC | 0xe8a593fa | TIECK--- | 0x00000800
+800A0F00 | 0x80080388 | RUDIBUBI | 0x00001000
+800A0F04 | 0x0dccdf98 | CHIPPIE- | 0x00002000
+800A0F08 | 0x5cae7f9f | TOBIASS- | 0x00004000
+800A0F0C | 0xceb94078 | SIRHISS- | 0x00008000
+800A0F10 | 0x654092d5 | HARDROCK | 0x00010000
+800A0F14 | 0xe999ec85 | THBPILOT | 0x00020000
+800A0F18 | 0x56289944 | FLYDODGE | 0x00040000
+800A0F1C | 0xd842019e | MAESTRO- | 0x00080000
+800A0F20 | 0x0c687bea | DIRECTOR | 0x00100000
+800A0F24 | 0x09b770c0 | CREDITS- | 0x00200000
+800A0F28 | 0xa04a5db4 | IGIVEUP- | 0x00400000
+800A0F2C | 0x81a84cca | RADAR--- | 0x00800000
+800A0F30 | 0x9a58a558 | TOUGHGUY | 0x01000000
+800A0F34 | 0x477ac2fb | CHICKEN- | 0x02000000
+800A0F38 | 0x557e6ad9 | WOMPRAT! | 0x04000000
+800A0F3C | 0x494dac91 | WOISTHAN | 0x08000000
+800A0F40 | 0x3c0ef6f5 | DEADDACK | 0x10000000
+-------- | 0x050fe09c | !YNGWIE! <- Not stored in the cheat table. Rather, this CRC hash is used in a decryption key like manner in func_8006AFC0
+-------- | 0xcd668fa5 | MEAKMAN- <- PC only?
