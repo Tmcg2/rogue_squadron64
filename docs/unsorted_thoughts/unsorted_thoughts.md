@@ -146,15 +146,25 @@ struct D_80130B40_type {
     /* 0x04 */ u8  unk04;
     /* 0x05 */ u8  controllerSetting; // Should really an `enum ControllerSetting` but enums types are bigger than 1 byte
     /* 0x06 */ u8  languageSelect; // Should really an `enum Language` but enums types are bigger than 1 byte
-    /* 0x07 */ u8  unk07;
-    /* 0x08 */ u8  unk08;
-    /* 0x09 */ u8  unk09;
+    /* 0x07 */ char name[3]; // no null terminator
     /* 0x0A */ u8  unk0A;
     /* 0x0B */ u8  unk0B;
     // I suspect these next 4 bytes are really part of a single word
     // It might be a huge bit field?
     /* 0x0C */ u8  unk0C;
+    /*
+    |             7             |                6               |                 5                |           4           |
+    |            ???            |               ???              |                ???               |          ???          |
+    |             3             |                2               |                 1                |           0           |
+    | 1/0, all craft  available | 1/0, TIE interceptor available | 1/0, millennium falcon available | 1/0, advanced shields |
+    */
     /* 0x0D */ u8  unk0D;
+    /*
+    |          7          |               6              |            5           |               4               |
+    | 1/0, advanced bombs | 1/0, seeker cluster missiles |  1/0, seeker torpedos  | 1/0, advanced proton torpedos |
+    |          3          |               2              |            1           |               0               |
+    | 1/0, seeker missles |     1/0, advanced missles    | 1/0, advanced blasters |              ???              |
+    */
     /* 0x0E */ u8  unk0E;
     /*
     |                  7                 |  6   |            5            |            4           |
