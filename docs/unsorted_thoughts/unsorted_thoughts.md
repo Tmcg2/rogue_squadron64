@@ -347,42 +347,4 @@ But when multiple HMT files are loaded, there would need to be way to differenti
 And to the best of my knowledge, that's what those 2 types/arrays are involved with.
 The details are a fuzzy though, needs a lot more investigation.
 
-## Elite Rogue Screen
 
-[func_800BEA00.c](/docs/unsorted_thoughts/func_800BEA00.c) appears to be the primary handler for the "Elite Rogues" menu screen (basically the high score list).
-The named ranks (e.g Tainee, Cadet, Surpeme Alliance Commander) are decided by the "point" score.
-Gold medals are worth 4 points, silvers are worth 2, and bronzes are worth 1 point.
-Every 4 points increases the rank.
-
-The data for the screen is saved at ROM address `0x8013A612` (could be other places too).
-That address is super weird, so it wouldn't surprise me to find out that its part of a larger data structure (its probably some sub-section of the save data...)
-In fact, its almost certainly a hardcoded reference to a specific spot in a block of memory starting at `0x8013A5C0`.
-
-```cpp
-struct EliteRogueData {
-    char name[3]; // really just 3 characters, no null terminator
-    u8 current_level; // should be an enum Level but enum entires are sized too big
-    // Don't know if its a bit field, or if its just a u16 that they pick apart by hand
-    union {
-        u16 as_short;
-        struct {
-            u16 pad     : 1;
-            u16 golds   : 5;
-            u16 silvers : 5;
-            u16 bronzes : 5;
-        } as_bit_field;
-    };
-    u16 accountNumber; // I think?
-}; // size 0x8
-```
-
-Speculatively, [func_8006DCCC.c](/docs/unsorted_thoughts/func_8006DCCC.c) loads the 10 default high scores.
-This would indicate that the names of the default scores start at ROM address `0x8003CB10`.
-Really, the names would be a list of `char*`s.
-You can even find those pointers starting at ROM address `0x800A0A64`.
-
-```cpp
-char *defaultNames[] = {
-    "FLO", "ABC", "ETC",...
-}
-```

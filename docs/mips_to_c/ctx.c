@@ -196,6 +196,8 @@ typedef struct {
     char    game_name[16];
 } OSPfsState;
 
+OSPfs D_80112730[];
+
 s32 osPfsInitPak(OSMesgQueue*, OSPfs*, int);
 s32 osPfsRepairId(OSPfs*);
 s32 osPfsInit(OSMesgQueue*, OSPfs*, int);
@@ -326,8 +328,8 @@ struct sub_struct {
 struct hud_struct {
     /* 0x000 */ u8 unknown000;
     /* 0x001 */ u8 unknown001;
-    /* 0x002 */ u8 unknown002;
-    /* 0x003 */ u8 unknown003;
+    /* 0x002 */ u8 secondaryWeaponCount;
+    /* 0x003 */ u8 secondaryWeaponReset; // Or maybe, secondaryWeaponMax?
     /* 0x004 */ u8 unknown004;
     /* 0x005 */ u8 unknown005;
     /* 0x006 */ u8 unknown006;
@@ -336,10 +338,12 @@ struct hud_struct {
     /* 0x00A */ u16 some_indices[10];
     /* 0x01E */ // u16 compiler_padding;
     /* 0x020 */ u32 unknown020; // could be padding?
-    /* 0x024 */ f32 one;
+    /* 0x024 */ f32 alpha_scaling;
     /* 0x028 */ struct sub_struct hud_elements[10];
     /* 0x208 */ u32 unknown_words208[0x1C];
 }; // size 0x278
+
+struct hud_struct D_8010CA30[2];
 
 struct data_block_header_entry {
     /* 0x00 */ u8 name[16];
@@ -386,8 +390,6 @@ struct D_80110A80_entry {
 struct D_80110A80_entry D_80110A80[4];
 
 struct manifest_entry *find_manifest_entry(u32 idx, u8 *entry_name);
-
-struct hud_struct D_8010CA30;
 
 /*
 Copied from http://www.factor5.com/secrets_rogue_squadron.shtml:
@@ -843,3 +845,28 @@ void func_800457D0(struct hmp_context *hmp_ctx, s32 arg1);
 void func_80049814(void *arg0, struct hmp_context *hmp_ctx);
 void func_80049BBC(void *arg0, struct hmp_context *hmp_ctx);
 void func_80049FB8(void *arg0, struct hmp_context *hmp_ctx);
+
+s32 func_8006F43C(enum PlayerCraft craftType, s32 arg1);
+
+struct EliteRogueData {
+    char name[3]; // really just 3 characters, no null terminator
+    u8 current_level; // should be an enum Level but enum entires are sized too big
+    // Don't know if its a bit field, or if its just a u16 that they pick apart by hand
+    u16 pad     : 1;
+    u16 golds   : 5;
+    u16 silvers : 5;
+    u16 bronzes : 5;
+    // Only has non-zero entries for player accounds, purpose unknown
+    u16 unknown;
+};
+
+struct gamesave_asset {
+    /* 0x00 */ u32 game_code;
+    /* 0x04 */ u32 save_file_size;
+    /* 0x08 */ u32 save_data_size;
+    /* 0x0C */ u16 company_code;
+    /* 0x0E */ u16 data_copy_count;
+    /* 0x10 */ char game_name[16]; // Not 100% certain about this part...
+}; // size 0x20
+
+struct gamesave_asset D_801126C0;
