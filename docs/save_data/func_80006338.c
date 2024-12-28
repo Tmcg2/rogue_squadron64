@@ -85,7 +85,7 @@ s32 func_80006338(s32 arg0, s32 (*arg1)(?)) {
             sp2C = 0x55555555; // ???
             // I bet this is a type-cast, something like `(u16) D_801126C0.save_data_size << 0x10`
             sp28 = (D_801126C0.unkA << 0x10) | D_801126C0.data_copy_count;
-            sp10 = adler32(adler32(0, NULL, 0U, 0x47535953), &sp14, 0x0000000CU);
+            sp10 = adler32(adler32(0, NULL, 0U), &sp14, 0x0000000CU);
             sp20 = adler32(adler32(0, NULL, 0U), &sp24, 0x0000000CU);
 loop_10:
             func_80003284();

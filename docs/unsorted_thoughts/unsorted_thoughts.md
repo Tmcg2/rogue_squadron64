@@ -346,5 +346,3 @@ By that I mean, textures in the HMT file have their own 0 indexed numbers associ
 But when multiple HMT files are loaded, there would need to be way to differentiate the multiple "index 0" textures.
 And to the best of my knowledge, that's what those 2 types/arrays are involved with.
 The details are a fuzzy though, needs a lot more investigation.
-
-
