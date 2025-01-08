@@ -28,6 +28,15 @@ While the USA v1.0 cart doesn't have a language select in any of its menus, you 
 Set its value to whatever you want and then "change screens".
 By this I mean go to the mission select screen (or to the main menu) to trigger the change.
 See [unsorted thoughs](/docs/unsorted_thoughts/unsorted_thoughts.md) for more information about that particular ROM address.
+Alternatively, set the byte at `0x8010FF20` to `1`(`OS_TV_TYPE_NTSC`) to activate a language selection menu in the "Game Settings" menu.
+Note: it has to be `1`, the game (or, at least, the US version) only checks for that specific value.
+
+```cpp
+// from libultra's viint.h 
+#define OS_TV_TYPE_PAL 0
+#define OS_TV_TYPE_NTSC 1
+#define OS_TV_TYPE_MPAL 2
+```
 
 ```cpp
 enum Language {
