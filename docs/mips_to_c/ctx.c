@@ -303,43 +303,45 @@ struct rgba {
     /* 0x03 */ u8 alpha;
 }; // size 0x4
 
-struct sub_struct {
+struct xy_offset {
+    /* 0x0 */ u16 x;
+    /* 0x2 */ u16 y;
+}; // size = 0x4
+
+struct hud_sub_struct {
     // Or is it prev then next?
-    /* 0x00 */ struct sub_struct *next;
-    /* 0x04 */ struct sub_struct *prev;
+    /* 0x00 */ struct hud_sub_struct *next;
+    /* 0x04 */ struct hud_sub_struct *prev;
     // These seem to control whether the UI element is visible or not, somehow
-    /* 0x08 */ u16 unknown08;
+    /* 0x08 */ u16 texture_count;
     /* 0x0A */ u16 unknown0A;
-    /* 0x0C */ u16 *pointer_in_some_indices;
-    /* 0x10 */ void *a_pointer; // usually NULL, but occasionally not
-        // If not NULL, this is usually a set of u16 x/y pairs that act as extra offsets from the main X/Y position for each sub-element of the main thing-to-display
-    /* 0x14 */ u8 unknown14;
-    /* 0x15 */ u8 unknown15;
-    /* 0x16 */ u8 unknown16;
-    /* 0x17 */ u8 unknown17;
+    /* 0x0C */ u16 *texture_id_pointer;
+    /* 0x10 */ struct xy_offset *xy_offset_pointer;
+    /* 0x14 */ u32 flags;
     /* 0x18 */ f32 xpos;
     /* 0x1C */ f32 ypos;
     /* 0x20 */ f32 zero; // zpos?, maybe padding
     /* 0x24 */ f32 width_scale;
     /* 0x28 */ f32 height_scale;
     /* 0x2C */ struct rgba rgba;
-}; // size 0x30
+}; // size = 0x30
 
 struct hud_struct {
-    /* 0x000 */ u8 unknown000;
+    /* 0x000 */ u8 secondaryWeapon;
     /* 0x001 */ u8 unknown001;
     /* 0x002 */ u8 secondaryWeaponCount;
     /* 0x003 */ u8 secondaryWeaponReset; // Or maybe, secondaryWeaponMax?
-    /* 0x004 */ u8 unknown004;
-    /* 0x005 */ u8 unknown005;
+    /* 0x004 */ u8 secondaryWeaponIsAdvanced;
+    /* 0x005 */ u8 crosshairOnOff;
     /* 0x006 */ u8 unknown006;
     /* 0x007 */ u8 unknown007;
     /* 0x008 */ u16 unknown008;
-    /* 0x00A */ u16 some_indices[10];
+    // I think these are indices into D_8011A444;
+    /* 0x00A */ u16 texture_ids[10];
     /* 0x01E */ // u16 compiler_padding;
     /* 0x020 */ u32 unknown020; // could be padding?
     /* 0x024 */ f32 alpha_scaling;
-    /* 0x028 */ struct sub_struct hud_elements[10];
+    /* 0x028 */ struct hud_sub_struct hud_elements[10];
     /* 0x208 */ u32 unknown_words208[0x1C];
 }; // size 0x278
 
@@ -533,7 +535,27 @@ enum PlayerCraft {
 // Default/demo craft per level
 enum PlayerCraft dDefaultCraftForLevel[NUM_LEVELS];
 
-s32 func_800C6728(enum Level arg0, enum PlayerCraft arg1, s32 arg2);
+char *D_80109CB0[];
+
+enum SecondaryWeapon {
+    /* 0x00 */ UNUSED, // not sure what's up with this...
+    /* 0x01 */ ION_CANNON,
+    /* 0x02 */ MISSLES,
+    /* 0x03 */ SEEKER_MISSILES,
+    /* 0x04 */ BOMBS,
+    /* 0x05 */ PROTON_TORPEDOS,
+    /* 0x06 */ TOW_CABLE,
+    /* 0x07 */ CLUSTER_MISSILES,
+    /* 0x08 */ SEEKER_TORPEDOS,
+    /* 0x09 */ SEEKER_CLUSTER_MISSILES,
+    /* 0xFF */ NONE = 0xFF,
+};
+
+u16 D_800A5840[];
+
+enum SecondaryWeapon func_800C6728(enum Level arg0, enum PlayerCraft arg1, s32 arg2);
+s32 func_800C6900(enum Level arg0);
+char *func_800AE530(enum Level arg0, enum PlayerCraft arg1);
 
 struct inner_player_struct {
     /* 0x000 */ void *unk000;
@@ -608,47 +630,64 @@ enum ResolutionSetting {
     NUM_RESOLUTIONS,
 };
 
+struct D_80130B10_type {
+    /* 0x0 */ u8 unk0;
+    /* 0x1 */ u8 unk1;
+    /* 0x2 */ u8 secondaryWeapon;
+    /* 0x3 */ u8 secondaryWeaponMax;
+    /* 0x4 */ u8 unk4;
+    /* 0x5 */ u8 unk5;
+    /* 0x6 */ u8 unk6;
+    /* 0x7 */ u8 unk7;
+}; // size 0x8
+
+struct D_80130B10_type D_80130B10;
+
 struct D_80130B40_type {
     /* 0x00 */ u8  currentLevel; // Should really be an `enum Level` but enums types are bigger than 1 byte
-    /* 0x01 */ u8  vehicleId; // Should really an `enum PlayerCraft` but enums types are bigger than 1 byte
+    /* 0x01 */ u8  vehicleId; // Should really be an `enum PlayerCraft` but enums types are bigger than 1 byte
     /* 0x02 */ u8  unk02;
-    /* 0x03 */ u8  unk03;
+    /* 0x03 */ u8  secondaryWeapon; // Should really be an `enum SecondaryWeapon` but enum types are bigger than 1 byte
     /* 0x04 */ u8  unk04;
     /* 0x05 */ u8  controllerSetting; // Should really an `enum ControllerSetting` but enums types are bigger than 1 byte
     /* 0x06 */ u8  languageSelect; // Should really an `enum Language` but enums types are bigger than 1 byte
-    /* 0x07 */ u8  unk07;
-    /* 0x08 */ u8  unk08;
-    /* 0x09 */ u8  unk09;
+    /* 0x07 */ char name[3]; // no null terminator
     /* 0x0A */ u8  unk0A;
     /* 0x0B */ u8  unk0B;
-    // /* 0x0C */ struct {
-    //     u32 bit1F : 1; u32 bit1E : 1; u32 bit1D : 1; u32 bit1C : 1;
-    //     u32 bit1B : 1; u32 bit1A : 1; u32 bit19 : 1; u32 bit18 : 1;
-    //     u32 bit17 : 1; u32 bit16 : 1; u32 bit15 : 1; u32 bit14 : 1;
-    //     u32 bit13 : 1; u32 bit12 : 1; u32 bit11 : 1; u32 bit10 : 1;
-    //     u32 bit0F : 1; u32 bit0E : 1; u32 bit0D : 1; u32 bit0C : 1;
-    //     u32 bit0B : 1; u32 bit0A : 1; u32 bit09 : 1; u32 bit08 : 1;
-    //     u32 crosshair : 1; u32 bit06 : 1; u32 unfreeCamera : 1; u32 cockpit   : 1;
-    //     u32 displays  : 1; u32 bit02 : 1; u32 autoRoll     : 1; u32 autoLevel : 1;
-    // } settings1;
+    // I suspect these next 4 bytes are really part of a single word
+    // It might be a huge bit field?
     /* 0x0C */ u8  unk0C;
+    /*
+    |             7             |                6               |                 5                |           4           |
+    |            ???            |               ???              |                ???               |          ???          |
+    |             3             |                2               |                 1                |           0           |
+    | 1/0, all craft  available | 1/0, TIE interceptor available | 1/0, millennium falcon available | 1/0, advanced shields |
+    */
     /* 0x0D */ u8  unk0D;
+    /*
+    |          7          |               6              |            5           |               4               |
+    | 1/0, advanced bombs | 1/0, seeker cluster missiles |  1/0, seeker torpedos  | 1/0, advanced proton torpedos |
+    |          3          |               2              |            1           |               0               |
+    | 1/0, seeker missles |     1/0, advanced missles    | 1/0, advanced blasters |              ???              |
+    */
     /* 0x0E */ u8  unk0E;
     /*
-    |           7           | 6 |            5            |          4         |
-    | 1/0, crosshair on/off |   | 1/0, free camera off/on | 1/0 cockpit on/off |
-    |                  3                 | 2 |           1           |            0           |
-    | 1/0 displays (hud elements) on/off |   | 1/0, auto roll on/off | 1/0, auto level on/off |
+    |                  7                 |  6   |            5            |            4           |
+    |       1/0, crosshair on/off        | ???  | 1/0, free camera off/on |   1/0 cockpit on/off   |
+    |                  3                 |  2   |            1            |            0           |
+    | 1/0 displays (hud elements) on/off | ???  |  1/0, auto roll on/off  | 1/0, auto level on/off |
     */
     /* 0x0F */ u8  displaySettings;
+    // I suspect these next 4 bytes are really part of a single word
+    // It might be a huge bit field?
     /* 0x10 */ u8  unk10;
     /* 0x11 */ u8  unk11;
     /* 0x12 */ u8  unk12;
     /*
-    |        7        | 6 |            5             |           4          |
-    | 1/0 mono/stereo |   | 1/0 demo active/inactive | 1/0 subtitles off/on |
-    |          3           |         2         |          1          |              0              |
-    | 0/1 speech un/muted  | 0/1 sfx un/muted  | 0/1 music un/muted  | 1/0, resolution high/normal |
+    |          7           |         6         |            5             |              4              |
+    |    1/0 mono/stereo   |        ???        |    0/1 demo in/active    |     1/0 subtitles off/on    |
+    |          3           |         2         |            1             |              0              |
+    | 0/1 speech un/muted  | 0/1 sfx un/muted  |    0/1 music un/muted    |  1/0 resolution high/normal |
     */
     /* 0x13 */ u8  soundResolutionSettings;
     /* 0x14 */ u8  demoId;
@@ -665,6 +704,9 @@ struct D_80130B40_type {
 }; // size 0x2C
 
 struct D_80130B40_type D_80130B40;
+
+void func_800C5898(struct D_80130B40_type *arg0, s32 arg1, s32 arg2);
+s32 func_800C5D9C(struct D_80130B40_type *arg0, s32 arg1);
 
 struct demoInput {
     /*
@@ -712,7 +754,7 @@ s32 func_800076F8(s8 *arg0, s8 *arg1); // strcmp?
 void zmemcpy(u8 *dest, u8 *src, u32 size);
 
 void func_80001C98(struct manifest_entry*);
-void func_800159B4(struct sub_struct *hud_element, void*);
+void func_800159B4(struct hud_sub_struct *hud_element, void*);
 
 u16 func_8001F954(struct texture_entry *texture, u32 *palte_offset, u16 width, u16 height, u32 *trans_color, char *texture_name_offset);
 s32 func_80022B90(struct material_entry *material, struct texture_entry *texture, u32 arg2);
@@ -846,27 +888,280 @@ void func_80049814(void *arg0, struct hmp_context *hmp_ctx);
 void func_80049BBC(void *arg0, struct hmp_context *hmp_ctx);
 void func_80049FB8(void *arg0, struct hmp_context *hmp_ctx);
 
-s32 func_8006F43C(enum PlayerCraft craftType, s32 arg1);
+s32 func_8006F43C(enum PlayerCraft craftType, enum SecondaryWeapon arg1);
+
+struct account_data {
+    /* 0x00 */ char name[4]; // has a null-terminator (I think?)
+    /* 0x04 */ u32 unk04;
+    /* 0x08 */ u32 unk08;
+    /* 0x0C */ u32 unk0C;
+    /* 0x10 */ u8  accountNumber;
+    /* 0x11 */ u8  padding[3];
+}; // size 0x14
 
 struct EliteRogueData {
     char name[3]; // really just 3 characters, no null terminator
     u8 current_level; // should be an enum Level but enum entires are sized too big
     // Don't know if its a bit field, or if its just a u16 that they pick apart by hand
-    u16 pad     : 1;
-    u16 golds   : 5;
-    u16 silvers : 5;
-    u16 bronzes : 5;
-    // Only has non-zero entries for player accounds, purpose unknown
-    u16 unknown;
-};
+    union {
+        u16 as_short;
+        struct {
+            u16 pad     : 1;
+            u16 golds   : 5;
+            u16 silvers : 5;
+            u16 bronzes : 5;
+        } as_bit_field;
+    };
+    u16 accountNumber; // I think?
+}; // size 0x8
 
-struct gamesave_asset {
-    /* 0x00 */ u32 game_code;
-    /* 0x04 */ u32 save_file_size;
-    /* 0x08 */ u32 save_data_size;
-    /* 0x0C */ u16 company_code;
-    /* 0x0E */ u16 data_copy_count;
-    /* 0x10 */ char game_name[16]; // Not 100% certain about this part...
+struct D_8013A5C0_type {
+    /* 0x00 */ u32 unk00; // struct D_80130B40_type.unk10
+    /* 0x04 */ u32 unk04; // struct D_80130B40_type.unk0C & 0x8B
+    /* 0x08 */ u32 cheatCodeFlags[2];
+    /* 0x10 */ u8  musicVolume;
+    /* 0x11 */ u8  soundFxVolume;
+    /* 0x12 */ u8  speechVolume;
+    /* 0x13 */ u8  controllerSetting;
+    /* 0x14 */ struct account_data accounts[3];
+    /* 0x50 */ u8 unk50; // has a value, unsure of purpose
+    /* 0x51 */ u8 unk51;
+    // This stuff is aligned super weirdly, so being a proper struct may not work, only time will tell
+    /* 0x52 */ struct EliteRogueData highscores[10];
+    /* 0xA0 */ u32 unkA0;
+    /* 0xA4 */ u32 unkA4;
+    /* 0xA8 */ u8  languageSelect;
+    /* 0xA9 */ u8  padding[3]; // maybe?
+    /* 0xAC */ u32 unkAC;
+}; // size 0xB0
+
+struct save_data_body {
+    /* 0x00 */ u32 D_8013A5C0_checksum;
+    /* 0x04 */ u32 unknown_checksum; // checksum of the unk08 section
+    // This looks like a series of pointers(?) but I can't be certain
+    /* 0x08 */ u32 unk08[4];
+    /* 0x18 */ struct D_8013A5C0_type body;
+}; // size 0xC8
+
+struct save_file_header {
+    /* 0x000 */ u32 part1_checksum;
+    /* 0x004 */ u32 part1[3];
+    /* 0x010 */ u32 part2_checksum;
+    /* 0x014 */ u32 part2[3];
 }; // size 0x20
 
+struct save_data {
+    /* 0x000 */ struct save_file_header header;
+    /* 0x020 */ struct save_data_body data[2];
+    /* 0x1B0 */ u32 zeros[0x50]; // The game doesn't use all 256 bytes of the EEPROM, so there's a bunch of unused space at the bottom
+}; // size 0x200
+
 struct gamesave_asset D_801126C0;
+
+struct account_data *func_8006EE5C(s32);
+void func_8006EB48(struct account_data *arg0, s32 arg1);
+
+struct D_800CE730_type {
+    /* 0x00 */ char *screen_title;
+    /* 0x04 */ u8 current_menu;
+    /* 0x05 */ u8 back_menu; // that is, the menu you'll go back to when selecting the "Back" option
+    /* 0x06 */ u16 unk06;
+    /* 0x08 */ char *menu_entries[8];
+    /* 0x28 */ u8 unk28[8]; // sub-type of each menu entry
+    /* 0x30 */ s16 entry_xy_offsets[8][2]; // could maybe be struct, but an array works just as well
+    /* 0x50 */ s16 title_xy_offset[2];
+    /* 0x54 */ f32 entry_size_scaler[8];
+    /* 0x74 */ u32 unk74[8]; // numbers found here have different meanings, dependent on the "sub-type" fount in unk28
+    /* 0x94 */ u8 current_menu_entry;
+    /* 0x95 */ u8 num_menu_entries; // This doesn't alway match the visible menu entries, so there's likely a nuance I'm missing
+    /* 0x96 */ s16 overall_y_offset;
+    /*
+    bit field(?) indicating if the text of a menu entry is non-zero
+    something like:
+    u16 entry15 : 1;
+    u16 entry14 : 1;
+    ...
+    u16 entry1  : 1;
+    u16 entry0  : 1;
+    */
+    /* 0x98 */ u16 active_entries;
+    /* 0x9A */ u16 unk9A;
+    /* 0x9C */ f32 unk9C; // Changes whenever you move to a new menu entry, purpose unknown
+    /* 0xA0 */ f32 highlight_timer;
+    /* 0xA4 */ f32 unkA4;
+    /* 0xA8 */ f32 unkA8;
+    /* 0xAC */ f32 unkAC;
+    /* 0xB0 */ f32 unkB0[8];
+    /* 0xD0 */ f32 unkD0[8];
+    /* 0xF0 */ f32 unkF0[2];
+}; // size = 0xF8
+
+struct D_800CE730_type D_800CE730;
+
+struct D_800CC89C_type {
+    /* 0x00 */ u16 name_text_id;
+    /* 0x02 */ u16 unk02; // padding, maybe?
+    /* 0x04 */ char *image_asset_name;
+    /* 0x08 */ u16 image_width;
+    /* 0x0A */ u16 image_height;
+    /* 0x0C */ u16 image_x_offset;
+    /* 0x0E */ u16 image_y_offset;
+    /* 0x10 */ s16 name_x_offset;
+    /* 0x12 */ u16 biography_text_id;
+    /* 0x14 */ u16 unk14; // x-offset of the indent 
+    /* 0x16 */ u16 unk16; // y-offset of where the biography text stops taking the picture into account
+    /* 0x18 */ u16 unk18[6]; // maximum of 5 real entries with the 6th being `0xFFFF`
+}; // size = 0x24
+
+struct D_800CC89C_type D_800CC89C[7];
+
+struct D_800CC974_type {
+    /* 0x0 */ u16 option1_text_id;
+    /* 0x2 */ u16 option2_text_id;
+    /* 0x4 */ u8  D_80130B40_unk0C_byte;
+    /* 0x5 */ u8  unk5; // padding?
+    /* 0x6 */ u16 D_80130B40_unk0C_bit;
+    /* 0x8 */ u16 unk8;
+    /* 0xA */ u16 unkA;
+}; // size = 0xC
+
+struct D_800CC974_type D_800CC974[7];
+
+struct D_800CCE1C_type {
+    /* 0x0 */ char *song_name;
+    /* 0x4 */ u32 song_id; // name is speculative
+}; // size = 0x8
+
+struct D_800CCE1C_type D_800CCE1C[0x3E];
+
+struct D_800CE730_type *func_800BA0F0(u8 arg0, s32 arg1, s32 arg2);
+s32 func_800BB234(s32 arg0, struct D_800CE730_type *arg1, s32 arg2, s32 arg3, u8 arg4);
+void func_800C4C8C(struct D_800CE730_type *arg0, s32 arg1, s32 arg2);
+
+char D_800CD540[4][0x30];
+
+struct func_800C0084_d84_type {
+    /* 0x00 */ u32 unk00[8];
+    /* 0x20 */ u32 unk20;
+    /* 0x24 */ u32 unk24;
+    /* 0x28 */ u32 unk28;
+    /* 0x2C */ u16 unk2C;
+    /* 0x2E */ u16 unk2E;
+    /* 0x30 */ u16 unk30;
+    /* 0x32 */ u16 unk32;
+    /* 0x34 */ u16 unk34;
+    /* 0x36 */ u16 unk36;
+    /* 0x38 */ u16 unk38;
+    /* 0x3A */ u16 unk3A;
+    /* 0x3C */ u16 unk3C;
+    /* 0x3E */ u16 unk3E;
+    /* 0x40 */ u16 unk40;
+    /* 0x42 */ u16 unk42;
+    /* 0x44 */ u32 unk44;
+}; // size = 0x48
+
+struct func_800C0084_type {
+    /* 0x000 */ u16 hud_texture_ids[0x1E];
+    /* 0x03C */ struct hud_sub_struct hud_elements[9];
+    /* 0x1EC */ u16 hud_xy_offsets[6][2]; // Not sure why there's only 6 of these but 9 hud elements
+    /* 0x204 */ struct rgba hud_element_colors[9];
+    /* 0x22C */ u32 rest01[15];
+    /* 0x264 */ struct hud_sub_struct menu_elements[16];
+    /* 0x564 */ u16 menu_texture_ids[0x12C];
+    /* 0x7BC */ u8  rest02[10];
+    // The alignment of this is pretty bizarre
+    /* 0x7C6 */ u16 menu_element_xy_offsets[0x12C][2];
+    /* 0xC76 */ u8  rest03[2]; // padding, most likely
+    /*
+    Starting here it looks like there's something like a mini-hob. Its related to the dimming effect on the pause screen.
+    The `big_block_o_floats` from the meshdef0 definition is a little small in this case though, only 14 floats instead of 28
+    The meshdef1 is also interesting, in the middle of its `big_block_o_floats` there's a pointer of some kind, so that's probably undersized too
+    */
+    /* 0xC78  u32 mini_hob[0x3C];*/
+    struct {
+        struct {
+            /* 0xC78 */ void *next_meshdef0_pointer;
+            /* 0xC7C */ void *prev_meshdef0_pointer;
+            /* 0xC80 */ void *unknown_meshdef0_pointer0;
+            /* 0xC84 */ void *unknown_meshdef0_pointer1;
+            /* 0xC88 */ void *meshdef1_pointer;
+            /* 0xC8C */ u32 unk14;
+            /* 0xC90 */ u32 unk18;
+            /* 0xC94 */ float big_block_o_floats[9];
+            /* 0xCB8 */ float pos[3];
+        } mini_meshdef0;
+        struct {
+            /* 0xCC4 */ void *next_meshdef1_pointer;
+            /* 0xCC8 */ void *prev_meshdef1_pointer;
+            /* 0xCCC */ u32 unk08;
+            /* 0xCD0 */ u32 unk0C;
+            /* 0xCD4 */ u32 unk10;
+            /* 0xCD8 */ u32 vertex_counts[2];
+            /* 0xCE0 */ float some_float;
+            /* 0xCE4 */ void *facegroup_pointer;
+            /* 0xCE8 */ void *vertext_pointers[2];
+        } mini_meshdef1;
+        /* 0xCF0 */ u32 unk78[12];
+        struct {
+            /* 0xD20 */ void *next_facegroup;
+            /* 0xD24 */ void *prev_facegroup;
+            /* 0xD28 */ void *face_offset;
+            /* 0xD2C */ u32 face_count;
+        } facegroup;
+        struct {
+            /* 0xD30 */ u32 flags;
+            /* struct {
+                u32 extra                     : 2;
+                u32 face_size                 : 6; // multiply by 4 to get the actual size
+                u32 vertex_indices_offset1    : 6; // multiply by 4 to get the actual offset
+                u32 vertex_color_offset       : 6; // multiply by 4 to get the actual offset
+                u32 vertex_indices_offset2    : 6; // multiply by 4 to get the actual offset
+                u32 texture_coordiante_offset : 6; // multiply by 4 to get the actual offset
+            } stuffed_data; */
+            /* 0xD34 */ u32 stuffed_data;
+            /* 0xD38 */ u32 material_index;
+            /* 0xD3C */ u16 vertex_indices[4];
+            /* 0xD44 */ struct rgba vertex_colors;
+        } face;
+        /* 0xD58 */ struct {
+            u16 x;
+            u16 y;
+            u16 z;
+            u16 padding;
+        } vertices[4];
+    } mini_hob;
+    /* 0xD68 */ u16 current_entry;
+    /* 0xD6A */ u8  current_menu;
+    /* 0xD6B */ u8  unkD6B;
+    /* 0xD6C */ u32 unkD6C;
+    /* 0xD70 */ f32 text_highlight_timer;
+    /* 0xD74 */ f32 medal_timer; // a timer related to the medal's back-and-forth rotation
+    /* 0xD78 */ u32 unkD78;
+    /* 0xD7C */ u32 unkD7C;
+    /* 0xD80 */ f32 objective_highlight_countdown; // a countdown to when the objectives should be highlighted, the hilighting uses the same time as the menu selection
+    /* 0xD84 */ struct func_800C0084_d84_type unkD84[7];
+    /* 0xF7C */ u8 unkF7C;
+    /* 0xF7D */ u8 secondaryWeaponType;
+    /* 0xF7E */ u8 secondaryWeaponLevel;
+    /* 0xF7F */ u8 unkF7F;
+}; // size = 0xF80
+
+// This also for D_80109E24, D_80109EEC, and D_80109E68
+struct D_80109DD4_type {
+    /* 0x0 */ u16 flags;
+    /* 0x2 */ u16 unk2;
+    /* 0x4 */ u16 unk4;
+}; // size = 0x6
+
+struct D_80109DD4_type D_80109DD4[];
+struct D_80109DD4_type D_80109E24[];
+struct D_80109DD4_type D_80109E68[];
+struct D_80109DD4_type D_80109EEC[];
+
+u8 D_80109D2C[][4];
+
+void func_80062108(s16 arg0, struct hud_sub_struct *arg1, u8 arg2, u8 *arg3, u16 arg4, u16 arg5);
+void func_800C1D3C(struct func_800C0084_type *arg0, f32 arg1);
+void func_800C298C(void *arg0, struct func_800C0084_type *arg1);
+void func_800BFDC4(struct func_800C0084_type *arg0);
+void func_800BFEA0(struct func_800C0084_d84_type *arg0, void **arg1, s32 arg2);

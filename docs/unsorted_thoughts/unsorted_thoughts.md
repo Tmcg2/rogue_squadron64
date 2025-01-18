@@ -77,6 +77,53 @@ I know at some point I used it to get the wrong craft loaded for one of the demo
 
 [func_800FB6C0.c](/docs/unsorted_thoughts/func_800FB6C0.c) is pretty invovled with the DMA'ing of the HOB/HMT files for the chosen player craft.
 
+`D_80109CB0` is a `char*` array that contains the paths to the `ov_*` assets for each of the playable crafts.
+
+```cpp
+enum SecondaryWeapon {
+    /* 0x00 */ UNUSED, // not sure what's up with this...
+    /* 0x01 */ ION_CANNON,
+    /* 0x02 */ MISSLES,
+    /* 0x03 */ SEEKER_MISSILES,
+    /* 0x04 */ BOMBS,
+    /* 0x05 */ PROTON_TORPEDOS,
+    /* 0x06 */ TOW_CABLE,
+    /* 0x07 */ CLUSTER_MISSILES,
+    /* 0x08 */ SEEKER_TORPEDOS,
+    /* 0x09 */ SEEKER_CLUSTER_MISSILES,
+    /* 0xFF */ NONE = 0xFF,
+};
+
+enum SecondaryWeaponType {
+    /* 0x0 */ MISSLE_TYPE,
+    /* 0x1 */ CLUSTER_MISSLE_TYPE,
+    /* 0x2 */ TORPEDO_TYPE,
+    /* 0x3 */ BOMB_TYPE,
+};
+
+enum SecondaryWeaponLevel {
+    /* 0x0 */ NORMAL_LEVEL,
+    /* 0x1 */ ADVANCED_LEVEL,
+    /* 0x2 */ SEEKER_LEVEL,
+};
+```
+
+There's no specific value for the `Advanced` versions of the secondary weapons in `enum SecondaryWeapon`.
+Instead, there are bits found in the `struct D_80130B40_type` that are set when the advanced type is available and `func_800AE530` uses those bits to decide whether or not to add the word `Advanced` to the displayed string.
+`func_800AE530` is responible for creating the string displayed in the craft selection screen that indicates the craft's secondary weapon.
+`D_800CC6E8` is a byte used as an index into `D_800CD540`, which is an array of `0x30` sized strings.
+I don't know why `D_800CD540` is big enough to hold 4 such strings.
+
+`func_800C6728` is used to find out which secondary weapon is to be used based on player craft, current level, and some bits found in `struct D_80130B40_type`.
+`D_800A5840` is (likely) function specific data that maps `enum SecondaryWeapon` types to their display text ids.
+Its an array of `u16`s.
+
+`func_8006F43C` returns the maximum amount of secondary weapon each craft has.
+`0xFF (-1)` is used to indicate a maximum of "initify" (used for the Ion Cannon).
+
+`D_80109CD4` is a list of `char*` used to select from the different overlay images used for secondary weapons.
+Look for the `ov_2_*` assets.
+
 ## Player Struct
 
 I've identified a block in memory that has lots of player information in it.
@@ -138,11 +185,23 @@ At ROM address `0x80130B40` there is a large struct that seems to track several 
 Things like the current level, chosen player craft, controller setting choice, language choice, volume levels, cheat code flags, and who knows what else.
 
 ```cpp
+// This could be an array, not sure
+struct D_80130B10_type {
+    /* 0x0 */ u8 playerCraft;
+    /* 0x1 */ u8 unk1;
+    /* 0x2 */ u8 secondaryWeapon;
+    /* 0x3 */ u8 secondaryWeaponMax;
+    /* 0x4 */ u8 unk4;
+    /* 0x5 */ u8 unk5;
+    /* 0x6 */ u8 unk6;
+    /* 0x7 */ u8 unk7;
+}; // size 0x8
+
 struct D_80130B40_type {
     /* 0x00 */ u8  currentLevel; // Should really be an `enum Level` but enums types are bigger than 1 byte
-    /* 0x01 */ u8  vehicleId; // Should really an `enum PlayerCraft` but enums types are bigger than 1 byte
+    /* 0x01 */ u8  vehicleId; // Should really be an `enum PlayerCraft` but enums types are bigger than 1 byte
     /* 0x02 */ u8  unk02;
-    /* 0x03 */ u8  unk03;
+    /* 0x03 */ u8  secondaryWeapon; // Should really be an `enum SecondaryWeapon` but enum types are bigger than 1 byte
     /* 0x04 */ u8  unk04;
     /* 0x05 */ u8  controllerSetting; // Should really an `enum ControllerSetting` but enums types are bigger than 1 byte
     /* 0x06 */ u8  languageSelect; // Should really an `enum Language` but enums types are bigger than 1 byte
@@ -255,94 +314,3 @@ Don't know what to make of that.
 
 I also found this repo: https://github.com/AxioDL/amuse
 Don't know if it works or not, just wanted to note it down.
-
-## HUD Stuff
-
-General note about this section: ROM addresses mentioned are likley only valid if you are playing the "Search for the Nonna" mission.
-Its possible they could be valid for other levels, but I wouldn't assume that is the case.
-
-There's a struct at ROM address `0x8010CA30` that seems to be related to how the HUD elements get displayed.
-Its very very big, but the bulk of its size is comprised an array of a another struct type.
-
-```cpp
-struct rgba {
-    /* 0x00 */ u8 red;
-    /* 0x01 */ u8 green;
-    /* 0x02 */ u8 blue;
-    /* 0x03 */ u8 alpha;
-}; // size 0x4
-
-struct sub_struct {
-    // Or is it prev then next?
-    /* 0x00 */ struct sub_struct *next;
-    /* 0x04 */ struct sub_struct *prev;
-    // These seem to control whether the UI element is visible or not, somehow
-    /* 0x08 */ u16 unknown08;
-    /* 0x0A */ u16 unknown0A;
-    /* 0x0C */ u16 *pointer_in_some_indices;
-    /* 0x10 */ void *a_pointer; // usually NULL, but occasionally not
-        // If not NULL, this is usually a set of u16 x/y pairs that act as extra offsets from the main X/Y position for each sub-element of the main thing-to-display
-    /* 0x14 */ u8 unknown14;
-    /* 0x15 */ u8 unknown15;
-    /* 0x16 */ u8 unknown16;
-    /* 0x17 */ u8 unknown17;
-    /* 0x18 */ f32 xpos;
-    /* 0x1C */ f32 ypos;
-    /* 0x20 */ f32 zero; // zpos?, maybe padding
-    /* 0x24 */ f32 width_scale;
-    /* 0x28 */ f32 height_scale;
-    /* 0x2C */ struct rgba rgba;
-}; // size 0x30
-
-struct hud_struct {
-    /* 0x000 */ u8 unknown000;
-    /* 0x001 */ u8 unknown001;
-    /* 0x002 */ u8 secondaryWeaponCount;
-    /* 0x003 */ u8 secondaryWeaponReset; // Or maybe, secondaryWeaponMax?
-    /* 0x004 */ u8 unknown004;
-    /* 0x005 */ u8 unknown005;
-    /* 0x006 */ u8 unknown006;
-    /* 0x007 */ u8 unknown007;
-    /* 0x008 */ u16 unknown008;
-    // I think these are indices into D_8011A444;
-    /* 0x00A */ u16 some_indices[10];
-    /* 0x01E */ // u16 compiler_padding;
-    /* 0x020 */ u32 unknown020; // could be padding?
-    /* 0x024 */ f32 alpha_scaling;
-    /* 0x028 */ struct sub_struct hud_elements[10];
-    /* 0x208 */ u32 unknown_words208[0x1C];
-}; // size 0x278
-
-struct hud_struct D_8010CA30[2];
-
-struct D_80128F08_type {
-    /* 0x00 */ u8  unk00;
-    /* 0x01 */ u8  unk01;
-    /* 0x02 */ u8  unk02;
-    /* 0x03 */ u8  unk03;
-    /* 0x04 */ u32 unk04;
-    /* 0x08 */ u16 width;
-    /* 0x0A */ u16 height;
-    /* 0x0C */ u16 texture_size;
-    /* 0x0E */ u16 unk0E;
-    /* 0x10 */ void *texture_data; // u8*?
-    /* 0x14 */ u8 texture_name[16];
-}; // size 0x24
-
-struct D_8011A444_entry {
-    /* 0x0 */ u16 material_type;
-    /* 0x2 */ u16 D_80128F08_index;
-}; // size 0x4
-
-struct D_80128F08_type *D_80128F08;
-struct D_8011A444_entry *D_8011A444;
-```
-
-`D_8010CA30` gets referenced alot in the `0xFCA20` code segment, so that would be the best place to start investigating how it works.
-
-I don't fully understand `D_80128F08_type` and `D_8011A444_entry` at this time.
-They seem related to how textures from the [HMT files](/docs/hmt_files/hmt_files.md) get mapped on loading.
-By that I mean, textures in the HMT file have their own 0 indexed numbers associated with them.
-But when multiple HMT files are loaded, there would need to be way to differentiate the multiple "index 0" textures.
-And to the best of my knowledge, that's what those 2 types/arrays are involved with.
-The details are a fuzzy though, needs a lot more investigation.
