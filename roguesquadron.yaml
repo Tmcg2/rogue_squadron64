@@ -57,6 +57,7 @@ segments:
     type: code
     start: 0x40
     vram: 0xA4000040
+    exclusive_ram_id: "boot"
     subsegments:
       - [0x40, hasm, ipl3_entry]
       - [0xB70, bin, ipl3_font]
@@ -65,6 +66,7 @@ segments:
     type: code
     start: 0x1000
     vram: 0x80000400
+    exclusive_ram_id: "entry"
     subsegments:
       - [0x1000, hasm, entry_point]
 
@@ -73,6 +75,7 @@ segments:
     start: 0x01040
     vram: 0x80000440
     bss_size: 0x47490
+    exclusive_ram_id: "main"
     follows_vram: entry
     subsegments:
       - [0x01040, rodata] # Part of rodata for main?
@@ -80,7 +83,7 @@ segments:
       - [0x01100, rodata]
       - [0x01120, rodata]
       - [0x013D0, rodata]
-      - [0x01670, rodata, "zlib"]
+      - [0x01670, .rodata, "zlib"]
       - [0x01720, asm] # main code, part of it at least
       - [0x25620, asm]
       - [0x275B0, c,      "zlib"]
@@ -213,35 +216,35 @@ segments:
       - [0x383C0, data]
       - [0x383D0, data]
       - [0x394E0, data]
-      - [0x39A00, data,   "zlib"]
-      - [0x39CC0, data,   "libultra/io/aisetnextbuf"]
-      - [0x39CD0, data,   "libultra/io/controller"]
-      - [0x39CE0, data,   "libultra/os/exceptasm"]
-      - [0x39D00, data,   "libultra/os/initialize"]
-      - [0x39D20, data,   "libultra/io/motor"]
-      - [0x39D30, data,   "libultra/io/pimgr"]
-      - [0x39D60, data,   "libultra/io/piacs"]
-      - [0x39D70, data,   "libultra/io/siacs"]
-      - [0x39D80, data,   "libultra/os/thread"]
-      - [0x39DA0, data,   "libultra/os/timerintr"]
-      - [0x39DB0, data,   "libultra/io/vi"]
-      - [0x39E20, data,   "libultra/io/vimgr"]
-      - [0x39E40, data,   "libultra/vimodes/vimodempallan1"]
-      - [0x39E90, data,   "libultra/vimodes/vimodentsclan1"]
-      - [0x39EE0, data,   "libultra/vimodes/vimodepallan1"]
+      - [0x39A00, .data,   "zlib"]
+      - [0x39CC0, .data,   "libultra/io/aisetnextbuf"]
+      - [0x39CD0, .data,   "libultra/io/controller"]
+      - [0x39CE0, .data,   "libultra/os/exceptasm"]
+      - [0x39D00, .data,   "libultra/os/initialize"]
+      - [0x39D20, .data,   "libultra/io/motor"]
+      - [0x39D30, .data,   "libultra/io/pimgr"]
+      - [0x39D60, .data,   "libultra/io/piacs"]
+      - [0x39D70, .data,   "libultra/io/siacs"]
+      - [0x39D80, .data,   "libultra/os/thread"]
+      - [0x39DA0, .data,   "libultra/os/timerintr"]
+      - [0x39DB0, .data,   "libultra/io/vi"]
+      - [0x39E20, .data,   "libultra/io/vimgr"]
+      - [0x39E40, .data,   "libultra/vimodes/vimodempallan1"]
+      - [0x39E90, .data,   "libultra/vimodes/vimodentsclan1"]
+      - [0x39EE0, .data,   "libultra/vimodes/vimodepallan1"]
       # Based on missing entries from this table we're using a libultra version < J
-      - [0x39F30, data,   "libultra/io/vitbl"]
-      - [0x3AC50, data,   "libultra/libc/xprintf"]
-      - [0x3ACA0, data,   "libultra/libc/xlitob"]
-      - [0x3ACD0, rodata, "libultra/gu/cosf"]
-      - [0x3AD20, rodata, "libultra/os/exceptasm"]
-      - [0x3AD70, rodata, "libultra/gu/libm_vals"]
-      - [0x3AD80, rodata, "libultra/gu/perspective"]
-      - [0x3AD90, rodata, "libultra/io/devmgr"]
-      - [0x3ADB0, rodata, "libultra/os/setintmask"]
-      - [0x3AE30, rodata, "libultra/gu/sinf"]
-      - [0x3AE80, rodata, "libultra/libc/xprintf"]
-      - [0x3AF80, rodata, "libultra/libc/xldtob"]
+      - [0x39F30, .data,   "libultra/io/vitbl"]
+      - [0x3AC50, .data,   "libultra/libc/xprintf"]
+      - [0x3ACA0, .data,   "libultra/libc/xlitob"]
+      - [0x3ACD0, .rodata, "libultra/gu/cosf"]
+      - [0x3AD20, .rodata, "libultra/os/exceptasm"]
+      - [0x3AD70, .rodata, "libultra/gu/libm_vals"]
+      - [0x3AD80, .rodata, "libultra/gu/perspective"]
+      - [0x3AD90, .rodata, "libultra/io/devmgr"]
+      - [0x3ADB0, .rodata, "libultra/os/setintmask"]
+      - [0x3AE30, .rodata, "libultra/gu/sinf"]
+      - [0x3AE80, .rodata, "libultra/libc/xprintf"]
+      - [0x3AF80, .rodata, "libultra/libc/xldtob"]
       - [0x3AFE0, rodata]
       - [0x3B240, rodata]
       - [0x3B4D0, rodata]
@@ -273,74 +276,76 @@ segments:
       # - [0xC6860, asm]
       # - [0xF3E90, asm]
       - { start: auto, type: bss, vram: 0x8010D200, name: "1720.s" }
-      - { start: auto, type: bss, vram: 0x8012BF30, name: "zlib" }
-      - { start: auto, type: bss, vram: 0x8012CFD0, name: "libultra/io/conteepread" }
-      - { start: auto, type: bss, vram: 0x8012D010, name: "libultra/io/controller" }
-      - { start: auto, type: bss, vram: 0x8012D0A0, name: "libultra/os/initialize" }
-      - { start: auto, type: bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver" } # Contains __osThreadSave, only used in exceptasm.s
-      - { start: auto, type: bss, vram: 0x8012D260, name: "libultra/io/leointerrupt" }
-      - { start: auto, type: bss, vram: 0x8012E260, name: "libultra/io/leodiskinit" }
-      - { start: auto, type: bss, vram: 0x8012E2E0, name: "libultra/io/motor" }
-      - { start: auto, type: bss, vram: 0x8012E520, name: "libultra/io/pfsisplug" }
-      - { start: auto, type: bss, vram: 0x8012E560, name: "libultra/io/pimgr" }
-      - { start: auto, type: bss, vram: 0x8012F730, name: "libultra/io/cartrominit" }
-      - { start: auto, type: bss, vram: 0x8012F7B0, name: "libultra/io/piacs" }
-      - { start: auto, type: bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg" }
-      - { start: auto, type: bss, vram: 0x8012F850, name: "libultra/io/siacs" }
-      - { start: auto, type: bss, vram: 0x8012F870, name: "libultra/io/sptask" }
-      - { start: auto, type: bss, vram: 0x8012F8B0, name: "libultra/os/timerintr" }
-      - { start: auto, type: bss, vram: 0x8012F8F0, name: "libultra/io/vimgr" }
+      - { start: auto, type: .bss, vram: 0x8012BF30, name: "zlib" }
+      - { start: auto, type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread" }
+      - { start: auto, type: .bss, vram: 0x8012D010, name: "libultra/io/controller" }
+      - { start: auto, type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize" }
+      - { start: auto, type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver" } # Contains __osThreadSave, only used in exceptasm.s
+      - { start: auto, type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt" }
+      - { start: auto, type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit" }
+      - { start: auto, type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor" }
+      - { start: auto, type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug" }
+      - { start: auto, type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr" }
+      - { start: auto, type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit" }
+      - { start: auto, type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs" }
+      - { start: auto, type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg" }
+      - { start: auto, type: .bss, vram: 0x8012F850, name: "libultra/io/siacs" }
+      - { start: auto, type: .bss, vram: 0x8012F870, name: "libultra/io/sptask" }
+      - { start: auto, type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr" }
+      - { start: auto, type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr" }
       - { start: auto, type: bss, vram: 0x80130B10, name: "125910.s" }
 
-  - name: dsegment
+  - name: mission_overlay
     type: code
     start: 0x000A5D30
     vram: 0x800A5130
     bss_size: 0x1B30
-    exclusive_ram_id: "tyler"
+    exclusive_ram_id: "mission_overlay"
     subsegments:
       - [0x000A5D30, rodata]
       - [0x000AA780, asm]
       - [0x000FCA14, rodata]
       - [0x000FCA20, asm]
       - [0x0010A240, rodata]
+      - { start: auto, type: bss, vram: 0x8010B6D0 }
 
-  - name: bsegment
+  - name: menu_overlay
     type: code
     start: 0x10C2D0
     vram: 0x800A5130
     bss_size: 0x2EC0
-    exclusive_ram_id: "tyler"
+    exclusive_ram_id: "menu_overlay"
     subsegments:
       - [0x10C2D0, rodata]
       - [0x110410, asm]
       - [0x133574, rodata]
+      - { start: auto, type: bss, vram: 0x800CD520 }
 
-  - name: esegment
+  - name: unknown_segment
     type: code
     start: 0x1346C0
-    vram: 0x800A5130
-    exclusive_ram_id: "tyler"
+    vram: 0x800A5130 # This is highly suspect...
+    exclusive_ram_id: "unknown_segment"
     subsegments:
       - [0x1346C0, rodata]
 
-  - name: csegment
+  - name: cinematic_overlay
     type: code
     start: 0x137580
     vram: 0x800A5130
     bss_size: 0x15B0
-    exclusive_ram_id: "tyler"
+    exclusive_ram_id: "cinematic_overlay"
     subsegments:
       - [0x137580, rodata]
       - [0x1381D0, asm]
       - [0x141AF8, rodata]
+      - { start: auto, type: bss, vram: 0x800B0940 }
 
 
   - type: bin
     start: 0x142D90 # In reality this is likely a mix of binary data and regular (ro)data
-    follows_vram: main
 
-  - name: big_data_block
+  - name: the_data_blob
     type: bin
     start: 0x144340
 

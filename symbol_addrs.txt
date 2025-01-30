@@ -158,24 +158,6 @@ fbit = 0x8003A28C; // type:s32
 // Static const varaible in xldtob
 pows = 0x8003A380; // type:f64 size:0x48
 
-D_80000440 = 0x80000440; // type:asciz
-D_80000474 = 0x80000474; // type:asciz
-D_800007D0 = 0x800007D0; // type:asciz
-D_80000988 = 0x80000988; // type:asciz
-D_800009F4 = 0x800009F4; // type:asciz
-D_80000A00 = 0x80000A00; // type:asciz
-D_80000A60 = 0x80000A60; // type:asciz
-D_80000AA8 = 0x80000AA8; // type:asciz
-D_80000AD8 = 0x80000AD8; // type:asciz
-
-D_800A5140 = 0x800A5140; // type:asciz segment:bsegment
-D_800A5E08 = 0x800A5E08; // type:asciz segment:dsegment size:0x14
-D_800A6638 = 0x800A6638; // type:asciz segment:dsegment
-jtbl_800A54B0 = 0x800A54B0; // type:jtbl segment:dsegment
-jtbl_800A5788 = 0x800A5788; // type:jtbl segment:dsegment size:0x24
-jtbl_800A57C0 = 0x800A57C0; // type:jtbl segment:dsegment
-jtbl_800A5AE0 = 0x800A5AE0; // type:jtbl segment:dsegment
-
 D_80137DB8 = 0x80137DB8; // size:0x2A0
 
 // Unknown type
@@ -186,6 +168,65 @@ gCheatCodeCrc32Table = 0x800A0ED0; // type:u32 size:0x74
 gCurrentLevel = 0x80130B70; // type:u32 size:0x4
 
 dDefaultCraftForLevel = 0x8009EC50; // type:u32 size:0x4C
+
+D_80130B40 = 0x80130B40; // size:0x2C
+
+D_80109CB0 = 0x80109CB0; // type:char* size:0x24
+
+D_800007D0 = 0x800007D0; // type:asciz segment:main
+D_800009F8 = 0x800009F8; // type:asciz segment:main
+D_80000A3C = 0x80000A3C; // type:asciz segment:main
+D_8003A8C0 = 0x8003A8C0; // type:asciz segment:main
+D_8003AF60 = 0x8003AF60; // type:asciz segment:main
+D_8003B404 = 0x8003B404; // type:asciz segment:main
+D_8003B488 = 0x8003B488; // type:asciz segment:main
+D_8003B4DC = 0x8003B4DC; // type:asciz segment:main
+D_8003B514 = 0x8003B514; // type:asciz segment:main
+D_8003B588 = 0x8003B588; // type:asciz segment:main
+D_8003B5D4 = 0x8003B5D4; // type:asciz segment:main
+D_8003B618 = 0x8003B618; // type:asciz segment:main
+D_8003B65C = 0x8003B65C; // type:asciz segment:main
+D_8003B7DC = 0x8003B7DC; // type:asciz segment:main
+D_8003C2E0 = 0x8003C2E0; // type:asciz segment:main
+D_8003C790 = 0x8003C790; // type:asciz segment:main
+D_8003C9B0 = 0x8003C9B0; // type:asciz segment:main
+D_8003CB10 = 0x8003CB10; // type:asciz segment:main
+D_8003CBCC = 0x8003CBCC; // type:asciz segment:main
+D_8003CCD4 = 0x8003CCD4; // type:asciz segment:main
+D_8003D624 = 0x8003D624; // type:asciz segment:main
+D_8003D63C = 0x8003D63C; // type:asciz segment:main
+
+D_800A5140 = 0x800A5140; // type:asciz segment:menu_overlay allow_duplicated:True
+D_800A5150 = 0x800A5150; // type:asciz segment:menu_overlay
+D_800A5B14 = 0x800A5B14; // type:asciz segment:menu_overlay
+D_800A5C50 = 0x800A5C50; // type:asciz segment:menu_overlay
+D_800A5CC8 = 0x800A5CC8; // type:asciz segment:menu_overlay
+D_800A5CEC = 0x800A5CEC; // type:asciz segment:menu_overlay
+D_800A5D38 = 0x800A5D38; // type:asciz segment:menu_overlay
+D_800A5DD0 = 0x800A5DD0; // type:asciz segment:menu_overlay
+D_800A5FD8 = 0x800A5FD8; // type:asciz segment:menu_overlay
+D_800A762C = 0x800A762C; // type:asciz segment:menu_overlay
+
+D_800A5820 = 0x800A5820; // type:asciz segment:mission_overlay
+D_800A5990 = 0x800A5990; // type:asciz segment:mission_overlay
+D_800A5B20 = 0x800A5B20; // type:asciz segment:mission_overlay
+D_800A5C20 = 0x800A5C20; // type:asciz segment:mission_overlay
+D_800A5E00 = 0x800A5E00; // type:asciz segment:mission_overlay
+D_800A5FE0 = 0x800A5FE0; // type:asciz segment:mission_overlay
+D_800A60D0 = 0x800A60D0; // type:asciz segment:mission_overlay
+D_800A61E0 = 0x800A61E0; // type:asciz segment:mission_overlay
+D_800A6250 = 0x800A6250; // type:asciz segment:mission_overlay
+D_800A6880 = 0x800A6880; // type:asciz segment:mission_overlay
+D_800A6D10 = 0x800A6D10; // type:asciz segment:mission_overlay
+D_800A7DE0 = 0x800A7DE0; // type:asciz segment:mission_overlay
+D_800A8290 = 0x800A8290; // type:asciz segment:mission_overlay
+
+D_800A5140 = 0x800A5140; // type:asciz segment:cinematic_overlay allow_duplicated:True
+D_800A517C = 0x800A517C; // type:asciz segment:cinematic_overlay
+D_800A5300 = 0x800A5300; // type:asciz segment:cinematic_overlay
+D_800A5984 = 0x800A5984; // type:asciz segment:cinematic_overlay
+D_800A5994 = 0x800A5994; // type:asciz segment:cinematic_overlay
+D_800A59A4 = 0x800A59A4; // type:asciz segment:cinematic_overlay
 
 //////// Functions ////////
 
@@ -416,8 +457,7 @@ getControllerSettingsTitle = 0x800C49BC; // type:func
 
 // Appears to be some sort of memory zero'ing function? 
 // Handwritten (uses `cache` intstruction), directly below entry_point in memory
-// Might be responsible for zero'ing out BSS? If that guess is right, D_8010D200 is the start of
-// BSS
+// Might be responsible for zero'ing out BSS? If that guess is right, D_8010D200 is the start of BSS
 func_8000040C = 0x8000040C; // type:func
 
 // Jumped to by entry_point
