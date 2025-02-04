@@ -31,7 +31,13 @@ options:
   # auto_all_sections: [".data", ".rodata", ".bss"]
 
   symbol_addrs_path:
-    - symbol_addrs.txt
+    - symbol_files/cinematic_overlay.txt
+    - symbol_files/libultra.txt
+    - symbol_files/main_overlay.txt
+    - symbol_files/menu_overlay.txt
+    - symbol_files/mission_overlay.txt
+    - symbol_files/symbol_addrs.txt
+    - symbol_files/zlib.txt
   reloc_addrs_path:
     - reloc_addrs.txt
 
@@ -85,6 +91,8 @@ segments:
       - [0x013D0, rodata]
       - [0x01670, .rodata, "zlib"]
       - [0x01720, asm] # main code, part of it at least
+      - [0x192D8, rodata]
+      - [0x19314, asm]
       - [0x25620, asm]
       - [0x275B0, c,      "zlib"]
       # Based on some stuff in the Ai functions, we're on a libultra version < J
@@ -269,12 +277,7 @@ segments:
       # They're being used as branch targets purely as a way to shove the program counter into $ra
       - [0x9E3CC, asm]
       - [0x9E744, asm]
-      # - [0x9E898, asm]
       - [0x9E9D0, rodata]
-      # - [0xAA780, asm]
-      # - [0xBAFF0, asm]
-      # - [0xC6860, asm]
-      # - [0xF3E90, asm]
       - { start: auto, type: bss, vram: 0x8010D200, name: "1720.s" }
       - { start: auto, type: .bss, vram: 0x8012BF30, name: "zlib" }
       - { start: auto, type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread" }
@@ -306,6 +309,8 @@ segments:
       - [0x000AA780, asm]
       - [0x000FCA14, rodata]
       - [0x000FCA20, asm]
+      - [0x000FFB04, rodata]
+      - [0x000FFB10, asm]
       - [0x0010A240, rodata]
       - { start: auto, type: bss, vram: 0x8010B6D0 }
 

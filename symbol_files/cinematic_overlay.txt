@@ -1,0 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Strings ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+D_800A5140 = 0x800A5140; // type:asciz segment:cinematic_overlay allow_duplicated:True
+D_800A5148 = 0x800A5148; // type:asciz segment:cinematic_overlay
+D_800A5150 = 0x800A5150; // type:asciz segment:cinematic_overlay
+D_800A517C = 0x800A517C; // type:asciz segment:cinematic_overlay
+D_800A5300 = 0x800A5300; // type:asciz segment:cinematic_overlay
+D_800A5304 = 0x800A5304; // type:asciz segment:cinematic_overlay
+D_800A5308 = 0x800A5308; // type:asciz segment:cinematic_overlay
+D_800A530C = 0x800A530C; // type:asciz segment:cinematic_overlay
+D_800A5984 = 0x800A5984; // type:asciz segment:cinematic_overlay
+D_800A5994 = 0x800A5994; // type:asciz segment:cinematic_overlay
+D_800A59A4 = 0x800A59A4; // type:asciz segment:cinematic_overlay
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Functions ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////

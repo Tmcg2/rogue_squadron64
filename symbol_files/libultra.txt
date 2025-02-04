@@ -1,0 +1,348 @@
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Functions ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+bcmp = 0x80029F60; // type:func segment:main
+bcopy = 0x80034010; // type:func segment:main
+bzero = 0x8002A080; // type:func segment:main
+corrupted = 0x800315B8; // type:func segment:main
+corrupted_init = 0x80031404; // type:func segment:main
+cosf = 0x8002B190; // type:func segment:main
+sinf = 0x80033960; // type:func segment:main
+memcpy = 0x800346F0; // type:func segment:main
+proutSprintf = 0x80033CA0; // type:func segment:main
+sprintf = 0x80033CC4; // type:func segment:main
+strlen = 0x8003471C; // type:func segment:main
+strchr = 0x80034744; // type:func segment:main
+_Printf = 0x80035FD0; // type:func segment:main
+_Putfld = 0x80035960; // type:func segment:main
+// There should be _Ldunscale somehwere near here, but
+// I our version of libultra I guess its inlined/not a separate function?
+_Genld = 0x80036620; // type:func segment:main
+viMgrMain = 0x80034F38; // type:func segment:main
+
+_Ldtob = 0x80036B90; // type:func segment:main
+_Litob = 0x80037270; // type:func segment:main
+_MakeMotorData = 0x8002D710; // type:func
+
+guMtxCatL      = 0x8002E410; // type:func segment:main
+guMtxCatF      = 0x8002E510; // type:func segment:main
+guMtxF2L       = 0x8002E680; // type:func segment:main
+guMtxIdent     = 0x8002E808; // type:func segment:main
+guMtxIdentF    = 0x8002E780; // type:func segment:main
+guMtxL2F       = 0x8002E838; // type:func segment:main
+guMtxXFMF      = 0x8002E470; // type:func segment:main
+guMtxXFML      = 0x8002E3B0; // type:func segment:main
+guPerspective  = 0x8002EB80; // type:func segment:main
+guPerspectiveF = 0x8002E950; // type:func segment:main
+guScale        = 0x800333C4; // type:func segment:main
+guScaleF       = 0x80033370; // type:func segment:main
+
+osAiSetFrequency       = 0x80029D20; // type:func segment:main
+osAiSetNextBuffer      = 0x80029E80; // type:func segment:main
+osCartRomInit          = 0x800326F0; // type:func segment:main
+osContGetQuery         = 0x8002AC04; // type:func segment:main
+osContGetReadData      = 0x8002ACBC; // type:func segment:main
+osContInit             = 0x8002AE50; // type:func segment:main
+osContStartQuery       = 0x8002AB80; // type:func segment:main
+osContStartReadData    = 0x8002AC30; // type:func segment:main
+osCreateMesgQueue      = 0x8002B300; // type:func segment:main
+osCreatePiManager      = 0x80032560; // type:func segment:main
+osCreateThread         = 0x8002B330; // type:func segment:main
+osCreateViManager      = 0x80034DB0; // type:func segment:main
+osDestroyThread        = 0x8002B480; // type:func segment:main
+osDpGetCounters        = 0x8002B590; // type:func segment:main
+osDpSetStatus          = 0x8002B5E0; // type:func segment:main
+osEepromLongRead       = 0x8002A120; // type:func segment:main
+osEepromLongWrite      = 0x8002A1B0; // type:func segment:main
+osEepromProbe          = 0x8002A2A0; // type:func segment:main
+osEepromRead           = 0x8002A340; // type:func segment:main
+osEepromWrite          = 0x8002A660; // type:func segment:main
+osEPiRawStartDma       = 0x8002CD80; // type:func segment:main
+osGetCount             = 0x8002BF90; // type:func segment:main
+osGetThreadPri         = 0x80032FB0; // type:func segment:main
+osGetTime              = 0x8002BF00; // type:func segment:main
+osInitialize           = 0x8002BFA0; // type:func segment:main
+osInvalDCache          = 0x8002C280; // type:func segment:main
+osInvalICache          = 0x8002C330; // type:func segment:main
+osJamMesg              = 0x8002C3B0; // type:func segment:main
+osLeoDiskInit          = 0x8002CFB0; // type:func segment:main
+osMapTLBRdb            = 0x8002D370; // type:func segment:main
+osMotorInit            = 0x8002D88C; // type:func segment:main
+osMotorStart           = 0x8002D570; // type:func segment:main
+osMotorStop            = 0x8002D3D0; // type:func segment:main
+osPfsAllocateFile      = 0x8002EBE0; // type:func segment:main
+osPfsChecker           = 0x80030D40; // type:func segment:main
+osPfsDeleteFile        = 0x800300F0; // type:func segment:main
+osPfsFindFile          = 0x80032260; // type:func segment:main
+osPfsFreeBlocks        = 0x80030710; // type:func segment:main
+osPfsInitPak           = 0x80030AA0; // type:func segment:main
+osPfsIsPlug            = 0x800317A0; // type:func segment:main
+osPfsReadWriteFile     = 0x80031BDC; // type:func segment:main
+osPfsRepairId          = 0x80032000; // type:func segment:main
+osPiGetCmdQueue        = 0x80032530; // type:func segment:main
+osPiRawReadIo          = 0x80033170; // type:func segment:main
+osPiRawStartDma        = 0x80033090; // type:func segment:main
+osPiStartDma           = 0x80032420; // type:func segment:main
+osRecvMesg             = 0x800331D0; //type:func segment:main
+osSendMesg             = 0x80033410; // type:func segment:main
+osSetEventMesg         = 0x80033560; // type:func segment:main
+osSetIntMask           = 0x80033630; // type:func segment:main
+osSetTimer             = 0x800337C0; // type:func segment:main
+osSetThreadPri         = 0x800336E0; // type:func segment:main
+osSpTaskLoad           = 0x80033E3C; // type:func segment:main
+osSpTaskStartGo        = 0x80033FCC; // type:func segment:main
+osSpTaskYield          = 0x80034430; // type:func segment:main
+osSpTaskYielded        = 0x80034450; // type:func segment:main
+osStartThread          = 0x800344E0; // type:func segment:main
+osStopThread           = 0x80034630; // type:func segment:main
+osVirtualToPhysical    = 0x80035120; // type:func segment:main
+osViBlack              = 0x80034BE0; // type:func segment:main
+osViGetCurrentField    = 0x80034D90; // type:func segment:main
+osViSetEvent           = 0x80035260; // type:func segment:main
+osViSetMode            = 0x800352D0; // type:func segment:main
+osViSetSpecialFeatures = 0x80035340; // type:func segment:main
+osViSwapBuffer         = 0x80035500; // type:func segment:main
+osWritebackDCache      = 0x800358B0; // type:func segment:main
+osWritebackDCacheAll   = 0x80035930; // type:func segment:main
+osYieldThread          = 0x80037510; // type:func segment:main
+
+_VirtualToPhysicalTask = 0x80033D20; // type:func segment:main
+
+__osAiDeviceBusy         = 0x80029F30; // type:func segment:main
+__osBlockSum             = 0x80030618; // type:func segment:main
+__osCleanupThread        = 0x8002BEF0; // type:func segment:main
+__osCheckId              = 0x8002FC60; // type:func segment:main
+__osCheckPackId          = 0x8002F86C; // type:func segment:main
+__osClearPage            = 0x8002F2C8; // type:func segment:main
+__osContAddressCrc       = 0x8002E230; // type:func segment:main
+__osContDataCrc          = 0x8002E2E0; // type:func segment:main
+__osContGetInitData      = 0x8002AFC0; // type:func segment:main
+__osContRamRead          = 0x8002DB70; // type:func segment:main
+__osContRamWrite         = 0x8002DED0; // type:func segment:main
+__osDequeueThread        = 0x80034790; // type:func segment:main
+__osDevMgrMain           = 0x800327F0; // type:func segment:main
+__osDisableInt           = 0x8002C240; // type:func segment:main
+__osDispatchThread       = 0x8002BD74; // type:func segment:main
+__osEepStatus            = 0x8002A958; // type:func segment:main
+__osEnqueueAndYield      = 0x8002BC1C; // type:func segment:main
+__osEnqueueThread        = 0x8002BD1C; // type:func segment:main
+__osEPiRawWriteIo        = 0x80032E20; // type:func segment:main
+__osEPiRawReadIo         = 0x80032C80; // type:func segment:main
+__osException            = 0x8002B600; // type:func segment:main
+__osExceptionPreamble    = 0x8002B5F0; // type:func segment:main
+__osGetId                = 0x8002FA04; // type:func segment:main
+__osGetSR                = 0x8002C230; // type:func segment:main
+__osIdCheckSum           = 0x8002F3EC; //type:func segment:main
+__osInsertTimer          = 0x80034A48; // type:func segment:main
+__osLeoAbnormalResume    = 0x8002CBA4; // type:func segment:main
+__osLeoInterrupt         = 0x8002C500; // type:func segment:main
+__osLeoResume            = 0x8002CC8C; // type:func segment:main
+__osPackEepReadData      = 0x8002A55C; // type:func segment:main
+__osPackEepWriteData     = 0x8002A84C; // type:func segment:main
+__osPackRamReadData      = 0x8002DD8C; // type:func segment:main
+__osPackRamWriteData     = 0x8002E0D4; // type:func segment:main
+__osPackReadData         = 0x8002AD64; // type:func segment:main
+__osPackRequestData      = 0x8002B090; // type:func segment:main
+__osPfsDeclarePage       = 0x8002F064; // type:func segment:main
+__osPfsGetInitData       = 0x80031A10; // type:func segment:main
+__osPfsGetNextPage       = 0x80031AE0; // type:func segment:main
+__osPfsGetOneChannelData = 0x80030A04; // type:func segment:main
+__osPfsGetStatus         = 0x80030860; // type:func segment:main
+__osPfsReleasePages      = 0x800303D0; // type:func segment:main
+__osPfsRequestData       = 0x80031940; // type:func segment:main
+__osPfsRequestOneChannel = 0x80030944; // type:func segment:main
+__osPfsRWInode           = 0x8002FD5C; // type:func segment:main
+__osPfsSelectBank        = 0x8003007C; // type:func segment:main
+__osPiCreateAccessQueue  = 0x80032FD0; // type:func segment:main
+__osPiGetAccess          = 0x80033020; // type:func segment:main
+__osPiRelAccess          = 0x80033064; // type:func segment:main
+__osPopThread            = 0x8002BD64; // type:func segment:main
+__osProbeTLB             = 0x800351A0; // type:func segment:main
+__osRepairPackId         = 0x8002F454; // type:func segment:main
+__osResetGlobalIntMask   = 0x80033310; // type:func segment:main
+__osRestoreInt           = 0x8002C260; // type:func segment:main
+__osSetCompare           = 0x80034BD0; // type:func segment:main
+__osSetFpcCsr            = 0x800335D0; // type:func segment:main
+__osSetGlobalIntMask     = 0x800335E0; // type:func segment:main
+__osSetSR                = 0x800336D0; // type:func segment:main
+__osSetTimerIntr         = 0x800349D4; // type:func segment:main
+__osSiCreateAccessQueue  = 0x800338A0; // type:func segment:main
+__osSiDeviceBusy         = 0x80033BD0; // type:func segment:main
+__osSiGetAccess          = 0x800338F0; // type:func segment:main
+__osSiRawReadIo          = 0x80033C00; // type:func segment:main
+__osSiRawStartDma        = 0x80033B20; // type:func segment:main
+__osSiRawWriteIo         = 0x80033C50; // type:func segment:main
+__osSiRelAccess          = 0x80033934; // type:func segment:main
+__osSpDeviceBusy         = 0x80034320; // type:func segment:main
+__osSpGetStatus          = 0x800344D0; // type:func segment:main
+__osSpRawStartDma        = 0x80034350; // type:func segment:main
+__osSpSetPc              = 0x800343E0; // type:func segment:main
+__osSpSetStatus          = 0x80034420; // type:func segment:main
+__osSumcalc              = 0x8002F390; // type:func segment:main
+__osTimerInterrupt       = 0x8003485C; // type:func segment:main
+__osTimerServicesInit    = 0x800347D0; // type:func segment:main
+__osViGetCurrentContext  = 0x80035110; // type:func segment:main
+__osViInit               = 0x80034C50; // type:func segment:main
+__osViSwapContext        = 0x80035550; // type:func segment:main
+
+lldiv = 0x800370E0; // type:func segment:main
+ldiv  = 0x800371E0; // type:func segment:main
+
+__ll_div      = 0x8002D1BC; // type:func segment:main
+__ll_lshift   = 0x8002D154; // type:func segment:main
+__ll_mod      = 0x8002D2A8; // type:func segment:main
+__ll_mul      = 0x8002D218; // type:func segment:main
+__ll_rem      = 0x8002D180; // type:func segment:main
+__ll_rshift   = 0x8002D344; // type:func segment:main
+__ull_div     = 0x8002D118; // type:func segment:main
+__ull_divremi = 0x8002D248; // type:func segment:main
+__ull_rem     = 0x8002D0DC; // type:func segment:main
+__ull_rshift  = 0x8002D0B0; // type:func segment:main
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Varibales ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+__osIntOffTable = 0x8003A120; // type:u8 size:0x20
+
+__motorstartbuf = 0x8012E500; // type:u8 size:0x20 segment:main
+_motorstopbuf   = 0x8012E4E0; // type:u8 size:0x20 segment:main
+_MotorStartData = 0x8012E3E0; // type:OSPifRam size:0x100 segment:main
+_MotorStopData  = 0x8012E2E0; // type:OSPifRam size:0x100 segment:main
+
+__osActiveQueue      = 0x8003918C; // type:OSThread* segment:main
+__osBaseCounter      = 0x8012F8D8; // type:u32 segment:main
+__osBaseTimer        = 0x8012F8B0; // type:OSTimer size:0x20 segment:main
+__osContinitialized  = 0x800390D0; // type:u32 segment:main
+__osContLastCmd      = 0x8012D050; // type:u8 segment:main
+__osContPifRam       = 0x8012D010; // type:OSPifRam size:0x40 segment:main
+__osCurrentHandle    = 0x80039150; // type:OSPiHandle* size:0x8 segment:main
+__osCurrentTime      = 0x8012F8D0; // type:OSTime size:0x8 segment:main
+__osDiskHandle       = 0x8012E2D4; // type:OSPiHandle* size:0x4 segment:main
+__osEepPifRam        = 0x8012CFD0; // type:OSPifRam size:0x40 segment:main
+__osEepromTimer      = 0x8012D058; // type:OSTimer size:0x20 segment:main
+__osEepromTimerQ     = 0x8012D078; // type:OSMesgQueue size:0x18 segment:main
+__osEepromTimerMsg   = 0x8012D090; // type:OSMesg size:0x4 segment:main
+// Should really be __OSEventState, but splat doesn't like that :(
+__osEventStateTab    = 0x8012F7D0; // type:OSEventState size:0x7C segment:main
+__osFaultedThread    = 0x80039194; // type:OSThread* segment:main
+__osFinalrom         = 0x8012D0A0; // type:u32 segment:main
+// volatile u32
+__OSGlobalIntMask    = 0x80039110; // segment:main
+// s32 (*__osHwIntTable[5])(void)
+__osHwIntTable       = 0x800390E0; // type:u32 size:0x14 segment:main
+__osMaxControllers   = 0x8012D051; // type:u8 segment:main
+__osMotorinitialized = 0x80039120; // type:u32 size:0x10 segment:main
+__osPfsPifRam        = 0x8012E520; // type:OSPifRam size:0x40 segment:main
+__osPiDevMgr         = 0x80039130; // type:OSDevMgr size:0x1C segment:main
+__osPiTable          = 0x8003914C; // type:OSPiHandle_s* size:0x4 segment:main
+__osRcpImTable       = 0x8003A1B0; // type:u16 size:0x80 segment:main
+__osRunningThread    = 0x80039190; // type:OSThread* segment:main
+__osRunQueue         = 0x80039188; // type:OSThread* segment:main
+__osShutdown         = 0x8003910C; // type:u32 segment:main
+__osThreadSave       = 0x8012D0B0; // type:OSThread size:0x1B0 segment:main
+__osThreadTail       = 0x80039180; // type:OSThreadTail segment:main
+__osTimerCounter     = 0x8012F8E0; // type:u32 segment:main
+__osTimerList        = 0x800391A0; // type:OSTimer* size:0x4 segment:main
+__osViCurr           = 0x80039210; // type:OSViContext* segment:main
+__osViNext           = 0x80039214; // type:OSViContext* segment:main
+__osViIntrCount      = 0x8012F8DC; // type:u32 segment:main
+// Called `__osViMesgQueue` in MK64
+viEventQueue         = 0x80130AA0; // type:OSMesgQueue size:0x18 segment:main
+
+CartRomHandle = 0x8012F730; // type:OSPiHandle size:0x74 segment:main
+
+// cosf
+P    = 0x8003A0D0; // type:u64 size:40 allow_duplicated:True segment:main
+rpi  = 0x8003A0F8; // type:u64 allow_duplicated:True segment:main
+pihi = 0x8003A100; // type:u64 allow_duplicated:True segment:main
+pilo = 0x8003A108; // type:u64 allow_duplicated:True segment:main
+zero = 0x8003A110; // type:f32 allow_duplicated:True segment:main
+
+// sinf
+P    = 0x8003A230; // type:u64 size:40 allow_duplicated:True segment:main
+rpi  = 0x8003A258; // type:u64 allow_duplicated:True segment:main
+pihi = 0x8003A260; // type:u64 allow_duplicated:True segment:main
+pilo = 0x8003A268; // type:u64 allow_duplicated:True segment:main
+zero = 0x8003A270; // type:f32 allow_duplicated:True segment:main
+
+__libm_qnan_f = 0x8003A170; // type:f32 segment:main
+
+// Static variable in `sptask`
+tmp_task = 0x8012F870; // type:OSTask size:0x40 segment:main
+
+// Static variable in `aisetnextbuf`
+hdwrBugFlag = 0x800390C0; // type:u8 segment:main
+
+__osPiAccessQueueEnabled = 0x80039160; // type:u32 segment:main
+piAccessBuf              = 0x8012F7B0; // type:OSMesg size:0x4 segment:main
+__osPiAccessQueue        = 0x8012F7B8; // type:OSMesgQueue size:0x18 segment:main
+
+__osSiAccessQueueEnabled = 0x80039170; // type:u32 segment:main
+siAccessBuf              = 0x8012F850; // type:OSMesg size:0x4 segment:main
+__osSiAccessQueue        = 0x8012F858; // type:OSMesgQueue size:0x18 segment:main
+
+vi = 0x800391B0; // type:OSViContext size:0x60 segment:main
+
+// s32[]
+osAppNMIBuffer   = 0x8000031C; // type:s32 size:0x40 segment:main
+osClockRate      = 0x80039100; // type:u64 segment:main
+osResetType      = 0x8000030C; // type:s32 segment:main
+osRomBase        = 0x80000308; // type:u32 segment:main
+osTvType         = 0x80000300; // type:u32 segment:main
+osViClock        = 0x80039108; // type:u32 segment:main
+osViModeTable    = 0x80039330; // type:OSViMode[42] size:0xD20 segment:main
+osViModePalLan1  = 0x800392E0; // type:OSViMode size:0x50 segment:main
+osViModeMpalLan1 = 0x80039240; // type:OSViMode size:0x50 segment:main
+osViModeNtscLan1 = 0x80039290; // type:OSViMode size:0x50 segment:main
+
+LeoDiskHandle = 0x8012E260; // type:OSPiHandle size:0x74 segment:main
+leoDiskStack  = 0x8012D260; // type:u8 size:0x1000 segment:main
+piEventQueue  = 0x8012F710; // type:OSMesgQueue size:0x18 segment:main
+piEventBuf    = 0x8012F728; // type:OSMesg size=0x4 segment:main
+piThreadStack = 0x8012E710; // type:char size=0x1000 segment:main
+piThread      = 0x8012E560; // type:OSThread size:0x1B0 segment:main
+viCounterMsg  = 0x80130AE8; // type:OSIoMesg size:0x18 segment:main
+viRetraceMsg  = 0x80130AD0; // type:OSIoMesg size:0x18 segment:main
+__osViDevMgr  = 0x80039220; // type:OSDevMgr size:0x1C segment:main
+viEventBuf    = 0x80130AB8; // type:OSMesg size:0x14 segment:main
+viThreadStack = 0x8012FAA0; // type:u8 size:0x1000 segment:main
+viThread      = 0x8012F8F0; // type:OSThread size:0x1B0 segment:main
+// Static variable in `viMgrMain`
+retrace       = 0x80130B00; // type:u16 segment:main
+
+// Static variables in `xlitob`
+ldigs = 0x8003A0A0; // type:asciz segment:main
+udigs = 0x8003A0B4; // type:asciz segment:main
+
+// Static variables in `xprintf`
+spaces = 0x8003A050; // type:asciz segment:main
+zeroes = 0x8003A074; // type:asciz segment:main
+
+// Static const variables in `_Printf`
+fchar = 0x8003A284; // type:asciz segment:main
+fbit  = 0x8003A28C; // type:s32 segment:main
+
+// Static const varaible in xldtob
+pows = 0x8003A380; // type:f64 size:0x48 segment:main
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// Jump Table Stuff ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+__osIntTable  = 0x8003A140; // type:jtbl segment:main
+jtbl_8003A190 = 0x8003A190; // type:jtbl segment:main
+// _Printf
+jtbl_8003A2A4 = 0x8003A2A4; // type:jtbl segment:main
+
+// __osIntTable
+redispatch = 0x8002BAB8; // type:jtbl_label segment:main
+sw1        = 0x8002BA80; // type:jtbl_label segment:main
+sw2        = 0x8002BA60; // type:jtbl_label segment:main
+rcp        = 0x8002B8C4; // type:jtbl_label segment:main
+cart       = 0x8002B870; // type:jtbl_label segment:main
+prenmi     = 0x8002BA04; // type:jtbl_label segment:main
+IP6_Hdlr   = 0x8002B838; // type:jtbl_label segment:main
+IP7_Hdlr   = 0x8002B844; // type:jtbl_label segment:main
+counter    = 0x8002B850; // type:jtbl_label segment:main
