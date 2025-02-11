@@ -212,10 +212,10 @@ struct D_80130B40_type {
     // It might be a huge bit field?
     /* 0x0C */ u8  unk0C;
     /*
-    |             7             |                6               |                 5                |           4           |
-    |            ???            |               ???              |                ???               |          ???          |
-    |             3             |                2               |                 1                |           0           |
-    | 1/0, all craft  available | 1/0, TIE interceptor available | 1/0, millennium falcon available | 1/0, advanced shields |
+    |             7             |                 6                 |                    5                    |                   4                   |
+    |            ???            | 1/0, Hoth Extra Level en/disabled | 1/0, Death Star Extra Level en/disabled | 1/0, Tatooine Extra Level en/disabled |
+    |             3             |                 2                 |                    1                    |                   0                   |
+    | 1/0, all craft  available |  1/0, TIE interceptor available   |    1/0, millennium falcon available     |         1/0, advanced shields         |
     */
     /* 0x0D */ u8  unk0D;
     /*
@@ -314,3 +314,134 @@ Don't know what to make of that.
 
 I also found this repo: https://github.com/AxioDL/amuse
 Don't know if it works or not, just wanted to note it down.
+
+## Level Selection Screen
+
+`func_800C63C0` returns a word whose bits indicate which ships are available for use in a given level.
+`func_800B19EC` is responsible for printing the weapon/shield text on the level select screen.
+`D_80130B2F` is something like "number of unlocked levels".
+
+## Craft Selection Screen
+
+```cpp
+struct D_800CDA5C_type {
+    /* 0x000 */ u32 unk000[0x9E];
+}; // size = 0x278
+
+struct D_800CDA5C_type *D_800CDA5C;
+```
+
+`func_800A9364` is responsible for `rs_malloc`'ing `D_800CDA5C`.
+`D_800CDA5C` is 0x38 (56) entries long.
+
+`func_800C6234` also returns a word whose bits indicate which ships are available for use in a given level.
+Its very similar to `func_800C63C0`, although they do differ in some small ways.
+`D_800CD6D8` stores those bits.
+
+`func_800A9364` is involved with Craft Selection, for example it's where the on screen text is decided.
+It does a ton of other stuff though, not sure what all is going on in that function.
+
+`D_800CC3F0` is an array of `enum PlayerCraft`s (as `u8`s).
+NOTE: the first entry is `0`, but that is NOT the same as being an X-Wing.
+For reasons unknown `D_800CC404` does not contain a `0` entry.
+
+`D_800CC404` is an intermediate map of some kind.
+Its indexed by bay number and its contents are indexes into `D_800CC3F0`.
+It also appears to contain indexes into `D_800CDA5C`, so this map might be a bay-to-ui-element-index map.
+
+`D_800CC40C` is an array of `enum PlayerCraft`s (as `u8`s).
+Indicates which craft is in which bay in the hangar.
+
+`D_800CC4F8` is an array of `u16` pointers.
+These point to `0xFFFF` terminated lists of `u16` that acts as voice line (or just general audio?) ids.
+Values in `D_800CC404`, chosen by `D_800CD6E8`, decide which pointer to access.
+`func_800AE264` is involved in this somehow.
+
+`func_800CBF60` is responsible for `rs_malloc`ing a struct that is related to those voice lines, although most of the details about that struct are lost on me.
+
+`D_800CD6CD` is a byte, indicates if the Mellinium Falcon is available or not.
+`D_800CD6CE` is a byte, indicates if the TIE Interceptor is available or not.
+`D_800CD6CF` is a byte, indicates if the Naboo Starfighter is available or not.
+
+`D_800CD6D0` is a word whose bits indicate if a given craft is available for use in the currently selected level.
+
+`D_800CD6E4` is a byte, its the value you get if you access `D_800CC404` at `D_800CD6E8`
+
+`D_800CD6E8` is a byte, indicates the current bay being looked at in the hanger
+
+## I don't remember what these are for...
+
+I think these are in-mission related, something to do with the `DAT` files in the [Data Blob](/docs/data_blob/data_blob.md).
+
+```cpp
+struct D_80130BB8_type {
+    /* 0x00 */ u32 unk00[15];
+}; // size = 0x3C
+
+struct D_80130BB8_type *D_80130BB8;
+u32 *D_80130BBC; // not entirely what type this should be, but its only 4 bytes big so u32 will do for now
+```
+
+`func_8003FD54` is responsible for `rs_malloc`'ing `D_80130BB8` and `D_80130BBC`
+`D_80130BB8` and `D_80130BBC` are both 0xC0 (192) entries long.
+
+## Overlay Speculation
+
+I think `func_80000B20` is the high level entry point for getting an overlay loaded.
+I speculate (but can not confirm) that there are 3 overlays:
+
+0) In-mission
+1) Memory Pak message and menus
+2) "Cinematic" scenes (logo screens, pre/post mission cutscenes, demos)
+
+If there are more overlays, I don't know where they are or how to find them.
+
+The main thing `func_80000B20` does is initialize a struct that I guess could be called "overlay dma information".
+`D_800375B0` appears to be something like "currently loaded overlay"
+
+```cpp
+struct overlay_dma {
+    /* 0x00 */ u32 src_addrs[8];
+    /* 0x20 */ u32 dest_addrs[8];
+    /* 0x40 */ u32 dma_size[8];
+    /* 0x60 */ u32 transaction_count;
+    /* 0x64 */ u32 bss_addr;
+    /* 0x68 */ u32 bss_size;
+}; // size = 0x6C
+
+struct overlay_dma overlay0 = {
+    { 0xB00A5D30, 0, 0, 0, 0, 0, 0, 0 },
+    { 0x800A5130, 0, 0, 0, 0, 0, 0, 0 },
+    { 0x665A0, 0, 0, 0, 0, 0, 0, 0 },
+    1,
+    0x8010B6D0,
+    0x1B30
+};
+
+struct overlay_dma overlay1 = {
+    { 0xB010C2D0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0x800A5130, 0, 0, 0, 0, 0, 0, 0 },
+    { 0x283F0, 0, 0, 0, 0, 0, 0, 0 },
+    1,
+    0x800CD520,
+    0x2EC0,
+};
+
+struct overlay_dma overlay2 = {
+    { 0xB0137580, 0, 0, 0, 0, 0, 0, 0 },
+    { 0x800A5130, 0, 0, 0, 0, 0, 0, 0 },
+    { 0xB810, 0, 0, 0, 0, 0, 0, 0 },
+    1,
+    0x800B0940,
+    0x15B0,
+};
+```
+
+Note that these structs aren't real data.
+A single struct of this type exists as a function local variable and has its entries set in a switch-case.
+
+The `bss_*` members are a bit speculative, I don't actually know with certainty that they are for BSS initialization.
+What I do know is that `bss_size` bytes are zero-filled starting at `bss_addr` after the DMA is done.
+Which, to me, looks a lot like BSS initialization.
+
+`func_800033A0` does the actual handling of the struct, which in turn goes 2 or 3 functions deep before the DMA proper occurs

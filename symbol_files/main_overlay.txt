@@ -203,6 +203,7 @@ find_manifest_entry        = 0x80003A0C; // type:func segment:main
 getControllerSettingsTitle = 0x800C49BC; // type:func segment:main
 getGameOrFrontText         = 0x8005589C; // type:func segment:main
 getPlayerHealthPercentage  = 0x800C40AC; // type:func segment:main
+load_hmt_and_hob           = 0x8005645C; // type:func segment:main
 make_crc32_lut             = 0x80082544; // type:func segment:main
 rs_crc32                   = 0x800824F8; // type:func segment:main
 rs_free                    = 0x80001C98; // type:func segment:main

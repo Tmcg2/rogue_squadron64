@@ -11,7 +11,7 @@ struct _m2c_stack_func_800FB6C0 {
 };                                                  /* size = 0xA8 */
 
 u16 func_8003FFEC(? (*)(), f32 *, ?, ?);            /* extern */
-? func_8005645C(s32 *, s32, ?, ?);                  /* extern */
+? load_hmt_and_hob(s32 *, s32, ?, ?);                  /* extern */
 s32 func_80056DA4(? *);                             /* extern */
 ? sprintf(s32 *, ? *, ? *, s32);                    /* extern */
 ? D_800C68A0();                                     /* static */
@@ -56,12 +56,12 @@ void func_800FB6C0(enum PlayerCraft *arg0) {
         D_80137DB8->inner.vehicleId = XWING;
         // imp_stuff/atst_hi
         sprintf(&sp10, &D_800A9030);
-        func_8005645C(&sp10, 0, 0, 0);
+        load_hmt_and_hob(&sp10, 0, 0, 0);
         sp60 = 0.0f;
         func_8003FFEC(D_800D2208, &sp60, 2, 0x64);
         // pl_crafts/%, c_xwng
         sprintf(&sp10, &D_800A9044, D_8010A0FC);
-        func_8005645C(&sp10, 0, 0, 0);
+        load_hmt_and_hob(&sp10, 0, 0, 0);
         D_80137DB8->inner.unk28A = func_8003FFEC(D_800C68A0, &sp60, 4, 0x64);
         return;
     }
@@ -100,7 +100,7 @@ void func_800FB6C0(enum PlayerCraft *arg0) {
                 if (temp_v0_2 == KOELSCH) {
                     var_a2_2 = -0x7FFF;
                 }
-                func_8005645C(&sp10, var_a1, var_a2_2, 0x10000);
+                load_hmt_and_hob(&sp10, var_a1, var_a2_2, 0x10000);
             }
             sp60 = (f32) var_s1;
             func_8003FFEC(*((var_s0->inner.vehicleId * 4) + &D_8010B3C4), &sp60, 4, 0x64);
@@ -108,7 +108,7 @@ void func_800FB6C0(enum PlayerCraft *arg0) {
                 // pl_crafts/%s, c_<craft_shortname>
                 // i.e. c_xwng, c_spdr, c_tie
                 sprintf(&sp10, &D_800A9044, (&D_8010A0FC)[var_s0->inner.vehicleId]);
-                func_8005645C(&sp10, 0, 1, 0x10000);
+                load_hmt_and_hob(&sp10, 0, 1, 0x10000);
             }
             var_s0->inner.unk28A = func_8003FFEC(D_800C68A0, &sp60, 4, 0x64);
         }

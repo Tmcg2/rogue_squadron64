@@ -11,6 +11,7 @@ struct item_list {
     uint32_t offset_list_offset;
     uint32_t *offset_list;
     char **item_names;
+    uint32_t *sub_types;
 };
 
 struct collection_entry {
@@ -26,7 +27,7 @@ void item_handle(FILE *source_file, struct item_list *item_list) {
 
     fseek(source_file, item_list->item_count_offset, SEEK_SET);
     fread(&item_count, sizeof(uint32_t), 1, source_file);
-    item_count = be32toh(item_count);
+    item_count = htobe32(item_count);
 
     if (item_count == 0) {
         printf("No Item %d entries\n", item_list->item_type);
@@ -34,15 +35,16 @@ void item_handle(FILE *source_file, struct item_list *item_list) {
     }
 
     fread(&item_list->offset_list_offset, sizeof(uint32_t), 1, source_file);
-    item_list->offset_list_offset = be32toh(item_list->offset_list_offset);
+    item_list->offset_list_offset = htobe32(item_list->offset_list_offset);
 
     item_list->offset_list = malloc(sizeof(uint32_t) * item_count);
     item_list->item_names = calloc(sizeof(char*), item_count);
+    item_list->sub_types = calloc(sizeof(uint32_t), item_count);
 
     fseek(source_file, item_list->offset_list_offset, SEEK_SET);
     fread(item_list->offset_list, sizeof(uint32_t), item_count, source_file);
     for (int i = 0; i < item_count; i++) {
-        item_list->offset_list[i] = be32toh(item_list->offset_list[i]);
+        item_list->offset_list[i] = htobe32(item_list->offset_list[i]);
     }
 
     printf("%d Item %d's:\n", item_count, item_list->item_type);
@@ -51,13 +53,16 @@ void item_handle(FILE *source_file, struct item_list *item_list) {
         // It's a little silly to split all these fseeks apart, but it makes things easier for me to track
         fseek(source_file, item_list->offset_list_offset, SEEK_SET);
         fseek(source_file, item_list->offset_list[i], SEEK_CUR);
+
+        fread(&item_list->sub_types[i], sizeof(uint32_t), 1, source_file);
+
         fseek(source_file, 0x8, SEEK_CUR);
 
         fread(&next_item_offset, sizeof(uint32_t), 1, source_file);
-        next_item_offset = be32toh(next_item_offset);
+        next_item_offset = htobe32(next_item_offset);
 
         fread(&item_name_offset, sizeof(uint32_t), 1, source_file);
-        item_name_offset = be32toh(item_name_offset);
+        item_name_offset = htobe32(item_name_offset);
 
         if (item_name_offset == 0) {
             printf("\tNONAME at %#010x\n", item_list->offset_list_offset + item_list->offset_list[i]);
@@ -66,7 +71,7 @@ void item_handle(FILE *source_file, struct item_list *item_list) {
             item_list->item_names[i] = calloc(sizeof(char), (name_size + 1));
             fseek(source_file, item_name_offset - 0x10, SEEK_CUR);
             fread(item_list->item_names[i], sizeof(char), name_size, source_file);
-            printf("\t%d: %s\n", i, item_list->item_names[i]);
+            printf("\t%d: 0x%2x %s\n", i, item_list->sub_types[i], item_list->item_names[i]);
         }
     }
 }
@@ -103,28 +108,28 @@ int main(int argc, char *argv[]) {
 
     fseek(source_file, 0x40, SEEK_SET);
     fread(&item_collection_size, sizeof(uint32_t), 1, source_file);
-    item_collection_size = be32toh(item_collection_size);
+    item_collection_size = htobe32(item_collection_size);
     item_collection_size -= sizeof(uint32_t) * 256;
 
     collection_count = item_collection_size / 8;
 
     fread(&item_collection_offset, sizeof(uint32_t), 1, source_file);
-    item_collection_offset = be32toh(item_collection_offset);
+    item_collection_offset = htobe32(item_collection_offset);
 
     fseek(source_file, item_collection_offset, SEEK_SET);
     fread(collection_offsets, sizeof(uint32_t), 256, source_file);
 
     for (int i = 0; i < 256; i++) {
-        collection_offsets[i] = be32toh(collection_offsets[i]);
+        collection_offsets[i] = htobe32(collection_offsets[i]);
 
         if (collection_offsets[i] == 0) continue;
 
         fseek(source_file, item_collection_offset + collection_offsets[i], SEEK_SET);
 
         fread(&item_type, sizeof(uint32_t), 1, source_file);
-        item_type = be32toh(item_type);
+        item_type = htobe32(item_type);
         fread(&item_index, sizeof(uint32_t), 1, source_file);
-        item_index = be32toh(item_index);
+        item_index = htobe32(item_index);
 
         while (item_type != 0xFFFFFFFF) {
             switch(item_type) {
@@ -148,9 +153,9 @@ int main(int argc, char *argv[]) {
             printf("%s -> ", item_name);
 
             fread(&item_type, sizeof(uint32_t), 1, source_file);
-            item_type = be32toh(item_type);
+            item_type = htobe32(item_type);
             fread(&item_index, sizeof(uint32_t), 1, source_file);
-            item_index = be32toh(item_index);
+            item_index = htobe32(item_index);
         }
         printf("\n");
     }

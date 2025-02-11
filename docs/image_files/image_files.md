@@ -88,7 +88,7 @@ Counter-intuitively, `image_size` does not include the 4 bytes used to store the
 Offests are NOT relative to the beginning of the file.
 They are relative to the point AFTER `image_size`, which is very frustrating.
 
-[func_8005645C.c](/docs/image_files/func_8005645C.c) isn't related to image files directly, infact its more focused on [HMT](/docs/hmt_files/hmt_files.md) and [HOB](/docs/hob_files/hob_files.md) files.
+[load_hmt_and_hob.c](/docs/image_files/load_hmt_and_hob.c) isn't related to image files directly, infact its more focused on [HMT](/docs/hmt_files/hmt_files.md) and [HOB](/docs/hob_files/hob_files.md) files.
 HMT files do have image-like entries in them though and code in this function suggests that there's potentially 8 pixel offsets.
 I don't know what multiple non-zero entries would imply, but the game's code suggests that its possible.
 

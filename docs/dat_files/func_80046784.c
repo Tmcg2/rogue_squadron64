@@ -13,7 +13,7 @@ struct _m2c_stack_func_80046784 {
 };                                                  /* size = 0x88 */
 
 f32 func_8001E20C(f32, f32);                        /* extern */
-? func_8005645C(? *, ? *, ?, ?);                    /* extern */
+? load_hmt_and_hob(? *, ? *, ?, ?);                    /* extern */
 void **func_80056EB0(? *);                          /* extern */
 ? func_8005779C(void **);                           /* extern */
 void *func_8006488C(? *);                           /* extern */
@@ -629,10 +629,10 @@ block_97:
         }
     }
     sprintf(&sp10, "%s/opkg", arg0);
-    func_8005645C(&sp10, &D_80136FB0, 1, 0);
+    load_hmt_and_hob(&sp10, &D_80136FB0, 1, 0);
     if (D_80130B63 != 0) {
         sprintf(&sp10, "%s/opkg2", arg0);
-        func_8005645C(&sp10, &D_80136FB0, 1, 0);
+        load_hmt_and_hob(&sp10, &D_80136FB0, 1, 0);
     }
     if (D_80130B70 == 0x0000000A) {
         temp_v0_13 = func_80056EB0("b_tsp_hi");

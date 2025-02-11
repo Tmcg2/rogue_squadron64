@@ -314,7 +314,7 @@ To be honest, it doesn't make much sense to me reading over it so I doubt its go
 
 # Game Code Stuff
 
-[func_8005645C.c](/docs/hmt_files/func_8005645C.c) is the function that DMA's and does initial parsing of the HOB file.
+[load_hmt_and_hob.c](/docs/hmt_files/load_hmt_and_hob.c) is the function that DMA's and does initial parsing of the HOB file.
 The big thing that it's doing is converting offsets in the file into pointers.
 
 [func_800587F0.c](/docs/hmt_files/func_800587F0.c) is doing much the same but for the [facegroup](#facegroup) and [face](#face) entries.

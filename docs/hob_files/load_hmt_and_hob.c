@@ -1,4 +1,4 @@
-struct _m2c_stack_func_8005645C {
+struct _m2c_stack_load_hmt_and_hob {
     /* 0x00 */ char pad0[0x18];
     /* 0x18 */ u8 sp18;                             /* inferred */
     /* 0x19 */ char pad19[0x4F];                    /* maybe part of sp18[0x50]? */
@@ -41,7 +41,7 @@ extern ? D_80139020;
 extern u16 D_801394A0;
 extern ? D_801394B0;
 
-void func_8005645C(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
+void load_hmt_and_hob(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 sp90;
     u8 sp8F;
     u8 *sp84;

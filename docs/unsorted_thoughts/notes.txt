@@ -247,11 +247,11 @@ First demo X-Wing HMT watch locations
 	80022A00
 	80022B90
 
-func_8005645C is definitely responsible for HMT and HOB handling based on the D_8003AD80 and D_8003AD9C format strings (%s_HMT and %s_HOB)
+load_hmt_and_hob is definitely responsible for HMT and HOB handling based on the D_8003AD80 and D_8003AD9C format strings (%s_HMT and %s_HOB)
 	The specifics of the handling appear to be in other functions called by this one
 
 	func_80022B90(material_entry *arg0, texture_entry *arg1, ??? arg2)
-		arg2 is always(?) null in the func_8005645C
+		arg2 is always(?) null in the load_hmt_and_hob
 
 	func_80022A00(u32 some_count?, material_entry *arg1, texture_entry *arg2)
 

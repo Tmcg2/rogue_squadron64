@@ -53,7 +53,7 @@ struct material_entry {
 ```
 
 Its unclear whether the first member is a `type` or a set of `flags`.
-In [func_8005645C.c](/docs/hmt_files/func_8005645C.c), it accessed in a flag-like manner.
+In [load_hmt_and_hob.c](/docs/hmt_files/load_hmt_and_hob.c), it accessed in a flag-like manner.
 If this value is `1` (or it has the LSB set) there is a texture associate with the material.
 Otherwise, there's no texture.
 In all cases that I've seen, that also means this value `2`.
@@ -106,5 +106,5 @@ So user beware, it may not work everywhere.
 
 ## Game Code Stuff
 
-[func_8005645C.c](/docs/hmt_files/func_8005645C.c) is deeply involved in the handling of HMT files.
+[load_hmt_and_hob.c](/docs/hmt_files/load_hmt_and_hob.c) is deeply involved in the handling of HMT files.
 One of the big things its doing is translating the various offsets to pointers.

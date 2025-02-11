@@ -78,7 +78,7 @@ For `Attack on Mos Eisley`, the offset list for Item 0's can be found at offset 
 Entries of a given item type appear to have variable sizes, especially Item 0's (with its various sub-types), thus I can't provide a generic C struct to explain all of their internals.
 I'll provide a struct-like explanation of the parts that appear constant for each entry though.
 
-## Type 0 Intenals
+## Type 0 Internals
 
 ```cpp
 struct item_type_0 {
@@ -99,12 +99,12 @@ struct item_type_0 {
 };
 ```
 
-## Type 2 Intenals
+## Type 2 Internals
 
 Since `Attack on Mos Eisley` doesn't have any of these, I have no clue what they look like.
 Presumably they aren't that different from all the others.
 
-## Type 3 Intenals
+## Type 3 Internals
 
 ```cpp
 struct item_type_3 {
@@ -128,7 +128,7 @@ There are extra count+offset combos at offset 0x1C+0x20 and 0x28+0x2C of the ite
 Those offsets are RELATIVE TO THE ITEM ITSELF.
 I don't know what the counts or offsets are referencing
 
-## Type 6 Intenals
+## Type 6 Internals
 
 ```cpp
 struct item_type_6 {
@@ -148,7 +148,7 @@ struct item_type_6 {
 };
 ```
 
-## Type 7 Intenals
+## Type 7 Internals
 
 ```cpp
 struct item_type_7 {
@@ -182,3 +182,119 @@ struct item_collection_entry {
 ```
 
 Each group of items ends with an entry where both `item_type` and `item_index` `0xFFFFFFFF` (`-1`).
+
+# Code stuff
+
+`D_801375D8` appears to be what amounts to a DAT file pointer.
+`func_80064940` is invovled in [Type 0](#type-0) handling, especially the loading of the models for sub types with models.
+
+`D_80139990` is only ever referenced in `func_80064940`.
+It seems to be a list of bytes indicating whether a given sub-type has been loaded or not.
+The `rs_memset` call suggests that there are `0x53` total sub-types, although the array looks to be `0x58` bytes big based on debugger viewing.
+
+```cpp
+/*
+Nomenclature:
+    - DAT_UNKNOWN_XX: Not observed in any DAT or source code files
+    - DAT_TYPE_X_YY: Used by Type X entries, named after its enum value YY
+    - DAT_TYPE_X_A_NAME: Used by Type X entries, named after code or DAT file usage A_NAME
+*/
+enum DAT_SUBTYPE {
+	/* 0x00 */ DAT_UNKNOWN_00,
+	/* 0x01 */ DAT_TYPE_0_PLAYER_START_POSITION,
+	/* 0x02 */ DAT_TYPE_0_RESTART_POSITION, // Mostly used by players, but used for Moff Seerdon too
+	/* 0x03 */ DAT_TYPE_3_03, // "regular" spline type
+	/* 0x04 */ DAT_TYPE_6_HIGH_LOD_BOX, // Name is speculative
+	/* 0x05 */ DAT_TYPE_6_LOW_LOD_BOX, // Name is speculative
+	/* 0x06 */ DAT_TYPE_0_HANGAR_SUBTYPE0, // Only used in the hangar, mostly in reference to the player craft
+	/* 0x07 */ DAT_TYPE_0_HANGAR_SUBTYPE1, // Used in the hangar, bridge, and logo scenes, purpose unknown
+	/* 0x08 */ DAT_TYPE_3_08, // Another spline type, only used in the hangar and the logo scenes
+	/* 0x09 */ DAT_TYPE_2_09,
+	/* 0x0A */ DAT_UNKNOWN_0A,
+	/* 0x0B */ DAT_UNKNOWN_0B,
+	/* 0x0C */ DAT_TYPE_0_TIE_FIGHTER,
+	/* 0x0D */ DAT_TYPE_0_GUN_TURRET,
+	/* 0x0E */ DAT_TYPE_0_PROBE_DROID,
+	/* 0x0F */ DAT_TYPE_0_ATAT,
+	/* 0x10 */ DAT_TYPE_6_MUSIC_RNG,
+	/* 0x11 */ DAT_TYPE_7_11, // Could be boxes for event activation?
+	/* 0x12 */ DAT_TYPE_0_TIE_INTERCEPTOR,
+	/* 0x13 */ DAT_TYPE_0_TIE_BOMBER,
+	/* 0x14 */ DAT_TYPE_0_GENERIC_BUILDING, // These trigger the loading of the "destroyed building" model
+	/* 0x15 */ DAT_UNKNOWN_15,
+	/* 0x16 */ DAT_TYPE_6_16,
+	/* 0x17 */ DAT_TYPE_7_17, // Could be spheres for event activation?
+	/* 0x18 */ DAT_TYPE_7_18, // Could be timers for event activation?
+	/* 0x19 */ DAT_TYPE_7_19, // ??
+	/* 0x1A */ DAT_TYPE_7_1A, // One of the NONAME entry types
+	/* 0x1B */ DAT_TYPE_7_1B, // One of the NONAME entry types
+	/* 0x1B */ DAT_TYPE_7_1C, // One of the NONAME entry types
+	/* 0x1D */ DAT_UNKNOWN_1D,
+	/* 0x1E */ DAT_TYPE_0_MISSLE_TURRET,
+	/* 0x1F */ DAT_TYPE_0_ATST,
+	/* 0x1B */ DAT_TYPE_7_20, // One of the NONAME entry types
+	/* 0x21 */ DAT_TYPE_0_21, // Non-moving NPC spawn locations?
+	/* 0x22 */ DAT_TYPE_7_22, // One of the NONAME entry types
+	/* 0x23 */ DAT_TYPE_7_23, // One of the NONAME entry types
+	/* 0x24 */ DAT_TYPE_0_SHUTTLE,
+	/* 0x25 */ DAT_TYPE_0_TANK_DROID,
+	/* 0x26 */ DAT_TYPE_0_CAMERA_POSITION,
+	/* 0x27 */ DAT_TYPE_0_WINGMAN_POSITION, // Has a sub-sub-type to indicate the exact craft to be used
+	/*
+	This is really 3 models under one sub-type:
+	The Gerrard V mega turrets
+	The Trench Run mega turrets
+	The generic mega turrets
+
+	The exact model chosen is decided by the currently loaded level
+	*/
+	/* 0x28 */ DAT_TYPE_0_MEGA_TURRENT,
+	/* 0x29 */ DAT_TYPE_0_TIE_D, // ??????
+	/* 0x2A */ DAT_TYPE_0_RADAR_DISH,
+	/* 0x2B */ DAT_TYPE_0_REBEL_TRANSPORT,
+	/* 0x2C */ DAT_TYPE_0_HEAVY_SHUTTLE,
+	/* 0x2D */ DAT_TYPE_0_CARGO_01,
+	/* 0x2E */ DAT_TYPE_0_REBEL_COMBAT, // Don't know exactly what this is...
+	// All three of these load the same model, I'm not sure why they're separate sub-types
+	/* 0x2F */ DAT_TYPE_0_IMPERIAL_TRAIN0,
+	/* 0x30 */ DAT_TYPE_0_IMPERIAL_TRAIN1,
+	/* 0x31 */ DAT_TYPE_0_IMPERIAL_TRAIN2,
+	/* 0x32 */ DAT_TYPE_0_SHIELD, // ?????
+	/* 0x33 */ DAT_TYPE_0_IMPERIAL_TRAIN_PILLAR,
+	// All two of these load the same model, I'm not sure why they're separate sub-types
+	/* 0x34 */ DAT_TYPE_0_REBEL_TRAIN0,
+	/* 0x35 */ DAT_TYPE_0_REBEL_TRAIN1,
+	/* 0x36 */ DAT_TYPE_0_REBEL_TRAIN_PILLAR,
+	/* 0x37 */ DAT_TYPE_0_WORLD_DEVASTATOR,
+	/* 0x38 */ DAT_UNKNOWN_38,
+	/* 0x39 */ DAT_TYPE_6_39, // One of the NONAME entry types
+	/* 0x3A */ DAT_TYPE_7_3A, // One of the NONAME entry types
+	/* 0x3B */ DAT_TYPE_0_IMPERIAL_TROOPER,
+	/* 0x3C */ DAT_TYPE_0_REBEL_PILOT,
+	/* 0x3D */ DAT_TYPE_0_CIVILIAN,
+	/* 0x3E */ DAT_TYPE_0_ASSAULT_BOAT,
+	/* 0x3F */ DAT_UNKNOWN_3F,
+	/* 0x40 */ DAT_TYPE_0_WAVE_SKIMMER,
+	/* 0x41 */ DAT_TYPE_0_REBEL_TURRET,
+	/* 0x42 */ DAT_TYPE_0_TALORAAN_TURRET,
+	/* 0x43 */ DAT_TYPE_0_CLOUD_CAR,
+	/* 0x44 */ DAT_TYPE_0_IMPERIAL_PLATFORM, // Not sure what exactly this is, maybe the floating platforms in the Taloraan level
+	/* 0x45 */ DAT_UNKNOWN_45,
+	/* 0x46 */ DAT_TYPE_0_46, // Moving NPC spawn position?
+	/* 0x47 */ DAT_TYPE_0_ATPT,
+	/* 0x48 */ DAT_TYPE_0_BOSS_HUT, // Only shows up once, named "MOFF SEERDON"
+	/* 0x49 */ DAT_TYPE_0_WORLD_DEVASTATOR_GUN,
+	/* 0x4A */ DAT_TYPE_0_POWER_GENERATOR,
+	/* 0x4B */ DAT_TYPE_0_4B, // Large generic buildings?
+	/* 0x4C */ DAT_TYPE_0_POWER_UP,
+	/* 0x4D */ DAT_TYPE_0_HEAVY_RAPTOR_SHUTTLE,
+	/* 0x4E */ DAT_TYPE_7_4E, // One of the NONAME entry types
+	/* 0x4F */ DAT_TYPE_0_EXHAUST_PORT, // Death Star exhause port
+	/* 0x50 */ DAT_TYPE_0_B_SOLDIER, // Not present in any DAT files
+	/* 0x51 */ DAT_TYPE_2_LAVA_FARTS, // Only used by the Raid on Sullust level
+	/* 0x52 */ DAT_TYPE_0_52, // One of the NONAME entry types
+	/* 0x53 */ DAT_NUM_SUBTYPES,
+};
+```
+
+`func_80047B70` is somehow involved with the [Item Groups](#item-groups).

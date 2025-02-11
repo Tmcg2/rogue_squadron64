@@ -33,5 +33,5 @@ Basic usage:
 Example usage:
 
 ```bash
-./m2c_helper.sh 55AF0 func_8005645C
+./m2c_helper.sh 55AF0 load_hmt_and_hob
 ```

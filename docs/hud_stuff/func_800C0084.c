@@ -15,7 +15,7 @@ s32 func_80005080(s32, u8 *);                       /* extern */
 ? func_80054EF0(u8 *, ?, struct func_800C0084_type *, ?, s32); /* extern */
 ? func_800551D8(u8 *, ? *, ?, u16 *, s32, s32);     /* extern */
 u16 func_800554D8(u8 *, ?, ?);                      /* extern */
-? func_8005645C(? *, ?, ?, ?);                      /* extern */
+? load_hmt_and_hob(? *, ?, ?, ?);                      /* extern */
 u32 func_80056EB0(? *);                             /* extern */
 ? func_8005779C(u32, s32);                          /* extern */
 u32 func_800594F8(u32, ? *);                        /* extern */
@@ -777,7 +777,7 @@ s32 func_800C0084(void *arg0, s32 arg1, void *arg2) {
         } else {
             temp_v0->unkF7C = 0;
         }
-        func_8005645C(&D_800A63FC, 0, 0, 0);
+        load_hmt_and_hob(&D_800A63FC, 0, 0, 0);
         temp_v0_14 = func_80056EB0(&D_800A6414);
         temp_v0->rest01[0xA] = temp_v0_14;
         func_8005955C(temp_v0_14, 0, 0x30440000, 0x100008);
