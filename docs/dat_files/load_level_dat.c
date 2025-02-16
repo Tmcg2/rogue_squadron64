@@ -1,4 +1,4 @@
-struct _m2c_stack_func_80046784 {
+struct _m2c_stack_load_level_dat {
     /* 0x00 */ char pad0[0x10];
     /* 0x10 */ ? sp10;                              /* inferred */
     /* 0x10 */ char pad10[0x28];
@@ -17,7 +17,7 @@ f32 func_8001E20C(f32, f32);                        /* extern */
 void **func_80056EB0(? *);                          /* extern */
 ? func_8005779C(void **);                           /* extern */
 void *func_8006488C(? *);                           /* extern */
-? func_80064940();                                  /* extern */
+? load_dat_file_assets();                                  /* extern */
 ? func_800653B4(void *);                            /* extern */
 s32 func_80065790(void *, s32);                     /* extern */
 ? func_800AA870(void **, u32);                      /* extern */
@@ -39,7 +39,7 @@ extern s32 D_801375D4;
 extern ? D_801375D8;
 extern s32 D_80137CE4;
 
-void *func_80046784(s32 arg0) {
+void *load_level_dat(s32 arg0) {
     f32 sp50;
     f32 sp4C;
     f32 sp48;
@@ -528,7 +528,7 @@ block_97:
     if (D_80130B39 == 0) {
         func_800AA870(temp_s2->unk3C, temp_s2->unk38);
     }
-    func_80064940();
+    load_dat_file_assets();
     if (D_80130B39 != 0) {
         var_s1_7 = 0;
         if (D_801375D8.unk0->unk0 != 0) {

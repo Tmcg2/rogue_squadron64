@@ -18,7 +18,7 @@ struct _m2c_stack_load_hmt_and_hob {
 
 s32 func_80004AAC(s32, ?, s32, u8 *, s32);          /* extern */
 ? func_80004C70(s32, s32);                          /* extern */
-s32 func_80004D5C(s32, u8 *);                       /* extern */
+s32 get_asset_size_extra(s32, u8 *);                       /* extern */
 ? func_80004E70(s32, ?, s32, ?, s32, u8 *);         /* extern */
 s32 func_80005080(s32, u8 *);                       /* extern */
 ? func_80014DE0(? *, ?, ?);                         /* extern */
@@ -152,7 +152,7 @@ void load_hmt_and_hob(u8 *arg0, s32 arg1, s32 arg2, s32 arg3) {
             sp7C = 0;
         }
     }
-    temp_v0_2 = func_80004D5C(D_80137CFC, &sp18);
+    temp_v0_2 = get_asset_size_extra(D_80137CFC, &sp18);
     var_s3 = rs_malloc(temp_v0_2, 4U);
     if (var_s3 == NULL) {
         var_s3 = rs_malloc(temp_v0_2, 0U);
@@ -263,7 +263,7 @@ loop_20:
         if (sp7C > 0) {
             *sp70 = sp7C + 0x30;
         }
-        temp_s2 = func_80004D5C(D_80137CFC, &sp18);
+        temp_s2 = get_asset_size_extra(D_80137CFC, &sp18);
         var_a1_2 = 0x0010;
         if (sp8F != 0) {
             var_a1_2 = 4;

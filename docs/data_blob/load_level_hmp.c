@@ -1,4 +1,4 @@
-struct _m2c_stack_func_80043D74 {
+struct _m2c_stack_load_level_hmp {
     /* 0x00 */ char pad0[0x18];
     /* 0x18 */ ? sp18;                              /* inferred */
     /* 0x18 */ char pad18[0x28];
@@ -13,7 +13,7 @@ struct _m2c_stack_func_80043D74 {
 
 s32 func_80004AAC(s32, ?, s32, ? *, s32);           /* extern */
 ? func_80004C70(s32, s32);                          /* extern */
-s32 func_80004D5C(s32, ? *);                        /* extern */
+s32 get_asset_size_extra(s32, ? *);                        /* extern */
 ? func_80004E70(s32, ?, s32, ?, s32, void *);       /* extern */
 ? func_8001CF58(f32 *, u8, void *);                 /* extern */
 s32 func_8006B694();                                /* extern */
@@ -31,7 +31,7 @@ extern s32 D_80137CFC;
 extern s32 D_80138920;
 extern ? *D_80138D24;
 
-s32 func_80043D74(s32 arg0, ? arg1) {
+s32 load_level_hmp(s32 arg0, ? arg1) {
     void *sp54;
     s32 sp50;
     f32 sp48;
@@ -107,7 +107,7 @@ s32 func_80043D74(s32 arg0, ? arg1) {
     void *var_s1;
 
     sprintf(&sp18, "%s/hmp", arg1);
-    temp_v0 = func_80004D5C(D_80137CFC, &sp18);
+    temp_v0 = get_asset_size_extra(D_80137CFC, &sp18);
     D_80136FC4 = rs_malloc(temp_v0, 0U);
     temp_v0_2 = func_80004AAC(D_80138920, 0, D_80137CFC, &sp18, 0);
     func_80004E70(D_80138920, 0, temp_v0_2, 0, temp_v0, D_80136FC4);
@@ -239,7 +239,7 @@ loop_4:
         } while (var_s3_3 < (D_80136DC0.unk38 * D_80136DC0.unk3A));
     }
     sprintf(&sp18, "%s_TEX", arg1);
-    temp_v0_11 = func_80004D5C(D_80137CFC, &sp18);
+    temp_v0_11 = get_asset_size_extra(D_80137CFC, &sp18);
     D_80136DC0.unkC = rs_malloc(temp_v0_11, 0U);
     temp_v0_12 = func_80004AAC(D_80138920, 0, D_80137CFC, &sp18, 0);
     func_80004E70(D_80138920, 0, temp_v0_12, 0, temp_v0_11, D_80136DC0.unkC);

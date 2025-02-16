@@ -198,23 +198,34 @@ D_8003D654 = 0x8003D654; // type:asciz segment:main
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-decrypt_ns_hmt             = 0x8006AFC0; // type:func segment:main
-find_manifest_entry        = 0x80003A0C; // type:func segment:main
-getControllerSettingsTitle = 0x800C49BC; // type:func segment:main
-getGameOrFrontText         = 0x8005589C; // type:func segment:main
-getPlayerHealthPercentage  = 0x800C40AC; // type:func segment:main
-load_hmt_and_hob           = 0x8005645C; // type:func segment:main
-make_crc32_lut             = 0x80082544; // type:func segment:main
-rs_crc32                   = 0x800824F8; // type:func segment:main
-rs_free                    = 0x80001C98; // type:func segment:main
-rs_malloc                  = 0x80001ACC; // type:func segment:main
-rs_memset                  = 0x800078E0; // type:func segment:main
-rs_strcat                  = 0x8000767C; // type:func segment:main
-rs_strcmp                  = 0x800076F8; // type:func segment:main
-rs_strcpy                  = 0x8000761C; // type:func segment:main
-rs_strncat                 = 0x800076B8; // type:func segment:main
-rs_strncmp                 = 0x800077A8; // type:func segment:main
-rs_strncpy                 = 0x80007640; // type:func segment:main
+decrypt_ns_hmt                   = 0x8006AFC0; // type:func segment:main
+find_manifest_entry              = 0x80003A0C; // type:func segment:main
+full_header_image_offset_convert = 0x80055488; // type:func segment:main
+get_asset_size_extra             = 0x80004D5C; // type:func segment:main
+get_asset_size_simple            = 0x80005134; // type:func segment:main
+getControllerSettingsTitle       = 0x800C49BC; // type:func segment:main
+getGameOrFrontText               = 0x8005589C; // type:func segment:main
+getPlayerHealthPercentage        = 0x800C40AC; // type:func segment:main
+load_asset                       = 0x8006488C; // type:func segment:main
+load_asset_with_malloc_flags     = 0x800647E0; // type:func segment:main
+load_dat_file_assets             = 0x80064940; // type:func segment:main
+load_full_header_image           = 0x800543F4; // type:func segment:main
+load_hmt_and_hob                 = 0x8005645C; // type:func segment:main
+load_level_dat                   = 0x80046784; // type:func segment:main
+load_level_hmp                   = 0x80043D74; // type:func segment:main
+load_naboo_starfighter           = 0x8006C780; // type:func segment:main
+make_crc32_lut                   = 0x80082544; // type:func segment:main
+model_animation_offset_convert   = 0x80082BD0; // type:func segment:main
+rs_crc32                         = 0x800824F8; // type:func segment:main
+rs_free                          = 0x80001C98; // type:func segment:main
+rs_malloc                        = 0x80001ACC; // type:func segment:main
+rs_memset                        = 0x800078E0; // type:func segment:main
+rs_strcat                        = 0x8000767C; // type:func segment:main
+rs_strcmp                        = 0x800076F8; // type:func segment:main
+rs_strcpy                        = 0x8000761C; // type:func segment:main
+rs_strncat                       = 0x800076B8; // type:func segment:main
+rs_strncmp                       = 0x800077A8; // type:func segment:main
+rs_strncpy                       = 0x80007640; // type:func segment:main
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Varibales ///////////////////////////////////

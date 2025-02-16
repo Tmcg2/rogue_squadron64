@@ -1,8 +1,8 @@
-struct _m2c_stack_func_80004D5C {
+struct _m2c_stack_get_asset_size_extra {
     /* 0x00 */ char pad0[0x28];
 };                                                  /* size = 0x28 */
 
-s32 func_80004D5C(u32 arg0, u8 *arg1) {
+s32 get_asset_size_extra(u32 arg0, u8 *arg1) {
     s32 var_a0;
     struct D_80110A80_entry *var_s1;
     struct manifest_entry *var_a1;

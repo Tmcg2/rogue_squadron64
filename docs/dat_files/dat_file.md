@@ -1,7 +1,7 @@
 # DAT File Specification
 
 DAT files contain a variety of data for playable levels and certain menu locations (the hanger and the briefing room for example).
-They are initially parsed by [func_80046784](func_80046784.c).
+They are initially parsed by [load_level_dat](load_level_dat.c).
 One of the big things that function does is convert offsets into pointers.
 
 I have also made a utility called [dat_file_names.c](dat_file_names.c) that will extract the names of each of the data items from a DAT file.
@@ -83,7 +83,7 @@ I'll provide a struct-like explanation of the parts that appear constant for eac
 ```cpp
 struct item_type_0 {
 	uint16_t sub_type;
-	uint16_t padding;
+	uint16_t unk02;
 	uint16_t item_index; // Maybe?
 	uint16_t padding;
 	union {
@@ -186,9 +186,9 @@ Each group of items ends with an entry where both `item_type` and `item_index` `
 # Code stuff
 
 `D_801375D8` appears to be what amounts to a DAT file pointer.
-`func_80064940` is invovled in [Type 0](#type-0) handling, especially the loading of the models for sub types with models.
+`load_dat_file_assets` is invovled in [Type 0](#type-0) handling, especially the loading of the models for sub types with models.
 
-`D_80139990` is only ever referenced in `func_80064940`.
+`D_80139990` is only ever referenced in `load_dat_file_assets`.
 It seems to be a list of bytes indicating whether a given sub-type has been loaded or not.
 The `rs_memset` call suggests that there are `0x53` total sub-types, although the array looks to be `0x58` bytes big based on debugger viewing.
 
@@ -261,7 +261,7 @@ enum DAT_SUBTYPE {
 	/* 0x31 */ DAT_TYPE_0_IMPERIAL_TRAIN2,
 	/* 0x32 */ DAT_TYPE_0_SHIELD, // ?????
 	/* 0x33 */ DAT_TYPE_0_IMPERIAL_TRAIN_PILLAR,
-	// All two of these load the same model, I'm not sure why they're separate sub-types
+	// Both of these load the same model, I'm not sure why they're separate sub-types
 	/* 0x34 */ DAT_TYPE_0_REBEL_TRAIN0,
 	/* 0x35 */ DAT_TYPE_0_REBEL_TRAIN1,
 	/* 0x36 */ DAT_TYPE_0_REBEL_TRAIN_PILLAR,
@@ -289,7 +289,7 @@ enum DAT_SUBTYPE {
 	/* 0x4C */ DAT_TYPE_0_POWER_UP,
 	/* 0x4D */ DAT_TYPE_0_HEAVY_RAPTOR_SHUTTLE,
 	/* 0x4E */ DAT_TYPE_7_4E, // One of the NONAME entry types
-	/* 0x4F */ DAT_TYPE_0_EXHAUST_PORT, // Death Star exhause port
+	/* 0x4F */ DAT_TYPE_0_EXHAUST_PORT, // Death Star exhaust port
 	/* 0x50 */ DAT_TYPE_0_B_SOLDIER, // Not present in any DAT files
 	/* 0x51 */ DAT_TYPE_2_LAVA_FARTS, // Only used by the Raid on Sullust level
 	/* 0x52 */ DAT_TYPE_0_52, // One of the NONAME entry types

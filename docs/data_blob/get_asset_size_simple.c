@@ -1,8 +1,8 @@
-struct _m2c_stack_func_80005134 {
+struct _m2c_stack_get_asset_size_simple {
     /* 0x00 */ char pad0[0x28];
 };                                                  /* size = 0x28 */
 
-u32 func_80005134(u32 arg0, u8 *arg1) {
+u32 get_asset_size_simple(u32 arg0, u8 *arg1) {
     struct D_80110A80_entry *var_s1;
     struct manifest_entry *var_v0_2;
     struct manifest_entry *var_v1;

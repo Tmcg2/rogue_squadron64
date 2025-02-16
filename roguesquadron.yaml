@@ -269,6 +269,7 @@ segments:
       - [0x3EB20, asm]
       - [0x55AF0, asm]
       - [0x68990, asm]
+      - [0x832A0, asm]
       - [0x9ABDC, asm]
       - [0x9BB60, asm]
       - [0x9C8C4, asm]

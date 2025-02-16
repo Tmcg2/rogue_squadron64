@@ -137,7 +137,7 @@ This file is huge and I have no idea where to begin with it.
 
 Probably short for "height map", see [ReRogue's spec file](https://github.com/dpethes/rerogue/blob/master/doc/file_hmp_spec.txt).
 I've done some manual verification on a couple of these files to ensure they match up with ReRogue, but I don't know how to extract them into, say, Blender for viewing.
-[func_80043D74.c](/docs/data_blob/func_80043D74.c) is deeply involved with HMP files, doing some form of initial parsing of the file.
+[load_level_hmp.c](/docs/data_blob/load_level_hmp.c) is deeply involved with HMP files, doing some form of initial parsing of the file.
 
 ### DAT
 
@@ -152,7 +152,7 @@ I have no idea what these files are, I don't think the game ever uses them.
 
 Tiles in the [HMP](#hmp) files have a "texmap" entry, I believe they are referencing entires in this file.
 I don't understand what the entries in this file are though.
-[func_80043D74.c](/docs/data_blob/func_80043D74.c) does something with these files, although the details are entirely lost on me.
+[load_level_hmp.c](/docs/data_blob/load_level_hmp.c) does something with these files, although the details are entirely lost on me.
 
 ### INTRO/EXTRO
 
@@ -237,4 +237,4 @@ I don't think this ever happens in the game though, at least not that I've ever 
 
 ### Other assorted functions
 
-[func_80005134.c](/docs/data_blob/func_80005134.c) and [func_80004D5C.c](/docs/data_blob/func_80004D5C.c) both search for an asset and then return it's size (compressed if its compressed, decompressed otherwise), although `func_80005134` is more "vanilla" than `func_80004D5C`.
+[get_asset_size_simple.c](/docs/data_blob/get_asset_size_simple.c) and [get_asset_size_extra.c](/docs/data_blob/get_asset_size_extra.c) both search for an asset and then return it's size (compressed if its compressed, decompressed otherwise), although `get_asset_size_simple` is more "vanilla" than `get_asset_size_extra`.

@@ -121,7 +121,7 @@ I also don't know how to re-encrypt the file.
 It might be as simple as passing the plain-text file through the decrypter function.
 
 The in-game version of the decryption process is called [decrypt_ns_hmt](/docs/cheat_codes/decrypt_ns_hmt.c).
-[func_8006C780.c](/docs/cheat_codes/func_8006C780.c) is the function that really drives the loading of the Naboo Starfighter's HMT asset.
+[load_naboo_starfighter.c](/docs/cheat_codes/load_naboo_starfighter.c) is the function that really drives the loading of the Naboo Starfighter's HMT asset.
 It also crucially validates that the decryption process worked correctly.
 The short version of validation is that it goes through the decrypted HMT file and confirms that a variety of offsets in the file are "sane".
 Where "sane" means non-zero, multiples of 4, and are commensurate with the size of the file.

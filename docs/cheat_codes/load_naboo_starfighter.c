@@ -1,10 +1,10 @@
-struct _m2c_stack_func_8006C780 {
+struct _m2c_stack_load_naboo_starfighter {
     /* 0x00 */ char pad0[0x30];
 };                                                  /* size = 0x30 */
 
 s32 func_80004AAC(s32, ?, s32, ? *, s32);           /* extern */
 ? func_80004C70(s32, s32);                          /* extern */
-s32 func_80004D5C(s32, ? *);                        /* extern */
+s32 get_asset_size_extra(s32, ? *);                        /* extern */
 ? func_80004E70(s32, ?, s32, ?, s32, void *);       /* extern */
 ? decrypt_ns_hmt(void *, s32, s32);                  /* static */
 extern s32 D_80137CFC;
@@ -23,7 +23,7 @@ The texture_offset, texture_count, pixel_offset and texture_name_offset all are 
 These checks are very, very unlikely to all be correct if the file was decoded with the incorrect key
 If properly validated, the decryption key is returned. Otherwise, 0 is returned
 */
-s32 func_8006C780(s32 arg0) {
+s32 load_naboo_starfighter(s32 arg0) {
     s32 temp_v0;
     s32 temp_v0_2;
     s32 var_a2;
@@ -37,7 +37,7 @@ s32 func_8006C780(s32 arg0) {
     void *temp_s2;
     void *temp_v0_3;
 
-    temp_v0 = func_80004D5C(D_80137CFC, &D_8003C9B0);
+    temp_v0 = get_asset_size_extra(D_80137CFC, &D_8003C9B0);
     temp_s2 = rs_malloc(temp_v0, 0U);
     temp_v0_2 = func_80004AAC(D_80138920, 0, D_80137CFC, &D_8003C9B0, 0);
     func_80004E70(D_80138920, 0, temp_v0_2, 0, temp_v0, temp_s2);
