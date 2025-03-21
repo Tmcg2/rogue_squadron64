@@ -154,3 +154,23 @@ D_800A763C = 0x800A763C; // type:asciz segment:menu_overlay
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+// 110410.s
+	// Real functions missed by splat
+		func_800B3824 = 0x800B3824; // type:func segment:menu_overlay
+
+	// Fake Function Fixing
+		fake_func_800AEC54 = 0x800AEC54; // type:func segment:menu_overlay
+		func_800AEC60      = 0x800AEC60; // type:func segment:menu_overlay
+
+		fake_func_800B2628 = 0x800B2628; // type:func segment:menu_overlay
+		func_800B2630      = 0x800B2630; // type:func segment:menu_overlay
+
+		fake_func_800B47C4 = 0x800B47C4; // type:func segment:menu_overlay
+		func_800B47D0      = 0x800B47D0; // type:func segment:menu_overlay
+
+		fake_func_800C6968 = 0x800C6968; // type:func segment:menu_overlay
+		func_800C6970      = 0x800C6970; // type:func segment:menu_overlay
+
+		fake_func_800CC038 = 0x800CC038; // type:func segment:menu_overlay
+		func_800CC040      = 0x800CC040; // type:func segment:menu_overlay

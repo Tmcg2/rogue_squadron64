@@ -100,6 +100,68 @@ reset_and_free_model_animations = 0x800F9F6C; // type:func segment:mission_overl
 reset_model_animations          = 0x800F9F2C; // type:func segment:mission_overlay
 func_800CFE7C                   = 0x800CFE7C; // type:func segment:mission_overlay
 
+// AA780.s
+	// Fake Function Fixing
+		fake_func_800AA6CC = 0x800AA6CC; // type:func segment:mission_overlay
+		func_800AA6D0      = 0x800AA6D0; // type:func segment:mission_overlay
+
+		fake_func_800AAADC = 0x800AAADC; // type:func segment:mission_overlay
+		func_800AAAE0      = 0x800AAAE0; // type:func segment:mission_overlay
+
+		fake_func_800AD378 = 0x800AD378; // type:func segment:mission_overlay
+		func_800AD380      = 0x800AD380; // type:func segment:mission_overlay
+
+		fake_func_800AE3E4 = 0x800AE3E4; // type:func segment:mission_overlay
+		func_800AE3F0      = 0x800AE3F0; // type:func segment:mission_overlay
+
+		fake_func_800B42BC = 0x800B42BC; // type:func segment:mission_overlay
+		func_800B42C0      = 0x800B42C0; // type:func segment:mission_overlay
+
+		fake_func_800B58B4 = 0x800B58B4; // type:func segment:mission_overlay
+		func_800B58C0      = 0x800B58C0; // type:func segment:mission_overlay
+
+		fake_func_800B75C4 = 0x800B75C4; // type:func segment:mission_overlay
+		func_800B75D0      = 0x800B75D0; // type:func segment:mission_overlay
+
+		fake_func_800B89F4 = 0x800B89F4; // type:func segment:mission_overlay
+		func_800B8A00      = 0x800B8A00; // type:func segment:mission_overlay
+
+		fake_func_800BCC38 = 0x800BCC38; // type:func segment:mission_overlay
+		func_800BCC40      = 0x800BCC40; // type:func segment:mission_overlay
+
+		fake_func_800BEBFC = 0x800BEBFC; // type:func segment:mission_overlay
+		func_800BEC00      = 0x800BEC00; // type:func segment:mission_overlay
+
+		fake_func_800BF498 = 0x800BF498; // type:func segment:mission_overlay
+		func_800BF4A0      = 0x800BF4A0; // type:func segment:mission_overlay
+
+		fake_func_800BF784 = 0x800BF784; // type:func segment:mission_overlay
+		func_800BF790      = 0x800BF790; // type:func segment:mission_overlay
+
+		fake_func_800C41AC = 0x800C41AC; // type:func segment:mission_overlay
+		func_800C41B0      = 0x800C41B0; // type:func segment:mission_overlay
+
+		fake_func_800C64A4 = 0x800C64A4; // type:func segment:mission_overlay
+		func_800C64B0      = 0x800C64B0; // type:func segment:mission_overlay
+
+		fake_func_800CEF1C = 0x800CEF1C; // type:func segment:mission_overlay
+		func_800CEF20      = 0x800CEF20; // type:func segment:mission_overlay
+
+		fake_func_800E71C8 = 0x800E71C8; // type:func segment:mission_overlay
+		func_800E71D0      = 0x800E71D0; // type:func segment:mission_overlay
+
+		fake_func_800E8A34 = 0x800E8A34; // type:func segment:mission_overlay
+		func_800E8A40      = 0x800E8A40; // type:func segment:mission_overlay
+
+		fake_func_800ED148 = 0x800ED148; // type:func segment:mission_overlay
+		func_800ED150      = 0x800ED150; // type:func segment:mission_overlay
+
+		fake_func_800EFD74 = 0x800EFD74; // type:func segment:mission_overlay
+		func_800EFD80      = 0x800EFD80; // type:func segment:mission_overlay
+
+		fake_func_800EFDDC = 0x800EFDDC; // type:func segment:mission_overlay
+		func_800EFDE0      = 0x800EFDE0; // type:func segment:mission_overlay
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Varibales ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

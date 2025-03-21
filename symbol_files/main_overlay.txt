@@ -227,6 +227,161 @@ rs_strncat                       = 0x800076B8; // type:func segment:main
 rs_strncmp                       = 0x800077A8; // type:func segment:main
 rs_strncpy                       = 0x80007640; // type:func segment:main
 
+// 1720.s
+	// Real functions missed by splat
+		func_80002F4C = 0x80002F4C; // type:func segment:main
+		func_800045E8 = 0x800045E8; // type:func segment:main
+		func_8000569C = 0x8000569C; // type:func segment:main
+
+	// Fake Function Fixing
+		fake_func_800027B8 = 0x800027B8; // type:func segment:main
+		func_800027C0      = 0x800027C0; // type:func segment:main
+
+		fake_func_8000337C = 0x8000337C; // type:func segment:main
+		func_80003380      = 0x80003380; // type:func segment:main
+
+		fake_func_80003424 = 0x80003424; // type:func segment:main
+		func_80003430      = 0x80003430; // type:func segment:main
+
+		fake_func_80003474 = 0x80003474; // type:func segment:main
+		func_80003480      = 0x80003480; // type:func segment:main
+
+		fake_func_8000537C = 0x8000537C; // type:func segment:main
+		func_80005380      = 0x80005380; // type:func segment:main
+
+		fake_func_8000595C = 0x8000595C; // type:func segment:main
+		func_80005960      = 0x80005960; // type:func segment:main
+
+		fake_func_80006BFC = 0x80006BFC; // type:func segment:main
+		func_80006C00      = 0x80006C00; // type:func segment:main
+
+		fake_func_8000737C = 0x8000737C; // type:func segment:main
+		func_80007380      = 0x80007380; // type:func segment:main
+
+		fake_func_800074D8 = 0x800074D8; // type:func segment:main
+		func_800074E0      = 0x800074E0; // type:func segment:main
+
+		fake_func_80007908 = 0x80007908; // type:func segment:main
+		func_80007910      = 0x80007910; // type:func segment:main
+
+// 19314.s
+	// Real functions missed by splat
+		func_80018E60 = 0x80018E60; // type:func segment:main
+
+	// Fake Function Fixing
+		fake_func_80024878 = 0x80024878; // type:func segment:main
+		func_8001C400      = 0x8001C400; // type:func segment:main
+
+		fake_func_8001C3FC = 0x8001C3FC; // type:func segment:main
+		func_80024880      = 0x80024880; // type:func segment:main
+
+// 3EB20.s
+	// Real functions missed by splat
+		func_800403EC = 0x800403EC; // type:func segment:main
+
+	// Fake Function Fixing
+		fake_func_80041EEC = 0x80041EEC; // type:func segment:main
+		func_80041EF0      = 0x80041EF0; // type:func segment:main
+
+		fake_func_800457CC = 0x800457CC; // type:func segment:main
+		func_800457D0      = 0x800457D0; // type:func segment:main
+
+		fake_func_8004661C = 0x8004661C; // type:func segment:main
+		func_80046620      = 0x80046620; // type:func segment:main
+
+		fake_func_800496F4 = 0x800496F4; // type:func segment:main
+		func_80049700      = 0x80049700; // type:func segment:main
+
+		fake_func_8004CCF8 = 0x8004CCF8; // type:func segment:main
+		func_8004CD00      = 0x8004CD00; // type:func segment:main
+
+		fake_func_800538AC = 0x800538AC; // type:func segment:main
+		func_800538B0      = 0x800538B0; // type:func segment:main
+
+// 55AF0.s
+	// Fake Function Fixing
+		fake_func_80055698 = 0x80055698; // type:func segment:main
+		func_800556A0      = 0x800556A0; // type:func segment:main
+
+		fake_func_80059B4C = 0x80059B4C; // type:func segment:main
+		func_80059B50      = 0x80059B50; // type:func segment:main
+
+		fake_func_8005A11C = 0x8005A11C; // type:func segment:main
+		func_8005A120      = 0x8005A120; // type:func segment:main
+
+		fake_func_8005C61C = 0x8005C61C; // type:func segment:main
+		func_8005C620      = 0x8005C620; // type:func segment:main
+
+		fake_func_8005EE64 = 0x8005EE64; // type:func segment:main
+		func_8005EE70      = 0x8005EE70; // type:func segment:main
+
+		fake_func_800613B8 = 0x800613B8; // type:func segment:main
+		func_800613C0      = 0x800613C0; // type:func segment:main
+
+		fake_func_80064294 = 0x80064294; // type:func segment:main
+		func_800642A0      = 0x800642A0; // type:func segment:main
+
+		fake_func_80065A5C = 0x80065A5C; // type:func segment:main
+		func_80065A60      = 0x80065A60; // type:func segment:main
+
+// 68990.s
+	// Real functions missed by splat
+		func_8006F388 = 0x8006F388; // type:func segment:main
+
+	// Fake Function Fixing
+		fake_func_80069AEC = 0x80069AEC; // type:func segment:main
+		func_80069AF0      = 0x80069AF0; // type:func segment:main
+
+		fake_func_8006ACA4 = 0x8006ACA4; // type:func segment:main
+		func_8006ACB0      = 0x8006ACB0; // type:func segment:main
+
+		fake_func_8006AE48 = 0x8006AE48; // type:func segment:main
+		func_8006AE58      = 0x8006AE58; // type:func segment:main
+
+		fake_func_8006D8FC = 0x8006D8FC; // type:func segment:main
+		func_8006D900      = 0x8006D900; // type:func segment:main
+
+		fake_func_8006F4AC = 0x8006F4AC; // type:func segment:main
+		func_8006F4B0      = 0x8006F4B0; // type:func segment:main
+
+		fake_func_80072CE8 = 0x80072CE8; // type:func segment:main
+		func_80072CF0      = 0x80072CF0; // type:func segment:main
+
+		fake_func_8007A0E8 = 0x8007A0E8; // type:func segment:main
+		func_8007A0F0      = 0x8007A0F0; // type:func segment:main
+
+		fake_func_8007A86C = 0x8007A86C; // type:func segment:main
+		func_8007A870      = 0x8007A870; // type:func segment:main
+
+// 832A0.s
+	// Real functions missed by splat
+		func_800927B0 = 0x800927B0; // type:func segment:main
+		func_80092A54 = 0x80092A54; // type:func segment:main
+		.L80092C6C    = 0x80092C6C; // type:label segment:main
+		func_80092CF0 = 0x80092CF0; // type:func segment:main
+		func_80092F94 = 0x80092F94; // type:func segment:main
+
+	// Fake Function Fixing
+		fake_func_80093E74 = 0x80093E74; // type:func segment:main
+		func_80093E80      = 0x80093E80; // type:func segment:main
+
+		fake_func_80094348 = 0x80094348; // type:func segment:main
+		func_80094350      = 0x80094350; // type:func segment:main
+
+		fake_func_8009711C = 0x8009711C; // type:func segment:main
+		func_80097120      = 0x80097120; // type:func segment:main
+
+		fake_func_80097D58 = 0x80097D58; // type:func segment:main
+		func_80097D60      = 0x80097D60; // type:func segment:main
+
+		fake_func_80099C4C = 0x80099C4C; // type:func segment:main
+		func_80099C50      = 0x80099C50; // type:func segment:main
+
+// 9C8C4.s
+	// Fake Function Fixing
+		fake_func_8009C2C8 = 0x8009C2C8; // type:func segment:main
+		func_8009C2D0      = 0x8009C2D0; // type:func segment:main
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Varibales ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
