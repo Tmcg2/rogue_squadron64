@@ -8,32 +8,20 @@
 // On the one hand it can't be later than v0.95, but on another it can't be earlier than v0.99
 // So wtf is up? Did they hack together a couple different versions, including pre-1.0?
 
-//// inftrees ////
-// .data
-cplens      = 0x80038E54; // type:u32 size:0x7C segment:main
-cplext      = 0x80038ED0; // type:u32 size:0x7C segment:main
-cpdist      = 0x80038F4C; // type:u32 size:0x78 segment:main
-cpdext      = 0x80038FC4; // type:u32 size:0x78 segment:main
-fixed_built = 0x8003903C; // type:s32 size:0x4 segment:main
-
-// .bss
-// type:inflate_huft 
-fixed_mem = 0x8012BF30; // size:0x1090 segment:main
-fixed_bl  = 0x8012CFC0; // type:u32 size:0x4 segment:main
-fixed_bd  = 0x8012CFC4; // type:u32 size:0x4 segment:main
-// type:inflate_huft*
-fixed_tl  = 0x8012CFC8; // size:0x4 segment:main
-// type:inflate_huft*
-fixed_td  = 0x8012CFCC; // size:0x4 segment:main
-
+//// adler32 ////
 // .text
-huft_build            = 0x800290E0; // type:func segment:main
-inflate_trees_bits    = 0x800296A0; // type:func segment:main
-inflate_trees_dynamic = 0x8002971C; // type:func segment:main
-inflate_trees_fixed   = 0x80029864; // type:func segment:main
-// This function appears to be from v0.99 (or later) based on the inclusion of 2 `while` loops
-inflate_trees_free    = 0x80029A68; // type:func segment:main
-falloc                = 0x80029AE8; // type:func segment:main
+adler32 = 0x800269B0; // type:func segment:main
+
+//// inflate ////
+// .text
+// inflateReset and inflateEnd are also getting inline'd
+inflateReset         = 0x80026BA0; // type:func segment:main
+inflateEnd           = 0x80026C04; // type:func segment:main
+inflateInit2_        = 0x80026C7C; // type:func segment:main
+inflateInit_         = 0x80026E7C; // type:func segment:main
+inflate              = 0x80026EA8; // type:func segment:main
+inflateSetDictionary = 0x8002739C; // type:func segment:main
+inflateSync          = 0x80027468; // type:func segment:main
 
 //// infblock ////
 // .data
@@ -48,28 +36,6 @@ inflate_blocks         = 0x80027818; // type:func segment:main
 inflate_blocks_free    = 0x800283D8; // type:func segment:main
 inflate_set_dictionary = 0x800284D4; // type:func segment:main
 
-//// infutil ////
-// .data
-inflate_mask = 0x80039040; // type:u32 size:0x44 segment:main
-
-// .text
-inflate_flush = 0x80029B20; // type:func segment:main
-
-//// adler32 ////
-// .text
-adler32 = 0x800269B0; // type:func segment:main
-
-//// inflate ////
-// .text
-// inflateReset and inflateEnd are also getting inline'd
-inflateReset         = 0x80026B98; // type:func segment:main
-inflateEnd           = 0x80026C04; // type:func segment:main
-inflateInit2_        = 0x80026C7C; // type:func segment:main
-inflateInit_         = 0x80026E7C; // type:func segment:main
-inflate              = 0x80026EA8; // type:func segment:main
-inflateSetDictionary = 0x8002739C; // type:func segment:main
-inflateSync          = 0x80027468; // type:func segment:main
-
 //// infcodes ////
 // .text
 inflate_codes_new  = 0x80028520; // type:func segment:main
@@ -80,6 +46,40 @@ inflate_codes_free = 0x80028D2C; // type:func segment:main
 // .text
 inflate_fast = 0x80028D60; // type:func segment:main
 
+//// inftrees ////
+// .data
+cplens      = 0x80038E54; // type:u32 size:0x7C segment:main
+cplext      = 0x80038ED0; // type:u32 size:0x7C segment:main
+cpdist      = 0x80038F4C; // type:u32 size:0x78 segment:main
+cpdext      = 0x80038FC4; // type:u32 size:0x78 segment:main
+fixed_built = 0x8003903C; // type:s32 size:0x4 segment:main
+
+// .bss
+// type:inflate_huft 
+fixed_mem = 0x8012BF30; // type:u32 size:0x1090 segment:main
+fixed_bl  = 0x8012CFC0; // type:u32 size:0x4 segment:main
+fixed_bd  = 0x8012CFC4; // type:u32 size:0x4 segment:main
+// type:inflate_huft*
+fixed_tl  = 0x8012CFC8; // type:u32 segment:main
+// type:inflate_huft*
+fixed_td  = 0x8012CFCC; // type:u32 segment:main
+
+// .text
+huft_build            = 0x800290E0; // type:func segment:main
+inflate_trees_bits    = 0x800296A0; // type:func segment:main
+inflate_trees_dynamic = 0x8002971C; // type:func segment:main
+inflate_trees_fixed   = 0x80029864; // type:func segment:main
+// This function appears to be from v0.99 (or later) based on the inclusion of 2 `while` loops
+inflate_trees_free    = 0x80029A68; // type:func segment:main
+falloc                = 0x80029AE8; // type:func segment:main
+
+//// infutil ////
+// .data
+inflate_mask = 0x80039040; // type:u32 size:0x44 segment:main
+
+// .text
+inflate_flush = 0x80029B20; // type:func segment:main
+
 //// zutil ////
 // .text
 // This isn't `zmemcpy` found in the zlib source, it appears to be a handwritten assembly function
@@ -88,9 +88,40 @@ zmemcpy = 0x80018EF4; // type:func segment:main
 zcalloc = 0x80029CD0; // type:func segment:main
 zcfree  = 0x80029CF4; // type:func segment:main
 
+// Fake Function Fixing
+
+fake_func_8002851C = 0x8002851C; // type:func segment:main
+// Real function is inflate_codes_new
+
+fake_func_80028D58 = 0x80028D58; // type:func segment:main
+// Real function is inflate_fast
+
+fake_func_80026B98 = 0x80026B98; // type:func segment:main
+// Real function is inflateReset
+
+fake_func_800290D8 = 0x800290D8; // type:func segment:main
+// Real function is huft_build
+
+fake_func_80029B14 = 0x80029B14; // type:func segment:main
+// Real function is inflate_flush
+
+fake_func_80029D14 = 0x80029D14; // type:func segment:main
+// Real function is osAiSetFrequency
+
 ////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////// Jump Table Stuff ///////////////////////////////
+////////////////////////////////// Variables ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-jtbl_80000AB0 = 0x80000AB0; // type:jtbl_label segment:main
-jtbl_80000AE0 = 0x80000AE0; // type:jtbl_label segment:main
+D_80000B18 = 0x80000B18; // type:asciz size:0x3 segment:main
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// File Split Garbage ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+junk_80000AA8 = 0x80000AA8; // type:u8 segment:main
+junk_80000AD8 = 0x80000AD8; // type:u8 segment:main
+junk_80000B08 = 0x80000B08; // type:u8 segment:main
+junk_80000B1B = 0x80000B1B; // type:u8 segment:main
+junk_80038E4C = 0x80038E4C; // type:u8 segment:main
+junk_80039084 = 0x80039084; // type:u8 segment:main
+jukn_800390B8 = 0x800390B8; // type:u8 segment:main

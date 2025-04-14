@@ -2,7 +2,7 @@
 /////////////////////////////////// Strings ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_800A5140 = 0x800A5140; // type:asciz segment:cinematic_overlay allow_duplicated:True
+D_800A5140 = 0x800A5140; // type:asciz segment:cinematic_overlay
 D_800A5148 = 0x800A5148; // type:asciz segment:cinematic_overlay
 D_800A5150 = 0x800A5150; // type:asciz segment:cinematic_overlay
 D_800A517C = 0x800A517C; // type:asciz segment:cinematic_overlay
@@ -13,6 +13,7 @@ D_800A530C = 0x800A530C; // type:asciz segment:cinematic_overlay
 D_800A5984 = 0x800A5984; // type:asciz segment:cinematic_overlay
 D_800A5994 = 0x800A5994; // type:asciz segment:cinematic_overlay
 D_800A59A4 = 0x800A59A4; // type:asciz segment:cinematic_overlay
+D_800A5B9C = 0x800A5B9C; // type:asciz segment:cinematic_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
@@ -20,3 +21,80 @@ D_800A59A4 = 0x800A59A4; // type:asciz segment:cinematic_overlay
 
 load_cutscene         = 0x800A6620; // type:func segment:cinematic_overlay
 cuts_0058_bubble_sort = 0x800AEA28; // type:func segment:cinematic_overlay
+
+// Fake Function Fixing
+fake_func_800AF6A8 = 0x800AF6A8; // type:func segment:cinematic_overlay
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Varibales ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+D_800AF92C = 0x800AF92C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AF988 = 0x800AF988; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AF9E4 = 0x800AF9E4; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFA40 = 0x800AFA40; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFA9C = 0x800AFA9C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFAF8 = 0x800AFAF8; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFB54 = 0x800AFB54; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFBB0 = 0x800AFBB0; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFC0C = 0x800AFC0C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFC68 = 0x800AFC68; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFCC4 = 0x800AFCC4; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFD20 = 0x800AFD20; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFD7C = 0x800AFD7C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFDD8 = 0x800AFDD8; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFE34 = 0x800AFE34; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFE90 = 0x800AFE90; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFEEC = 0x800AFEEC; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFF48 = 0x800AFF48; // type:u32 size:0x5C segment:cinematic_overlay
+D_800AFFA4 = 0x800AFFA4; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0000 = 0x800B0000; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B005C = 0x800B005C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B00B8 = 0x800B00B8; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0114 = 0x800B0114; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0170 = 0x800B0170; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B01CC = 0x800B01CC; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0228 = 0x800B0228; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0284 = 0x800B0284; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B02E0 = 0x800B02E0; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B033C = 0x800B033C; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0398 = 0x800B0398; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B03F4 = 0x800B03F4; // type:u32 size:0x5C segment:cinematic_overlay
+D_800B0450 = 0x800B0450; // type:u32 size:0x5C segment:cinematic_overlay
+
+D_800B04AC = 0x800B04AC; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B04C0 = 0x800B04C0; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B04D4 = 0x800B04D4; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B04E8 = 0x800B04E8; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B04FC = 0x800B04FC; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0510 = 0x800B0510; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0524 = 0x800B0524; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0538 = 0x800B0538; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B054C = 0x800B054C; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0560 = 0x800B0560; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0574 = 0x800B0574; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0588 = 0x800B0588; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B059C = 0x800B059C; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B05B0 = 0x800B05B0; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B05C4 = 0x800B05C4; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B05D8 = 0x800B05D8; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B05EC = 0x800B05EC; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0600 = 0x800B0600; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0614 = 0x800B0614; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0628 = 0x800B0628; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B063C = 0x800B063C; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0650 = 0x800B0650; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0664 = 0x800B0664; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0678 = 0x800B0678; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B068C = 0x800B068C; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B06A0 = 0x800B06A0; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B06B4 = 0x800B06B4; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B06C8 = 0x800B06C8; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B06DC = 0x800B06DC; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B06F0 = 0x800B06F0; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0704 = 0x800B0704; // type:u32 size:0x14 segment:cinematic_overlay
+D_800B0718 = 0x800B0718; // type:u32 size:0x14 segment:cinematic_overlay
+
+D_800B072C = 0x800B072C; // type:u32 size:0xA0 segment:cinematic_overlay
+D_800B07CC = 0x800B07CC; // type:u32 size:0xA0 segment:cinematic_overlay
+D_800B086C = 0x800B086C; // type:u32 size:0xA0 segment:cinematic_overlay

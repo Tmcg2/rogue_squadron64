@@ -6,7 +6,7 @@ options:
   elf_path: build/roguesquadron.elf
   base_path: .
   platform: n64
-  compiler: GCC
+  compiler: KMC
 
   # asm_path: asm
   # src_path: src
@@ -63,11 +63,8 @@ segments:
     type: code
     start: 0x40
     vram: 0xA4000040
-    # Splat complains about the overlay VRAM segments overlapping with the global VRAM segment if this isn't here
-    # Although I've been told that this shouldn't be necessary
-    exclusive_ram_id: ipl3
     subsegments:
-      - [0x40, hasm, ipl3_entry]
+      - [0x40, ipl3, ipl3_entry]
       - [0xB70, bin, ipl3_font]
 
   - name: entry
@@ -82,32 +79,57 @@ segments:
     start: 0x01040
     vram: 0x80000440
     bss_size: 0x47490
-    # Splat complains about the overlay VRAM segments overlapping with the global VRAM segment if this isn't here
-    # Although I've been told that this shouldn't be necessary
-    exclusive_ram_id: main
     follows_vram: entry
+    exclusive_ram_id: main
     subsegments:
-      - [0x01040, rodata,  "main/01040"] # Part of rodata for main?
+      - [0x01040, rodata,  "main/01040"]
+      - [0x01050, rodata,  "main/01050"]
+      - [0x01060, rodata,  "main/01060"]
       - [0x01070, rodata,  "main/01070"]
+      - [0x01080, rodata,  "main/01080"]
       - [0x01100, rodata,  "main/01100"]
       - [0x01120, rodata,  "main/01120"]
       - [0x013D0, rodata,  "main/013D0"]
-      - [0x01670, .rodata, "zlib"]
-      - [0x01720, asm,     "main/01720"] # main code, part of it at least
+      - [0x013F0, rodata,  "main/013F0"]
+      - [0x01410, rodata,  "main/01410"]
+      - [0x01590, rodata,  "main/01590"]
+      - [0x01600, rodata,  "main/01600"]
+      - [0x01670, .rodata, "zlib/inflate"]
+      - [0x016B0, .rodata, "zlib/infblock"]
+      - [0x016E0, .rodata, "zlib/infcodes"]
+      - [0x01720, asm,     "main/01720"]
       - [0x033C0, asm,     "main/033C0"]
       - [0x03F80, asm,     "main/03F80"]
       - [0x04030, asm,     "main/04030"]
       - [0x04080, asm,     "main/04080"]
       - [0x05F80, asm,     "main/05F80"]
+      - [0x06170, asm,     "main/06170"]
       - [0x06560, asm,     "main/06560"]
       - [0x07800, asm,     "main/07800"]
       - [0x07F80, asm,     "main/07F80"]
       - [0x080E0, asm,     "main/080E0"]
       - [0x08510, asm,     "main/08510"]
-      - [0x192D8, rodata,  "main/192D8"]
-      - [0x19314, asm,     "main/19314"]
-      - [0x25620, asm,     "main/25620"]
-      - [0x275B0, c,       "zlib"]
+      # This is a bunch of hand written code (seemingly matrix math related)
+      # It has some data at the top too, but the alignment between it and the text is weird.
+      # I don't know if the linker can handle the strange alignment, so I'm just leaving it as a single asm block for now
+      - [0x192E0, hasm,    "main/192E0"]
+      # This is what it would be if you split them up
+      # - [0x192E0, data,    "main/192E0"]
+      # - [0x19314, hasm,    "main/19314"]
+      - [0x1A410, asm,     "main/1A410"]
+      - [0x1D000, asm,     "main/1D000"]
+      - [0x25480, asm,     "main/25480"]
+      # I'm not actually 100% what to call this.
+      # There's definitely more than one set of ucodes in this binary (probably non/FIFO) but I don't know how to split them up
+      - [0x25610, textbin, "main/gspF3DEXMainText"]
+      - [0x275B0, c,       "zlib/adler32"]
+      - [0x277A0, c,       "zlib/inflate"]
+      - [0x281F0, c,       "zlib/infblock"]
+      - [0x29120, c,       "zlib/infcodes"]
+      - [0x29960, c,       "zlib/inffast"]
+      - [0x29CE0, c,       "zlib/inftrees"]
+      - [0x2A720, c,       "zlib/infutil"]
+      - [0x2A8D0, c,       "zlib/zutil"]
       # Based on some stuff in the Ai functions, we're on a libultra version < J
       - [0x2A920, c,       "libultra/io/aisetfreq"]
       - [0x2AA80, c,       "libultra/io/aisetnextbuf"]
@@ -231,13 +253,21 @@ segments:
       - [0x37E70, c,       "libultra/libc/xlitob"]
       - [0x38110, c,       "libultra/os/yieldthread"]
       - [0x38160, data,    "main/38160"]
-      - [0x38170, data,    "main/38170"]
       - [0x381B0, data,    "main/381B0"]
       - [0x38250, data,    "main/38250"]
       - [0x383C0, data,    "main/383C0"]
-      - [0x383D0, data,    "main/383D0"]
       - [0x394E0, data,    "main/394E0"]
-      - [0x39A00, .data,   "zlib"]
+      - [0x39900, databin, "main/gspF3DEXMainData"]
+      - [0x39A00,  data,   "zlib/infblock"]
+      # I'm a little confused by something here...
+      # In the actual zlib source, this should start with cplens, but here there's an errant word
+      # just before cplens. Its currently treated as a string but frankly it could be just about anything
+      - [0x39A50,  data,   "zlib/inftrees"]
+      - [0x39C40,  data,   "zlib/infutil"]
+      # This is speculative, I can't figure out what this data is meant to be
+      # Based on its location I believe that it has to belong to zutil but I don't see
+      # anything in zlib's zutil file that resembles this data...
+      - [0x39C90,  data,   "zlib/zutil"]
       - [0x39CC0, .data,   "libultra/io/aisetnextbuf"]
       - [0x39CD0, .data,   "libultra/io/controller"]
       - [0x39CE0, .data,   "libultra/os/exceptasm"]
@@ -267,48 +297,122 @@ segments:
       - [0x3AE80, .rodata, "libultra/libc/xprintf"]
       - [0x3AF80, .rodata, "libultra/libc/xldtob"]
       - [0x3AFE0, rodata,  "main/3AFE0"]
+      - [0x3B0D0, rodata,  "main/3B0D0"]
+      - [0x3B210, rodata,  "main/3B210"]
       - [0x3B240, rodata,  "main/3B240"]
+      - [0x3B3E0, rodata,  "main/3B3E0"]
+      - [0x3B420, rodata,  "main/3B420"]
+      - [0x3B4C0, rodata,  "main/3B4C0"]
       - [0x3B4D0, rodata,  "main/3B4D0"]
+      - [0x3B7E0, rodata,  "main/3B7E0"]
       - [0x3B8D0, rodata,  "main/3B8D0"]
+      - [0x3B920, rodata,  "main/3B920"]
+      - [0x3B9C0, rodata,  "main/3B9C0"]
       - [0x3BE30, rodata,  "main/3BE30"]
+      - [0x3BF00, rodata,  "main/3BF00"]
+      - [0x3C010, rodata,  "main/3C010"]
       - [0x3C0D0, rodata,  "main/3C0D0"]
       - [0x3C2D0, rodata,  "main/3C2D0"]
       - [0x3C2E0, rodata,  "main/3C2E0"]
+      - [0x3C430, rodata,  "main/3C430"]
+      - [0x3CE60, rodata,  "main/3CE60"]
+      - [0x3CEE0, rodata,  "main/3CEE0"]
       - [0x3D3D0, rodata,  "main/3D3D0"]
-      - [0x3DF60, rodata,  "main/3DF60"]
-      - [0x3E260, rodata,  "main/3E260"]
+      - [0x3D4D0, rodata,  "main/3D4D0"]
+      - [0x3D500, rodata,  "main/3D500"]
+      - [0x3D560, rodata,  "main/3D560"]
+      - [0x3D5D0, rodata,  "main/3D5D0"]
+      - [0x3D6F0, rodata,  "main/3D6F0"]
+      - [0x3D770, rodata,  "main/3D770"]
+      - [0x3DAF0, rodata,  "main/3DAF0"]
+      - [0x3E100, rodata,  "main/3E100"]
+      - [0x3E230, rodata,  "main/3E230"]
+      - [0x3EA70, rodata,  "main/3EA70"]
+      - [0x3EAF0, rodata,  "main/3EAF0"]
       - [0x3EB00, rodata,  "main/3EB00"]
-      # Might be the beginning of the MORT handling code? Maybe?
       - [0x3EB20, asm,     "main/3EB20"]
+      - [0x3EBA0, asm,     "main/3EBA0"]
+      - [0x40F10, asm,     "main/40F10"]
+      - [0x42AF0, asm,     "main/42AF0"]
+      - [0x463D0, asm,     "main/463D0"]
+      - [0x47220, asm,     "main/47220"]
+      - [0x4A300, asm,     "main/4A300"]
+      - [0x4D900, asm,     "main/4D900"]
+      - [0x544B0, asm,     "main/544B0"]
+      - [0x55250, asm,     "main/55250"]
       - [0x55AF0, asm,     "main/55AF0"]
+      - [0x561F0, asm,     "main/561F0"]
+      - [0x562A0, asm,     "main/562A0"]
+      - [0x56630, asm,     "main/56630"]
+      - [0x5A750, asm,     "main/5A750"]
+      - [0x5AD20, asm,     "main/5AD20"]
+      - [0x5D220, asm,     "main/5D220"]
+      - [0x5FA70, asm,     "main/5FA70"]
+      - [0x61FC0, asm,     "main/61FC0"]
+      - [0x64EA0, asm,     "main/64EA0"]
+      - [0x65540, asm,     "main/65540"]
+      - [0x66660, asm,     "main/66660"]
+      - [0x66FB0, asm,     "main/66FB0"]
       - [0x68990, asm,     "main/68990"]
+      - [0x6A6F0, asm,     "main/6A6F0"]
+      - [0x6B8B0, asm,     "main/6B8B0"]
+      - [0x6C310, asm,     "main/6C310"]
+      - [0x6E500, asm,     "main/6E500"]
+      - [0x700B0, asm,     "main/700B0"]
+      - [0x738F0, asm,     "main/738F0"]
+      - [0x79E80, asm,     "main/79E80"]
+      - [0x7A8E0, asm,     "main/7A8E0"]
+      - [0x7ACF0, asm,     "main/7ACF0"]
+      - [0x7B470, asm,     "main/7B470"]
+      - [0x7CEA0, asm,     "main/7CEA0"]
+      - [0x82E70, asm,     "main/82E70"]
+      - [0x831D0, textbin, "main/rspbootText"]
       - [0x832A0, asm,     "main/832A0"]
-      - [0x9ABDC, asm,     "main/9ABDC"]
+      - [0x94A80, asm,     "main/94A80"]
+      - [0x94F50, asm,     "main/94F50"]
+      - [0x97D20, asm,     "main/97D20"]
+      - [0x98960, asm,     "main/98960"]
+      - [0x9A850, asm,     "main/9A850"]
+      - [0x9ABE0, textbin, "main/aspMainText"]
       - [0x9BB60, asm,     "main/9BB60"]
+      - [0x9CED0, asm,     "main/9CED0"]
       # This file has some bullshit going on
       # 0x9E4BC and 0x9E578 are referenced as if they're branch targets, but in reality they are data
       # They're being used as branch targets purely as a way to shove the program counter into $ra
       - [0x9E3D0, asm,     "main/9E3D0"]
       - [0x9E9D0, rodata,  "main/9E9D0"]
-      - { start: auto, type: bss,  vram: 0x8010D200, name: "1720.s" }
-      - { start: auto, type: .bss, vram: 0x8012BF30, name: "zlib" }
-      - { start: auto, type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread" }
-      - { start: auto, type: .bss, vram: 0x8012D010, name: "libultra/io/controller" }
-      - { start: auto, type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize" }
-      - { start: auto, type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver" } # Contains __osThreadSave, only used in exceptasm.s
-      - { start: auto, type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt" }
-      - { start: auto, type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit" }
-      - { start: auto, type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor" }
-      - { start: auto, type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug" }
-      - { start: auto, type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr" }
-      - { start: auto, type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit" }
-      - { start: auto, type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs" }
-      - { start: auto, type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg" }
-      - { start: auto, type: .bss, vram: 0x8012F850, name: "libultra/io/siacs" }
-      - { start: auto, type: .bss, vram: 0x8012F870, name: "libultra/io/sptask" }
-      - { start: auto, type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr" }
-      - { start: auto, type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr" }
-      - { start: auto, type: bss,  vram: 0x80130B10, name: "125910.s" }
+      - [0x9EAC0, rodata,  "main/9EAC0"]
+      - [0x9EAD0, rodata,  "main/9EAD0"]
+      - [0x9EAE0, rodata,  "main/9EAE0"]
+      - [0x9F850, rodata,  "main/9F850"]
+      - [0xA0850, rodata,  "main/A0850"]
+      - [0xA11D0, rodata,  "main/A11D0"]
+      - [0xA1660, rodata,  "main/A1660"]
+      - [0xA1690, rodata,  "main/A1690"]
+      - [0xA1AD0, rodata,  "main/A1AD0"]
+      - [0xA2380, rodata,  "main/A2380"]
+      - [0xA2390, rodata,  "main/A2390"]
+      - [0xA5A00, databin, "main/aspMainData"]
+      - [0xA5D20, rodata,  "main/A5D20"]
+      - {type:  bss, vram: 0x8010D200, name: "main/8010D200"              }
+      - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
+      - {type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
+      - {type: .bss, vram: 0x8012D010, name: "libultra/io/controller"     }
+      - {type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }
+      - {type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver"} # Contains __osThreadSave, only used in exceptasm.s
+      - {type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt"   }
+      - {type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit"    }
+      - {type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor"          }
+      - {type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug"      }
+      - {type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr"          }
+      - {type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit"    }
+      - {type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs"          }
+      - {type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg"   }
+      - {type: .bss, vram: 0x8012F850, name: "libultra/io/siacs"          }
+      - {type: .bss, vram: 0x8012F870, name: "libultra/io/sptask"         }
+      - {type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
+      - {type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
+      - {type:  bss, vram: 0x80130B10, name: "main/80130B10"              }
 
   - name: mission_overlay
     type: code
@@ -318,13 +422,130 @@ segments:
     exclusive_ram_id: "800A5130_overlay"
     subsegments:
       - [0x000A5D30, rodata, "mission_overlay/0A5D30"]
+      - [0x000A5DE0, rodata, "mission_overlay/0A5DE0"]
+      - [0x000A5DF0, rodata, "mission_overlay/0A5DF0"]
+      - [0x000A5FE0, rodata, "mission_overlay/0A5FE0"]
+      - [0x000A6410, rodata, "mission_overlay/0A6410"]
+      - [0x000A6590, rodata, "mission_overlay/0A6590"]
+      - [0x000A6720, rodata, "mission_overlay/0A6720"]
+      - [0x000A6820, rodata, "mission_overlay/0A6820"]
+      - [0x000A6AE0, rodata, "mission_overlay/0A6AE0"]
+      - [0x000A6BE0, rodata, "mission_overlay/0A6BE0"]
+      - [0x000A6CD0, rodata, "mission_overlay/0A6CD0"]
+      - [0x000A6DE0, rodata, "mission_overlay/0A6DE0"]
+      - [0x000A6E40, rodata, "mission_overlay/0A6E40"]
+      - [0x000A6E50, rodata, "mission_overlay/0A6E50"]
+      - [0x000A7330, rodata, "mission_overlay/0A7330"]
+      - [0x000A7480, rodata, "mission_overlay/0A7480"]
+      - [0x000A7560, rodata, "mission_overlay/0A7560"]
+      - [0x000A7570, rodata, "mission_overlay/0A7570"]
+      - [0x000A7780, rodata, "mission_overlay/0A7780"]
+      - [0x000A77A0, rodata, "mission_overlay/0A77A0"]
+      - [0x000A7FC0, rodata, "mission_overlay/0A7FC0"]
+      - [0x000A81F0, rodata, "mission_overlay/0A81F0"]
+      - [0x000A8290, rodata, "mission_overlay/0A8290"]
+      - [0x000A8560, rodata, "mission_overlay/0A8560"]
+      - [0x000A8710, rodata, "mission_overlay/0A8710"]
+      - [0x000A8910, rodata, "mission_overlay/0A8910"]
+      - [0x000A89E0, rodata, "mission_overlay/0A89E0"]
+      - [0x000A8E90, rodata, "mission_overlay/0A8E90"]
+      - [0x000A90C0, rodata, "mission_overlay/0A90C0"]
+      - [0x000A92D0, rodata, "mission_overlay/0A92D0"]
+      - [0x000A9490, rodata, "mission_overlay/0A9490"]
+      - [0x000A9530, rodata, "mission_overlay/0A9530"]
+      - [0x000A9570, rodata, "mission_overlay/0A9570"]
+      - [0x000A9B70, rodata, "mission_overlay/0A9B70"]
+      - [0x000A9CB0, rodata, "mission_overlay/0A9CB0"]
+      - [0x000AA030, rodata, "mission_overlay/0AA030"]
+      - [0x000AA0D0, rodata, "mission_overlay/0AA0D0"]
+      - [0x000AA150, rodata, "mission_overlay/0AA150"]
+      - [0x000AA190, rodata, "mission_overlay/0AA190"]
+      - [0x000AA1B0, rodata, "mission_overlay/0AA1B0"]
+      - [0x000AA220, rodata, "mission_overlay/0AA220"]
+      - [0x000AA2C0, rodata, "mission_overlay/0AA2C0"]
+      - [0x000AA330, rodata, "mission_overlay/0AA330"]
+      - [0x000AA360, rodata, "mission_overlay/0AA360"]
+      - [0x000AA380, rodata, "mission_overlay/0AA380"]
+      - [0x000AA3D0, rodata, "mission_overlay/0AA3D0"]
+      - [0x000AA430, rodata, "mission_overlay/0AA430"]
+      - [0x000AA460, rodata, "mission_overlay/0AA460"]
+      - [0x000AA470, rodata, "mission_overlay/0AA470"]
+      - [0x000AA4F0, rodata, "mission_overlay/0AA4F0"]
+      - [0x000AA570, rodata, "mission_overlay/0AA570"]
+      - [0x000AA5A0, rodata, "mission_overlay/0AA5A0"]
+      - [0x000AA5F0, rodata, "mission_overlay/0AA5F0"]
+      - [0x000AA640, rodata, "mission_overlay/0AA640"]
+      - [0x000AA680, rodata, "mission_overlay/0AA680"]
+      - [0x000AA760, rodata, "mission_overlay/0AA760"]
       - [0x000AA780, asm,    "mission_overlay/0AA780"]
-      - [0x000FCA14, rodata, "mission_overlay/0FCA14"]
+      - [0x000AB2D0, asm,    "mission_overlay/0AB2D0"]
+      - [0x000AB6E0, asm,    "mission_overlay/0AB6E0"]
+      - [0x000ADF80, asm,    "mission_overlay/0ADF80"]
+      - [0x000AEFF0, asm,    "mission_overlay/0AEFF0"]
+      - [0x000B4EC0, asm,    "mission_overlay/0B4EC0"]
+      - [0x000B64C0, asm,    "mission_overlay/0B64C0"]
+      - [0x000B81D0, asm,    "mission_overlay/0B81D0"]
+      - [0x000B9600, asm,    "mission_overlay/0B9600"]
+      - [0x000BAFF0, asm,    "mission_overlay/0BAFF0"]
+      - [0x000BD840, asm,    "mission_overlay/0BD840"]
+      - [0x000BF800, asm,    "mission_overlay/0BF800"]
+      - [0x000C00A0, asm,    "mission_overlay/0C00A0"]
+      - [0x000C0390, asm,    "mission_overlay/0C0390"]
+      - [0x000C4DB0, asm,    "mission_overlay/0C4DB0"]
+      - [0x000C70B0, asm,    "mission_overlay/0C70B0"]
+      - [0x000C89C0, asm,    "mission_overlay/0C89C0"]
+      - [0x000CAE70, asm,    "mission_overlay/0CAE70"]
+      - [0x000CFB20, asm,    "mission_overlay/0CFB20"]
+      - [0x000D38A0, asm,    "mission_overlay/0D38A0"]
+      - [0x000D5AD0, asm,    "mission_overlay/0D5AD0"]
+      - [0x000DDED0, asm,    "mission_overlay/0DDED0"]
+      - [0x000E0790, asm,    "mission_overlay/0E0790"]
+      - [0x000E4C70, asm,    "mission_overlay/0E4C70"]
+      - [0x000E5080, asm,    "mission_overlay/0E5080"]
+      - [0x000E7DD0, asm,    "mission_overlay/0E7DD0"]
+      - [0x000E9640, asm,    "mission_overlay/0E9640"]
+      - [0x000EA6E0, asm,    "mission_overlay/0EA6E0"]
+      - [0x000ECD10, asm,    "mission_overlay/0ECD10"]
+      - [0x000ED2F0, asm,    "mission_overlay/0ED2F0"]
+      - [0x000EDA10, asm,    "mission_overlay/0EDA10"]
+      - [0x000EDD50, asm,    "mission_overlay/0EDD50"]
+      - [0x000F0980, asm,    "mission_overlay/0F0980"]
+      - [0x000F09E0, asm,    "mission_overlay/0F09E0"]
+      - [0x000F3E90, asm,    "mission_overlay/0F3E90"]
+      - [0x000FAE50, asm,    "mission_overlay/0FAE50"]
       - [0x000FCA20, asm,    "mission_overlay/0FCA20"]
-      - [0x000FFB04, rodata, "mission_overlay/0FFB04"]
       - [0x000FFB10, asm,    "mission_overlay/0FFB10"]
-      - [0x0010A240, rodata, "mission_overlay/10A240"]
-      - { start: auto, type: bss, vram: 0x8010B6D0 }
+      - [0x001028D0, asm,    "mission_overlay/1028D0"]
+      - [0x001036A0, asm,    "mission_overlay/1036A0"]
+      - [0x00104180, asm,    "mission_overlay/104180"]
+      - [0x00104910, asm,    "mission_overlay/104910"]
+      - [0x00104E10, asm,    "mission_overlay/104E10"]
+      - [0x001050E0, asm,    "mission_overlay/1050E0"]
+      - [0x00106760, asm,    "mission_overlay/106760"]
+      - [0x00106DA0, asm,    "mission_overlay/106DA0"]
+      - [0x001077F0, asm,    "mission_overlay/1077F0"]
+      - [0x00107E20, asm,    "mission_overlay/107E20"]
+      - [0x00108AB0, asm,    "mission_overlay/108AB0"]
+      - [0x00109790, asm,    "mission_overlay/109790"]
+      - [0x0010A030, asm,    "mission_overlay/10A030"]
+      - [0x0010A220, asm,    "mission_overlay/10A220"]
+      - [0x0010A240, data,   "mission_overlay/10A240"]
+      - [0x0010A4B0, data,   "mission_overlay/10A4B0"]
+      - [0x0010A700, data,   "mission_overlay/10A700"]
+      - [0x0010A980, data,   "mission_overlay/10A980"]
+      - [0x0010ABE0, data,   "mission_overlay/10ABE0"]
+      - [0x0010AC90, data,   "mission_overlay/10AC90"]
+      - [0x0010B050, data,   "mission_overlay/10B050"]
+      - [0x0010B200, data,   "mission_overlay/10B200"]
+      - [0x0010B550, data,   "mission_overlay/10B550"]
+      - [0x0010B700, data,   "mission_overlay/10B700"]
+      - [0x0010B890, data,   "mission_overlay/10B890"]
+      - [0x0010BBB0, data,   "mission_overlay/10BBB0"]
+      - [0x0010BFA0, data,   "mission_overlay/10BFA0"]
+      - [0x0010BFF0, data,   "mission_overlay/10BFF0"]
+      - [0x0010C110, data,   "mission_overlay/10C110"]
+      - [0x0010C290, data,   "mission_overlay/10C290"]
+      - {type: bss, vram: 0x8010B6D0, name: "mission_overlay/8010B6D0"}
 
   - name: menu_overlay
     type: code
@@ -333,18 +554,37 @@ segments:
     bss_size: 0x2EC0
     exclusive_ram_id: "800A5130_overlay"
     subsegments:
-      - [0x10C2D0, rodata, "menu_overlay/10C2D0"]
-      - [0x110410, asm,    "menu_overlay/110410"]
-      - [0x133574, rodata, "menu_overlay/133574"]
-      - { start: auto, type: bss, vram: 0x800CD520 }
+      - [0x0010C2D0, rodata, "menu_overlay/10C2D0"]
+      - [0x0010CB70, rodata, "menu_overlay/10CB70"]
+      - [0x0010CDC0, rodata, "menu_overlay/10CDC0"]
+      - [0x0010CE50, rodata, "menu_overlay/10CE50"]
+      - [0x0010CF70, rodata, "menu_overlay/10CF70"]
+      - [0x0010E700, rodata, "menu_overlay/10E700"]
+      - [0x0010E880, rodata, "menu_overlay/10E880"]
+      - [0x0010EA50, rodata, "menu_overlay/10EA50"]
+      - [0x0010ED70, rodata, "menu_overlay/10ED70"]
+      - [0x0010ED80, rodata, "menu_overlay/10ED80"]
+      - [0x0010EDA0, rodata, "menu_overlay/10EDA0"]
+      - [0x00110410, asm,    "menu_overlay/110410"]
+      - [0x00115E00, asm,    "menu_overlay/115E00"]
+      - [0x001197D0, asm,    "menu_overlay/1197D0"]
+      - [0x0011B970, asm,    "menu_overlay/11B970"]
+      - [0x0012CA40, asm,    "menu_overlay/12CA40"]
+      - [0x0012DB10, asm,    "menu_overlay/12DB10"]
+      - [0x00130D90, asm,    "menu_overlay/130D90"]
+      - [0x001331E0, asm,    "menu_overlay/1331E0"]
+      - [0x00133580, data,   "menu_overlay/133580"]
+      - [0x00133640, data,   "menu_overlay/133640"]
+      - [0x00133DA0, data,   "menu_overlay/133DA0"]
+      - [0x00134450, data,   "menu_overlay/134450"]
+      - [0x001346B0, data,   "menu_overlay/1346B0"]
+      - {type: bss, vram: 0x800CD520, name: "menu_overlay/800CD520"}
 
-  - name: unknown_segment
-    type: code
+  # This segment has 5 non-zero words in it
+  # That I can tell nothing in this segment is ever referenced
+  # I have no idea what's going on here
+  - type: bin
     start: 0x1346C0
-    vram: 0x800A5130 # This is highly suspect...
-    exclusive_ram_id: "800A5130_overlay"
-    subsegments:
-      - [0x1346C0, rodata]
 
   - name: cinematic_overlay
     type: code
@@ -354,13 +594,17 @@ segments:
     exclusive_ram_id: "800A5130_overlay"
     subsegments:
       - [0x137580, rodata, "cinematic_overlay/137580"]
+      - [0x138030, rodata, "cinematic_overlay/138030"]
       - [0x1381D0, asm,    "cinematic_overlay/1381D0"]
-      - [0x141AF8, rodata, "cinematic_overlay/141AF8"]
-      - { start: auto, type: bss, vram: 0x800B0940 }
+      - [0x141B00, data,   "cinematic_overlay/141B00"]
+      - {type: bss, vram: 0x800B0940, name: "cinematic_overlay/800B0940"}
 
 
+  # This segment has 1 non-zero word in it
+  # That I can tell nothing in this segment is ever referenced
+  # I have no idea what's going on here
   - type: bin
-    start: 0x142D90 # In reality this is likely a mix of binary data and regular (ro)data
+    start: 0x142D90
 
   - name: the_data_blob
     type: bin

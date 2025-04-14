@@ -2,28 +2,28 @@
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-bcmp = 0x80029F60; // type:func segment:main
-bcopy = 0x80034010; // type:func segment:main
-bzero = 0x8002A080; // type:func segment:main
-corrupted = 0x800315B8; // type:func segment:main
+bcmp           = 0x80029F60; // type:func segment:main
+bcopy          = 0x80034010; // type:func segment:main
+bzero          = 0x8002A080; // type:func segment:main
+corrupted      = 0x800315B8; // type:func segment:main
 corrupted_init = 0x80031404; // type:func segment:main
-cosf = 0x8002B190; // type:func segment:main
-sinf = 0x80033960; // type:func segment:main
-memcpy = 0x800346F0; // type:func segment:main
-proutSprintf = 0x80033CA0; // type:func segment:main
-sprintf = 0x80033CC4; // type:func segment:main
-strlen = 0x8003471C; // type:func segment:main
-strchr = 0x80034744; // type:func segment:main
-_Printf = 0x80035FD0; // type:func segment:main
-_Putfld = 0x80035960; // type:func segment:main
+cosf           = 0x8002B190; // type:func segment:main
+sinf           = 0x80033960; // type:func segment:main
+memcpy         = 0x800346F0; // type:func segment:main
+proutSprintf   = 0x80033CA0; // type:func segment:main
+sprintf        = 0x80033CC4; // type:func segment:main
+strlen         = 0x8003471C; // type:func segment:main
+strchr         = 0x80034744; // type:func segment:main
+_Printf        = 0x80035FD0; // type:func segment:main
+_Putfld        = 0x80035960; // type:func segment:main
 // There should be _Ldunscale somehwere near here, but
 // I our version of libultra I guess its inlined/not a separate function?
-_Genld = 0x80036620; // type:func segment:main
-viMgrMain = 0x80034F38; // type:func segment:main
+_Genld         = 0x80036620; // type:func segment:main
+viMgrMain      = 0x80034F38; // type:func segment:main
 
-_Ldtob = 0x80036B90; // type:func segment:main
-_Litob = 0x80037270; // type:func segment:main
-_MakeMotorData = 0x8002D710; // type:func
+_Ldtob         = 0x80036B90; // type:func segment:main
+_Litob         = 0x80037270; // type:func segment:main
+_MakeMotorData = 0x8002D710; // type:func segment:main
 
 guMtxCatL      = 0x8002E410; // type:func segment:main
 guMtxCatF      = 0x8002E510; // type:func segment:main
@@ -84,7 +84,7 @@ osPiGetCmdQueue        = 0x80032530; // type:func segment:main
 osPiRawReadIo          = 0x80033170; // type:func segment:main
 osPiRawStartDma        = 0x80033090; // type:func segment:main
 osPiStartDma           = 0x80032420; // type:func segment:main
-osRecvMesg             = 0x800331D0; //type:func segment:main
+osRecvMesg             = 0x800331D0; // type:func segment:main
 osSendMesg             = 0x80033410; // type:func segment:main
 osSetEventMesg         = 0x80033560; // type:func segment:main
 osSetIntMask           = 0x80033630; // type:func segment:main
@@ -133,7 +133,7 @@ __osException            = 0x8002B600; // type:func segment:main
 __osExceptionPreamble    = 0x8002B5F0; // type:func segment:main
 __osGetId                = 0x8002FA04; // type:func segment:main
 __osGetSR                = 0x8002C230; // type:func segment:main
-__osIdCheckSum           = 0x8002F3EC; //type:func segment:main
+__osIdCheckSum           = 0x8002F3EC; // type:func segment:main
 __osInsertTimer          = 0x80034A48; // type:func segment:main
 __osLeoAbnormalResume    = 0x8002CBA4; // type:func segment:main
 __osLeoInterrupt         = 0x8002C500; // type:func segment:main
@@ -248,7 +248,7 @@ __osTimerList        = 0x800391A0; // type:OSTimer* size:0x4 segment:main
 __osViCurr           = 0x80039210; // type:OSViContext* segment:main
 __osViNext           = 0x80039214; // type:OSViContext* segment:main
 __osViIntrCount      = 0x8012F8DC; // type:u32 segment:main
-// Called `__osViMesgQueue` in MK64
+
 viEventQueue         = 0x80130AA0; // type:OSMesgQueue size:0x18 segment:main
 
 CartRomHandle = 0x8012F730; // type:OSPiHandle size:0x74 segment:main
