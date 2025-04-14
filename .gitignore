@@ -1,5 +1,9 @@
-data_block/*
-m2c_output/*
-output_pngs/*
+asm/**
+assets/**
+data_block/**
+m2c_output/**
+output_pngs/**
 tools/*
-lib/*
+
+# venv stuff, should probably recreate and consolidate to a single folder
+venv/**
