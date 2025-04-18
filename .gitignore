@@ -1,6 +1,6 @@
 asm/**
 assets/**
-data_block/**
+data_blob/**
 m2c_output/**
 output_pngs/**
 tools/*

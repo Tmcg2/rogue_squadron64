@@ -1,11 +1,11 @@
 # The Data Blob
 
-The beginning of the data blob is at ROM address 0x144340.
+The beginning of the data blob is at ROM address `0x144340`.
 From here on that address will be referred to as `data_start`.
 The blob is where most (if not all) assets for the game reside.
 Textures, image, sounds, songs, models, text, and probably a couple other things.
 The ReRogue project has a decent explanation of what it looks like here `https://github.com/dpethes/rerogue/blob/master/doc/file_data_spec.txt`.
-I'll a more verbose explanation here, using of C styled structs to specify the structure of the blob.
+I'll give a more verbose explanation here, using of C styled structs to specify the structure of the blob.
 
 ## Data Blob Structure
 
@@ -23,7 +23,9 @@ struct segment_header {
 
 Currently there are only 2 of these: `data` and `dbg_data`.
 
-The `data_offset` value is relative to `data_start` and points to the beginning of the data for that segment.
+The `data_offset` value is relative to the end segment definitions (ROM address `0x144380`).
+It points to the beginning of the data for that segment.
+
 The data blocks themselves have a tiny header too, henceforth called `block_header`s.
 
 ```cpp
@@ -63,12 +65,9 @@ struct manifest_entry {
 `asset_offset` is relative to the `block_header`'s location.
 So, `data_start + segment_header.data_offset + manifest_entry.asset_offset`.
 
-`compressed_size` is interesting, there's a couple things to note about it.
-If its `-1`/`0xFFFFFFFF`, that indicates that the asset is uncompressed (what I'll call "raw" for now).
-Otherwise, the asset in question is compressed with `zlib`.
-The `compressed_size` is also a litte larger than necessary.
-For example, if the asset size after deflation was 596 bytes, it would padded out the 599 bytes (1 less than the next multiple of 4).
-I don't know why they do this.
+A `compressed_size` of `-1`/`0xFFFFFFFF` indicates that the asset is uncompressed (what I'll call "raw" for now).
+When its something other that `0xFFFFFFFF` that indicates that the asset is a `zlib` data stream.
+Such sizes are always over-sized by exactly 10 bytes.
 
 For flags, bit 7 (0x80) indicates that the `manifest_entry` is really a directory, not a single asset.
 Other flag bits are checked in the code but none are ever set so I don't know what they're meant to do yet.
@@ -76,14 +75,7 @@ Other flag bits are checked in the code but none are ever set so I don't know wh
 `directory_size` is only ever non-zero if the directory bit flag is set, and it is the size in bytes of all the `manifest_entry`s (including itself!) in the directory.
 You can get a count of `manifest_entry`s in the directoy (including the directory entry itself!) by dividing this value by 32.
 
-## Asset Information
-
-All compressed assets were compressed using `zlib`, and you can decompress them using the `pigz` utility.
-Based on very VERY minor testing on my part, you can also use `pigz` to compress the the assets again in a way that will match their in-ROM state.
-
-```bash
-pigz --best -z filename_here
-```
+## Assets Types
 
 There are several asset types, I will do my best to explain them here.
 For some files their type is easy to deduce by just looking at their name, for other you'll have to decompress them and investigate them manually.
@@ -190,22 +182,26 @@ The [text file specification](/docs/text_files/text_files.md) has more informati
 
 ## Extracting Assets
 
-I have written a utility, [zz_addresses.py](/docs/data_blob/zz_addresses.py) that:
-1) Extracts the assets from the primary `data` segment
-2) Outputs a [data_subsegment.yaml](/docs/data_blob/data_subsegments.yaml) file that is kind-of-sort-of a `splat` compatible set of entries for each asset
+I have written a utility, [extract_assets](/docs/data_blob/extract_assets.c) that extracts and decompresses the assets from the ROM.
+The directory structure is preserved during extraction.
 
-For #1, the assets are extracted as-is from the ROM and placed in a directory named `data_block`.
-if this directory does not exist the uitility WILL NOT create it.
-Assets are named after the `asset_name` from their `manifest_entry` and are prefixed with their ROM address.
+You'll need to install and link against the `zlib` development libraries to use this utility.
+
+```bash
+# Add `-DDEBUG` for a bunch of debug output during the extraction
+gcc -o extract_assets docs/data_blob/extract_assets.c -lz
+```
+
+Assets are named after the `asset_name` from their `manifest_entry`.
 Assets that are compresses are suffixed with `.zz`, while uncompressed files are suffixed with `.raw`.
 
 Note: files that are compressed (`.zz` files) are raw `zlib` streams, they are NOT `gzip` compatible.
-You have to use the `pigz` utility to decompress them, like so:
+You can also use the `pigz` utility to decompress such assets, like so:
 
 ```bash
 # -d -> decompress
 # -k -> keep the compressed file
-pigz -d -k data_block/<filename_here>.zz
+pigz -d -k path/to/<filename_here>.zz
 ```
 
 To re-compress the file you can do:
@@ -213,14 +209,15 @@ To re-compress the file you can do:
 ```bash
 # --best -> Compression level 9
 # -z -> compress to zlib format, not gzip
-pigz --best -z data_block<filename_here>
+pigz --best -z path/to/<filename_here>
 ```
 
-In regard to #2, `splat` allows end user to provide their own bespoke segment types, so its plausible that I could write an extractor for `zz` types.
-But that would be a lot of work, and I don't really care to do that right now.
+This works a decent percent of the time (66% to 75%), but there are some assets that don't match after decompression.
+Presumably there's some difference in the underlying `zlib` libraries used by Factor 5 and `pigz`.
+
+`splat` allows end user to provide their own bespoke segment types, so its plausible that I could write an extractor for `zz` types.
 A potential would-be-nice for the future would be adding types that look something like `zz:HMT`, `zz:HOB`, and `zz:DEM`.
-Composite types essentially, telling splat first how/if it should decompress the asset and then specifies what exactly the asset is.
-But again, I don't really care to do this at the moment.
+Composite types essentially, telling splat first how/if it should decompress the asset, then further specifying the asset's actual type.
 
 ## Game Code stuff
 
