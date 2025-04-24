@@ -3,13 +3,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <endian.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>
 
 /*
  * KNOWN ISSUES
  * If 2 assets have the same description string they overwrite each other, see wrld_vsanim as an example
  */
 
-#define PNG_OUTPUT_FORMAT "./output_pngs/%s.png"
+#define MAX_FILENAME 256
+char *png_output_format = "./output_pngs/%s.png";
 
 // Generic X bit to Y bit scaling function
 // Works both directions, X does not have to be larger than Y
@@ -102,53 +106,39 @@ struct rgba {
     uint8_t alpha;
 };
 
-struct greyscalealpha4 {
-    uint8_t grey_sample : 4;
-    uint8_t alpha_sample : 4;
+struct full_image_header {
+    uint32_t image_size;
+    uint32_t pixel_offset[8];
+    uint32_t palette_offset;
+    uint32_t image_name_offset;
+    uint16_t image_pixel_width;
+    uint16_t image_pixel_height;
+    uint8_t  always_1;
+    uint8_t  bit_depth;
+    uint16_t flags_type;
+    uint32_t transparency_color;
 };
 
-struct asset_header {
-    uint32_t asset_size; // Really, the size of the asset minus the 4 bytes used for this header entry
-    // All offsets are relative to the point AFTER asset_size
+struct image_context {
+    uint32_t image_size;
     uint32_t pixel_offset;
-    // In reality `pixel_offset` should be an array with size [8], but I've only seen 2 instances of multiple pixel offsets so I'm going to simplify my life a little
-    uint32_t extra_offset;
-    uint32_t palette_offset; // Ought be to 0 for non-palette image types
-    uint32_t description_string_offset;
-    uint16_t width, height;
-    uint8_t bit_depth; // 0 = 4, 1 = 8, only matters for palette/greyscale image types
-    /*
-    * The next 2 flags don't matter to CI assets
-    * If neither of the next 2 flags are set, the alpha value is always maxed out (not alpha, basically)
-    * 0x8000: Alpha value is embedded with the color values
-    * 0x4000: Alpha value is either 0 or max value, depends on whether the color value matches `trans_color` or not
-    * 0x2000: Unknown
-    * 0x1000: Unknown
-    * 0x0800: Has an extra Greyscale4/8 image after the primary image
-    * 0x0400: Has an extra Greyscale16  image after the primary image
-    * 0x0200: Unknown
-    * 0x0100: Unknown
-    * 0x0080: Unknown
-    * 0x0040: Unknown
-    * 0x0020: Unknown
-    * 0x0010: Unknown
-    */
-    uint16_t flags;
-    uint8_t  type;
-    uint32_t trans_color;
+    uint32_t palette_offset;
+    uint16_t image_pixel_width;
+    uint16_t image_pixel_height;
+    uint8_t  bit_depth;
+    uint16_t flags_type;
+    uint32_t transparency_color;
 
-    // Calculated values, not part of the header found in the files
-    uint32_t description_string_size;
-    uint32_t img_byte_size;
+    uint32_t pixel_count;
+    char image_name[MAX_FILENAME];
 };
 
-void export_ci4(FILE *source_file, struct asset_header *header) {
+void export_ci4(FILE *source_file, struct image_context *image) {
     int        ret;
+    uint32_t   raw_size;
     FILE      *png_file;
     uint8_t   *raw_data;
-    uint8_t   *img_data;
-    char      *description_string;
-    char       png_filename[256];
+    char       png_filename[MAX_FILENAME] = {0};
     struct rgb palette[CI4_PAL_SIZE];
 
     spng_ctx        *ctx  = NULL;
@@ -156,23 +146,28 @@ void export_ci4(FILE *source_file, struct asset_header *header) {
     struct spng_plte plte = {0};
     struct spng_trns trns = {0};
 
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    ihdr.color_type = SPNG_COLOR_TYPE_INDEXED;
-    ihdr.bit_depth = 4;
+    printf("Extracting CI4 image %s\n", image->image_name);
 
+    raw_size = image->image_size;
+
+    ihdr.bit_depth = 4;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
+    ihdr.color_type = SPNG_COLOR_TYPE_INDEXED;
+
+    fseek(source_file, image->palette_offset, SEEK_SET);
     fread(palette, sizeof(struct rgb), CI4_PAL_SIZE, source_file);
 
     plte.n_entries = CI4_PAL_SIZE;
-    if (header->flags & 0x4000) {
+    if (image->flags_type & 0x4000) {
         trns.n_type3_entries = CI4_PAL_SIZE;
         for (int i = 0; i < CI4_PAL_SIZE; i++) {
             plte.entries[i].red   = palette[i].red;
             plte.entries[i].green = palette[i].green;
             plte.entries[i].blue  = palette[i].blue;
-            if ((plte.entries[i].red   != ((header->trans_color & 0xFF000000) >> 0x18)) ||
-                (plte.entries[i].green != ((header->trans_color & 0x00FF0000) >> 0x10)) ||
-                (plte.entries[i].blue  != ((header->trans_color & 0x0000FF00) >> 0x08))) {
+            if ((plte.entries[i].red   != ((image->transparency_color & 0xFF000000) >> 0x18)) ||
+                (plte.entries[i].green != ((image->transparency_color & 0x00FF0000) >> 0x10)) ||
+                (plte.entries[i].blue  != ((image->transparency_color & 0x0000FF00) >> 0x08))) {
                 trns.type3_alpha[i] = 0xFF;
             } else {
                 trns.type3_alpha[i] = 0x00;
@@ -186,20 +181,11 @@ void export_ci4(FILE *source_file, struct asset_header *header) {
         }
     }
 
-    raw_data = malloc(header->img_byte_size);
-    fread(raw_data, sizeof(uint8_t), header->img_byte_size, source_file);
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
+    fread(raw_data, sizeof(uint8_t), raw_size, source_file);
 
-    img_data = raw_data;
-
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
-
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
-    }
-
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
     png_file = fopen(png_filename, "wb");
 
     ctx = spng_ctx_new(SPNG_CTX_ENCODER);
@@ -216,7 +202,7 @@ void export_ci4(FILE *source_file, struct asset_header *header) {
         printf("\tset_plte: %d: %s\n", ret, spng_strerror(ret));
     }
 
-    if (header->flags &0x4000) {
+    if (image->flags_type & 0x4000) {
         ret = spng_set_trns(ctx, &trns);
 
         if (ret != SPNG_OK) {
@@ -224,21 +210,19 @@ void export_ci4(FILE *source_file, struct asset_header *header) {
         }
     }
 
-    ret = spng_encode_image(ctx, img_data, header->img_byte_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+    ret = spng_encode_image(ctx, raw_data, raw_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
 
     spng_ctx_free(ctx);
     fclose(png_file);
-    free(description_string);
     free(raw_data);
 }
 
-void export_ci8(FILE *source_file, struct asset_header *header) {
+void export_ci8(FILE *source_file, struct image_context *image) {
     int        ret;
+    uint32_t   raw_size;
     FILE      *png_file;
     uint8_t   *raw_data;
-    uint8_t   *img_data;
-    char      *description_string;
-    char       png_filename[256];
+    char       png_filename[MAX_FILENAME] = {0};
     struct rgb palette[CI8_PAL_SIZE];
 
     spng_ctx        *ctx  = NULL;
@@ -246,50 +230,42 @@ void export_ci8(FILE *source_file, struct asset_header *header) {
     struct spng_plte plte = {0};
     struct spng_trns trns = {0};
 
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    ihdr.color_type = SPNG_COLOR_TYPE_INDEXED;
-    ihdr.bit_depth = 8;
+    printf("Extracting CI8 image %s\n", image->image_name);
 
+    raw_size = image->image_size;
+
+    ihdr.bit_depth = 8;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
+    ihdr.color_type = SPNG_COLOR_TYPE_INDEXED;
+
+    fseek(source_file, image->palette_offset, SEEK_SET);
     fread(palette, sizeof(struct rgb), CI8_PAL_SIZE, source_file);
 
     plte.n_entries = CI8_PAL_SIZE;
-    if (header->flags & 0x4000) {
+    for (int i = 0; i < CI8_PAL_SIZE; i++) {
+        plte.entries[i].red   = palette[i].red;
+        plte.entries[i].green = palette[i].green;
+        plte.entries[i].blue  = palette[i].blue;
+    }
+    if (image->flags_type & 0x4000) {
         trns.n_type3_entries = CI8_PAL_SIZE;
         for (int i = 0; i < CI8_PAL_SIZE; i++) {
-            plte.entries[i].red   = palette[i].red;
-            plte.entries[i].green = palette[i].green;
-            plte.entries[i].blue  = palette[i].blue;
-            if ((plte.entries[i].red   != ((header->trans_color & 0xFF000000) >> 0x18)) ||
-                (plte.entries[i].green != ((header->trans_color & 0x00FF0000) >> 0x10)) ||
-                (plte.entries[i].blue  != ((header->trans_color & 0x0000FF00) >> 0x08))) {
+            if ((plte.entries[i].red   != ((image->transparency_color & 0xFF000000) >> 0x18)) ||
+                (plte.entries[i].green != ((image->transparency_color & 0x00FF0000) >> 0x10)) ||
+                (plte.entries[i].blue  != ((image->transparency_color & 0x0000FF00) >> 0x08))) {
                 trns.type3_alpha[i] = 0xFF;
             } else {
                 trns.type3_alpha[i] = 0x00;
             }
         }
-    } else {
-        for (int i = 0; i < CI8_PAL_SIZE; i++) {
-            plte.entries[i].red   = palette[i].red;
-            plte.entries[i].green = palette[i].green;
-            plte.entries[i].blue  = palette[i].blue;
-        }
     }
 
-    raw_data = malloc(header->img_byte_size);
-    fread(raw_data, sizeof(uint8_t), header->img_byte_size, source_file);
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
+    fread(raw_data, sizeof(uint8_t), raw_size, source_file);
 
-    img_data = raw_data;
-
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
-
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
-    }
-
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
     png_file = fopen(png_filename, "wb");
 
     ctx = spng_ctx_new(SPNG_CTX_ENCODER);
@@ -306,7 +282,7 @@ void export_ci8(FILE *source_file, struct asset_header *header) {
         printf("\tset_plte: %d: %s\n", ret, spng_strerror(ret));
     }
 
-    if (header->flags &0x4000) {
+    if (image->flags_type & 0x4000) {
         ret = spng_set_trns(ctx, &trns);
 
         if (ret != SPNG_OK) {
@@ -314,94 +290,69 @@ void export_ci8(FILE *source_file, struct asset_header *header) {
         }
     }
 
-    ret = spng_encode_image(ctx, img_data, header->img_byte_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+    ret = spng_encode_image(ctx, raw_data, raw_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
 
     spng_ctx_free(ctx);
     fclose(png_file);
-    free(description_string);
     free(raw_data);
 }
 
-void export_rgba5551(FILE *source_file, struct asset_header *header) {
+void export_rgba5551(FILE *source_file, struct image_context *image) {
     int          ret;
-    uint32_t     img_size;
     uint32_t     raw_size;
+    uint32_t     converted_size;
     struct rgb   trans_color, raw_color;
     FILE        *png_file;
-    char        *description_string;
-    uint8_t     *img_data;
     uint16_t    *raw_data;
+    uint8_t     *converted_data;
     struct rgba *converted;
-    char         png_filename[256];
+    char         png_filename[MAX_FILENAME] = {0};
 
     spng_ctx        *ctx  = NULL;
     struct spng_ihdr ihdr = {0};
     struct spng_trns trns = {0};
 
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    ihdr.bit_depth = 8;
-    if (header->flags & 0x8000) {
-        ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA;
+    printf("Extracting RGBA5551 image %s\n", image->image_name);
 
-        img_size = header->width * header->height * 4;
-        raw_size = header->width * header->height * 2;
+    raw_size = image->image_size;
+
+    ihdr.bit_depth = 8;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
+
+    if (image->flags_type & 0x8000) {
+        ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA;
+        converted_size = sizeof(struct rgba) * image->pixel_count;
     } else {
         ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR;
-
-        if (header->flags & 0x4000){
-            trns.red   = (header->trans_color & 0xFF000000) >> 0x18;
-            trns.green = (header->trans_color & 0x00FF0000) >> 0x10;
-            trns.blue  = (header->trans_color & 0x0000FF00) >> 0x08;
-        }
-
-        img_size = header->width * header->height * 3;
-        raw_size = header->width * header->height * 2;
+        converted_size = sizeof(struct rgb) * image->pixel_count;
     }
 
-    raw_data = malloc(sizeof(uint8_t) * raw_size);
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
     fread(raw_data, sizeof(uint8_t), raw_size, source_file);
 
-    img_data = malloc(sizeof(uint8_t) * img_size);
+    converted_data = malloc(converted_size);
 
-    if (header->flags & 0x8000) {
-        for (uint32_t i = 0; i < (header->width * header->height); i++) {
+    if (image->flags_type & 0x8000) {
+        for (uint32_t i = 0; i < image->pixel_count; i++) {
             raw_data[i] = be16toh(raw_data[i]);
-            img_data[4*i]     = scale_x_y((raw_data[i] & 0x7C00) >> 10, 5, 8);
-            img_data[4*i + 1] = scale_x_y((raw_data[i] & 0x03E0) >>  5, 5, 8);
-            img_data[4*i + 2] = scale_x_y((raw_data[i] & 0x001F) >>  0, 5, 8);
-            img_data[4*i + 3] = scale_x_y((raw_data[i] & 0x8000) >> 15, 1, 8);
+            converted_data[(4*i) + 0] = scale_x_y((raw_data[i] & 0x7C00) >> 10, 5, 8);
+            converted_data[(4*i) + 1] = scale_x_y((raw_data[i] & 0x03E0) >>  5, 5, 8);
+            converted_data[(4*i) + 2] = scale_x_y((raw_data[i] & 0x001F) >>  0, 5, 8);
+            // Alpha is the leading bit????
+            converted_data[(4*i) + 3] = scale_x_y((raw_data[i] & 0x8000) >> 15, 1, 8);
         }
     } else {
-        for (uint32_t i = 0; i < (header->width * header->height); i++) {
+        for (uint32_t i = 0; i < image->pixel_count; i++) {
             raw_data[i] = be16toh(raw_data[i]);
-            img_data[3*i]     = scale_x_y((raw_data[i] & 0x7C00) >> 10, 5, 8);
-            img_data[3*i + 1] = scale_x_y((raw_data[i] & 0x03E0) >>  5, 5, 8);
-            img_data[3*i + 2] = scale_x_y((raw_data[i] & 0x001F) >>  0, 5, 8);
+            converted_data[(3*i) + 0] = scale_x_y((raw_data[i] & 0x7C00) >> 10, 5, 8);
+            converted_data[(3*i) + 1] = scale_x_y((raw_data[i] & 0x03E0) >>  5, 5, 8);
+            converted_data[(3*i) + 2] = scale_x_y((raw_data[i] & 0x001F) >>  0, 5, 8);
         }
     }
 
-    /*
-    These checks should technically exist in EVERY image extraction handler, but I've only ever seen this flag for RGBA551 images,
-    specifically `ionexp_IMGS` and `ionex2_IMGS`.
-    We're checking to see if there's an extra data for a greyscale 4/8/16 image after the expected image data.
-    If there is, we'll seek over it for now. In the future we'll have to try and actually extract it.
-
-    An argument to `func_8001F954.c` controls with width/height of the extra image. Its not always the same width/height of the normal image
-    */
-    if (header->flags & 0x0C00) {
-        fseek(source_file, header->description_string_offset - header->extra_offset, SEEK_CUR);
-    }
-
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
-
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
-    }
-
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
     png_file = fopen(png_filename, "wb");
 
     ctx = spng_ctx_new(SPNG_CTX_ENCODER);
@@ -413,7 +364,11 @@ void export_rgba5551(FILE *source_file, struct asset_header *header) {
         printf("\tset_ihdr: %d: %s\n", ret, spng_strerror(ret));
     }
 
-    if (header->flags &0x4000) {
+    if (image->flags_type & 0x4000) {
+        trns.red   = (image->transparency_color & 0xFF000000) >> 0x18;
+        trns.green = (image->transparency_color & 0x00FF0000) >> 0x10;
+        trns.blue  = (image->transparency_color & 0x0000FF00) >> 0x08;
+
         ret = spng_set_trns(ctx, &trns);
 
         if (ret != SPNG_OK) {
@@ -421,7 +376,7 @@ void export_rgba5551(FILE *source_file, struct asset_header *header) {
         }
     }
 
-    ret = spng_encode_image(ctx, img_data, img_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+    ret = spng_encode_image(ctx, converted_data, converted_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
 
     if (ret != SPNG_OK) {
         printf("\tencode_image: %d: %s\n", ret, spng_strerror(ret));
@@ -429,111 +384,129 @@ void export_rgba5551(FILE *source_file, struct asset_header *header) {
 
     spng_ctx_free(ctx);
     fclose(png_file);
-    free(description_string);
-    free(img_data);
+    free(converted_data);
     free(raw_data);
 }
 
-void export_rgba32(FILE *source_file, struct asset_header *header) {
-    int      ret;
-    FILE    *png_file;
-    uint8_t *raw_data;
-    char    *description_string;
-    char     png_filename[256];
-
-    spng_ctx        *ctx  = NULL;
-    struct spng_ihdr ihdr = {0};
-
-    raw_data = malloc(header->img_byte_size);
-
-    fread(raw_data, sizeof(uint8_t), header->img_byte_size, source_file);
-
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
-
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
-    }
-
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
-    png_file = fopen(png_filename, "wb");
-
-    ctx = spng_ctx_new(SPNG_CTX_ENCODER);
-    spng_set_png_file(ctx, png_file);
-
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA;
-    ihdr.bit_depth = 8;
-    spng_set_ihdr(ctx, &ihdr);
-
-    ret = spng_encode_image(ctx, raw_data, header->img_byte_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
-
-    spng_ctx_free(ctx);
-    fclose(png_file);
-    free(description_string);
-    free(raw_data);
-}
-
-void export_grayscale4_8(FILE *source_file, struct asset_header *header) {
+void export_rgba32(FILE *source_file, struct image_context *image) {
     int      ret;
     uint32_t raw_size;
-    uint32_t img_size;
     FILE    *png_file;
     uint8_t *raw_data;
-    uint8_t *img_data;
-    char    *description_string;
-    char     png_filename[256];
+    char     png_filename[MAX_FILENAME] = {0};
 
     spng_ctx        *ctx  = NULL;
     struct spng_ihdr ihdr = {0};
     struct spng_trns trns = {0};
 
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    if (header->flags & 0x8000) {
-        ihdr.bit_depth = 8;
-        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE_ALPHA;
+    printf("Extracting RGBA32 image %s\n", image->image_name);
 
-        raw_size = header->width * header->height;
-        img_size = header->width * header->height * 2;
+    raw_size = image->image_size;
+
+    ihdr.bit_depth = 8;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
+
+    if (image->flags_type & 0x8000) {
+        ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA;
     } else {
-        ihdr.bit_depth = 4;
-        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE;
-
-        if (header->flags & 0x4000){
-            trns.gray = (header->trans_color & 0xF0000000) >> 0x1C;
-        }
-
-        raw_size = img_size = (header->width * header->height) / 2;
+        ihdr.color_type = SPNG_COLOR_TYPE_TRUECOLOR;
     }
 
-    raw_data = malloc(sizeof(uint8_t) * raw_size);
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
     fread(raw_data, sizeof(uint8_t), raw_size, source_file);
 
-    img_data = malloc(sizeof(uint8_t) * img_size);
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
+    png_file = fopen(png_filename, "wb");
 
-    if (header->flags & 0x8000) {
-        for (uint32_t i = 0; i < (header->width * header->height); i++) {
-            img_data[2*i]     = scale_x_y(raw_data[i] & 0xF0 >> 4, 4, 8);
-            img_data[2*i + 1] = scale_x_y(raw_data[i] & 0x0F, 4, 8);
+    ctx = spng_ctx_new(SPNG_CTX_ENCODER);
+    spng_set_png_file(ctx, png_file);
+
+    spng_set_ihdr(ctx, &ihdr);
+
+    if (image->flags_type & 0x4000) {
+        trns.red   = (image->transparency_color & 0xFF000000) >> 0x18;
+        trns.green = (image->transparency_color & 0x00FF0000) >> 0x10;
+        trns.blue  = (image->transparency_color & 0x0000FF00) >> 0x08;
+
+        ret = spng_set_trns(ctx, &trns);
+
+        if (ret != SPNG_OK) {
+            printf("\tset_trns: %d: %s\n", ret, spng_strerror(ret));
+        }
+    }
+
+    ret = spng_encode_image(ctx, raw_data, raw_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+
+    spng_ctx_free(ctx);
+    fclose(png_file);
+    free(raw_data);
+}
+
+void export_grayscale4_8(FILE *source_file, struct image_context *image) {
+    int      ret;
+    uint32_t raw_size;
+    uint32_t converted_size;
+    FILE    *png_file;
+    uint8_t *converted_data;
+    uint8_t *raw_data;
+    char     png_filename[MAX_FILENAME] = {0};
+
+    spng_ctx        *ctx  = NULL;
+    struct spng_ihdr ihdr = {0};
+    struct spng_trns trns = {0};
+
+    if (image->bit_depth == 0) {
+        printf("Extracting Greyscale4 image %s\n", image->image_name);
+    } else {
+        printf("Extracting Greyscale8 image %s\n", image->image_name);
+        // This flag should always be set if we're dealing with 8 bit greyscale
+        assert(image->flags_type & 0x8000);
+    }
+
+    raw_size = image->image_size;
+
+    ihdr.bit_depth = 8;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
+
+    if (image->bit_depth == 1) {
+        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE_ALPHA;
+        // Each pixel takes 2 bytes: one for the grey sample and one for the alpha sample
+        converted_size = sizeof(uint8_t) * 2 * image->pixel_count;
+        // The converted data should take double the amount of space as the raw data
+        assert(converted_size == (raw_size * 2));
+    } else {
+        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE;
+        // Each pixel takes 1 byte
+        converted_size = sizeof(uint8_t) * image->pixel_count;
+        // The converted data should take double the amount of space as the raw data
+        assert(converted_size == (raw_size * 2));
+    }
+
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
+    fread(raw_data, sizeof(uint8_t), raw_size, source_file);
+
+    converted_data = malloc(converted_size);
+
+    if (image->bit_depth == 1) {
+        for (int i = 0; i < image->pixel_count; i++) {
+            converted_data[(2*i) + 0] = scale_x_y((raw_data[i] & 0xF0) >> 4,  4, 8);
+            converted_data[(2*i) + 1] = scale_x_y((raw_data[i] & 0x0F) >> 0,  4, 8);
         }
     } else {
-        for (uint32_t i = 0; i < (header->width * header->height) / 2; i++) {
-            img_data[i] = raw_data[i];
+        for (int i = 0; i < image->pixel_count; i++) {
+            if ((i % 2) == 0){
+                converted_data[i] = scale_x_y((raw_data[i/2] & 0xF0) >> 4,  4, 8);
+            } else {
+                converted_data[i] = scale_x_y((raw_data[i/2] & 0x0F) >> 0,  4, 8);
+            }
         }
     }
 
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
-
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
-    }
-
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
     png_file = fopen(png_filename, "wb");
 
     ctx = spng_ctx_new(SPNG_CTX_ENCODER);
@@ -545,7 +518,12 @@ void export_grayscale4_8(FILE *source_file, struct asset_header *header) {
         printf("\tset_ihdr: %d: %s\n", ret, spng_strerror(ret));
     }
 
-    if (header->flags &0x4000) {
+    if (image->flags_type & 0x4000) {
+        // Use of a transparency color implies a bit depth of 4
+        assert(image->bit_depth == 0);
+
+        trns.gray = (image->transparency_color & 0xF0000000) >> 0x1C;
+
         ret = spng_set_trns(ctx, &trns);
 
         if (ret != SPNG_OK) {
@@ -553,7 +531,7 @@ void export_grayscale4_8(FILE *source_file, struct asset_header *header) {
         }
     }
 
-    ret = spng_encode_image(ctx, img_data, img_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+    ret = spng_encode_image(ctx, converted_data, converted_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
 
     if (ret != SPNG_OK) {
         printf("\tencode_image: %d: %s\n", ret, spng_strerror(ret));
@@ -561,171 +539,176 @@ void export_grayscale4_8(FILE *source_file, struct asset_header *header) {
 
     spng_ctx_free(ctx);
     fclose(png_file);
-    free(description_string);
-    free(img_data);
+    free(converted_data);
     free(raw_data);
 }
 
-void export_grayscale16(FILE *source_file, struct asset_header *header) {
+void export_grayscale16(FILE *source_file, struct image_context *image) {
     int      ret;
+    uint32_t raw_size;
     FILE    *png_file;
     uint8_t *raw_data;
-    char    *description_string;
-    char     png_filename[256];
+    char     png_filename[MAX_FILENAME] = {0};
 
     spng_ctx        *ctx  = NULL;
     struct spng_ihdr ihdr = {0};
     struct spng_trns trns = {0};
 
-    raw_data = malloc(header->img_byte_size);
+    printf("Extracting Greyscale16 image %s\n", image->image_name);
 
-    fread(raw_data, sizeof(uint8_t), header->img_byte_size, source_file);
+    raw_size = image->image_size;
 
-    description_string = malloc(header->description_string_size);
-    fread(description_string, sizeof(char), header->description_string_size, source_file);
+    ihdr.bit_depth = 8;
+    ihdr.width = image->image_pixel_width;
+    ihdr.height = image->image_pixel_height;
 
-    if ((header->description_string_size % 4) != 0) {
-        fseek(source_file, 4 - (header->description_string_size % 4), SEEK_CUR);
+    if (image->flags_type  & 0x8000) {
+        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE_ALPHA;
+    } else {
+        ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE;
     }
 
-    snprintf(png_filename, sizeof(png_filename), PNG_OUTPUT_FORMAT, description_string);
-    printf("%s\n", png_filename);
+    raw_data = malloc(raw_size);
+    fseek(source_file, image->pixel_offset, SEEK_SET);
+    fread(raw_data, sizeof(uint8_t), raw_size, source_file);
+
+    snprintf(png_filename, MAX_FILENAME, png_output_format, image->image_name);
     png_file = fopen(png_filename, "wb");
 
     ctx = spng_ctx_new(SPNG_CTX_ENCODER);
     spng_set_png_file(ctx, png_file);
 
-    ihdr.width = header->width;
-    ihdr.height = header->height;
-    ihdr.color_type = SPNG_COLOR_TYPE_GRAYSCALE_ALPHA;
-    ihdr.bit_depth = 8;
     spng_set_ihdr(ctx, &ihdr);
 
-    trns.gray = header->trans_color;
-    spng_set_trns(ctx, &trns);
+    if (image->flags_type & 0x4000) {
+        trns.gray = (image->transparency_color & 0xFF000000) >> 0x18;
 
-    ret = spng_encode_image(ctx, raw_data, header->img_byte_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
+        spng_set_trns(ctx, &trns);
+    }
+
+    ret = spng_encode_image(ctx, raw_data, raw_size, SPNG_FMT_RAW, SPNG_ENCODE_FINALIZE);
 
     spng_ctx_free(ctx);
     fclose(png_file);
-    free(description_string);
     free(raw_data);
 }
 
-void export_png(FILE *source_file, struct asset_header *header) {
-    switch(header->type) {
+void export_png(FILE *source_file, struct image_context *image) {
+    switch((image->flags_type & 0x000F)) {
     case CI4:
-        export_ci4(source_file, header);
+        export_ci4(source_file, image);
         break;
     case CI8:
-        export_ci8(source_file, header);
+        export_ci8(source_file, image);
         break;
     case RGBA5551:
-        export_rgba5551(source_file, header);
+        export_rgba5551(source_file, image);
         break;
     case RGBA32:
-        export_rgba32(source_file, header);
+        export_rgba32(source_file, image);
         break;
     case GRAYSCALE4_8:
-        export_grayscale4_8(source_file, header);
+        export_grayscale4_8(source_file, image);
         break;
     case GRAYSCALE16:
-        export_grayscale16(source_file, header);
+        export_grayscale16(source_file, image);
         break;
     default:
         break;
     }
 }
 
-void parse_asset_header(FILE *source_file, struct asset_header *header) {
-    fread(&header->asset_size, sizeof(uint32_t), 1, source_file);
-    header->asset_size = be32toh(header->asset_size);
-
-    fread(&header->pixel_offset, sizeof(uint32_t), 1, source_file);
-    header->pixel_offset = be32toh(header->pixel_offset);
-
-    fread(&header->extra_offset, sizeof(uint32_t), 1, source_file);
-    header->extra_offset = be32toh(header->extra_offset);
-
-    // Large block of 0 bytes
-    fseek(source_file, 24, SEEK_CUR);
-
-    fread(&header->palette_offset, sizeof(uint32_t), 1, source_file);
-    header->palette_offset = be32toh(header->palette_offset);
-
-    fread(&header->description_string_offset, sizeof(uint32_t), 1, source_file);
-    header->description_string_offset = be32toh(header->description_string_offset);
-    header->description_string_size = header->asset_size - header->description_string_offset;
-
-    fread(&header->width, sizeof(uint16_t), 1, source_file);
-    header->width = be16toh(header->width);
-
-    fread(&header->height, sizeof(uint16_t), 1, source_file);
-    header->height = be16toh(header->height);
-
-    // if ((header->width  % 2) == 1) header->width++;
-    // if ((header->height % 2) == 1) header->height++;
-
-    // Always 0x01, purpose unknown
-    fseek(source_file, 1, SEEK_CUR);
-
-    fread(&header->bit_depth, sizeof(uint8_t), 1, source_file);
-
-    // 0x00, 0x40 or 0x80, purpose unknown
-    // fseek(source_file, 1, SEEK_CUR);
-    // fread(&header->type, sizeof(uint8_t), 1, source_file);
-
-    uint16_t flags;
-    fread(&flags, sizeof(uint16_t), 1, source_file);
-
-    flags = be16toh(flags);
-    header->flags = flags & 0xFFF0;
-    header->type  = flags & 0x000F;
-
-    fread(&header->trans_color, sizeof(uint32_t), 1, source_file);
-    header->trans_color = be32toh(header->trans_color);
-
-    switch(header->type) {
-    case CI4:
-        printf("CI4 image, ");
-        header->img_byte_size = (sizeof(uint8_t) * header->width * header->height) / 2;
-        break;
-    case CI8:
-        printf("CI8 image, ");
-        header->img_byte_size = sizeof(uint8_t) * header->width * header->height;
-        break;
-    case RGBA5551:
-        printf("RGBA5551 image, ");
-        header->img_byte_size = sizeof(uint16_t) * header->width * header->height;
-        break;
-    case RGBA32:
-        printf("RGBA32 image, ");
-        header->img_byte_size = sizeof(uint32_t) * header->width * header->height;
-        break;
-    case GRAYSCALE4_8:
-        if (header->bit_depth == 0) {
-            printf("GRAYSCALE4 image, ");
-            header->img_byte_size = (sizeof(uint8_t) * header->width * header->height) / 2;
-        } else {
-            printf("GRAYSCALE8 image, ");
-            header->img_byte_size = sizeof(uint8_t) * header->width * header->height;
-        }
-        break;
-    case GRAYSCALE16:
-        printf("GRAYSCALE16 image, ");
-        header->img_byte_size = sizeof(uint16_t) * header->width * header->height;
-        break;
-    default:
-        break;
+void parse_asset_header(struct full_image_header *header) {
+    header->image_size          = be32toh(header->image_size);
+    for (int i = 0; i < 8; i++) {
+        header->pixel_offset[i] = be32toh(header->pixel_offset[i]);
     }
-    printf("flags=0x%04x: ", header->flags);
+    header->palette_offset      = be32toh(header->palette_offset);
+    header->image_name_offset   = be32toh(header->image_name_offset);
+    header->image_pixel_width   = be16toh(header->image_pixel_width);
+    header->image_pixel_height  = be16toh(header->image_pixel_height);
+    header->flags_type          = be16toh(header->flags_type);
+    header->transparency_color  = be32toh(header->transparency_color);
+
+    // if ((header->image_pixel_width  % 2) == 1) header->image_pixel_width++;
+    // if ((header->image_pixel_height % 2) == 1) header->image_pixel_height++;
+}
+
+void extarct_all_images(FILE *source_file) {
+    long end;
+    long start;
+
+    fseek(source_file, 0, SEEK_END);
+    end = ftell(source_file);
+    fseek(source_file, 0, SEEK_SET);
+
+    do {
+        struct image_context image = {0};
+        struct full_image_header header = {0};
+
+        start = ftell(source_file);
+
+        fread(&header, sizeof(struct full_image_header), 1, source_file);
+        parse_asset_header(&header);
+
+        // This is way less involved than detecting its type and doing some math
+        if (header.flags_type & 0x0C00) {
+            image.image_size     = header.pixel_offset[1]   - header.pixel_offset[0];
+        } else {
+            image.image_size     = header.image_name_offset - header.pixel_offset[0];
+        }
+        // Convert realtive offsets to absolute offsets
+        image.pixel_offset       = header.pixel_offset[0] + start + 4;
+        image.palette_offset     = header.palette_offset  + start + 4;
+        image.image_pixel_width  = header.image_pixel_width;
+        image.image_pixel_height = header.image_pixel_height;
+        image.bit_depth          = header.bit_depth;
+        image.flags_type         = header.flags_type;
+        image.transparency_color = header.transparency_color;
+
+        image.pixel_count        = image.image_pixel_width * image.image_pixel_height;
+
+        fseek(source_file, header.image_name_offset + start + 4, SEEK_SET);
+        fread(image.image_name, sizeof(uint8_t), header.image_size - header.image_name_offset, source_file);
+
+        export_png(source_file, &image);
+
+        if (header.flags_type & 0x0C00) {
+            // The scale calculation I'm doing is a little screwy.
+            // I'm using image_size and the type information to deduce the number of pixels
+            // In the extra image, and then compare that against the number of pixels in the primary image
+            int scale;
+
+            image.image_size = header.image_name_offset - header.pixel_offset[1];
+
+            image.pixel_offset = header.pixel_offset[1] + start + 4;
+            if (header.flags_type & 0x0800) {
+                image.flags_type = GRAYSCALE4_8;
+                image.bit_depth = 0;
+                // 2 pixels per byte in the extra image
+                scale = sqrtf(image.pixel_count / (image.image_size * 2));
+            } else {
+                image.flags_type = GRAYSCALE16;
+                // 1 pixel per 2 bytes in the extra image
+                scale = sqrtf(image.pixel_count / (image.image_size / 2));
+            }
+            image.image_pixel_width  /= scale;
+            image.image_pixel_height /= scale;
+
+            image.pixel_count = image.image_pixel_width * image.image_pixel_height;
+            strcat(image.image_name, "_gs");
+            export_png(source_file, &image);
+        }
+        // Files with single images usually end exactly at the name's null-terminator
+        // In fact, the asset_sizes in those files appear to be byte-exact for the asset, no padding involved
+        // Multi-image files by contrast are padded up to the nearest 4 byte boundary
+        fseek(source_file, ((header.image_size + 3) & ~0x3) + start + 4, SEEK_SET);
+    // < since some files have names that don't neatly end at the 4 byte boundary, so the previous seek can over-shoot the file end
+    } while (ftell(source_file) < end);
 }
 
 int main(int argc, char *argv[]) {
     FILE *source_file;
-    struct asset_header header = {0};
-    int ret;
-    int peek;
 
     source_file = fopen(argv[1], "rb");
 
@@ -734,11 +717,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    while ((peek = fgetc(source_file)) != EOF) {
-        ungetc(peek, source_file);
-        parse_asset_header(source_file, &header);
-        export_png(source_file, &header);
-    }
+    extarct_all_images(source_file);
+
     fclose(source_file);
     return 0;
 }

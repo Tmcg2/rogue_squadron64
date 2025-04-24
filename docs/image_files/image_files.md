@@ -17,7 +17,7 @@ They aren't perfect, but they should work for most files I've tried them with.
 You'll need to install the [spng](https://libspng.org/) library and link against it when compiling the utilities.
 
 ```bash
-gcc -g -o extract_full_header_img extract_full_header_img.c -lspng
+gcc -g -o extract_full_header_img extract_full_header_img.c -lspng -lm
 gcc -g -o extract_partial_header_img extract_partial_header_img.c -lspng
 ```
 
@@ -123,7 +123,7 @@ Instead, bit depth is usually inferred from the `image_type` and `flags`.
 You can see this in [func_8001EB24](func_8001EB24.c), specifically in case 4.
 It checks for flags `0x800` and `0x400` and depending on which flag is detected, it treats the data slightly differently.
 If flag `0x800` is set, its 8 bits per pixel.
-If flag `0x400` is set, its 3 bits per pixel.
+If flag `0x400` is set, its 4 bits per pixel.
 
 ## Flags
 
