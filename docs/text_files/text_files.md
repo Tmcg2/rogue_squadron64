@@ -68,19 +68,18 @@ So, to see the text in a readable form you have decrypt it.
 
 ## Text Decrypting
 
-You can decrypt the text using the [text unmask utility](/docs/text_files/text_unmask.py), assuming you have extracted and decompressed the assets from the [Data Blob](/docs/data_blob/data_blob.md).
+You can decrypt the text using the [text unmask utility](/docs/text_files/unmask_text.c), assuming you have extracted and decompressed the assets from the [Data Blob](/docs/data_blob/data_blob.md).
 
-The unmasking/decrypting process can be roughly described with this python code:
+```cpp
+// string_data is the encrypted data, which will be decrypted in-place
+void decrypt(uint8_t *string_data, uint32_t string_size) {
+    uint8_t prev = 0xf5;
 
-```python
-previous_character = 0xf5 # cute choice on Factor 5's part here
-clear_text = list()
-
-for character in obfuscated_text:
-	clear_text.append(character ^ prev)
-	previous_character = character
-
-print(clear_text)
+    for (int i = 0; i < string_size; i++) {
+        string_data[i] ^= prev;
+        prev ^= string_data[i];
+    }
+}
 ```
 
 It wouldn't surprise me if there's a name for this encryption/decryption scheme, but I don't know enough about those matters to find out for certain.
@@ -109,3 +108,5 @@ There may or may not be other functions that do the decryption, I have not done 
 [getGameOrFrontText.c](/docs/text_files/getGameOrFrontText.c) is pretty much what it says on the tin.
 It takes a "text ID" and gives you back the string associated with that ID, but only for Front and Game text.
 This function implies then that `D_8009ECA0` is a pointer to a `language_offset` list, and `D_80138E7C` is used to house the `string_count`.
+
+

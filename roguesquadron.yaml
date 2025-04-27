@@ -385,6 +385,7 @@ segments:
       - [0x9EAD0, rodata,  "main/9EAD0"]
       - [0x9EAE0, rodata,  "main/9EAE0"]
       - [0x9F850, rodata,  "main/9F850"]
+      - [0x9F8B0, asm,     "main/9F8B0"]
       - [0xA0850, rodata,  "main/A0850"]
       - [0xA11D0, rodata,  "main/A11D0"]
       - [0xA1660, rodata,  "main/A1660"]
