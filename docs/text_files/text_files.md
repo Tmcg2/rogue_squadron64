@@ -13,11 +13,15 @@ The text files start with a header that looks like this C struct:
 
 ```cpp
 struct text_file_header {
-	uint16_t language_count;
-	uint16_t string_count;
-	uint32_t language_offset[5]; // Realistically this is sized to be the same as `language_count`, but whatever
-	uint32_t file_size;
-};
+    /* 0x00 */ uint16_t language_count;
+    /* 0x02 */ uint16_t string_count;
+    /* 0x04 */ uint32_t language_offset[6]; // Realistically this is sized to be the same as `language_count`, but whatever
+    /* 0x18 */ // uint32_t file_size;
+}; // size = 0x1C
+
+// RAM address 0x80138E60
+struct text_file_header *txtFileHeader;
+u32  languageStringcount;
 ```
 
 There are 5 languages in the game, the N64 and PC versions of the game are in agreement on that front.
@@ -100,7 +104,7 @@ These don't show up in game, so something somewhere has to be using them for pre
 
 ## Game Code Stuff
 
-[func_800556A0.c](/docs/text_files/func_800556A0.c) and [func_80055978.c](/docs/text_files/func_80055978.c) appear to be the functions that do the decryption in-game.
+[loadTxtFile](loadTxtFile.c) and [func_80055978.c](/docs/text_files/func_80055978.c) appear to be the functions that do the decryption in-game.
 There may or may not be other functions that do the decryption, I have not done a particularly thorough search.
 
 [func_80055978.c](/docs/text_files/func_80055978.c) is specific to the Voice text I believe, it does some extra work to force all the decrypted text to be in upper case. (I wonder how this works for non-English text?).
@@ -108,5 +112,3 @@ There may or may not be other functions that do the decryption, I have not done 
 [getGameOrFrontText.c](/docs/text_files/getGameOrFrontText.c) is pretty much what it says on the tin.
 It takes a "text ID" and gives you back the string associated with that ID, but only for Front and Game text.
 This function implies then that `D_8009ECA0` is a pointer to a `language_offset` list, and `D_80138E7C` is used to house the `string_count`.
-
-

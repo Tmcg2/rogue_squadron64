@@ -205,54 +205,57 @@ D_8003D660   = 0x8003D660; // type:asciz segment:main
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-decrypt_ns_hmt                   = 0x8006AFC0; // type:func segment:main
+rs_malloc                        = 0x80001ACC; // type:func segment:main
+rs_free                          = 0x80001C98; // type:func segment:main
 find_manifest_entry              = 0x80003A0C; // type:func segment:main
-freeTxtFile                      = 0x800558D4; // type:func segment:main
-full_header_image_offset_convert = 0x80055488; // type:func segment:main
 get_asset_size_extra             = 0x80004D5C; // type:func segment:main
 get_asset_size_simple            = 0x80005134; // type:func segment:main
-getControllerSettingsTitle       = 0x800C49BC; // type:func segment:main
-getGameOrFrontText               = 0x8005589C; // type:func segment:main
-getPlayerHealthPercentage        = 0x800C40AC; // type:func segment:main
-load_asset                       = 0x8006488C; // type:func segment:main
-load_asset_with_malloc_flags     = 0x800647E0; // type:func segment:main
-load_dat_file_assets             = 0x80064940; // type:func segment:main
-load_full_header_image           = 0x800543F4; // type:func segment:main
-load_hmt_and_hob                 = 0x8005645C; // type:func segment:main
-load_level_dat                   = 0x80046784; // type:func segment:main
+rs_strcpy                        = 0x8000761C; // type:func segment:main
+rs_strncpy                       = 0x80007640; // type:func segment:main
+rs_strcat                        = 0x8000767C; // type:func segment:main
+rs_strncat                       = 0x800076B8; // type:func segment:main
+rs_strcmp                        = 0x800076F8; // type:func segment:main
+rs_strncmp                       = 0x800077A8; // type:func segment:main
+rs_memset                        = 0x800078E0; // type:func segment:main
 load_level_hmp                   = 0x80043D74; // type:func segment:main
-load_naboo_starfighter           = 0x8006C780; // type:func segment:main
+load_level_dat                   = 0x80046784; // type:func segment:main
+load_full_header_image           = 0x800543F4; // type:func segment:main
+full_header_image_offset_convert = 0x80055488; // type:func segment:main
 loadTxtFile                      = 0x800556A0; // type:func segment:main
+loadGameOrFrontTxtFile           = 0x80055880; // type:func segment:main
+getGameOrFrontText               = 0x8005589C; // type:func segment:main
+freeTxtFile                      = 0x800558D4; // type:func segment:main
+getVoiceText                     = 0x80055978; // type:func segment:main
+loadVoiceTxtFile                 = 0x80055A20; // type:func segment:main
+load_hmt_and_hob                 = 0x8005645C; // type:func segment:main
+load_asset_with_malloc_flags     = 0x800647E0; // type:func segment:main
+load_asset                       = 0x8006488C; // type:func segment:main
+load_dat_file_assets             = 0x80064940; // type:func segment:main
+decrypt_ns_hmt                   = 0x8006AFC0; // type:func segment:main
+load_naboo_starfighter           = 0x8006C780; // type:func segment:main
+rs_crc32                         = 0x800824F8; // type:func segment:main
 make_crc32_lut                   = 0x80082544; // type:func segment:main
 model_animation_offset_convert   = 0x80082BD0; // type:func segment:main
-rs_crc32                         = 0x800824F8; // type:func segment:main
-rs_free                          = 0x80001C98; // type:func segment:main
-rs_malloc                        = 0x80001ACC; // type:func segment:main
-rs_memset                        = 0x800078E0; // type:func segment:main
-rs_strcat                        = 0x8000767C; // type:func segment:main
-rs_strcmp                        = 0x800076F8; // type:func segment:main
-rs_strcpy                        = 0x8000761C; // type:func segment:main
-rs_strncat                       = 0x800076B8; // type:func segment:main
-rs_strncmp                       = 0x800077A8; // type:func segment:main
-rs_strncpy                       = 0x80007640; // type:func segment:main
-
-// The zcalloc and zcfree functions are effectively just wrappers for these functions
-rs_zcalloc                      = 0x8000527C; // type:func segment:main
-rs_zcfree                       = 0x8000525C; // type:func segment:main
+loadSpeechFile                   = 0x8009BA38; // type:func segment:main
+getPlayerHealthPercentage        = 0x800C40AC; // type:func segment:main
+getControllerSettingsTitle       = 0x800C49BC; // type:func segment:main
+// The zcfree and zcalloc functions are effectively just wrappers for these functions
+rs_zcfree                        = 0x8000525C; // type:func segment:main
+rs_zcalloc                       = 0x8000527C; // type:func segment:main
 
 // Real functions missed by splat
 
-func_80002F4C = 0x80002F4C; // type:func segment:main
-func_800045E8 = 0x800045E8; // type:func segment:main
-func_8000569C = 0x8000569C; // type:func segment:main
-func_80018E60 = 0x80018E60; // type:func segment:main
-func_800403EC = 0x800403EC; // type:func segment:main
-func_8006F388 = 0x8006F388; // type:func segment:main
-func_800927B0 = 0x800927B0; // type:func segment:main
-func_80092A54 = 0x80092A54; // type:func segment:main
+func_80002F4C = 0x80002F4C; // type:func  segment:main
+func_800045E8 = 0x800045E8; // type:func  segment:main
+func_8000569C = 0x8000569C; // type:func  segment:main
+func_80018E60 = 0x80018E60; // type:func  segment:main
+func_800403EC = 0x800403EC; // type:func  segment:main
+func_8006F388 = 0x8006F388; // type:func  segment:main
+func_800927B0 = 0x800927B0; // type:func  segment:main
+func_80092A54 = 0x80092A54; // type:func  segment:main
 .L80092C6C    = 0x80092C6C; // type:label segment:main
-func_80092CF0 = 0x80092CF0; // type:func segment:main
-func_80092F94 = 0x80092F94; // type:func segment:main
+func_80092CF0 = 0x80092CF0; // type:func  segment:main
+func_80092F94 = 0x80092F94; // type:func  segment:main
 
 // Fake Function Fixing
 
@@ -337,7 +340,7 @@ fake_func_800555E8 = 0x800555E8; // type:func segment:main
 func_800555F0      = 0x800555F0; // type:func segment:main
 
 fake_func_80055698 = 0x80055698; // type:func segment:main
-func_800556A0      = 0x800556A0; // type:func segment:main
+// real function is loadTxtFile
 
 fake_func_80055A2C = 0x80055A2C; // type:func segment:main
 func_80055A30      = 0x80055A30; // type:func segment:main
@@ -451,9 +454,14 @@ D_8009DE18 = 0x8009DE18; // type:u32 size:0x24 segment:main
 D_8009DE3C = 0x8009DE3C; // type:u32 size:0x24 segment:main
 D_8009DE60 = 0x8009DE60; // type:u32 segment:main
 
-language_data = 0x8009ECA0; // type:u32 segment:main
-D_8009ECA4 = 0x8009ECA4; // type:u32 segment:main
-language_string_offsets = 0x8009ECA8; // type:u32 segment:main
+languageData          = 0x8009ECA0; // type:u32 segment:main
+D_8009ECA4            = 0x8009ECA4; // type:u32 segment:main
+languageStringOffsets = 0x8009ECA8; // type:u32 segment:main
+
+txtFileHeader          = 0x80138E60; // size:0x1C segment:main
+languageStringcount    = 0x80138E7C; // type:u32  segment:main
+voiceTxtLanguageOffset = 0x80138E80; // type:u32  segment:main
+voiceTxtString         = 0x80138E90; // size:0x4  segment:main
 
 // I believe this is related to the various fonts found in the game
 // The sizes are very strange, but I think they're correct
@@ -495,6 +503,27 @@ aspMainDataStart = 0x800A4E00; // size:0x320 name_end:aspMainDataEnd segment:mai
 
 gspF3DEXTextStart = 0x80024A10; // size:0x1FA0 name_end:gspF3DEXTextEnd segment:main
 gspF3DEXDataStart = 0x80038D00; // size:0x100  name_end:gspF3DEXDataEnd segment:main
+
+// Referencing indices in subtitleSlots, not sure what the purpose is though
+D_80139B80             = 0x80139B80; // type:u32 size:0x20 segment:main
+D_80139BA0             = 0x80139BA0; // type:u8  size:0x08 segment:main
+// Individual size is 0x10, count is 0x0C
+subtitleSlots          = 0x80139BB0; // size:0xC0 segment:main
+subtitleSlotHead       = 0x80139C70; // type:u8 size:0x01 segment:main
+subtitleSlotTail       = 0x80139C71; // type:u8 size:0x01 segment:main
+subtitleSlotsAvailable = 0x80139C72; // type:u8 size:0x01 segment:main
+// Some kind of reference to the next slot in D_80139B80 to use
+D_80139C73             = 0x80139C73; // size:0x01 segment:main
+
+numSpeechSamples    = 0x80154670; // size:0x4 segment:main
+speechSampleOffsets = 0x8015467C; // size:0x4 segment:main
+speechFile          = 0x80154684; // size:0x4 segment:main
+
+voiceIdtoTextIdMap        = 0x8009FFE0; // type:u16 size:0x5E8 segment:main
+speechSampleOffsetsLoaded = 0x800A5120; // type:u8  size:0x1   segment:main
+speechFileLoaded          = 0x800A5121; // type:u8  size:0x1   segment:main
+
+D_80153420 = 0x80153420; // size:0x1228 segment:main
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// Jump Tables //////////////////////////////////
@@ -547,6 +576,7 @@ junk_8009DEB8 = 0x8009DEB8; // type:u8 segment:main
 junk_8009DEC4 = 0x8009DEC4; // type:u8 segment:main
 junk_8009DED4 = 0x8009DED4; // type:u8 segment:main
 junk_8009ECAC = 0x8009ECAC; // type:u8 segment:main
+junk_8009FFDC = 0x8009FFDC; // type:u8 segment:main
 junk_800A05CC = 0x800A05CC; // type:u8 segment:main
 junk_800A0A8C = 0x800A0A8C; // type:u8 segment:main
 junk_800A0EC8 = 0x800A0EC8; // type:u8 segment:main

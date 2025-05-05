@@ -4,6 +4,4 @@ data_blob/**
 m2c_output/**
 output_pngs/**
 tools/*
-
-# venv stuff, should probably recreate and consolidate to a single folder
 venv/**

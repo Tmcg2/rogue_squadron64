@@ -114,10 +114,10 @@ D_800A9A5C = 0x800A9A5C; // type:asciz size:0x17 segment:mission_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-load_model_animation            = 0x800F9E40; // type:func segment:mission_overlay
-reset_and_free_model_animations = 0x800F9F6C; // type:func segment:mission_overlay
-reset_model_animations          = 0x800F9F2C; // type:func segment:mission_overlay
 func_800CFE7C                   = 0x800CFE7C; // type:func segment:mission_overlay
+load_model_animation            = 0x800F9E40; // type:func segment:mission_overlay
+reset_model_animations          = 0x800F9F2C; // type:func segment:mission_overlay
+reset_and_free_model_animations = 0x800F9F6C; // type:func segment:mission_overlay
 
 // Fake Function Fixing
 fake_func_800AA6CC = 0x800AA6CC; // type:func segment:mission_overlay
