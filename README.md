@@ -8,12 +8,14 @@ Even with those short falls I still thinks its best for me to release what I hav
 That at least will open the doors for people with newer, fresher eyes than mine to make progress.
 
 In its current state the project contains a few different things:
+
 - Files for Splat so that it can (kind of, sort of) split the ROM up
 - A few utilites related to extracting game assets (textures, models, text, etc)
 - Several disparate files of notes filled with observations I've made
 - A couple files that have been """decompiled""" (passed through M2C) with minor annotations added by me
 
 This file has several purposes, some of which I have probably failed to enumerate here.
+
 1) List acknowldgements
 2) Be a map/manifest of the rest of the project
 3) Contain explanations (some brief, some not) of a variety of things
@@ -68,7 +70,7 @@ There are some actual calls to this function left floating around but there's wa
 
 ---
 
-## Acknowledgements:
+## Acknowledgements
 
 This a list of programs, utilities, and resources I have used in the course of making the repository.
 They are presented in no particular order.

@@ -3,6 +3,8 @@
 #include <endian.h>
 #include <stdlib.h>
 
+#define print_visual_separator() do { printf("================================================================================================================================\n"); } while(0)
+
 void parse_u16_subsection(FILE *proj, uint32_t subsection_start) {
     uint16_t data;
     uint32_t count = 0;
@@ -203,8 +205,6 @@ void parse_proj(FILE *proj) {
         fread(&section_size, sizeof(uint32_t), 1, proj);
         section_size = be32toh(section_size);
     }
-
-    printf("\n");
 }
 
 void parse_sdir(FILE *sdir) {
@@ -296,18 +296,29 @@ void parse_pool(FILE *pool) {
 }
 
 int main(int argc, char *argv[]) {
+    printf("\n");
+
+    FILE *pool = fopen("./data_blob/data/sound/pool_SND", "rb");
+    parse_pool(pool);
+    fclose(pool);
+
+    print_visual_separator();
+    print_visual_separator();
+    print_visual_separator();
+    printf("\n");
     
     FILE *proj = fopen("./data_blob/data/sound/proj_SND", "rb");
     parse_proj(proj);
     fclose(proj);
 
+    print_visual_separator();
+    print_visual_separator();
+    print_visual_separator();
+    printf("\n");
+
     FILE *sdir = fopen("./data_blob/data/sound/sdir_SND", "rb");
     parse_sdir(sdir);
     fclose(sdir);
-
-    FILE *pool = fopen("./data_blob/data/sound/pool_SND", "rb");
-    parse_pool(pool);
-    fclose(pool);
 
     return 0;
 }

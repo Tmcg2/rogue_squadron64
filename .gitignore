@@ -5,3 +5,4 @@ m2c_output/**
 output_pngs/**
 tools/*
 venv/**
+.vscode/**

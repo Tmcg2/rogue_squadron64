@@ -397,6 +397,8 @@ segments:
       - [0xA5A00, databin, "main/aspMainData"]
       - [0xA5D20, rodata,  "main/A5D20"]
       - {type:  bss, vram: 0x8010D200, name: "main/8010D200"              }
+      - {type:  bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
+      - {type:  bss, vram: 0x801128E0, name: "main/801128E0"              }
       - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
       - {type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
       - {type: .bss, vram: 0x8012D010, name: "libultra/io/controller"     }
