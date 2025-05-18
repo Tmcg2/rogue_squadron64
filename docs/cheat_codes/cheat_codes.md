@@ -1,6 +1,6 @@
 # Cheat Codes
 
-Copied from http://www.factor5.com/secrets_rogue_squadron.shtml:
+Copied from <http://www.factor5.com/secrets_rogue_squadron.shtml>:
 
 | Cheat Code | Effect                                          |
 | ---------- | ----------------------------------------------- |
@@ -108,10 +108,10 @@ key = 0x050FE09C
 plaintext = list()
 
 for cipher_byte in cipher_text:
-	plaintext_byte = (key & 0xFF) ^ cipher_byte
-	plaintext.append(plaintext_byte)
-	key = (key >> 8) | ((key & 0xFF) << 24)
-	key += cipher_byte
+    plaintext_byte = (key & 0xFF) ^ cipher_byte
+    plaintext.append(plaintext_byte)
+    key = (key >> 8) | ((key & 0xFF) << 24)
+    key += cipher_byte
 print(plaintext)
 ```
 

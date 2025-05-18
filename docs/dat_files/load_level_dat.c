@@ -414,6 +414,8 @@ loop_67:
     } else {
         temp_s2->unk3C = NULL;
     }
+    // The purpose of this block is to go though each hash map list
+    // converting the type entry to an item pointer and the item index to a pointer to the item's name
     // item collection offset list offset ->pointer
     temp_v0_9 = temp_s2->unk44;
     if (temp_v0_9 != NULL) {

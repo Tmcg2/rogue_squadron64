@@ -218,7 +218,9 @@ rs_strcmp                        = 0x800076F8; // type:func segment:main
 rs_strncmp                       = 0x800077A8; // type:func segment:main
 rs_memset                        = 0x800078E0; // type:func segment:main
 load_level_hmp                   = 0x80043D74; // type:func segment:main
-load_level_dat                   = 0x80046784; // type:func segment:main
+loadDatFile                      = 0x80046784; // type:func segment:main
+getLevelDatItemByName            = 0x80047B48; // type:func segment:main
+getDatItemByName                 = 0x80047B70; // type:func segment:main
 load_full_header_image           = 0x800543F4; // type:func segment:main
 full_header_image_offset_convert = 0x80055488; // type:func segment:main
 loadTxtFile                      = 0x800556A0; // type:func segment:main
@@ -239,6 +241,7 @@ model_animation_offset_convert   = 0x80082BD0; // type:func segment:main
 loadSpeechFile                   = 0x8009BA38; // type:func segment:main
 getPlayerHealthPercentage        = 0x800C40AC; // type:func segment:main
 getControllerSettingsTitle       = 0x800C49BC; // type:func segment:main
+
 // The zcfree and zcalloc functions are effectively just wrappers for these functions
 rs_zcfree                        = 0x8000525C; // type:func segment:main
 rs_zcalloc                       = 0x8000527C; // type:func segment:main
@@ -408,6 +411,8 @@ func_8007A870      = 0x8007A870; // type:func segment:main
 fake_func_8007C298 = 0x8007C298; // type:func segment:main
 func_8007C2A0      = 0x8007C2A0; // type:func segment:main
 
+// This fake function looks like it has a reference to D_8004D1B8, which is fake
+// This unfortunately causes func_8004D078 to get split in half erroneously
 fake_func_80082268 = 0x80082268; // type:func segment:main
 func_80082270      = 0x80082270; // type:func segment:main
 

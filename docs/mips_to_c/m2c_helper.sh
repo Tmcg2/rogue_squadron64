@@ -37,7 +37,7 @@ fi
 
 DATA_FILES=$(find ./asm/data/${OVERLAY} -type f -name "*.s")
 
-OUTPUT_DIR="./m2c_output/${OVERLAY}"
+OUTPUT_DIR="./m2c_output/${ASSEMBLY_FILE##./asm/}"
 mkdir -p "${OUTPUT_DIR}"
 
 ${M2C_DIR}/m2c.py           \

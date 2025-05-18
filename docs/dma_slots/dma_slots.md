@@ -19,22 +19,22 @@ Presumably they all do things in slightly different fashion, although the detail
 [func_80005938.c](/docs/dma_slots/func_80005938.c) can be used to set the value of `D_80111254`, although that never happens in practice.
 
 ```cpp
-s32 D_80111254; // Maximum DMA amount, hard-coded to 0x4000 in func_800045E8
+s32         dmaSlotMaxTxStepSize; // Maximum DMA amount, hard-coded to 0x4000 in func_800045E8
 OSMesg      D_801107A0[8]; // PI Manager message buffer
 OSMesgQueue D_801107C0; // PI Mangaer queue
 OSIoMesg    D_801107E0[8];
-OSMesg      D_801108A0[8]; // message """buffer""" for each message queue (only 1 message long though)
-OSMesgQueue D_801108C0[8]; // message queue for that slot
+OSMesg      dmaSlotMesgBuffer[8]; // message """buffer""" for each message queue (only 1 message long though)
+OSMesgQueue dmaSlotMesgQueue[8]; // message queue for that slot
 OSMesg      D_80110980;
 OSMesgQueue D_80110990;
-s32 D_801109A8; // is the index of the next open slot, I think?
-s32 D_801109AC; // seems like it tracks how many DMA "slots" are open, but nothing ever references it so what's the point?
-u8 *D_801109B0[8]; // destination addresses (treated as unsigned bytes for pointer arithmetic reasons)
-s32 D_801109D0[8]; // "total amount to be DMA'd", set but never referenced
-u8 *D_801109F0[8]; // source addresses (treated as unsigned bytes for pointer arithmetic reasons)
-s32 D_80110A10[8]; // "amount DMA'd so far"
-s32 D_80110A30[8]; // "amount left to DMA"
-s32 D_80110A50[8]; // "amount DMA'd this step"
-u8  D_80110A70; // Almost looks like a mutex around the actual OS DMA calls
-OSMesgueue D_80110BC0[16];
+s32         nextOpenDmaSlot; // is the index of the next open slot, I think?
+s32         dmaSlotsAvailable; // seems like it tracks how many DMA "slots" are open, but nothing ever references it so what's the point?
+u8         *dmaSlotDestAddr[8]; // destination addresses (treated as unsigned bytes for pointer arithmetic reasons)
+s32         dmaSlotTotalTxSize[8]; // "total amount to be DMA'd", set but never referenced
+u8         *dmaSlotSrcAddr[8]; // source addresses (treated as unsigned bytes for pointer arithmetic reasons)
+s32         dmaSlotTxSoFar[8]; // "amount DMA'd so far"
+s32         dmaSlotTxRemaning[8]; // "amount left to DMA"
+s32         dmaSlotTxThisStep[8]; // "amount DMA'd this step"
+u8          dmaSlotMutex; // Almost looks like a mutex around the actual OS DMA calls
+OSMesgQueue D_80110BC0[16];
 ```
