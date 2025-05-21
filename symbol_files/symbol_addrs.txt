@@ -11,7 +11,8 @@ gCurrentLevel = 0x80130B70; // type:u32 size:0x4
 
 dDefaultCraftForLevel = 0x8009EC50; // type:u32 size:0x4C
 
-D_80130B40 = 0x80130B40; // size:0x2C segment:main
+D_80130B10 = 0x80130B10; // size:0x28 segment:main
+D_80130B40 = 0x80130B40; // size:0x30 segment:main
 
 D_80109CB0 = 0x80109CB0; // type:char* size:0x24
 

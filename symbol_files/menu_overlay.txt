@@ -166,6 +166,13 @@ D_800A7C00 = 0x800A7C00; // type:asciz segment:menu_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+loadMedalInfo           = 0x800CC040; // type:func segment:menu_overlay
+getMissionMedal         = 0x800CC070; // type:func segment:menu_overlay
+calculatePlayerRank     = 0x800CC1A8; // type:func segment:menu_overlay
+getMedalInfo            = 0x800CC200; // type:func segment:menu_overlay
+compareStatstoMedalInfo = 0x800CC2B0; // type:func segment:menu_overlay
+calculateShotAccuracy   = 0x800CC374; // type:func segment:menu_overlay
+
 // Real functions missed by splat
 func_800B3824 = 0x800B3824; // type:func segment:menu_overlay
 
@@ -186,7 +193,7 @@ fake_func_800C6968 = 0x800C6968; // type:func segment:menu_overlay
 func_800C6970      = 0x800C6970; // type:func segment:menu_overlay
 
 fake_func_800CC038 = 0x800CC038; // type:func segment:menu_overlay
-func_800CC040      = 0x800CC040; // type:func segment:menu_overlay
+// Real function loadMedalInfo
 
 fake_func_800CC3D4 = 0x800CC3D4; // type:func segment:menu_overlay
 
@@ -232,6 +239,9 @@ D_800CCC58 = 0x800CCC58; // type:u32 size:0x58 segment:menu_overlay
 D_800CCCB0 = 0x800CCCB0; // type:u32 size:0x58 segment:menu_overlay
 D_800CCD10 = 0x800CCD10; // type:u32 size:0x58 segment:menu_overlay
 D_800CCD68 = 0x800CCD68; // type:u32 size:0x58 segment:menu_overlay
+
+D_800D03D0 = 0x800D03D0; // type:u32 size:0xC segment:menu_overlay
+medalInfo  = 0x800D03DC; // type:u32          segment:menu_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// File Split Garbage ///////////////////////////////

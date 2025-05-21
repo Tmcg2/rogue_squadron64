@@ -1,4 +1,6 @@
-# Save Data stuff
+# Save Data
+
+## Save File
 
 There's some parts of this I don't fully understand yet, but I have a good grasp of the general shape.
 Like most (all?) N64 games, Rogue Squadron uses a 256 byte blob for its save data.
@@ -160,7 +162,7 @@ char *defaultNames[] = {
 - `func_80006198` Appears to copy `struct save_data_body.unk08` stuff to somewhere else in memory.
 Not sure where or to what end.
 
-# Account Selection Screen
+## Account Selection Screen
 
 This is only tangentially related to save data, but since it has a pointer to `struct account_data` I felt it was appropriate to place here.
 
@@ -196,3 +198,69 @@ struct D_800CF180_type D_800CF180[3];
 [func_800B85B4.c](/docs/save_data/func_800B85B4.c) is really involved in reading account data for the account selection screen.
 `func_8006E8AC`, returns `unk50` from `struct D_8013A5C0_type`
 `func_8006E8BC`, returns `unk51` from `struct D_8013A5C0_type`
+
+## Mission Stats
+
+`1331E0.s` appears to be the segment of code responsible for deducing what medal you get for beating a level.
+Medal level is determined by comparing 5 stats from the mission to the stats found in the `medal_info` asset.
+You can use the [medal_info_parse](medal_info_parse.c) utility to print out the info in a human readable format.
+
+```cpp
+enum MEDAL_TYPE {
+    /* 0x00 */ NO_MEDAL,
+    /* 0x01 */ BRONZE,
+    /* 0x02 */ SILVER,
+    /* 0x03 */ GOLD,
+};
+
+enum PLAYER_RANK {
+    /* 0x00 */ TRAINEE,
+    /* 0x01 */ CADET,
+    /* 0x02 */ ENSIGN,
+    /* 0x03 */ OFFICER,
+    /* 0x04 */ LIEUTENANT,
+    /* 0x05 */ FLIGHT_LEADER,
+    /* 0x06 */ CAPTAIN,
+    /* 0x07 */ SQUAD_LEADER,
+    /* 0x08 */ GOLD_LEADER,
+    /* 0x09 */ MAJOR,
+    /* 0x0A */ COMMANDER,
+    /* 0x0B */ COLONEL,
+    /* 0x0C */ GENERAL,
+    /* 0x0D */ LINE_ADMIRAL,
+    /* 0x0E */ FLEET_ADMIRAL,
+    /* 0x0F */ SUPREME_ALLIED_COMMANDER,
+};
+
+// medal information as its stored in the `medal_info` asset
+struct asset_medal_info {
+    /* 0x00 */ f32 completion_time;
+    /* 0x04 */ u16 enemies_destroyed;
+    /* 0x06 */ u16 accuracy;
+    /* 0x08 */ u16 friendlies_saved;
+    /* 0x0A */ u16 bonus_collected;
+}; // size = 0x0C;
+
+// medal information as its stored in-memory
+struct game_medal_info {
+    /* 0x00 */ u32 completion_time;
+    /* 0x04 */ u16 enemies_destroyed;
+    /* 0x06 */ u8  accuracy;
+    /* 0x07 */ u8  friendlies_saved;
+    /* 0x08 */ u8  bonus_collected;
+    // 3 bytes of padding
+}; // size = 0x0C;
+
+struct mission_stats {
+    /* 0x00 */ u32 completion_time;
+    /* 0x04 */ u32 shots_fired;
+    /* 0x08 */ u32 shots_landed;
+    /* 0x0C */ u16 enemies_destroyed;
+    /* 0x0E */ u8  friendlies_saved;
+    /* 0x0F */ u8  bonus_collected;
+}; // size = 0x10;
+
+struct mission_stats     missionStats;
+struct game_medal_info   D_800D03D0;
+struct asset_medal_info *medalInfo;
+```

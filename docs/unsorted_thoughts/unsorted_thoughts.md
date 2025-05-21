@@ -179,7 +179,7 @@ struct player_struct D_80137DB8[];
 
 ## Game Context
 
-I don't know "context" is really the best word to use here, but its the best I can come up with.
+I don't know that "context" is really the best word to use here, but its the best I can come up with.
 
 At ROM address `0x80130B40` there is a large struct that seems to track several game state related variables.
 Things like the current level, chosen player craft, controller setting choice, language choice, volume levels, cheat code flags, and who knows what else.
@@ -255,7 +255,8 @@ struct D_80130B40_type {
     /* 0x23 */ u8  unk23;
     /* 0x24 */ u32 unk24;
     /* 0x28 */ u32 unk28;
-}; // size 0x2C
+    /* 0x2C */ u32 unk2C;
+}; // size 0x30
 ```
 
 ## Audio Stuff
@@ -276,11 +277,11 @@ But its written weird, its effectively saying "if 0 is less than 0, branch-and-l
 But 0 isn't less than 0, so the branch can't ever occur.
 
 As best as I understand it this is a roundabout way of getting program counter (instruction pointer) loaded into the `ra` register.
-See this StackOverflow question for more information: https://stackoverflow.com/questions/20680218/why-are-bgezal-bltzal-basic-instructions-and-not-pseudo-instructions-in-mips
+See this StackOverflow question for more information: <https://stackoverflow.com/questions/20680218/why-are-bgezal-bltzal-basic-instructions-and-not-pseudo-instructions-in-mips>
 
 The functions with such contructs HAVE to be hand-written.
 That by itself isn't super weird, there's bound to be hand-written in a game like this.
-But it become way more interesting when comparing other parts of that file to the code found here: https://github.com/jombo23/N64-Tools/blob/1e19f4d9fc8265c00abb39b34f15d37aaa3a6a6d/N64SoundListToolUpdated/N64SoundLibrary/MORTDecoder.cpp#L2529
+But it become way more interesting when comparing other parts of that file to the code found here: <https://github.com/jombo23/N64-Tools/blob/1e19f4d9fc8265c00abb39b34f15d37aaa3a6a6d/N64SoundListToolUpdated/N64SoundLibrary/MORTDecoder.cpp#L2529>
 
 I assume that that code can be attributed to Github user `jombo23` (given that its their repo), but I haven't confirmed that myself.
 I see that that file has been modified by another user named `SubDrag`, which is a name I saw a pop up a lot when googling Factor 5 audio stuff.
@@ -312,7 +313,7 @@ It gives good confidence that the `MORTDecoder` code is likely correct and that 
 There appears to be a similar set of numbers starting at ROM address `0x9E4BC`, but I don't see those referenced anywhere in the `MORTDecoder` code.
 Don't know what to make of that.
 
-I also found this repo: https://github.com/AxioDL/amuse
+I also found this repo: <https://github.com/AxioDL/amuse>
 Don't know if it works or not, just wanted to note it down.
 
 ## Level Selection Screen

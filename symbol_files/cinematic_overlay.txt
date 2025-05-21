@@ -98,3 +98,5 @@ D_800B0718 = 0x800B0718; // type:u32 size:0x14 segment:cinematic_overlay
 D_800B072C = 0x800B072C; // type:u32 size:0xA0 segment:cinematic_overlay
 D_800B07CC = 0x800B07CC; // type:u32 size:0xA0 segment:cinematic_overlay
 D_800B086C = 0x800B086C; // type:u32 size:0xA0 segment:cinematic_overlay
+
+cutsceneTypeStrings = 0x800AF6B0; // type:u32 size:0x0C segment:cinematic_overlay

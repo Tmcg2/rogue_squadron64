@@ -7,6 +7,7 @@ I have the general "shape" of the file figured out, but most of the fine grained
 I slightly annotated a [cutscene file](/docs/cutscenes/level_0_intro_cutscene) for reference.
 
 There are 3 types of cutscenes:
+
 - "Intro"
 - "Extra"
 - "Special"
@@ -18,15 +19,15 @@ For the "Defection" level I'd assume its a mid-level cutscene, but the logo sequ
 
 ```cpp
 enum CutsceneType {
-	/* 0x0 */ CUTSCENE_INTRO,
-	/* 0x1 */ CUTSCENE_EXTRO,
-	/* 0x2 */ CUTSCENE_SPECIAL,
-	/* 0x3 */ NUM_CUTSCENE_TYPES,
+    /* 0x0 */ CUTSCENE_INTRO,
+    /* 0x1 */ CUTSCENE_EXTRO,
+    /* 0x2 */ CUTSCENE_SPECIAL,
+    /* 0x3 */ NUM_CUTSCENE_TYPES,
 };
 
 // strings to be used to fill out a format string when searching for cutscene file assets
 // "intro", "extra", "special"
-char *D_800AF6B0[NUM_CUTSCENE_TYPES];
+char *cutsceneTypeStrings[NUM_CUTSCENE_TYPES];
 ```
 
 There's a part of the cutscene files that has a "constant" size (there's probably a better word to use than "constant" but whatever).
@@ -58,40 +59,40 @@ But if they aren't `Vec3f`s, then I don't know what they are.
 
 ```cpp
 struct cuts_0058_type {
-	/* 0x00 */ u32 sub_type; // ???
-	/* 0x04 */ u32 unk04;
-	/* 0x08 */ u32 unk08;
-	/* 0x0C */ u32 unk0C;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u32 unk14;
+    /* 0x00 */ u32 sub_type; // ???
+    /* 0x04 */ u32 unk04;
+    /* 0x08 */ u32 unk08;
+    /* 0x0C */ u32 unk0C;
+    /* 0x10 */ u32 unk10;
+    /* 0x14 */ u32 unk14;
 }; // size = 0x18
 
 struct cuts_1318_type {
-	/* 0x00 */ u32 vec3f_list_indices[8];
+    /* 0x00 */ u32 vec3f_list_indices[8];
 }; // size = 0x20
 
 struct cuts_13D8_type {
-	/* 0x00 */ char name[28]; // sometime an asset path, sometimes something else
-	/* 0x1C */ u32 flags;
-	/* 0x20 */ u32 unk20[11];
+    /* 0x00 */ char name[28]; // sometime an asset path, sometimes something else
+    /* 0x1C */ u32 flags;
+    /* 0x20 */ u32 unk20[11];
 }; // size = 0x4C
 
 struct cuts_file_constant {
-	/* 0x0000 */ char filename[64];
-	/* 0x0040 */ u32 unk0040;
-	/* 0x0044 */ u32 unk0044;
-	/* 0x0048 */ u16 unk0048;
-	/* 0x004A */ u16 unk13D8_active_count;
-	/* 0x004C */ u16 unk004C;
-	/* 0x004E */ u16 unk0058_active_count;
-	/* 0x0050 */ f32 unk0050;
-	/* 0x0054 */ f32 unk0054;
-	/* 0x0058 */ struct cuts_0058_type unk0058[200];
-	/* 0x1318 */ struct cuts_1318_type unk1318[6];
-	/* 0x13D8 */ struct cuts_13D8_type unk13D8[60];
-	/* 0x25A8 */ u32 vec3f_count;
-	// While these are definitely collections of 3 floating point numbers, I don't know if they're really Vec3f's (i.e. x/y/z)
-	/* 0x25AC */ Vec3f vec3f_list[1]; // size is bogus, this entry is only here to make using m2c a bit more ergonomic
+    /* 0x0000 */ char filename[64];
+    /* 0x0040 */ u32 unk0040;
+    /* 0x0044 */ u32 unk0044;
+    /* 0x0048 */ u16 unk0048;
+    /* 0x004A */ u16 unk13D8_active_count;
+    /* 0x004C */ u16 unk004C;
+    /* 0x004E */ u16 unk0058_active_count;
+    /* 0x0050 */ f32 unk0050;
+    /* 0x0054 */ f32 unk0054;
+    /* 0x0058 */ struct cuts_0058_type unk0058[200];
+    /* 0x1318 */ struct cuts_1318_type unk1318[6];
+    /* 0x13D8 */ struct cuts_13D8_type unk13D8[60];
+    /* 0x25A8 */ u32 vec3f_count;
+    // While these are definitely collections of 3 floating point numbers, I don't know if they're really Vec3f's (i.e. x/y/z)
+    /* 0x25AC */ Vec3f vec3f_list[1]; // size is bogus, this entry is only here to make using m2c a bit more ergonomic
 }; // size = 0x25AC
 
 struct cuts_file_constant *D_800B1904;
@@ -103,59 +104,59 @@ I don't have nay idea what the details of these are though.
 
 ```cpp
 struct D_800B1900_type {
-	/* 0x000 */ u8    unk000;
-	/* 0x001 */ u8    unk001;
-	/* 0x002 */ u8    unk002;
-	/* 0x003 */ u8    unk003;
-	/* 0x004 */ u32   unk004;
-	/* 0x008 */ void *unk008;
-	/* 0x00C */ u32   unk00C;
-	/* 0x010 */ u32   unk010;
-	/* 0x014 */ u32   unk014;
-	/* 0x018 */ u32   unk018;
-	/* 0x01C */ u32   unk01C;
-	/* 0x020 */ f32   unk020[12];
-	/* 0x050 */ void *unk050;
-	/* 0x054 */ u32   unk054;
-	/* 0x058 */ u16   unk058;
-	/* 0x05A */ u16   unk05A;
-	/* 0x05C */ u32   unk05C;
-	/* 0x060 */ u32   unk060;
-	/* 0x064 */ f32   unk064[21];
-	/* 0x0B8 */ u16   unk0B8;
-	/* 0x0BA */ u16   unk0BA;
-	/* 0x0BC */ u32   unk0BC;
-	/* 0x0C0 */ u32   unk0C0;
-	/* 0x0C4 */ u32   unk0C4;
-	/* 0x0C8 */ u32   unk0C8;
-	/* 0x0CC */ u32   unk0CC;
-	/* 0x0D0 */ u32   unk0D0;
-	/* 0x0D4 */ u32   unk0D4;
-	/* 0x0D8 */ u32   unk0D8;
-	/* 0x0DC */ u32   unk0DC;
-	/* 0x0E0 */ u32   unk0E0;
-	/* 0x0E4 */ u32   unk0E4;
-	/* 0x0E8 */ u32   unk0E8;
-	/* 0x0EC */ u32   unk0EC;
-	/* 0x0F0 */ u32   unk0F0;
-	/* 0x0F4 */ u32   unk0F4;
-	/* 0x0F8 */ u32   unk0F8;
-	/* 0x0FC */ u32   unk0FC;
-	/* 0x100 */ u32   unk100;
-	/* 0x104 */ u32   unk104;
-	/* 0x108 */ u32   unk108;
-	/* 0x10C */ u32   unk10C;
-	/* 0x110 */ u32   unk110;
-	/* 0x114 */ u32   unk114;
-	/* 0x118 */ u32   unk118;
-	/* 0x11C */ u32   unk11C;
-	/* 0x120 */ u32   unk120;
-	/* 0x124 */ u32   unk124;
-	/* 0x128 */ u32   unk128;
-	/* 0x12C */ u32   unk12C;
-	/* 0x130 */ u32   unk130;
-	/* 0x134 */ u32   unk134;
-	/* 0x138 */ u32   unk138;
+    /* 0x000 */ u8    unk000;
+    /* 0x001 */ u8    unk001;
+    /* 0x002 */ u8    unk002;
+    /* 0x003 */ u8    unk003;
+    /* 0x004 */ u32   unk004;
+    /* 0x008 */ void *unk008;
+    /* 0x00C */ u32   unk00C;
+    /* 0x010 */ u32   unk010;
+    /* 0x014 */ u32   unk014;
+    /* 0x018 */ u32   unk018;
+    /* 0x01C */ u32   unk01C;
+    /* 0x020 */ f32   unk020[12];
+    /* 0x050 */ void *unk050;
+    /* 0x054 */ u32   unk054;
+    /* 0x058 */ u16   unk058;
+    /* 0x05A */ u16   unk05A;
+    /* 0x05C */ u32   unk05C;
+    /* 0x060 */ u32   unk060;
+    /* 0x064 */ f32   unk064[21];
+    /* 0x0B8 */ u16   unk0B8;
+    /* 0x0BA */ u16   unk0BA;
+    /* 0x0BC */ u32   unk0BC;
+    /* 0x0C0 */ u32   unk0C0;
+    /* 0x0C4 */ u32   unk0C4;
+    /* 0x0C8 */ u32   unk0C8;
+    /* 0x0CC */ u32   unk0CC;
+    /* 0x0D0 */ u32   unk0D0;
+    /* 0x0D4 */ u32   unk0D4;
+    /* 0x0D8 */ u32   unk0D8;
+    /* 0x0DC */ u32   unk0DC;
+    /* 0x0E0 */ u32   unk0E0;
+    /* 0x0E4 */ u32   unk0E4;
+    /* 0x0E8 */ u32   unk0E8;
+    /* 0x0EC */ u32   unk0EC;
+    /* 0x0F0 */ u32   unk0F0;
+    /* 0x0F4 */ u32   unk0F4;
+    /* 0x0F8 */ u32   unk0F8;
+    /* 0x0FC */ u32   unk0FC;
+    /* 0x100 */ u32   unk100;
+    /* 0x104 */ u32   unk104;
+    /* 0x108 */ u32   unk108;
+    /* 0x10C */ u32   unk10C;
+    /* 0x110 */ u32   unk110;
+    /* 0x114 */ u32   unk114;
+    /* 0x118 */ u32   unk118;
+    /* 0x11C */ u32   unk11C;
+    /* 0x120 */ u32   unk120;
+    /* 0x124 */ u32   unk124;
+    /* 0x128 */ u32   unk128;
+    /* 0x12C */ u32   unk12C;
+    /* 0x130 */ u32   unk130;
+    /* 0x134 */ u32   unk134;
+    /* 0x138 */ u32   unk138;
 }; // size = 0x13C
 
 struct D_800B1900_type *D_800B1900;
@@ -169,15 +170,15 @@ I don't know what the non-string members are.
 
 ```cpp
 struct D_800AF92C_type {
-	/* 0x00 */ char asset_path_prefix[32];
-	/* 0x20 */ char asset_name[16];
-	/* 0x30 */ f32 unk30;
-	/* 0x34 */ f32 unk34;
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ char walk_animation_asset_path[24]; // size of this is a bit speculative
-	/* 0x54 */ f32 unk24;
-	/* 0x58 */ u16 unk58;
-	/* 0x5A */ u16 unk5A;
+    /* 0x00 */ char asset_path_prefix[32];
+    /* 0x20 */ char asset_name[16];
+    /* 0x30 */ f32 unk30;
+    /* 0x34 */ f32 unk34;
+    /* 0x38 */ f32 unk38;
+    /* 0x3C */ char walk_animation_asset_path[24]; // size of this is a bit speculative
+    /* 0x54 */ f32 unk24;
+    /* 0x58 */ u16 unk58;
+    /* 0x5A */ u16 unk5A;
 }; // size = 0x5C
 
 struct D_800AF92C_type D_800AF92C[32];

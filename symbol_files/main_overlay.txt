@@ -459,6 +459,8 @@ D_8009DE18 = 0x8009DE18; // type:u32 size:0x24 segment:main
 D_8009DE3C = 0x8009DE3C; // type:u32 size:0x24 segment:main
 D_8009DE60 = 0x8009DE60; // type:u32 segment:main
 
+missionStats = 0x80130B78; // size:0x10 segment:main
+
 languageData          = 0x8009ECA0; // type:u32 segment:main
 D_8009ECA4            = 0x8009ECA4; // type:u32 segment:main
 languageStringOffsets = 0x8009ECA8; // type:u32 segment:main
