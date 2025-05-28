@@ -29,9 +29,9 @@ The object entry list (or, really, the entire file) starts with a tiny header-li
 
 ```cpp
 struct object_section_header {
-	uint16_t object_count;
-	uint16_t padding;
-	uint32_t object_section_size; // not really sure what this is actually
+    uint16_t object_count;
+    uint16_t padding;
+    uint32_t object_section_size; // not really sure what this is actually
 };
 ```
 
@@ -44,17 +44,17 @@ This is, naturally, followed by `object_count` objects.
 ```cpp
 // Some members aren't fully understood, so they may be wrong. Reader beware
 struct object_entry {
-	/* 0x00 */ char object_name[16];
-	/* 0x10 */ uint32_t meshdef0_offset;
-	/* 0x14 */ uint32_t meshdef0_prelude_offset;
-	/* 0x18 */ uint32_t meshdef1_prelude_offsets[4];
-	/* 0x28 */ uint32_t unknown_offsets[3];
-	/* 0x34 */ float afloat;
-	/* 0x38 */ uint16_t ashort;
-	/* 0x3A */ uint16_t bshort;
-	/* 0x3C */ float afloat_list[7];
-	/* 0x58 */ uint32_t header_end_offset;
-	/* 0x5C */ float bfloat_list[6];	
+    /* 0x00 */ char object_name[16];
+    /* 0x10 */ uint32_t meshdef0_offset;
+    /* 0x14 */ uint32_t meshdef0_prelude_offset;
+    /* 0x18 */ uint32_t meshdef1_prelude_offsets[4];
+    /* 0x28 */ uint32_t unknown_offsets[3];
+    /* 0x34 */ float afloat;
+    /* 0x38 */ uint16_t ashort;
+    /* 0x3A */ uint16_t bshort;
+    /* 0x3C */ float afloat_list[7];
+    /* 0x58 */ uint32_t header_end_offset;
+    /* 0x5C */ float bfloat_list[6];
 }; // size 0x74
 ```
 
@@ -85,14 +85,14 @@ After all the `object_entry`'s come the meshdef0/1 prelude(s).
 
 ```cpp
 struct meshdef0_prelude_entry {
-	uint32_t flags; // ???
-	uint32_t meshdef0_offset;
+    uint32_t flags; // ???
+    uint32_t meshdef0_offset;
 };
 
 struct meshdef0_prelude {
-	uint16_t meshdef0_count;
-	uint16_t meshdef1_count;
-	struct meshdef0_prelude_entry ents[meshdef0_count];
+    uint16_t meshdef0_count;
+    uint16_t meshdef1_count;
+    struct meshdef0_prelude_entry ents[meshdef0_count];
 };
 ```
 
@@ -100,10 +100,10 @@ struct meshdef0_prelude {
 
 ```cpp
 struct meshdef1_prelude {
-	uint16_t meshdef0_count;
-	uint16_t meshdef1_count;
-	uint32_t meshdef1_offsets_mostly[AAA];
-	uint32_t zero_word;
+    uint16_t meshdef0_count;
+    uint16_t meshdef1_count;
+    uint32_t meshdef1_offsets_mostly[AAA];
+    uint32_t zero_word;
 };
 ```
 
@@ -120,9 +120,9 @@ There is a block of this type at file offset `0xC8` in the annotated HOB file.
 
 ```cpp
 struct unknown_offset0_entry {
-	char name[8]; // no null terminator???
-	uint16_t some_index;
-	uint32_t zero_word;
+    char name[8]; // no null terminator???
+    uint16_t some_index;
+    uint32_t zero_word;
 };
 ```
 
@@ -132,10 +132,10 @@ There is a block of this type at file offset `0xE0` in the annotated HOB file.
 
 ```cpp
 struct unknown_offset1_entry {
-	uint32_t meshdef1_offset;
-	char name[6];
-	uint16_t some_index;
-	uint32_t zero_word;
+    uint32_t meshdef1_offset;
+    char name[6];
+    uint16_t some_index;
+    uint32_t zero_word;
 };
 ```
 
@@ -145,11 +145,11 @@ There is a block of this type at file offset `0x120` in the annotated HOB file.
 
 ```cpp
 struct unknown_offset2_entry {
-	char name [6];
-	uint8_t flags; // maybe??? maybe its a meshdef0 index instead???
-	uint8_t some_count;
-	float float_blocks[some_count][9];
-	uint32_t zero_word;
+    char name [6];
+    uint8_t flags; // maybe??? maybe its a meshdef0 index instead???
+    uint8_t some_count;
+    float float_blocks[some_count][9];
+    uint32_t zero_word;
 }
 ```
 
@@ -166,13 +166,14 @@ It appears to be bunch of floats and then a terminating all-F-word.
 
 ```cpp
 struct meshdef0 {
-	/* 0x00 */ uint32_t next_meshdef0_offset;
-	/* 0x04 */ uint32_t prev_meshdef0_offset;
-	/* 0x08 */ uint32_t unknown_meshdef0_offset0;
-	/* 0x0C */ uint32_t unknown_meshdef0_offset1;
-	/* 0x10 */ uint32_t meshdef1_offset;
-	/* 0x14 */ float big_block_o_floats[28];
-}; // size = 0x84
+    /* 0x00 */ uint32_t next_meshdef0_offset;
+    /* 0x04 */ uint32_t prev_meshdef0_offset;
+    /* 0x08 */ uint32_t unknown_meshdef0_offset0;
+    /* 0x0C */ uint32_t unknown_meshdef0_offset1;
+    /* 0x10 */ uint32_t meshdef1_offset;
+    /* 0x14 */ float big_block_o_floats[14];
+    /* 0x4C */ float big_block_o_floats2[14];
+}; // size = (without big_block_o_floats2) 0x4C, otherwise 0x84
 ```
 
 `meshdef0`s can seemingly have a linked list like structure, hence the `next` and `prev` entries.
@@ -185,6 +186,9 @@ Maybe they're some form of sub-mesh?
 `meshdef1_offset` is exactly what it sounds like.
 
 `big_block_o_floats` is actuallly a little ambiguous, I'm assuming its all floats but it could potentially have other stuff hidden in there.
+Also the size of it is a little speculative.
+`func_80056EB0` suggests that `meshdef0`'s should have a size of `0x4C`, but that leaves 14 floats unaccounted for in the HOB files themselves.
+I don't know what to make of that.
 
 ## Meshdef1
 
@@ -197,16 +201,16 @@ Or, if it is part of the meshdef1, its very unclear why all meshdef1 offsets wou
 
 ```cpp
 struct meshdef1 {
-	/* 0x00 */ uint32_t next_meshdef1_offset;
-	/* 0x04 */ uint32_t prev_meshdef1_offset;
-	/* 0x08 */ uint32_t unk08;
-	/* 0x0C */ uint32_t unk0C;
-	/* 0x10 */ uint32_t unk10;
-	/* 0x14 */ uint32_t vertex_counts[2];
-	/* 0x1C */ float some_float;
-	/* 0x20 */ uint32_t facegroup_offset;
-	/* 0x24 */ uint32_t vertext_offsets[2];
-	/* 0x2C */ float big_block_o_floats[12];
+    /* 0x00 */ uint32_t next_meshdef1_offset;
+    /* 0x04 */ uint32_t prev_meshdef1_offset;
+    /* 0x08 */ uint32_t unk08;
+    /* 0x0C */ uint32_t unk0C;
+    /* 0x10 */ uint32_t unk10;
+    /* 0x14 */ uint32_t vertex_counts[2];
+    /* 0x1C */ float some_float;
+    /* 0x20 */ uint32_t facegroup_offset;
+    /* 0x24 */ uint32_t vertext_offsets[2];
+    /* 0x2C */ float big_block_o_floats[12];
 }; // size = 0x5C
 ```
 
@@ -220,14 +224,14 @@ They also can have up to 2 sets of vertices associated with them, hence there be
 
 `big_block_o_floats` is actuallly a little ambiguous, I'm assuming its all floats but it could potentially have other stuff hidden in there.
 
-## Facegoup
+## Facegroup
 
 ```cpp
-struct facegoup {
-	uint32_t next_facegroup;
-	uint32_t prev_facegroup;
-	uint32_t face_offset;
-	uint32_t face_count;
+struct facegroup {
+    uint32_t next_facegroup;
+    uint32_t prev_facegroup;
+    uint32_t face_offset;
+    uint32_t face_count;
 };
 ```
 
@@ -245,24 +249,25 @@ So you'll see several memebers in the C struct whose sizes or even presence is v
 
 ```cpp
 struct face {
-	uint32_t flags;
-	struct {
-		uint32_t ??                        : 2;
-		uint32_t face_size                 : 6; // multiply by 4 to get the actual size
-		uint32_t vertex_indices_offset1    : 6; // multiply by 4 to get the actual offset
-		uint32_t vertex_color_offset       : 6; // multiply by 4 to get the actual offset
-		uint32_t vertex_indices_offset2    : 6; // multiply by 4 to get the actual offset
-		uint32_t texture_coordiante_offset : 6; // multiply by 4 to get the actual offset
-	} stuffed_data;
-	uint16_t material_index;
-	uint16_t padding;
-	uint16_t vertex_indices[2][4]; // there may only be set of indices, see flags
-	uint32_t vertex_colors[3/4]; // these may not be present at all, there can be 3 or 4 entries, see flags
-	uint32_t texture_coordinates[3/4]; // these may not be present at all, there can be 3 or 4 entries,  see flags
+    uint32_t flags;
+    struct {
+        uint32_t ??                        : 2;
+        uint32_t face_size                 : 6; // multiply by 4 to get the actual size
+        uint32_t vertex_indices_offset1    : 6; // multiply by 4 to get the actual offset
+        uint32_t vertex_color_offset       : 6; // multiply by 4 to get the actual offset
+        uint32_t vertex_indices_offset2    : 6; // multiply by 4 to get the actual offset
+        uint32_t texture_coordiante_offset : 6; // multiply by 4 to get the actual offset
+    } stuffed_data;
+    uint16_t material_index;
+    uint16_t padding;
+    uint16_t vertex_indices[2][4]; // there may only be set of indices, see flags
+    uint32_t vertex_colors[3/4]; // these may not be present at all, there can be 3 or 4 entries, see flags
+    uint32_t texture_coordinates[3/4]; // these may not be present at all, there can be 3 or 4 entries,  see flags
 }
 ```
 
 ### Flags
+
 | Flag       | Usage |
 | ---------- | ----- |
 | 0x00000002 | Might be unique to player craft HOBs, indicates there's a second set of vertex indices |
@@ -299,20 +304,20 @@ Finally, there's the vertex lists.
 
 ```cpp
 struct vertex {
-	uint16_t x;
-	uint16_t y;
-	uint16_t z;
-	uint16_t padding;
+    uint16_t x;
+    uint16_t y;
+    uint16_t z;
+    uint16_t padding;
 };
 ```
 
-# Extraction
+## Extraction
 
 I made a utility that kind-of-sort-of extract models from HOB files, [extract_hob.py](/docs/hob_files/extract_hob.py).
 It is written in Python instead of C because I wanted it to use it in tandem with [Blender](https://www.blender.org/) to view the models after extraction.
 To be honest, it doesn't make much sense to me reading over it so I doubt its going to be easy for anyone else to understand it.
 
-# Game Code Stuff
+## Game Code Stuff
 
 [load_hmt_and_hob.c](/docs/hmt_files/load_hmt_and_hob.c) is the function that DMA's and does initial parsing of the HOB file.
 The big thing that it's doing is converting offsets in the file into pointers.
