@@ -393,6 +393,7 @@ segments:
       - [0xA11D0, rodata,  "main/A11D0"]
       - [0xA1660, rodata,  "main/A1660"]
       - [0xA1690, rodata,  "main/A1690"]
+      - [0xA1970, rodata,  "main/A1970"]
       - [0xA1AD0, rodata,  "main/A1AD0"]
       - [0xA2380, rodata,  "main/A2380"]
       - [0xA2390, rodata,  "main/A2390"]

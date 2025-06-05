@@ -327,3 +327,28 @@ The big thing that it's doing is converting offsets in the file into pointers.
 [func_800587F0.c](/docs/hmt_files/func_800587F0.c) appears to be scaling(?) the RGB channels of the vertex colors in each face (the alpha channel is left alone).
 It also implies that in the case where there's only a face color (as opposed to per-vertex colors) then there will be exactly one entry in the `vertex_colors` of the face.
 Or, at least, there's only 1 entry that matters.
+
+```cpp
+struct hobObjectListItem {
+    /* 0x00 */ s16 nextIndex;
+    /* 0x00 */ u16 padding;
+    /* 0x04 */ struct object_entry *object_entry;
+    /* 0x08 */ void *hob_file; // only set for the first object loaded from each HOB file, NULL otherwise
+}; // size = 0xC
+
+struct hobObjectListItem hobObjectListItems[0x60];
+// You could alternatively consider this the next open hobObjectList index
+// In practice this always ends up tracking the number of loaded objects
+u16 numHobObjectsLoaded;
+/*
+A hashmap, of sorts
+object names have their characters sum'd and then %25'd.
+The entires in this array are indices of entries in D_80139020, representing the 
+*/
+u16 hobObjectHashMap[25];
+```
+
+HOB objects are held in a hash-map like collection.
+`hobObjectHashMap` contains indices into `hobObjectListItems`, representing the head of a linked list of objects with the given hash.
+The hash is calculated by summing the ASCII value of the characters in the object's name and the taking that value `mod 25`.
+As a technical note, when new objects are loaded, they are appended to the front of the list they belong to, becoming the new head of the list.
