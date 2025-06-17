@@ -114,7 +114,47 @@ D_800A9A5C = 0x800A9A5C; // type:asciz size:0x17 segment:mission_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-func_800CFE7C                   = 0x800CFE7C; // type:func segment:mission_overlay
+playerSnowSpeederUpdate      = 0x800ACD9C; // type:func segment:mission_overlay
+
+playerXwingFireBlaster       = 0x800B4CC0; // type:func segment:mission_overlay
+playerXwingUpdate            = 0x800B5434; // type:func segment:mission_overlay
+
+playerAwingUpdate            = 0x800B7168; // type:func segment:mission_overlay
+playerYwingUpdate            = 0x800B8488; // type:func segment:mission_overlay
+playerVwingUpdate            = 0x800B9F4C; // type:func segment:mission_overlay
+playerFalconUpdate           = 0x800BB830; // type:func segment:mission_overlay
+playerTieInterceptorUpdate   = 0x800BC810; // type:func segment:mission_overlay
+playerT16Update              = 0x800BD530; // type:func segment:mission_overlay
+playerNabooStarfighterUpdate = 0x800BE7D0; // type:func segment:mission_overlay
+playerAtStUpdate             = 0x800D2208; // type:func segment:mission_overlay
+
+getPlayerHealthPercentage = 0x800C40AC; // type:func segment:mission_overlay
+
+getCurrentLevel = 0x800C7504; // type:func segment:mission_overlay
+
+dealDamagetoDatItem              = 0x800C7390; // type:func segment:mission_overlay
+setObjectiveBoolean              = 0x800C7540; // type:func segment:mission_overlay
+setObjectiveBooleans             = 0x800C7568; // type:func segment:mission_overlay
+getObjectiveBoolean              = 0x800C759C; // type:func segment:mission_overlay
+setObjectiveCount                = 0x800C75C0; // type:func segment:mission_overlay
+increaseObjectiveCount           = 0x800C75EC; // type:func segment:mission_overlay
+getObjectiveCount                = 0x800C761C; // type:func segment:mission_overlay
+setObjectiveHiddenFlag           = 0x800C7660; // type:func segment:mission_overlay
+activateObjectiveCompleteFlag    = 0x800C76B0; // type:func segment:mission_overlay
+setFriendliesSaved               = 0x800C77B0; // type:func segment:mission_overlay
+calculateDatItemDistanceToPlayer = 0x800C78A0; // type:func segment:mission_overlay
+getDatItemHealth                 = 0x800C7B60; // type:func segment:mission_overlay
+getDatItemHealthPercentage       = 0x800C7C28; // type:func segment:mission_overlay
+playObjectiveVoiceLine           = 0x800C7D1C; // type:func segment:mission_overlay
+
+func_800CFE7C = 0x800CFE7C; // type:func segment:mission_overlay
+
+setNpcHealth           = 0x800F2070; // type:func segment:mission_overlay
+getNpcCurrentHealth    = 0x800F20EC; // type:func segment:mission_overlay
+dealDamageToNpc        = 0x800F2120; // type:func segment:mission_overlay
+getNpcMissingHealth    = 0x800F215C; // type:func segment:mission_overlay
+getNpcHealthPercentage = 0x800F219C; // type:func segment:mission_overlay
+
 load_model_animation            = 0x800F9E40; // type:func segment:mission_overlay
 reset_model_animations          = 0x800F9F2C; // type:func segment:mission_overlay
 reset_and_free_model_animations = 0x800F9F6C; // type:func segment:mission_overlay
@@ -274,7 +314,7 @@ func_80109620      = 0x80109620; // type:func segment:mission_overlay
 ////////////////////////////////// Varibales ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_8010A204 = 0x8010A204; // type:f32 size:0x30 segment:mission_overlay
+D_8010C6E0 = 0x8010C6E0; // type:u32 size:0x300 segment:mission_overlay
 
 D_8010973C = 0x8010973C; // type:u32 size:0x10 segment:mission_overlay
 D_8010974C = 0x8010974C; // type:u32 size:0x10 segment:mission_overlay
@@ -310,8 +350,21 @@ D_80109A7C = 0x80109A7C; // type:u32 size:0x10 segment:mission_overlay
 D_80109A8C = 0x80109A8C; // type:u32 size:0x10 segment:mission_overlay
 D_80109A9C = 0x80109A9C; // type:u32 size:0x10 segment:mission_overlay
 
+D_80109AD0 = 0x80109AD0; // size:0x10  segment:mission_overlay
+
+D_8010A450 = 0x8010A450; // size:0x150 segment:mission_overlay
+
+missionObjectiveTextIds = 0x80109D2C; // type:u8 size:0x50 segment:mission_overlay
+
+pauseMenuMissionObjectives = 0x80109DD4; // type:u8 size:0x50 segment:mission_overlay
+pauseMenuGameSettings      = 0x80109E24; // type:u8 size:0x44 segment:mission_overlay
+pauseMenuAudioSettings     = 0x80109E68; // type:u8 size:0x84 segment:mission_overlay
+pauseMenuAbortLevel        = 0x80109EEC; // type:u8 size:0x38 segment:mission_overlay
+
 D_80109F24 = 0x80109F24; // type:u32 size:0x58 segment:mission_overlay
 D_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
+
+D_8010A204 = 0x8010A204; // type:f32 size:0x30 segment:mission_overlay
 
 D_8010A234 = 0x8010A234; // type:u32 size:0x38 segment:mission_overlay
 D_8010A26C = 0x8010A26C; // type:u32 size:0x38 segment:mission_overlay

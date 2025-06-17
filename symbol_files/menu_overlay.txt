@@ -160,18 +160,44 @@ D_800A7604 = 0x800A7604; // type:asciz segment:menu_overlay
 D_800A762C = 0x800A762C; // type:asciz segment:menu_overlay
 D_800A7634 = 0x800A7634; // type:asciz segment:menu_overlay
 D_800A763C = 0x800A763C; // type:asciz segment:menu_overlay
-D_800A7C00 = 0x800A7C00; // type:asciz segment:menu_overlay 
+D_800A78B0 = 0x800A78B0; // type:asciz segment:menu_overlay
+D_800A78B8 = 0x800A78B8; // type:asciz segment:menu_overlay
+D_800A78C0 = 0x800A78C0; // type:asciz segment:menu_overlay
+D_800A78C8 = 0x800A78C8; // type:asciz segment:menu_overlay
+D_800A78D8 = 0x800A78D8; // type:asciz segment:menu_overlay
+D_800A78E8 = 0x800A78E8; // type:asciz segment:menu_overlay
+D_800A7C00 = 0x800A7C00; // type:asciz segment:menu_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-loadMedalInfo           = 0x800CC040; // type:func segment:menu_overlay
-getMissionMedal         = 0x800CC070; // type:func segment:menu_overlay
-calculatePlayerRank     = 0x800CC1A8; // type:func segment:menu_overlay
-getMedalInfo            = 0x800CC200; // type:func segment:menu_overlay
-compareStatstoMedalInfo = 0x800CC2B0; // type:func segment:menu_overlay
-calculateShotAccuracy   = 0x800CC374; // type:func segment:menu_overlay
+postLevelStatScreen        = 0x800C089C; // type:func segment:menu_overlay
+getPlayerRankString        = 0x800C4700; // type:func segment:menu_overlay
+getControllerSettingsTitle = 0x800C49BC; // type:func segment:menu_overlay
+
+getLevelHardwiredDifficulty                 = 0x800C6720; // type:func segment:menu_overlay
+getAvailablePlayerCraftFlagsConsiderUnlocks = 0x800C6234; // type:func segment:menu_overlay
+getAvailablePlayerCraftFlagsIgnoreUnlocks   = 0x800C63C0; // type:func segment:menu_overlay
+unlockLevelsAndCraftsBasedOnMedalsEarned    = 0x800C64C8; // type:func segment:menu_overlay
+getSecondaryWeaponForLevelAndCraft          = 0x800C6728; // type:func segment:menu_overlay
+hasKasanMoorDefected                        = 0x800C6838; // type:func segment:menu_overlay
+getLevelIntroCrawlId                        = 0x800C6900; // type:func segment:menu_overlay
+selectPostCrawlCraft                        = 0x800CB9BC; // type:func segment:menu_overlay
+
+loadJfifAsset       = 0x800C6970; // type:func segment:menu_overlay
+parseJfifSOIMarker  = 0x800C6F24; // type:func segment:menu_overlay
+parseJfifSOF0Marker = 0x800C7070; // type:func segment:menu_overlay
+parseJfifDQTMarker  = 0x800C73E4; // type:func segment:menu_overlay
+parseJfifDHTMarker  = 0x800C7534; // type:func segment:menu_overlay
+paserJfifSOSMarker  = 0x800C76B8; // type:func segment:menu_overlay
+
+loadMedalInfo               = 0x800CC040; // type:func segment:menu_overlay
+getMissionMedal             = 0x800CC070; // type:func segment:menu_overlay
+calculatePlayerRank         = 0x800CC1A8; // type:func segment:menu_overlay
+getMedalInfo                = 0x800CC200; // type:func segment:menu_overlay
+compareStatstoMedalInfo     = 0x800CC2B0; // type:func segment:menu_overlay
+calculateShotAccuracy       = 0x800CC374; // type:func segment:menu_overlay
 
 // Real functions missed by splat
 func_800B3824 = 0x800B3824; // type:func segment:menu_overlay
@@ -190,7 +216,7 @@ fake_func_800C5898 = 0x800C5898; // type:func segment:menu_overlay
 func_800C58A0      = 0x800C58A0; // type:func segment:menu_overlay
 
 fake_func_800C6968 = 0x800C6968; // type:func segment:menu_overlay
-func_800C6970      = 0x800C6970; // type:func segment:menu_overlay
+// Real function loadJfifAsset
 
 fake_func_800CC038 = 0x800CC038; // type:func segment:menu_overlay
 // Real function loadMedalInfo
@@ -200,6 +226,8 @@ fake_func_800CC3D4 = 0x800CC3D4; // type:func segment:menu_overlay
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Varibales ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+D_800CC9D8 = 0x800CC9D8; // size:0x10 segment:menu_overlay
 
 D_800CC414 = 0x800CC414; // type:f32 segment:menu_overlay
 D_800CC430 = 0x800CC430; // type:f32 segment:menu_overlay
@@ -220,28 +248,25 @@ D_800CC908 = 0x800CC908; // type:u32 size:0x24 segment:menu_overlay
 D_800CC92C = 0x800CC92C; // type:u32 size:0x24 segment:menu_overlay
 D_800CC950 = 0x800CC950; // type:u32 size:0x24 segment:menu_overlay
 
-D_800CCA30 = 0x800CCA30; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA38 = 0x800CCA38; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA40 = 0x800CCA40; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA48 = 0x800CCA48; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA50 = 0x800CCA50; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA58 = 0x800CCA58; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA60 = 0x800CCA60; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA68 = 0x800CCA68; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA70 = 0x800CCA70; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA78 = 0x800CCA78; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA80 = 0x800CCA80; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA88 = 0x800CCA88; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA90 = 0x800CCA90; // type:u32 size:0x8 segment:menu_overlay
-D_800CCA98 = 0x800CCA98; // type:u32 size:0x8 segment:menu_overlay
+D_800CCA30 = 0x800CCA30; // type:u32 size:0x70 segment:menu_overlay
 
 D_800CCC58 = 0x800CCC58; // type:u32 size:0x58 segment:menu_overlay
 D_800CCCB0 = 0x800CCCB0; // type:u32 size:0x58 segment:menu_overlay
 D_800CCD10 = 0x800CCD10; // type:u32 size:0x58 segment:menu_overlay
 D_800CCD68 = 0x800CCD68; // type:u32 size:0x58 segment:menu_overlay
 
+gConcertHallDisplayIndex = 0x800CFE3D; // type:u8 segment:menu_overlay
+gConcertHallPlayingIndex = 0x800CFE3E; // type:u8 segment:menu_overlay
+
 D_800D03D0 = 0x800D03D0; // type:u32 size:0xC segment:menu_overlay
 medalInfo  = 0x800D03DC; // type:u32          segment:menu_overlay
+
+D_800CD438 = 0x800CD438; // type:f32 size:0x30 segment:menu_overlay
+
+gIntroCrawlTextId               = 0x800CD470; // type:u8  size:0x04 segment:menu_overlay
+gPostIntroCrawlNumCraft         = 0x800CD474; // type:u8  size:0x04 segment:menu_overlay
+gPostIntroCrawlCraftObjectNames = 0x800CD478; // type:u32 size:0x10 segment:menu_overlay
+gPostIntroCrawlHobFiles         = 0x800CD4B8; // type:u32 size:0x10 segment:menu_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// File Split Garbage ///////////////////////////////
@@ -258,5 +283,6 @@ junk_800A7BFC = 0x800A7BFC; // type:u8 segment:menu_overlay
 junk_800A9264 = 0x800A9264; // type:u8 segment:menu_overlay
 junk_800CCBFC = 0x800CCBFC; // type:u8 segment:menu_overlay
 junk_800CD2A4 = 0x800CD2A4; // type:u8 segment:menu_overlay
+junk_800CD468 = 0x800CD468; // type:u8 segment:menu_overlay
 junk_800CD50C = 0x800CD50C; // type:u8 segment:menu_overlay
 junk_800CD514 = 0x800CD514; // type:u8 segment:menu_overlay

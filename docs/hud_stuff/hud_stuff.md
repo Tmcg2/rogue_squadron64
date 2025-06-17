@@ -185,14 +185,6 @@ struct func_800C0084_type {
     /* 0xF7E */ u8 secondaryWeaponLevel;
     /* 0xF7F */ u8 unkF7F;
 }; // size = 0xF80
-
-// This also for D_80109E24, D_80109EEC, and D_80109E68
-// They are arrays of this type that end with an entry with flags set to 0xFFFF and the rest 0
-struct D_80109DD4_type {
-    /* 0x0 */ u16 flags;
-    /* 0x2 */ u16 unk2;
-    /* 0x4 */ u16 unk4;
-}; // size = 0x6
 ```
 
 `D_8010CA30` gets referenced alot in the `0xFCA20` code segment, so that would be the best place to start investigating how it works.
@@ -207,8 +199,6 @@ The details are a fuzzy though, needs a lot more investigation.
 `func_800C0084` initializes a struct that is `0xF80` bytes big.
 It's somehow involved with the HUD stuff too, although how it differs from `D_8010CA30` is unclear to me.
 It appears to contain several `struct hud_sub_struct`s, but there's clearly A LOT more in it than that.
-
-`struct D_80109DD4_type` is important to the displaying of the pause menu, although most of the details are beyond me.
 
 `D_80109D2C` is an array of text ID's, 4 per level.
 These are the mission objective text ID's.

@@ -35,13 +35,63 @@ Don't know why they made an entire function for that, but whatever.
 There are 4 different controller setting sets, named after Star Wars characters.
 
 ```cpp
-enum ControllerSetting {
+enum ControllerSettingType {
     /* 0x0 */ CONTROLLER_SETTING_LUKE,
     /* 0x1 */ CONTROLLER_SETTING_WEDGE,
     /* 0x2 */ CONTROLLER_SETTING_JANSON,
     /* 0x3 */ CONTROLLER_SETTING_HOBBIE,
     /* 0x4 */ NUM_CONTROLLER_SETTINGS,
 };
+
+enum ControllerInput {
+    /* 0x00 */ PAUSE,
+    /* 0x01 */ SWITCH_VIEW,
+    /* 0x02 */ DROP_CAMERA,
+    /* 0x03 */ LOOK_AROUND,
+    /* 0x04 */ COCKPIT_VIEW,
+    /* 0x05 */ CLOSE_VIEW,
+    /* 0x06 */ STANDARD_VIEW,
+    /* 0x07 */ UNKOWN_OPEARION_07,
+    /* 0x08 */ UNKOWN_OPEARION_08,
+    /* 0x09 */ BRAKES1,
+    /* 0x0A */ BRAKES2,
+    /* 0x0B */ BRAKES3,
+    /* 0x0C */ THRUST,
+    /* 0x0D */ FIRE_BLASTERS,
+    /* 0x0E */ FIRE_SECONDARY,
+    /* 0x0F */ FIRE_MODE,
+    /* 0x10 */ ROLL,
+    /* 0x11 */ SPECIAL,
+    /* 0x12 */ NUM_INPUTS,
+};
+
+union ControllerSettings {
+    struct {
+        /* 0x00 */ u16 pause;
+        /* 0x02 */ u16 switch_view;
+        /* 0x04 */ u16 drop_camera;
+        /* 0x06 */ u16 look_around;
+        /* 0x08 */ u16 cockpit_view;
+        /* 0x0A */ u16 close_view;
+        /* 0x0C */ u16 standard_view;
+        /* 0x0E */ u16 unknown_input_07;
+        /* 0x10 */ u16 unknown_input_08;
+        /* 0x12 */ u16 brakes1;
+        /* 0x14 */ u16 brakes2;
+        /* 0x16 */ u16 brakes3;
+        /* 0x18 */ u16 thrust;
+        /* 0x1A */ u16 fire_blasters;
+        /* 0x1C */ u16 fire_secondary;
+        /* 0x1E */ u16 fire_mode;
+        /* 0x20 */ u16 roll;
+        /* 0x22 */ u16 special;
+    } asStruct;
+    u16 asArray[NUM_INPUTS];
+}; // size = 0x24
+
+union ControllerSettings *D_800CC9D8[NUM_CONTROLLER_SETTINGS];
+union ControllerSettings *D_80109AD0[NUM_CONTROLLER_SETTINGS];
+union ControllerSettings  D_8010BE18[];
 ```
 
 You can fiddle with the byte at ROM address `0x80130B45` to set this value directly in memory.

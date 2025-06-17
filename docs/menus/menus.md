@@ -1,5 +1,7 @@
 # Menus
 
+## Main Menu Stuff
+
 There's a struct at `0x800CE730` that is `0xF8` bytes big.
 It appears to be related to the text shown on the menu screens.
 I don't currently know what all the entries in it are, but I have a good idea about a lot of them
@@ -155,3 +157,31 @@ The pointer part is pretty clear, its just a `char*`.
 The `song_id` is speculative on my part though, I haven't figured out what that number actually is.
 
 `D_800CFE3D` is the index of the song being displayed, while `D_800CFE3E` is the index of the song being played.
+
+## Pause Menu Stuff
+
+```cpp
+struct PauseMenuStuff {
+    /* 0x0 */ u16 flags;
+    union {
+        /* 0x2 */ u16 textId;
+        /* 0x2 */ u16 objectiveNumber;
+    };
+    union
+    {
+        /* 0x4 */ u16 nextMenu;
+        /* 0x4 */ u16 settingBit;
+    };
+}; // size = 0x6
+
+struct PauseMenuStuff pauseMenuMissionObjectives[];
+struct PauseMenuStuff pauseMenuGameSettings[];
+struct PauseMenuStuff pauseMenuAudioSettings[];
+struct PauseMenuStuff pauseMenuAbortLevel[];
+```
+
+Its hard to pin down the exact member names for things in `struct PauseMenuStuff`.
+The `flags` part is pretty straightforward, its the other 2 members that are messy.
+What represent appears to be highly context dependent.
+For the sub-menu options on the main pause menu screen (the Mission Objectives), the last member is an indicator of which menu the option will take you to.
+But when in the Game or Audio Settings menus they can represent the bit a particular setting modifies in `D_80130B40`.

@@ -131,11 +131,10 @@ I don't know of its the primary player information block, and I doubt its the on
 
 ```cpp
 struct inner_player_struct {
-    /* 0x000 */ void *unk000;
+    /* 0x000 */ struct object_entry *object;
     /* 0x004 */ f32 posX;
     /* 0x008 */ f32 posY;
     /* 0x00C */ f32 posZ;
-    // I wouldn't be surprised if things like speed, acceleration, and facing angle/vector are somewhere in here
     /* 0x010 */ f32 unk010;
     /* 0x014 */ f32 unk014;
     /* 0x018 */ f32 unk018;
@@ -152,7 +151,11 @@ struct inner_player_struct {
     /* 0x0BC */ void *unk0BC;
     /* 0x0C0 */ f32 currentHealth;
     /* 0x0C4 */ f32 maxHealth;
-    /* 0x0C8 */ f32 unk0C8[0x2C];
+    /* 0x0C8 */ f32 unk0C8[0x24];
+    /* 0x158 */ u16 blaster_to_fire;
+    /* 0x15A */ u16 pad15A;
+    /* 0x15C */ u32 fire_mode;
+    /* 0x160 */ f32 unk160[0x06];
     /* 0x178 */ u32 unk178[0x35];
     /* 0x24C */ f32 unk24C[0x10];
     /* 0x28C */ u16 unk28C;
@@ -185,17 +188,29 @@ At ROM address `0x80130B40` there is a large struct that seems to track several 
 Things like the current level, chosen player craft, controller setting choice, language choice, volume levels, cheat code flags, and who knows what else.
 
 ```cpp
-// This could be an array, not sure
 struct D_80130B10_type {
-    /* 0x0 */ u8 playerCraft;
-    /* 0x1 */ u8 unk1;
-    /* 0x2 */ u8 secondaryWeapon;
-    /* 0x3 */ u8 secondaryWeaponMax;
-    /* 0x4 */ u8 unk4;
-    /* 0x5 */ u8 unk5;
-    /* 0x6 */ u8 unk6;
-    /* 0x7 */ u8 unk7;
-}; // size 0x8
+    /* 0x00 */ u8  numLives;
+    /* 0x01 */ u8  playerRank;
+    /* 0x02 */ u8  secondaryWeapon;
+    /* 0x03 */ u8  secondaryWeaponMax;
+    /* 0x04 */ u8  unk4;
+    /* 0x05 */ u8  completedObjectiveFlags; // If a flag is 1, the objective is complete and will be colored green
+    /* 0x06 */ u8  hiddenObjectiveFlags; // If a flag is 1, the objective IS NOT displayed
+    /* 0x07 */ u8  numMissionObjectives;
+    // I think these are copied from D_80130B40 on level start and then compared against them again afterwards to deduce if a new
+    // unlocked was gained during the level
+    /* 0x08 */ u32 activeUnlockFlags;
+    /* 0x0C */ u8  medalPerLevel[0x13]; // really ought to be enum MEDAL_TYPE, but enums are sized too big
+    /* 0x1F */ u8  maxUnlockedLevel; // really ought to be enum Level, but enums are sized too big
+    /* 0x20 */ u8  unk20;
+    /* 0x21 */ u8  unk21;
+    /* 0x22 */ u8  unk22;
+    /* 0x23 */ u8  unk23;
+    /* 0x24 */ u8  accountNumber;
+    /* 0x25 */ u8  anyExtraLevelsUnlocked;
+    /* 0x26 */ u8  unk26;
+    /* 0x27 */ u8  unk27;
+}; // size 0x28
 
 struct D_80130B40_type {
     /* 0x00 */ u8  currentLevel; // Should really be an `enum Level` but enums types are bigger than 1 byte
