@@ -38,6 +38,9 @@ options:
     - symbol_files/mission_overlay.txt
     - symbol_files/symbol_addrs.txt
     - symbol_files/zlib.txt
+    # This only exists because I can't find a way to remove the exclusive_ram_id for the main "overlay"
+    # I should really fix that problem
+    - symbol_files/silly_addrs.txt
   reloc_addrs_path:
     - reloc_addrs.txt
 
@@ -101,6 +104,7 @@ segments:
       - [0x033C0, asm,     "main/033C0"]
       - [0x03F80, asm,     "main/03F80"]
       - [0x04030, asm,     "main/04030"]
+      - [0x04070, data,    "main/04070"]
       - [0x04080, asm,     "main/04080"]
       - [0x05F80, asm,     "main/05F80"]
       - [0x06170, asm,     "main/06170"]
@@ -254,6 +258,9 @@ segments:
       - [0x38110, c,       "libultra/os/yieldthread"]
       - [0x38160, data,    "main/38160"]
       - [0x381B0, data,    "main/381B0"]
+      - [0x381C0, data,    "main/381C0"]
+      - [0x38220, data,    "main/38220"]
+      - [0x38230, data,    "main/38230"]
       - [0x38250, data,    "main/38250"]
       - [0x383C0, data,    "main/383C0"]
       - [0x394E0, data,    "main/394E0"]
@@ -522,18 +529,25 @@ segments:
       - [0x000FAE50, asm,    "mission_overlay/0FAE50"]
       - [0x000FCA20, asm,    "mission_overlay/0FCA20"]
       - [0x000FFB10, asm,    "mission_overlay/0FFB10"]
+      - [0x00101C90, asm,    "mission_overlay/101C90"]
+      - [0x001025A0, asm,    "mission_overlay/1025A0"]
       - [0x001028D0, asm,    "mission_overlay/1028D0"]
       - [0x001036A0, asm,    "mission_overlay/1036A0"]
       - [0x00104180, asm,    "mission_overlay/104180"]
       - [0x00104910, asm,    "mission_overlay/104910"]
       - [0x00104E10, asm,    "mission_overlay/104E10"]
       - [0x001050E0, asm,    "mission_overlay/1050E0"]
+      - [0x001056A0, asm,    "mission_overlay/1056A0"]
+      - [0x00105B80, asm,    "mission_overlay/105B80"]
       - [0x00106760, asm,    "mission_overlay/106760"]
       - [0x00106DA0, asm,    "mission_overlay/106DA0"]
       - [0x001077F0, asm,    "mission_overlay/1077F0"]
       - [0x00107E20, asm,    "mission_overlay/107E20"]
+      - [0x00107F70, asm,    "mission_overlay/107F70"]
       - [0x00108AB0, asm,    "mission_overlay/108AB0"]
+      - [0x001090E0, asm,    "mission_overlay/1090E0"]
       - [0x00109790, asm,    "mission_overlay/109790"]
+      - [0x00109B60, asm,    "mission_overlay/109B60"]
       - [0x0010A030, asm,    "mission_overlay/10A030"]
       - [0x0010A220, asm,    "mission_overlay/10A220"]
       - [0x0010A240, data,   "mission_overlay/10A240"]
@@ -552,6 +566,8 @@ segments:
       - [0x0010BFF0, data,   "mission_overlay/10BFF0"]
       - [0x0010C110, data,   "mission_overlay/10C110"]
       - [0x0010C290, data,   "mission_overlay/10C290"]
+      - [0x0010C2B0, data,   "mission_overlay/10C2B0"]
+      - [0x0010C2C0, data,   "mission_overlay/10C2C0"]
       - {type: bss, vram: 0x8010B6D0, name: "mission_overlay/8010B6D0"}
 
   - name: menu_overlay
@@ -584,6 +600,7 @@ segments:
       - [0x00133640, data,   "menu_overlay/133640"]
       - [0x00133DA0, data,   "menu_overlay/133DA0"]
       - [0x00134450, data,   "menu_overlay/134450"]
+      - [0x00134610, data,   "menu_overlay/134610"]
       - [0x001346B0, data,   "menu_overlay/1346B0"]
       - {type: bss, vram: 0x800CD520, name: "menu_overlay/800CD520"}
 

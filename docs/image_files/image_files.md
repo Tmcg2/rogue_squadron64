@@ -35,22 +35,22 @@ For two, that example isn't getting extracted right.
 ```cpp
 // Multi-byte values are big-endian
 struct full_image_header {
-	uint32_t image_size;
-	uint32_t pixel_offset[8];
-	uint32_t palette_offset;
-	uint32_t image_name_offset;
-	uint16_t image_pixel_width;
-	uint16_t image_pixel_height;
-	uint8_t  always_1; // May not always be 1, but I personally have only seen 1
-	uint8_t  bit_depth;
-	union {
-		struct {
-			uint16_t flags      : 12;
-			uint16_t image_type :  4;
-		};
-		uint16_t flags_type;
-	};
-	uint32_t transparency_color;
+    uint32_t image_size;
+    uint32_t pixel_offset[8];
+    uint32_t palette_offset;
+    uint32_t image_name_offset;
+    uint16_t image_pixel_width;
+    uint16_t image_pixel_height;
+    uint8_t  always_1; // May not always be 1, but I personally have only seen 1
+    uint8_t  bit_depth;
+    union {
+        struct {
+            uint16_t flags      : 12;
+            uint16_t image_type :  4;
+        };
+        uint16_t flags_type;
+    };
+    uint32_t transparency_color;
 };
 ```
 
@@ -63,18 +63,18 @@ Author's note to self: all those images have the `0x800` flag set, whereas I don
 ```cpp
 // Multi-byte values are big-endian
 struct partial_image_header {
-	union {
-		struct {
-			uint16_t flags      : 12;
-			uint16_t image_type :  4;
-		};
-		uint16_t flags_type;
-	};
-	uint8_t  always_0; // May not always be 0, but I personally have only seen 0
-	uint8_t  bit_depth;
-	uint16_t image_pixel_width;
-	uint16_t image_pixel_height;
-	uint32_t transparency_color;
+    union {
+        struct {
+            uint16_t flags      : 12;
+            uint16_t image_type :  4;
+        };
+        uint16_t flags_type;
+    };
+    uint8_t  always_0; // May not always be 0, but I personally have only seen 0
+    uint8_t  bit_depth;
+    uint16_t image_pixel_width;
+    uint16_t image_pixel_height;
+    uint32_t transparency_color;
 };
 ```
 

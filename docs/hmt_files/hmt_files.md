@@ -20,9 +20,9 @@ The header looks like this C struct:
 
 ```cpp
 struct hmt_header {
-	uint16_t material_count;
-	uint16_t padding;
-	uint32_t texture_offset;
+    uint16_t material_count;
+    uint16_t padding;
+    uint32_t texture_offset;
 };
 ```
 
@@ -38,11 +38,11 @@ Then we get the `material_entry`s, which look like the following C struct:
 
 ```cpp
 struct material_entry {
-	union {
-		// 1 = has texture, 2 = no texture
-    	/* 0x00 */ uint16_t material_type;
-    	/* 0x00 */ uint16_t material_flags;
-	};
+    union {
+        // 1 = has texture, 2 = no texture
+        /* 0x00 */ uint16_t material_type;
+        /* 0x00 */ uint16_t material_flags;
+    };
     /* 0x02 */ uint16_t texture_index;
     /* 0x04 */ float misc_float; // Pupose unknown
     /* 0x08 */ float one; // Always(?) 1.0f
@@ -75,21 +75,21 @@ The only difference is that HMT images don't have an `image_size` member.
 
 ```cpp
 struct texture_entry {
-	uint32_t pixel_offset[8]; // relative to the start of the file
-	uint32_t palette_offset; // relative to the start of the file
-	uint32_t image_name_offset; // relative to the start of the file
-	uint16_t image_pixel_width;
-	uint16_t image_pixel_height;
-	uint8_t  always_1; // May not always be 1, but I personally have only seen 1
-	uint8_t  bit_depth;
-	union {
-		struct {
-			uint16_t flags      : 12;
-			uint16_t image_type :  4;
-		};
-		uint16_t flags_type;
-	};
-	uint32_t transparency_color;
+    uint32_t pixel_offset[8]; // relative to the start of the file
+    uint32_t palette_offset; // relative to the start of the file
+    uint32_t image_name_offset; // relative to the start of the file
+    uint16_t image_pixel_width;
+    uint16_t image_pixel_height;
+    uint8_t  always_1; // May not always be 1, but I personally have only seen 1
+    uint8_t  bit_depth;
+    union {
+        struct {
+            uint16_t flags      : 12;
+            uint16_t image_type :  4;
+        };
+        uint16_t flags_type;
+    };
+    uint32_t transparency_color;
 }; // size = 0x34
 ```
 

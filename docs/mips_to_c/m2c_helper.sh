@@ -30,7 +30,7 @@ popd > /dev/null
 OVERLAY="$1"
 FUNCTION="$2"
 
-if ! ASSEMBLY_FILE=$(grep -rl "glabel ${FUNCTION}" ./asm/${OVERLAY}); then
+if ! ASSEMBLY_FILE=$(grep -rl "glabel ${FUNCTION}$" ./asm/${OVERLAY}); then
     echo "Could not find ${FUNCTION} anywhere in ./asm/${OVERLAY}"
     exit 1
 fi
