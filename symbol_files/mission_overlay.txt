@@ -333,7 +333,7 @@ fake_func_80109618 = 0x80109618; // type:func segment:mission_overlay
 func_80109620      = 0x80109620; // type:func segment:mission_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// Varibales ///////////////////////////////////
+////////////////////////////////// Variables ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 simpleCheckHandles = 0x8010C6E0; // type:u32 size:0x300 segment:mission_overlay
@@ -362,10 +362,14 @@ D_8010993C = 0x8010993C; // type:u32 size:0x10 segment:mission_overlay
 D_8010994C = 0x8010994C; // type:u32 size:0x10 segment:mission_overlay
 D_8010995C = 0x8010995C; // type:u32 size:0x10 segment:mission_overlay
 
-D_80109A00 = 0x80109A00; // type:u32 size:0x10 segment:mission_overlay
-D_80109A10 = 0x80109A10; // type:u32 size:0x10 segment:mission_overlay
-D_80109A20 = 0x80109A20; // type:u32 size:0x10 segment:mission_overlay
-D_80109A30 = 0x80109A30; // type:u32 size:0x10 segment:mission_overlay
+D_80109974 = 0x80109974; // type:f32 size:0x18 segment:mission_overlay
+
+D_801099C4 = 0x801099C4; // type:f32 size:0x30 segment:mission_overlay
+
+D_80109A00 = 0x80109A00; // type:char* size:0x4 segment:mission_overlay
+D_80109A10 = 0x80109A10; // type:char* size:0x4 segment:mission_overlay
+D_80109A20 = 0x80109A20; // type:char* size:0x4 segment:mission_overlay
+D_80109A30 = 0x80109A30; // type:char* size:0x4 segment:mission_overlay
 
 D_80109A6C = 0x80109A6C; // type:u32 size:0x10 segment:mission_overlay
 D_80109A7C = 0x80109A7C; // type:u32 size:0x10 segment:mission_overlay
@@ -376,9 +380,13 @@ D_80109AD0 = 0x80109AD0; // size:0x10  segment:mission_overlay
 
 demoStep = 0x80109AE0; // type:u32 segment:mission_overlay
 
-D_80109FF8 = 0x80109FF8; // type:u8 size:0x30 segment:mission_overlay
-D_80109A28 = 0x80109A28; // type:u8 size:0x30 segment:mission_overlay
-D_80109A58 = 0x80109A58; // type:u8 size:0x30 segment:mission_overlay
+D_80109AE4 = 0x80109AE4; // type:char* size:0x18 segment:mission_overlay
+
+D_80109CB0 = 0x80109CB0; // type:char* size:0x24 segment:mission_overlay
+
+D_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
+D_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
+D_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
 
 D_8010A450 = 0x8010A450; // size:0x150 segment:mission_overlay
 
@@ -435,6 +443,8 @@ D_8010B6B0 = 0x8010B6B0; // type:u32 size:0x4 segment:mission_overlay
 demoInputs = 0x8010BCA0; // type:u32 size:0x4 segment:mission_overlay
 
 gObjectiveTimers = 0x8010C9F8; // type:f32 size:0x20 segment:mission_overlay
+
+gCurrentLevel = 0x80130B70; // type:u32 size:0x4
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// File Split Garbage ///////////////////////////////
@@ -493,7 +503,6 @@ junk_800A9A3C = 0x800A9A3C; // type:u8 segment:mission_overlay
 junk_800A9A73 = 0x800A9A73; // type:u8 segment:mission_overlay
 junk_800A9B58 = 0x800A9B58; // type:u8 segment:mission_overlay
 junk_800A9B78 = 0x800A9B78; // type:u8 segment:mission_overlay
-junk_80109AFC = 0x80109AFC; // type:u8 segment:mission_overlay
 junk_8010A444 = 0x8010A444; // type:u8 segment:mission_overlay
 junk_8010A5F8 = 0x8010A5F8; // type:u8 segment:mission_overlay
 junk_8010AAF4 = 0x8010AAF4; // type:u8 segment:mission_overlay

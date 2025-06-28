@@ -36,11 +36,8 @@ options:
     - symbol_files/main_overlay.txt
     - symbol_files/menu_overlay.txt
     - symbol_files/mission_overlay.txt
-    - symbol_files/symbol_addrs.txt
     - symbol_files/zlib.txt
-    # This only exists because I can't find a way to remove the exclusive_ram_id for the main "overlay"
-    # I should really fix that problem
-    - symbol_files/silly_addrs.txt
+    - symbol_files/ignored_symbols.txt
   reloc_addrs_path:
     - reloc_addrs.txt
 
@@ -81,9 +78,7 @@ segments:
     type: code
     start: 0x01040
     vram: 0x80000440
-    bss_size: 0x47490
     follows_vram: entry
-    exclusive_ram_id: main
     subsegments:
       - [0x01040, rodata,  "main/01040"]
       - [0x01050, rodata,  "main/01050"]
@@ -406,27 +401,6 @@ segments:
       - [0xA2390, rodata,  "main/A2390"]
       - [0xA5A00, databin, "main/aspMainData"]
       - [0xA5D20, rodata,  "main/A5D20"]
-      - {type:  bss, vram: 0x8010D200, name: "main/8010D200"              }
-      - {type:  bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
-      - {type:  bss, vram: 0x801128E0, name: "main/801128E0"              }
-      - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
-      - {type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
-      - {type: .bss, vram: 0x8012D010, name: "libultra/io/controller"     }
-      - {type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }
-      - {type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver"} # Contains __osThreadSave, only used in exceptasm.s
-      - {type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt"   }
-      - {type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit"    }
-      - {type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor"          }
-      - {type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug"      }
-      - {type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr"          }
-      - {type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit"    }
-      - {type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs"          }
-      - {type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg"   }
-      - {type: .bss, vram: 0x8012F850, name: "libultra/io/siacs"          }
-      - {type: .bss, vram: 0x8012F870, name: "libultra/io/sptask"         }
-      - {type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
-      - {type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
-      - {type:  bss, vram: 0x80130B10, name: "main/80130B10"              }
 
   - name: mission_overlay
     type: code
@@ -552,6 +526,12 @@ segments:
       - [0x0010A220, asm,    "mission_overlay/10A220"]
       - [0x0010A240, data,   "mission_overlay/10A240"]
       - [0x0010A4B0, data,   "mission_overlay/10A4B0"]
+      - [0x0010A590, data,   "mission_overlay/10A590"]
+      - [0x0010A600, data,   "mission_overlay/10A600"]
+      - [0x0010A610, data,   "mission_overlay/10A610"]
+      - [0x0010A620, data,   "mission_overlay/10A620"]
+      - [0x0010A630, data,   "mission_overlay/10A630"]
+      - [0x0010A640, data,   "mission_overlay/10A640"]
       - [0x0010A700, data,   "mission_overlay/10A700"]
       - [0x0010A980, data,   "mission_overlay/10A980"]
       - [0x0010ABE0, data,   "mission_overlay/10ABE0"]
@@ -623,7 +603,6 @@ segments:
       - [0x141B00, data,   "cinematic_overlay/141B00"]
       - {type: bss, vram: 0x800B0940, name: "cinematic_overlay/800B0940"}
 
-
   # This segment has 1 non-zero word in it
   # That I can tell nothing in this segment is ever referenced
   # I have no idea what's going on here
@@ -633,5 +612,32 @@ segments:
   - name: the_data_blob
     type: bin
     start: 0x144340
+
+  - name: main_bss
+    type: code
+    bss_size: 0x47490
+    vram: 0x8010D200
+    subsegments:
+      - {type:  bss, vram: 0x8010D200, name: "main/8010D200"              }
+      - {type:  bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
+      - {type:  bss, vram: 0x801128E0, name: "main/801128E0"              }
+      - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
+      - {type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
+      - {type: .bss, vram: 0x8012D010, name: "libultra/io/controller"     }
+      - {type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }
+      - {type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver"} # Contains __osThreadSave, only used in exceptasm.s
+      - {type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt"   }
+      - {type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit"    }
+      - {type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor"          }
+      - {type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug"      }
+      - {type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr"          }
+      - {type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit"    }
+      - {type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs"          }
+      - {type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg"   }
+      - {type: .bss, vram: 0x8012F850, name: "libultra/io/siacs"          }
+      - {type: .bss, vram: 0x8012F870, name: "libultra/io/sptask"         }
+      - {type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
+      - {type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
+      - {type:  bss, vram: 0x80130B10, name: "main/80130B10"              }
 
   - [0x1000000]
