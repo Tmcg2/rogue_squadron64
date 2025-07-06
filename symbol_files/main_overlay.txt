@@ -9,14 +9,15 @@ D_80000A00   = 0x80000A00; // type:asciz
 D_80000A3C   = 0x80000A3C; // type:asciz
 D_80000A48   = 0x80000A48; // type:asciz
 D_80000A54   = 0x80000A54; // type:asciz
-D_80000A60   = 0x80000A60; // type:asciz
+D_80000A60   = 0x80000A60; // type:asciz size:0xC
+D_80038CF0   = 0x80038CF0; // type:char* size:0x4
 D_8003A8C0   = 0x8003A8C0; // type:asciz
 D_8003AF60   = 0x8003AF60; // type:asciz
 D_8003AF68   = 0x8003AF68; // type:asciz
 D_8003AF74   = 0x8003AF74; // type:asciz
 D_8003AF80   = 0x8003AF80; // type:asciz
 D_8003AF8C   = 0x8003AF8C; // type:asciz
-D_8003B404   = 0x8003B404; // type:asciz
+D_8003B404   = 0x8003B404; // type:asciz size:0xC
 D_8003B410   = 0x8003B410; // type:asciz
 D_8003B414   = 0x8003B414; // type:asciz
 D_8003B418   = 0x8003B418; // type:asciz
@@ -461,19 +462,55 @@ func_8009C2D0      = 0x8009C2D0; // type:func
 ////////////////////////////////////////////////////////////////////////////////
 
 D_80000454 = 0x80000454; // type:f32 size:0x4
+D_80000460 = 0x80000460; // type:f32 size:0x4
 D_80000550 = 0x80000550; // type:f32
 D_800005A0 = 0x800005A0; // type:f64
 D_800007DC = 0x800007DC; // type:f32
-D_80003470 = 0x80003470; // type:u32
+D_800007E4 = 0x800007E4; // type:f32 size:0x4
+D_80000808 = 0x80000808; // type:f32 size:0x4
+D_80000984 = 0x80000984; // type:f32 size:0x4
+D_800009F0 = 0x800009F0; // type:f32 size:0x4
+D_80003470 = 0x80003470; // type:u32 size:0x4
 D_800186E0 = 0x800186E0; // type:f32
 
 gspF3DEXTextStart = 0x80024A10; // size:0x1FA0 name_end:gspF3DEXTextEnd
 D_80037560        = 0x80037560; // size:0x50
-D_800375B0        = 0x800375B0; // type:u32
+D_800375B0        = 0x800375B0; // type:u32 size:0x4
+D_80037620        = 0x80037620; // type:u32 size:0x4
+D_80037630        = 0x80037630; // type:s32 size:0x4
 gspTask           = 0x800377C8; // type:OSTask size:0x40
 gspF3DEXDataStart = 0x80038D00; // size:0x100 name_end:gspF3DEXDataEnd
+D_8003A4C4        = 0x8003A4C4; // type:f32 size:0x4
+D_8003A604        = 0x8003A604; // type:f32 size:0x4
+D_8003A7D8        = 0x8003A7D8; // type:f32 size:0x4
+D_8003A810        = 0x8003A810; // type:f32 size:0x4
+D_8003A8B4        = 0x8003A8B4; // type:f32 size:0x4
+D_8003ABD0        = 0x8003ABD0; // type:f32 size:0x4
+D_8003AD14        = 0x8003AD14; // type:f32 size:0x4
+D_8003ADB8        = 0x8003ADB8; // type:f32 size:0x4
+D_8003B2F4        = 0x8003B2F4; // type:f32 size:0x4
+D_8003B828        = 0x8003B828; // type:f32 size:0x4
+D_8003C2D0        = 0x8003C2D0; // type:f32 size:0x4
+D_8003C7C4        = 0x8003C7C4; // type:f32 size:0x4
+D_8003C8C4        = 0x8003C8C4; // type:f32 size:0x4
+D_8003C8F8        = 0x8003C8F8; // type:f32 size:0x4
+D_8003CAE4        = 0x8003CAE4; // type:f32 size:0x4
+D_8003CEE0        = 0x8003CEE0; // type:f32 size:0x4
+D_8003D4F4        = 0x8003D4F4; // type:f32 size:0x4
+D_8003DE60        = 0x8003DE60; // type:f32 size:0x4
+D_8003DEE0        = 0x8003DEE0; // type:f32 size:0x4
+D_8003DEF0        = 0x8003DEF0; // type:f32 size:0x4
 rspbootTextStart  = 0x800825D0; // size:0x0D0 name_end:rspbootTextEnd
 aspMainTextStart  = 0x80099FE0; // size:0xF80 name_end:aspMainTextEnd
+D_8009DEB4        = 0x8009DEB4; // type:f32 size:0x4
+D_8009DEC0        = 0x8009DEC0; // type:s32 size:0x4
+D_8009DED0        = 0x8009DED0; // type:s32 size:0x4
+// type_size:0x08 count:0x61
+D_8009FCD4        = 0x8009FCD4; // size:0x308
+D_800A05C8        = 0x800A05C8; // size:0x4
+D_800A0A64        = 0x800A0A64; // size:0x28
+// type_size:0x08 count:0x29
+D_800A0C1C        = 0x800A0C1C; // size:0x148
 
 WedgesControllerSettings  = 0x8009DDD0; // type:u16 size:0x24
 JansonsControllerSettings = 0x8009DDF4; // type:u16 size:0x24
@@ -481,10 +518,16 @@ LukesControllerSettings   = 0x8009DE18; // type:u16 size:0x24
 HobbiesControllerSettings = 0x8009DE3C; // type:u16 size:0x24
 
 D_8009DE60            = 0x8009DE60; // type:u32
+D_8009EBD0            = 0x8009EBD0; // type:f32 size:0x10
+D_8009EBE0            = 0x8009EBE0; // size:0x24
+// type_size:0x04 count:0x13
 dDefaultCraftForLevel = 0x8009EC50; // type:u32 size:0x4C
 languageData          = 0x8009ECA0; // type:u32
 D_8009ECA4            = 0x8009ECA4; // type:u32
-languageStringOffsets = 0x8009ECA8; // type:u32
+languageStringOffsets = 0x8009ECA8; // type:u32 size:0x4
+
+D_8009ED3C = 0x8009ED3C; // type:f32 size:0x1C
+D_8009ED60 = 0x8009ED60; // type:f32 size:0x10
 
 // I believe this is related to the various fonts found in the game
 // The sizes are very strange, but I think they're correct
@@ -501,15 +544,28 @@ D_8009F828 = 0x8009F828; // type:u32 size:0x138
 D_8009F960 = 0x8009F960; // type:u32 size:0x15C
 D_8009FABC = 0x8009FABC; // type:u32 size:0x154
 
+D_8009FC40 = 0x8009FC40; // type:f32 size:0xC
+D_8009FCB0 = 0x8009FCB0; // size:0x18
+
 voiceIdtoTextIdMap = 0x8009FFE0; // type:u16 size:0x5E8
 
-D_800A0D9C = 0x800A0D9C; // type:u32 size:0x3C
-D_800A0DD8 = 0x800A0DD8; // type:u32 size:0x3C
-D_800A0E14 = 0x800A0E14; // type:u32 size:0x3C
-D_800A0E50 = 0x800A0E50; // type:u32 size:0x3C
-D_800A0E8C = 0x800A0E8C; // type:u32 size:0x3C
+// type_size:0x30 count:0x15
+D_800A05D0 = 0x800A05D0; // size:0x3F0
+// type_size:0x28 count:0x04
+D_800A09C0 = 0x800A09C0; // size:0xA0
+
+D_800A0D70 = 0x800A0D70; // size:0x4
+D_800A0D80 = 0x800A0D80; // type:f32 size:0x4
+
+// type_size:0x3C count:0x05
+D_800A0D9C = 0x800A0D9C; // type:u32 size:0x12C
 
 gCheatCodeCrc32Table = 0x800A0ED0; // type:u32 size:0x74
+
+D_800A0F44 = 0x800A0F44; // type:u8  size:0x3
+D_800A0F58 = 0x800A0F58; // type:u16 size:0x800
+
+D_800A1780 = 0x800A1780; // type:u32 size=0x4
 
 D_800A1790 = 0x800A1790; // type:u16
 D_800A1990 = 0x800A1990; // type:s32
@@ -544,43 +600,54 @@ D_8010FF70           = 0x8010FF70; // type:OSThread     size:0x1B0
 D_80110120           = 0x80110120; // type:u8           size:0x4
 // Based on its usage in `func_80002C5C` it has to be an OSPfs array
 // But OSPfs' only have a size of 0x68
-// ????? size = 0x88, x4
 // Potenially this is a larger struct that contains OPfs' as its first member?
-D_80110520           = 0x80110520; //                   size:0x220
+// type_size:0x88 count:0x04
+D_80110520           = 0x80110520; // size:0x220
+// type_size:0x18 count:0x100
 gSIEventMesgQueue    = 0x80110770; // type:OSMesgQueue  size:0x1800
 gControllerStatuses  = 0x80110788; // type:OSContStatus size:0x10
-gControllerBits      = 0x80110798; // type:u8           size:0x8
+gControllerBits      = 0x80110798; // type:u8           size:0x08
+// type_size:0x04 count:0x08
 D_801107A0           = 0x801107A0; // type:OSMesg       size:0x20
 D_801107C0           = 0x801107C0; // type:OSMesgQueue  size:0x18
+// type_size:0x18 count:0x08
 D_801107E0           = 0x801107E0; // type:OSIoMesg     size:0xC0
+// type_size:0x04 count:0x08
 dmaSlotMesgBuffer    = 0x801108A0; // type:OSMesg       size:0x20
+// type_size:0x18 count:0x08
 dmaSlotMesgQueue     = 0x801108C0; // type:OSMesgQueue  size:0xC0
 D_80110980           = 0x80110980; // type:OSMesg       size:0x04
 D_80110990           = 0x80110990; // type:OSMesgQueue  size:0x18
 nextOpenDmaSlot      = 0x801109A8; // type:s32
 dmaSlotsAvailable    = 0x801109AC; // type:s32
+// type_size:0x04 count:0x08
 dmaSlotDestAddr      = 0x801109B0; // type:u32          size:0x20
+// type_size:0x04 count:0x08
 dmaSlotTotalTxSize   = 0x801109D0; // type:u32          size:0x20
+// type_size:0x04 count:0x08
 dmaSlotSrcAddr       = 0x801109F0; // type:u32          size:0x20
+// type_size:0x04 count:0x08
 dmaSlotTxSoFar       = 0x80110A10; // type:u32          size:0x20
+// type_size:0x04 count:0x08
 dmaSlotTxRemaning    = 0x80110A30; // type:u32          size:0x20
+// type_size:0x04 count:0x08
 dmaSlotTxThisStep    = 0x80110A50; // type:u32          size:0x20
 dmaSlotMutex         = 0x80110A70; // type:u8
-// Unknown type of size 0x50 (4 entries)
-D_80110A80           = 0x80110A80; // size:0x140
-// Individual size 0x18
-D_80110BC0           = 0x80110BC0; // size:0x180
-// Unknown type of size 0x74 (8 entries)
-D_80110D60           = 0x80110D60; // size:0x3A0
-// Unknown type of size 0x28 (8 entries)
-D_80111100           = 0x80111100; // size:0x140
-D_80111240           = 0x80111240; // size:0x4
+// type_size:0x50 count:0x04
+D_80110A80           = 0x80110A80; //                   size:0x140
+// type_size:0x18 count:0x10
+D_80110BC0           = 0x80110BC0; // type:OSMesgQueue  size:0x180
+// type_size:0x74 count:0x08
+D_80110D60           = 0x80110D60; //                   size:0x3A0
+// type_size:0x18 count:0x08
+D_80111100           = 0x80111100; //                   size:0x140
+D_80111240           = 0x80111240; //                   size:0x04
 dmaSlotMaxTxStepSize = 0x80111254; // type:u32
-// Unknown type of size 0x14, 256 entries total
-D_80111288           = 0x80111288; // type:OSMesg size:0x4
+D_80111288           = 0x80111288; // type:OSMesg      size:0x04
 D_80111290           = 0x80111290; // type:OSMesgQueue size:0x18
-D_801112B0           = 0x801112B0; // size:0x1400
-D_80112AE0           = 0x80112AE0; // type:OSMesg      size:0x4
+// type_size:0x14 count:0x100
+D_801112B0           = 0x801112B0; //                  size:0x1400
+D_80112AE0           = 0x80112AE0; // type:OSMesg      size:0x04
 
 D_801128D0   = 0x801128D0; // type:u32
 D_801128D4   = 0x801128D4; // type:u32
@@ -606,18 +673,19 @@ languageStringcount    = 0x80138E7C; // type:u32
 voiceTxtLanguageOffset = 0x80138E80; // type:u32
 voiceTxtString         = 0x80138E90; // size:0x4
 
+// type_size:0x0C count:0x60
 hobObjectListItems  = 0x80139020; //          size:0x480
 numHobObjectsLoaded = 0x801394A0; // type:u16
 hobObjectHashMap    = 0x801394B0; // type:u16 size:0x32
-
-D_801394F0             = 0x801394F0; // type:u8  size:0x60
+// type_size:0x01 count:0x60
+D_801394F0          = 0x801394F0; // type:u8  size:0x60
 
 // Referencing indices in subtitleSlots, not sure what the purpose is though
-D_80139B80             = 0x80139B80; // type:u32 size:0x20
-D_80139BA0             = 0x80139BA0; // type:u8  size:0x08
+D_80139B80 = 0x80139B80; // type:u32 size:0x20
+D_80139BA0 = 0x80139BA0; // type:u8  size:0x08
 
-// Individual size is 0x10, count is 0x0C
-subtitleSlots          = 0x80139BB0; // size:0xC0
+// type_size:0x0C count:0x10
+subtitleSlots          = 0x80139BB0; //         size:0xC0
 subtitleSlotHead       = 0x80139C70; // type:u8 size:0x01
 subtitleSlotTail       = 0x80139C71; // type:u8 size:0x01
 subtitleSlotsAvailable = 0x80139C72; // type:u8 size:0x01
@@ -643,57 +711,13 @@ jtbl_80000480 = 0x80000480; // type:jtbl
 jtbl_80000500 = 0x80000500; // type:jtbl
 jtbl_800008B8 = 0x800008B8; // type:jtbl
 jtbl_80000990 = 0x80000990; // type:jtbl
+jtbl_8003C140 = 0x8003C140; // type:jtbl size:0x118
+jtbl_8003C920 = 0x8003C920; // type:jtbl size:0x34
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// File Split Garbage ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-junk_8000044A = 0x8000044A; // type:u8
-junk_80000458 = 0x80000458; // type:u8
-junk_80000464 = 0x80000464; // type:u8
-junk_80000477 = 0x80000477; // type:u8
-junk_800007E8 = 0x800007E8; // type:u8
-junk_8000080C = 0x8000080C; // type:u8
-junk_80000988 = 0x80000988; // type:u8
-junk_800009F4 = 0x800009F4; // type:u8
-junk_80000A6C = 0x80000A6C; // type:u8
-junk_80003474 = 0x80003474; // type:u8
-junk_800375B4 = 0x800375B4; // type:u8
-junk_80037624 = 0x80037624; // type:u8
-junk_80037634 = 0x80037634; // type:u8
-junk_8003A4C8 = 0x8003A4C8; // type:u8
-junk_8003A608 = 0x8003A608; // type:u8
-junk_8003A7DC = 0x8003A7DC; // type:u8
-junk_8003A814 = 0x8003A814; // type:u8
-junk_8003A8B8 = 0x8003A8B8; // type:u8
-junk_8003ABD4 = 0x8003ABD4; // type:u8
-junk_8003AD18 = 0x8003AD18; // type:u8
-junk_8003ADBC = 0x8003ADBC; // type:u8
-junk_8003B2F8 = 0x8003B2F8; // type:u8
 junk_8003B40C = 0x8003B40C; // type:u8
-junk_8003B82C = 0x8003B82C; // type:u8
-junk_8003C25C = 0x8003C25C; // type:u8
-junk_8003C2D4 = 0x8003C2D4; // type:u8
-junk_8003C7C8 = 0x8003C7C8; // type:u8
-junk_8003C8C8 = 0x8003C8C8; // type:u8
-junk_8003C8FC = 0x8003C8FC; // type:u8
-junk_8003C958 = 0x8003C958; // type:u8
-junk_8003C9C6 = 0x8003C9C6; // type:u8
-junk_8003CAE8 = 0x8003CAE8; // type:u8
-junk_8003CEE4 = 0x8003CEE4; // type:u8
-junk_8003D4F8 = 0x8003D4F8; // type:u8
-junk_8003D62F = 0x8003D62F; // type:u8
-junk_8003DE64 = 0x8003DE64; // type:u8
-junk_8003DEE4 = 0x8003DEE4; // type:u8
-junk_8003DEF4 = 0x8003DEF4; // type:u8
-junk_8009DEB8 = 0x8009DEB8; // type:u8
-junk_8009DEC4 = 0x8009DEC4; // type:u8
-junk_8009DED4 = 0x8009DED4; // type:u8
-junk_8009ECAC = 0x8009ECAC; // type:u8
-junk_8009FFDC = 0x8009FFDC; // type:u8
-junk_800A05CC = 0x800A05CC; // type:u8
-junk_800A0A8C = 0x800A0A8C; // type:u8
-junk_800A0D64 = 0x800A0D64; // type:u8
-junk_800A0EC8 = 0x800A0EC8; // type:u8
 junk_800A1784 = 0x800A1784; // type:u8
 junk_800A5122 = 0x800A5122; // type:u8
