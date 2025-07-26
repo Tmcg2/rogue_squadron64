@@ -206,256 +206,259 @@ D_8003D660   = 0x8003D660; // type:asciz
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-thread3_video_handle                 = 0x80001088; // type:func
-main                                 = 0x8000161C; // type:func
-idle_thread_handle                   = 0x800017A0; // type:func
-rs_malloc                            = 0x80001ACC; // type:func
-rs_free                              = 0x80001C98; // type:func
-rand                                 = 0x80003430; // type:func
-find_manifest_entry                  = 0x80003A0C; // type:func
-get_asset_size_extra                 = 0x80004D5C; // type:func
-get_asset_size_simple                = 0x80005134; // type:func
+thread3_video_handle                 = 0x80001088; // defined:true
+main                                 = 0x8000161C; // defined:true
+idle_thread_handle                   = 0x800017A0; // defined:true
+rs_malloc                            = 0x80001ACC; // defined:true
+rs_free                              = 0x80001C98; // defined:true
+setViModeType                        = 0x8000274C; // defined:true
+getOsResetType                       = 0x800027A8; // defined:true
+rand                                 = 0x80003430; // defined:true
+find_manifest_entry                  = 0x80003A0C; // defined:true
+get_asset_size_extra                 = 0x80004D5C; // defined:true
+get_asset_size_simple                = 0x80005134; // defined:true
 // The zcfree and zcalloc functions are effectively just wrappers for these functions
-rs_zcfree                            = 0x8000525C; // type:func
-rs_zcalloc                           = 0x8000527C; // type:func
-rs_strcpy                            = 0x8000761C; // type:func
-rs_strncpy                           = 0x80007640; // type:func
-rs_strcat                            = 0x8000767C; // type:func
-rs_strncat                           = 0x800076B8; // type:func
-rs_strcmp                            = 0x800076F8; // type:func
-rs_strncmp                           = 0x800077A8; // type:func
-rs_memset                            = 0x800078E0; // type:func
-load_level_hmp                       = 0x80043D74; // type:func
-loadDatFile                          = 0x80046784; // type:func
-getLevelDatItemByName                = 0x80047B48; // type:func
-getDatItemByName                     = 0x80047B70; // type:func
-load_full_header_image               = 0x800543F4; // type:func
-full_header_image_offset_convert     = 0x80055488; // type:func
-loadTxtFile                          = 0x800556A0; // type:func
-loadGameOrFrontTxtFile               = 0x80055880; // type:func
-getGameOrFrontText                   = 0x8005589C; // type:func
-freeTxtFile                          = 0x800558D4; // type:func
-getVoiceText                         = 0x80055978; // type:func
-loadVoiceTxtFile                     = 0x80055A20; // type:func
-load_hmt_and_hob                     = 0x8005645C; // type:func
-isHobObjectLoaded                    = 0x80056DA4; // type:func
-getHobObjectByName                   = 0x80057B4C; // type:func
-freeAllHobFiles                      = 0x800591D4; // type:func
-load_asset_with_malloc_flags         = 0x800647E0; // type:func
-load_asset                           = 0x8006488C; // type:func
-load_dat_file_assets                 = 0x80064940; // type:func
-datItemSetObjectiveBooleanCount      = 0x80065914; // type:func
-decrypt_ns_hmt                       = 0x8006AFC0; // type:func
-load_naboo_starfighter               = 0x8006C780; // type:func
-getPlayerVehicleId                   = 0x8006C940; // type:func
-generateUnlockString                 = 0x8006E638; // type:func
-initializeNumLives                   = 0x8006EA78; // type:func
-gatherActiveUnlockFlags              = 0x8006EDB8; // type:func
-unlockMissleUpgradeOnLevelCompletion = 0x8006EE14; // type:func
-rs_crc32                             = 0x800824F8; // type:func
-make_crc32_lut                       = 0x80082544; // type:func
-model_animation_offset_convert       = 0x80082BD0; // type:func
-loadSpeechFile                       = 0x8009BA38; // type:func
+rs_zcfree                            = 0x8000525C; // defined:true
+rs_zcalloc                           = 0x8000527C; // defined:true
+rs_strcpy                            = 0x8000761C; // defined:true
+rs_strncpy                           = 0x80007640; // defined:true
+rs_strcat                            = 0x8000767C; // defined:true
+rs_strncat                           = 0x800076B8; // defined:true
+rs_strcmp                            = 0x800076F8; // defined:true
+rs_strncmp                           = 0x800077A8; // defined:true
+rs_memset                            = 0x800078E0; // defined:true
+load_level_hmp                       = 0x80043D74; // defined:true
+loadDatFile                          = 0x80046784; // defined:true
+getLevelDatItemByName                = 0x80047B48; // defined:true
+getDatItemByName                     = 0x80047B70; // defined:true
+load_full_header_image               = 0x800543F4; // defined:true
+full_header_image_offset_convert     = 0x80055488; // defined:true
+loadTxtFile                          = 0x800556A0; // defined:true
+loadGameOrFrontTxtFile               = 0x80055880; // defined:true
+getGameOrFrontText                   = 0x8005589C; // defined:true
+freeTxtFile                          = 0x800558D4; // defined:true
+getVoiceText                         = 0x80055978; // defined:true
+loadVoiceTxtFile                     = 0x80055A20; // defined:true
+load_hmt_and_hob                     = 0x8005645C; // defined:true
+isHobObjectLoaded                    = 0x80056DA4; // defined:true
+getHobObjectByName                   = 0x80057B4C; // defined:true
+freeAllHobFiles                      = 0x800591D4; // defined:true
+load_asset_with_malloc_flags         = 0x800647E0; // defined:true
+load_asset                           = 0x8006488C; // defined:true
+load_dat_file_assets                 = 0x80064940; // defined:true
+datItemSetObjectiveBooleanCount      = 0x80065914; // defined:true
+decrypt_ns_hmt                       = 0x8006AFC0; // defined:true
+load_naboo_starfighter               = 0x8006C780; // defined:true
+getPlayerVehicleId                   = 0x8006C940; // defined:true
+generateUnlockString                 = 0x8006E638; // defined:true
+initializeNumLives                   = 0x8006EA78; // defined:true
+gatherActiveUnlockFlags              = 0x8006EDB8; // defined:true
+unlockMissleUpgradeOnLevelCompletion = 0x8006EE14; // defined:true
+getControllerNewButtonsPressed       = 0x80079F50; // defined:true
+rs_crc32                             = 0x800824F8; // defined:true
+make_crc32_lut                       = 0x80082544; // defined:true
+model_animation_offset_convert       = 0x80082BD0; // defined:true
+loadSpeechFile                       = 0x8009BA38; // defined:true
 
 // Real functions missed by splat
 
-func_80002F4C = 0x80002F4C; // type:func
-func_800045E8 = 0x800045E8; // type:func
-func_8000569C = 0x8000569C; // type:func
-func_80018E60 = 0x80018E60; // type:func
-func_800403EC = 0x800403EC; // type:func
-func_8006F388 = 0x8006F388; // type:func
-func_800927B0 = 0x800927B0; // type:func
-func_80092A54 = 0x80092A54; // type:func
+func_80002F4C = 0x80002F4C; // defined:true
+func_800045E8 = 0x800045E8; // defined:true
+func_8000569C = 0x8000569C; // defined:true
+func_80018E60 = 0x80018E60; // defined:true
+func_800403EC = 0x800403EC; // defined:true
+func_8006F388 = 0x8006F388; // defined:true
+func_800927B0 = 0x800927B0; // defined:true
+func_80092A54 = 0x80092A54; // defined:true
 .L80092C6C    = 0x80092C6C; // type:label
-func_80092CF0 = 0x80092CF0; // type:func
-func_80092F94 = 0x80092F94; // type:func
+func_80092CF0 = 0x80092CF0; // defined:true
+func_80092F94 = 0x80092F94; // defined:true
 
 // Fake Function Fixing
 
-fake_func_800027B8 = 0x800027B8; // type:func
+fake_func_800027B8 = 0x800027B8; // defined:true
 // Called after osContGetReadData in func_80002E10
 // Probably something akin to `update_controller` from MK64
-func_800027C0      = 0x800027C0; // type:func
+func_800027C0      = 0x800027C0; // defined:true
 
-fake_func_8000337C = 0x8000337C; // type:func
-func_80003380      = 0x80003380; // type:func
+fake_func_8000337C = 0x8000337C; // defined:true
+func_80003380      = 0x80003380; // defined:true
 
-fake_func_80003424 = 0x80003424; // type:func
+fake_func_80003424 = 0x80003424; // defined:true
 
-func_80003480      = 0x80003480; // type:func
+func_80003480      = 0x80003480; // defined:true
 
 // Annoyingly the fake function here, when interpreted as real coode, contains a reference
 // to func_80007064 which isn't real. This causes a real function (func_8000703C) to get split in two
-fake_func_8000537C = 0x8000537C; // type:func
-func_80005380      = 0x80005380; // type:func
+fake_func_8000537C = 0x8000537C; // defined:true
+func_80005380      = 0x80005380; // defined:true
 
-fake_func_80005568 = 0x80005568; // type:func
-func_80005570      = 0x80005570; // type:func
+fake_func_80005568 = 0x80005568; // defined:true
+func_80005570      = 0x80005570; // defined:true
 
-fake_func_8000595C = 0x8000595C; // type:func
-func_80005960      = 0x80005960; // type:func
+fake_func_8000595C = 0x8000595C; // defined:true
+func_80005960      = 0x80005960; // defined:true
 
-fake_func_80006BFC = 0x80006BFC; // type:func
-func_80006C00      = 0x80006C00; // type:func
+fake_func_80006BFC = 0x80006BFC; // defined:true
+func_80006C00      = 0x80006C00; // defined:true
 
-fake_func_8000737C = 0x8000737C; // type:func
-func_80007380      = 0x80007380; // type:func
+fake_func_8000737C = 0x8000737C; // defined:true
+func_80007380      = 0x80007380; // defined:true
 
-fake_func_800074D8 = 0x800074D8; // type:func
-func_800074E0      = 0x800074E0; // type:func
+fake_func_800074D8 = 0x800074D8; // defined:true
+func_800074E0      = 0x800074E0; // defined:true
 
-fake_func_80007908 = 0x80007908; // type:func
-func_80007910      = 0x80007910; // type:func
+fake_func_80007908 = 0x80007908; // defined:true
+func_80007910      = 0x80007910; // defined:true
 
-fake_func_800186D8 = 0x800186D8; // type:func
+fake_func_800186D8 = 0x800186D8; // defined:true
 
-fake_func_80019808 = 0x80019808; // type:func
-func_80019810      = 0x80019810; // type:func
+fake_func_80019808 = 0x80019808; // defined:true
+func_80019810      = 0x80019810; // defined:true
 
-fake_func_80024878 = 0x80024878; // type:func
-func_8001C400      = 0x8001C400; // type:func
+fake_func_80024878 = 0x80024878; // defined:true
+func_8001C400      = 0x8001C400; // defined:true
 
-fake_func_8001C3FC = 0x8001C3FC; // type:func
-func_80024880      = 0x80024880; // type:func
+fake_func_8001C3FC = 0x8001C3FC; // defined:true
+func_80024880      = 0x80024880; // defined:true
 
-fake_func_80024A0C = 0x80024A0C; // type:func
+fake_func_80024A0C = 0x80024A0C; // defined:true
 // No accompanying "real" function
 
-fake_func_8003DF98 = 0x8003DF98; // type:func
-func_8003DFA0      = 0x8003DFA0; // type:func
+fake_func_8003DF98 = 0x8003DF98; // defined:true
+func_8003DFA0      = 0x8003DFA0; // defined:true
 
-fake_func_8003E55C = 0x8003E55C; // type:func
-func_8003E560      = 0x8003E560; // type:func
+fake_func_8003E55C = 0x8003E55C; // defined:true
+func_8003E560      = 0x8003E560; // defined:true
 
-fake_func_80040304 = 0x80040304; // type:func
-func_80040310      = 0x80040310; // type:func
+fake_func_80040304 = 0x80040304; // defined:true
+func_80040310      = 0x80040310; // defined:true
 
-fake_func_80041EEC = 0x80041EEC; // type:func
-func_80041EF0      = 0x80041EF0; // type:func
+fake_func_80041EEC = 0x80041EEC; // defined:true
+func_80041EF0      = 0x80041EF0; // defined:true
 
-fake_func_800457CC = 0x800457CC; // type:func
-func_800457D0      = 0x800457D0; // type:func
+fake_func_800457CC = 0x800457CC; // defined:true
+func_800457D0      = 0x800457D0; // defined:true
 
-fake_func_8004661C = 0x8004661C; // type:func
-func_80046620      = 0x80046620; // type:func
+fake_func_8004661C = 0x8004661C; // defined:true
+func_80046620      = 0x80046620; // defined:true
 
-fake_func_800496F4 = 0x800496F4; // type:func
-func_80049700      = 0x80049700; // type:func
+fake_func_800496F4 = 0x800496F4; // defined:true
+func_80049700      = 0x80049700; // defined:true
 
-fake_func_8004CCF8 = 0x8004CCF8; // type:func
-func_8004CD00      = 0x8004CD00; // type:func
+fake_func_8004CCF8 = 0x8004CCF8; // defined:true
+func_8004CD00      = 0x8004CD00; // defined:true
 
-fake_func_800538AC = 0x800538AC; // type:func
-func_800538B0      = 0x800538B0; // type:func
+fake_func_800538AC = 0x800538AC; // defined:true
+func_800538B0      = 0x800538B0; // defined:true
 
-fake_func_80054648 = 0x80054648; // type:func
-func_80054650      = 0x80054650; // type:func
+fake_func_80054648 = 0x80054648; // defined:true
+func_80054650      = 0x80054650; // defined:true
 
-fake_func_800555E8 = 0x800555E8; // type:func
-func_800555F0      = 0x800555F0; // type:func
+fake_func_800555E8 = 0x800555E8; // defined:true
+func_800555F0      = 0x800555F0; // defined:true
 
-fake_func_80055698 = 0x80055698; // type:func
+fake_func_80055698 = 0x80055698; // defined:true
 // real function is loadTxtFile
 
-fake_func_80055A2C = 0x80055A2C; // type:func
-func_80055A30      = 0x80055A30; // type:func
+fake_func_80055A2C = 0x80055A2C; // defined:true
+func_80055A30      = 0x80055A30; // defined:true
 
-fake_func_80056344 = 0x80056344; // type:func
-func_80056350      = 0x80056350; // type:func
+fake_func_80056344 = 0x80056344; // defined:true
+func_80056350      = 0x80056350; // defined:true
 
-fake_func_80059B4C = 0x80059B4C; // type:func
-func_80059B50      = 0x80059B50; // type:func
+fake_func_80059B4C = 0x80059B4C; // defined:true
+func_80059B50      = 0x80059B50; // defined:true
 
-fake_func_8005A11C = 0x8005A11C; // type:func
-func_8005A120      = 0x8005A120; // type:func
+fake_func_8005A11C = 0x8005A11C; // defined:true
+func_8005A120      = 0x8005A120; // defined:true
 
-fake_func_8005C61C = 0x8005C61C; // type:func
-func_8005C620      = 0x8005C620; // type:func
+fake_func_8005C61C = 0x8005C61C; // defined:true
+func_8005C620      = 0x8005C620; // defined:true
 
-fake_func_8005EE64 = 0x8005EE64; // type:func
-func_8005EE70      = 0x8005EE70; // type:func
+fake_func_8005EE64 = 0x8005EE64; // defined:true
+func_8005EE70      = 0x8005EE70; // defined:true
 
-fake_func_800613B8 = 0x800613B8; // type:func
-func_800613C0      = 0x800613C0; // type:func
+fake_func_800613B8 = 0x800613B8; // defined:true
+func_800613C0      = 0x800613C0; // defined:true
 
-fake_func_80064294 = 0x80064294; // type:func
-func_800642A0      = 0x800642A0; // type:func
+fake_func_80064294 = 0x80064294; // defined:true
+func_800642A0      = 0x800642A0; // defined:true
 
-fake_func_80064934 = 0x80064934; // type:func
+fake_func_80064934 = 0x80064934; // defined:true
 // Accompanying real function is load_dat_file_assets
 
-fake_func_80065A5C = 0x80065A5C; // type:func
-func_80065A60      = 0x80065A60; // type:func
+fake_func_80065A5C = 0x80065A5C; // defined:true
+func_80065A60      = 0x80065A60; // defined:true
 
-fake_func_800663AC = 0x800663AC; // type:func
-func_800663B0      = 0x800663B0; // type:func
+fake_func_800663AC = 0x800663AC; // defined:true
+func_800663B0      = 0x800663B0; // defined:true
 
-fake_func_80069AEC = 0x80069AEC; // type:func
-func_80069AF0      = 0x80069AF0; // type:func
+fake_func_80069AEC = 0x80069AEC; // defined:true
+func_80069AF0      = 0x80069AF0; // defined:true
 
-fake_func_8006ACA4 = 0x8006ACA4; // type:func
-func_8006ACB0      = 0x8006ACB0; // type:func
+fake_func_8006ACA4 = 0x8006ACA4; // defined:true
+func_8006ACB0      = 0x8006ACB0; // defined:true
 
-// fake_func_8006AE48 = 0x8006AE48; // type:func
-func_8006AE58      = 0x8006AE58; // type:func
+// fake_func_8006AE48 = 0x8006AE48; // defined:true
+func_8006AE58      = 0x8006AE58; // defined:true
 
-fake_func_8006B704 = 0x8006B704; // type:func
-func_8006B710      = 0x8006B710; // type:func
+fake_func_8006B704 = 0x8006B704; // defined:true
+func_8006B710      = 0x8006B710; // defined:true
 
-fake_func_8006D8FC = 0x8006D8FC; // type:func
-func_8006D900      = 0x8006D900; // type:func
+fake_func_8006D8FC = 0x8006D8FC; // defined:true
+func_8006D900      = 0x8006D900; // defined:true
 
-fake_func_8006F4AC = 0x8006F4AC; // type:func
-func_8006F4B0      = 0x8006F4B0; // type:func
+fake_func_8006F4AC = 0x8006F4AC; // defined:true
+func_8006F4B0      = 0x8006F4B0; // defined:true
 
-fake_func_80072CE8 = 0x80072CE8; // type:func
-func_80072CF0      = 0x80072CF0; // type:func
+fake_func_80072CE8 = 0x80072CE8; // defined:true
+func_80072CF0      = 0x80072CF0; // defined:true
 
-fake_func_80079278 = 0x80079278; // type:func
-func_80079280      = 0x80079280; // type:func
+fake_func_80079278 = 0x80079278; // defined:true
+func_80079280      = 0x80079280; // defined:true
 
-fake_func_80079CD8 = 0x80079CD8; // type:func
-func_80079CE0      = 0x80079CE0; // type:func
+fake_func_80079CD8 = 0x80079CD8; // defined:true
+func_80079CE0      = 0x80079CE0; // defined:true
 
-fake_func_8007A0E8 = 0x8007A0E8; // type:func
-func_8007A0F0      = 0x8007A0F0; // type:func
+fake_func_8007A0E8 = 0x8007A0E8; // defined:true
+func_8007A0F0      = 0x8007A0F0; // defined:true
 
-fake_func_8007A86C = 0x8007A86C; // type:func
-func_8007A870      = 0x8007A870; // type:func
+fake_func_8007A86C = 0x8007A86C; // defined:true
+func_8007A870      = 0x8007A870; // defined:true
 
-fake_func_8007C298 = 0x8007C298; // type:func
-func_8007C2A0      = 0x8007C2A0; // type:func
+fake_func_8007C298 = 0x8007C298; // defined:true
+func_8007C2A0      = 0x8007C2A0; // defined:true
 
-fake_func_80082268 = 0x80082268; // type:func
-func_80082270      = 0x80082270; // type:func
+fake_func_80082268 = 0x80082268; // defined:true
+func_80082270      = 0x80082270; // defined:true
 
-fake_func_800825C8 = 0x800825C8; // type:func
+fake_func_800825C8 = 0x800825C8; // defined:true
 // No accompanying "real" function
 
-fake_func_80093E74 = 0x80093E74; // type:func
-func_80093E80      = 0x80093E80; // type:func
+fake_func_80093E74 = 0x80093E74; // defined:true
+func_80093E80      = 0x80093E80; // defined:true
 
-fake_func_80094348 = 0x80094348; // type:func
-func_80094350      = 0x80094350; // type:func
+fake_func_80094348 = 0x80094348; // defined:true
+func_80094350      = 0x80094350; // defined:true
 
-fake_func_8009711C = 0x8009711C; // type:func
-func_80097120      = 0x80097120; // type:func
+fake_func_8009711C = 0x8009711C; // defined:true
+func_80097120      = 0x80097120; // defined:true
 
-fake_func_80097D58 = 0x80097D58; // type:func
-func_80097D60      = 0x80097D60; // type:func
+fake_func_80097D58 = 0x80097D58; // defined:true
+func_80097D60      = 0x80097D60; // defined:true
 
-fake_func_80099C4C = 0x80099C4C; // type:func
-func_80099C50      = 0x80099C50; // type:func
+fake_func_80099C4C = 0x80099C4C; // defined:true
+func_80099C50      = 0x80099C50; // defined:true
 
-fake_func_80099FDC = 0x80099FDC; // type:func
+fake_func_80099FDC = 0x80099FDC; // defined:true
 // No accompanying "real" function
 
-fake_func_8009D7CC = 0x8009D7CC; // type:func
-func_8009D7D0      = 0x8009D7D0; // type:func
+fake_func_8009D7CC = 0x8009D7CC; // defined:true
+func_8009D7D0      = 0x8009D7D0; // defined:true
 
-fake_func_8009C2C8 = 0x8009C2C8; // type:func
-func_8009C2D0      = 0x8009C2D0; // type:func
+fake_func_8009C2C8 = 0x8009C2C8; // defined:true
+func_8009C2D0      = 0x8009C2D0; // defined:true
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Variables ///////////////////////////////////
@@ -592,6 +595,7 @@ D_8010DFD8 = 0x8010DFD8; // type:OSMesgQueue size:0x18
 D_8010D598 = 0x8010D598; // type:OSMesg      size:0x4
 
 D_8010FEE0           = 0x8010FEE0; // type:OSMesgQueue  size:0x18
+rsViModeType         = 0x8010FF20; // type:u8
 gControllerPads      = 0x8010FF30; // type:OSContPad    size:0x18
 gSIEventMesgBuf      = 0x8010FF48; // type:OSMesg       size:0x4
 D_8010FF50           = 0x8010FF50; // type:OSMesgQueue  size:0x18
@@ -636,18 +640,18 @@ dmaSlotMutex         = 0x80110A70; // type:u8
 // type_size:0x50 count:0x04
 D_80110A80           = 0x80110A80; //                   size:0x140
 // type_size:0x18 count:0x10
-D_80110BC0           = 0x80110BC0; // type:OSMesgQueue  size:0x180
+D_80110BC0           = 0x80110BC0; //                   size:0x180
 // type_size:0x74 count:0x08
 D_80110D60           = 0x80110D60; //                   size:0x3A0
 // type_size:0x18 count:0x08
 D_80111100           = 0x80111100; //                   size:0x140
 D_80111240           = 0x80111240; //                   size:0x04
 dmaSlotMaxTxStepSize = 0x80111254; // type:u32
-D_80111288           = 0x80111288; // type:OSMesg      size:0x04
-D_80111290           = 0x80111290; // type:OSMesgQueue size:0x18
+D_80111288           = 0x80111288; // type:OSMesg       size:0x04
+D_80111290           = 0x80111290; // type:OSMesgQueue  size:0x18
 // type_size:0x14 count:0x100
-D_801112B0           = 0x801112B0; //                  size:0x1400
-D_80112AE0           = 0x80112AE0; // type:OSMesg      size:0x04
+D_801112B0           = 0x801112B0; //                   size:0x1400
+D_80112AE0           = 0x80112AE0; // type:OSMesg       size:0x04
 
 D_801128D0   = 0x801128D0; // type:u32
 D_801128D4   = 0x801128D4; // type:u32

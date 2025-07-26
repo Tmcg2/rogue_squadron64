@@ -20,6 +20,8 @@ struct D_801128D0_type {
     /* 0x1D0 */ OSMesgQueue mq;
     /* 0x1E8 */ OSMesg mesg2[2]; // not too sure about this, I doubt there's anything meaningful at 0x1EC
 }; // size = 0x1F0
+// Thread messages are here
+// The thread's stack follows
 
 struct D_801128D0_type *D_801128D0;
 u32 D_801128D4; // Monotonically increasing value, used to give each list item a unique thread ID

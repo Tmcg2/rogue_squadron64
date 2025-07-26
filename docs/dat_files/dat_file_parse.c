@@ -118,6 +118,8 @@ uint8_t name_hash(char *name) {
     return hash & 0xFF;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void parse_objective_stuff(FILE *src, uint32_t entryOffset) {
     uint32_t group1Index;
     uint32_t group1Value;
@@ -247,7 +249,7 @@ void parse_world_dev(FILE *src, struct entry_header *header, uint32_t entryOffse
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void parse_extra(FILE *src, struct entry_header *header, uint32_t entryOffset)  {
+void parse_item0_extra(FILE *src, struct entry_header *header, uint32_t entryOffset)  {
         switch(header->sub_type) {
             case DAT_TYPE_0_4B:
             case DAT_TYPE_0_EXHAUST_PORT:
@@ -317,6 +319,47 @@ void parse_extra(FILE *src, struct entry_header *header, uint32_t entryOffset)  
         }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void parse_waypoints(FILE *src, uint32_t entryOffset) {
+    uint32_t waypoint_count;
+    uint32_t waypoint_offset;
+    uint32_t waypoint_loc[3];
+    float    waypoint_locf[3];
+
+    fseek(src, entryOffset + 0x1C, SEEK_SET);
+    fread(&waypoint_count,  sizeof(uint32_t), 1, src);
+    fread(&waypoint_offset, sizeof(uint32_t), 1, src);
+
+    waypoint_count  = be32toh(waypoint_count);
+    waypoint_offset = be32toh(waypoint_offset);
+
+    printf("\t\t\t%d Waypoints at Offset 0x%08x:", waypoint_count, waypoint_offset);
+
+    fseek(src, entryOffset + waypoint_offset, SEEK_SET);
+
+    for (int i = 0; i < waypoint_count; i++) {
+        if ((i % 4) == 0) printf("\n\t\t\t\t");
+        
+        fread(&waypoint_loc, sizeof(uint32_t), 3, src);
+        
+        for (int j = 0; j < 3; j++) {
+            waypoint_loc[j] = be32toh(waypoint_loc[j]);
+            waypoint_locf[j] = *(float*)&waypoint_loc[j];
+        }
+        
+        printf("(%f, %f, %f)", waypoint_locf[0], waypoint_locf[1], waypoint_locf[2]);
+        if ((i % 4) != 3) printf(" ");
+    }
+    printf("\n");
+}
+
+void parse_item3_extra(FILE *src, struct entry_header *header, uint32_t entryOffset) {
+    parse_waypoints(src, entryOffset);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void parse_type(FILE *src, uint32_t type) {
     uint32_t count;
     uint32_t entryOffset;
@@ -370,7 +413,14 @@ void parse_type(FILE *src, uint32_t type) {
         printf("\t\t\tSize:          0x%08x\n", header.item_size);
         printf("\t\t\tName Offset:   0x%08x\n", header.item_name_offset);
 
-        parse_extra(src, &header, entryOffset);
+        switch(type) {
+            case 0:
+                parse_item0_extra(src, &header, entryOffset);
+                break;
+            case 3:
+                parse_item3_extra(src, &header, entryOffset);
+                break;
+        }
     }
 }
 

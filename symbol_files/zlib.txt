@@ -10,18 +10,18 @@
 
 //// adler32 ////
 // .text
-adler32 = 0x800269B0; // type:func
+adler32 = 0x800269B0; // defined:true
 
 //// inflate ////
 // .text
 // inflateReset and inflateEnd are also getting inline'd
-inflateReset         = 0x80026BA0; // type:func
-inflateEnd           = 0x80026C04; // type:func
-inflateInit2_        = 0x80026C7C; // type:func
-inflateInit_         = 0x80026E7C; // type:func
-inflate              = 0x80026EA8; // type:func
-inflateSetDictionary = 0x8002739C; // type:func
-inflateSync          = 0x80027468; // type:func
+inflateReset         = 0x80026BA0; // defined:true
+inflateEnd           = 0x80026C04; // defined:true
+inflateInit2_        = 0x80026C7C; // defined:true
+inflateInit_         = 0x80026E7C; // defined:true
+inflate              = 0x80026EA8; // defined:true
+inflateSetDictionary = 0x8002739C; // defined:true
+inflateSync          = 0x80027468; // defined:true
 
 //// infblock ////
 // .data
@@ -29,22 +29,22 @@ border = 0x80038E00; // type:u32 size:0x4C
 
 // .text
 // inflate_blocks_reset is inline'd nearly everywhere its used
-inflate_blocks_reset   = 0x800275F0; // type:func
+inflate_blocks_reset   = 0x800275F0; // defined:true
 // This function appears to be from v1.0.8 (26 January 1998) (or earlier) based on some missing `if` statements
-inflate_blocks_new     = 0x800276C4; // type:func
-inflate_blocks         = 0x80027818; // type:func
-inflate_blocks_free    = 0x800283D8; // type:func
-inflate_set_dictionary = 0x800284D4; // type:func
+inflate_blocks_new     = 0x800276C4; // defined:true
+inflate_blocks         = 0x80027818; // defined:true
+inflate_blocks_free    = 0x800283D8; // defined:true
+inflate_set_dictionary = 0x800284D4; // defined:true
 
 //// infcodes ////
 // .text
-inflate_codes_new  = 0x80028520; // type:func
-inflate_codes      = 0x8002859C; // type:func
-inflate_codes_free = 0x80028D2C; // type:func
+inflate_codes_new  = 0x80028520; // defined:true
+inflate_codes      = 0x8002859C; // defined:true
+inflate_codes_free = 0x80028D2C; // defined:true
 
 //// inffast ////
 // .text
-inflate_fast = 0x80028D60; // type:func
+inflate_fast = 0x80028D60; // defined:true
 
 //// inftrees ////
 // .data
@@ -65,47 +65,47 @@ fixed_tl  = 0x8012CFC8; // type:u32
 fixed_td  = 0x8012CFCC; // type:u32
 
 // .text
-huft_build            = 0x800290E0; // type:func
-inflate_trees_bits    = 0x800296A0; // type:func
-inflate_trees_dynamic = 0x8002971C; // type:func
-inflate_trees_fixed   = 0x80029864; // type:func
+huft_build            = 0x800290E0; // defined:true
+inflate_trees_bits    = 0x800296A0; // defined:true
+inflate_trees_dynamic = 0x8002971C; // defined:true
+inflate_trees_fixed   = 0x80029864; // defined:true
 // This function appears to be from v0.99 (or later) based on the inclusion of 2 `while` loops
-inflate_trees_free    = 0x80029A68; // type:func
-falloc                = 0x80029AE8; // type:func
+inflate_trees_free    = 0x80029A68; // defined:true
+falloc                = 0x80029AE8; // defined:true
 
 //// infutil ////
 // .data
 inflate_mask = 0x80039040; // type:u32 size:0x44
 
 // .text
-inflate_flush = 0x80029B20; // type:func
+inflate_flush = 0x80029B20; // defined:true
 
 //// zutil ////
 // .text
 // This isn't `zmemcpy` found in the zlib source, it appears to be a handwritten assembly function
-zmemcpy = 0x80018EF4; // type:func
+zmemcpy = 0x80018EF4; // defined:true
 // These 2 functions appear to be from v0.95 (16 Aug 95) (or earlier), based on there being no `if(opaque)` checks
-zcalloc = 0x80029CD0; // type:func
-zcfree  = 0x80029CF4; // type:func
+zcalloc = 0x80029CD0; // defined:true
+zcfree  = 0x80029CF4; // defined:true
 
 // Fake Function Fixing
 
-fake_func_8002851C = 0x8002851C; // type:func
+fake_func_8002851C = 0x8002851C; // defined:true
 // Real function is inflate_codes_new
 
-fake_func_80028D58 = 0x80028D58; // type:func
+fake_func_80028D58 = 0x80028D58; // defined:true
 // Real function is inflate_fast
 
-fake_func_80026B98 = 0x80026B98; // type:func
+fake_func_80026B98 = 0x80026B98; // defined:true
 // Real function is inflateReset
 
-fake_func_800290D8 = 0x800290D8; // type:func
+fake_func_800290D8 = 0x800290D8; // defined:true
 // Real function is huft_build
 
-fake_func_80029B14 = 0x80029B14; // type:func
+fake_func_80029B14 = 0x80029B14; // defined:true
 // Real function is inflate_flush
 
-fake_func_80029D14 = 0x80029D14; // type:func
+fake_func_80029D14 = 0x80029D14; // defined:true
 // Real function is osAiSetFrequency
 
 ////////////////////////////////////////////////////////////////////////////////

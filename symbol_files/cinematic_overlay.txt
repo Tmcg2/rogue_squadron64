@@ -19,11 +19,11 @@ D_800A5B9C = 0x800A5B9C; // type:asciz segment:cinematic_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-load_cutscene         = 0x800A6620; // type:func segment:cinematic_overlay
-cuts_0058_bubble_sort = 0x800AEA28; // type:func segment:cinematic_overlay
+load_cutscene         = 0x800A6620; // segment:cinematic_overlay
+cuts_0058_bubble_sort = 0x800AEA28; // segment:cinematic_overlay
 
 // Fake Function Fixing
-fake_func_800AF6A8 = 0x800AF6A8; // type:func segment:cinematic_overlay
+fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Variables ///////////////////////////////////

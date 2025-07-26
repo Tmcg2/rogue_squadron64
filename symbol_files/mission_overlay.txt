@@ -117,223 +117,269 @@ D_800A9B60 = 0x800A9B60; // type:asciz size:0x18 segment:mission_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-playerSnowSpeederUpdate      = 0x800ACD9C; // type:func segment:mission_overlay
+npcPowerGeneratorUpdate = 0x80077AF0; // segment:mission_overlay
 
-playerXwingFireBlaster       = 0x800B4CC0; // type:func segment:mission_overlay
-playerXwingUpdate            = 0x800B5434; // type:func segment:mission_overlay
+npcWorldDevastator = 0x8007EF1C; // segment:mission_overlay
 
-playerAwingUpdate            = 0x800B7168; // type:func segment:mission_overlay
-playerYwingUpdate            = 0x800B8488; // type:func segment:mission_overlay
-playerVwingUpdate            = 0x800B9F4C; // type:func segment:mission_overlay
-playerFalconUpdate           = 0x800BB830; // type:func segment:mission_overlay
-playerTieInterceptorUpdate   = 0x800BC810; // type:func segment:mission_overlay
-playerT16Update              = 0x800BD530; // type:func segment:mission_overlay
-playerNabooStarfighterUpdate = 0x800BE7D0; // type:func segment:mission_overlay
-playerAtStUpdate             = 0x800D2208; // type:func segment:mission_overlay
+playerSnowSpeederInit   = 0x800AAAE0; // segment:mission_overlay
+playerSnowSpeederUpdate = 0x800ACD9C; // segment:mission_overlay
 
-handleHUD = 0x800C0084; // type:func segment:mission_overlay
+playerXwingInit        = 0x800B42C0; // segment:mission_overlay
+playerXwingFireBlaster = 0x800B4CC0; // segment:mission_overlay
+playerXwingUpdate      = 0x800B5434; // segment:mission_overlay
 
-getPlayerHealthPercentage = 0x800C40AC; // type:func segment:mission_overlay
+playerAwingInit   = 0x800B58C0; // segment:mission_overlay
+playerAwingUpdate = 0x800B7168; // segment:mission_overlay
 
-initializeRadar = 0x800C44D0; // type:func segment:mission_overlay
-placeRadarDots  = 0x800C51E0; // type:func segment:mission_overlay
+playerYwingInit   = 0x800B75D0; // segment:mission_overlay
+playerYwingUpdate = 0x800B8488; // segment:mission_overlay
 
-getCurrentLevel = 0x800C7504; // type:func segment:mission_overlay
+playerVwingInit   = 0x800B8A00; // segment:mission_overlay
+playerVwingUpdate = 0x800B9F4C; // segment:mission_overlay
 
-initializeObjectiveTracking = 0x800C72B0; // type:func segment:mission_overlay
-func_800C72E8               = 0x800C72E8; // type:func segment:mission_overlay
-calculateFriendliesSaved    = 0x800C7320; // type:func segment:mission_overlay
-checkComplexObjectives      = 0x800C7358; // type:func segment:mission_overlay
+playerFalconInit   = 0x800BA3F0; // segment:mission_overlay
+playerFalconUpdate = 0x800BB830; // segment:mission_overlay
 
-dealDamagetoDatItem              = 0x800C7390; // type:func segment:mission_overlay
-setObjectiveBoolean              = 0x800C7540; // type:func segment:mission_overlay
-setObjectiveBooleans             = 0x800C7568; // type:func segment:mission_overlay
-getObjectiveBoolean              = 0x800C759C; // type:func segment:mission_overlay
-setObjectiveCount                = 0x800C75C0; // type:func segment:mission_overlay
-increaseObjectiveCount           = 0x800C75EC; // type:func segment:mission_overlay
-getObjectiveCount                = 0x800C761C; // type:func segment:mission_overlay
-setObjectiveHiddenFlag           = 0x800C7660; // type:func segment:mission_overlay
-activateObjectiveCompleteFlag    = 0x800C76B0; // type:func segment:mission_overlay
-getObjectiveTimer                = 0x800C76E0; // type:func segment:mission_overlay
-setObjectiveTimer                = 0x800C76FC; // type:func segment:mission_overlay
-setFriendliesSaved               = 0x800C77B0; // type:func segment:mission_overlay
-addBooleanCountHandleWrapper     = 0x800C7830; // type:func segment:mission_overlay
-addTimerHandleWrapper            = 0x800C7864; // type:func segment:mission_overlay
-calculateDatItemDistanceToPlayer = 0x800C78A0; // type:func segment:mission_overlay
-getDatItemHealth                 = 0x800C7B60; // type:func segment:mission_overlay
-getDatItemHealthPercentage       = 0x800C7C28; // type:func segment:mission_overlay
-playObjectiveVoiceLine1          = 0x800C7CF8; // type:func segment:mission_overlay
-playObjectiveVoiceLine2          = 0x800C7D1C; // type:func segment:mission_overlay
+playerTieInterceptorInit   = 0x800BBD30; // segment:mission_overlay
+playerTieInterceptorUpdate = 0x800BC810; // segment:mission_overlay
 
-func_800CFE7C = 0x800CFE7C; // type:func segment:mission_overlay
+playerT16Init   = 0x800BCC40; // segment:mission_overlay
+playerT16Update = 0x800BD530; // segment:mission_overlay
 
-setNpcHealth           = 0x800F2070; // type:func segment:mission_overlay
-getNpcCurrentHealth    = 0x800F20EC; // type:func segment:mission_overlay
-dealDamageToNpc        = 0x800F2120; // type:func segment:mission_overlay
-getNpcMissingHealth    = 0x800F215C; // type:func segment:mission_overlay
-getNpcHealthPercentage = 0x800F219C; // type:func segment:mission_overlay
+playerNabooStarfighterInit   = 0x800BDA50; // segment:mission_overlay
+playerNabooStarfighterUpdate = 0x800BE7D0; // segment:mission_overlay
 
-load_model_animation            = 0x800F9E40; // type:func segment:mission_overlay
-reset_model_animations          = 0x800F9F2C; // type:func segment:mission_overlay
-reset_and_free_model_animations = 0x800F9F6C; // type:func segment:mission_overlay
+handleHUD = 0x800C0084; // segment:mission_overlay
 
-checkObjectiveHandles      = 0x800F9FD0; // type:func segment:mission_overlay
-initializeObjectiveHandles = 0x800FA134; // type:func segment:mission_overlay
-addBooleanCountHandle      = 0x800FA15C; // type:func segment:mission_overlay
-addTimerHandle             = 0x800FA1DC; // type:func segment:mission_overlay
+getPlayerHealthPercentage = 0x800C40AC; // segment:mission_overlay
 
-getHudSecondaryWeponCount = 0x800FEEF4; // type:func segment:mission_overlay
+initializeRadar = 0x800C44D0; // segment:mission_overlay
+placeRadarDots  = 0x800C51E0; // segment:mission_overlay
+
+getCurrentLevel = 0x800C7504; // segment:mission_overlay
+
+initializeObjectiveTracking = 0x800C72B0; // segment:mission_overlay
+func_800C72E8               = 0x800C72E8; // segment:mission_overlay
+calculateFriendliesSaved    = 0x800C7320; // segment:mission_overlay
+checkComplexObjectives      = 0x800C7358; // segment:mission_overlay
+
+dealDamagetoDatItem              = 0x800C7390; // segment:mission_overlay
+setObjectiveBoolean              = 0x800C7540; // segment:mission_overlay
+setObjectiveBooleans             = 0x800C7568; // segment:mission_overlay
+getObjectiveBoolean              = 0x800C759C; // segment:mission_overlay
+setObjectiveCount                = 0x800C75C0; // segment:mission_overlay
+increaseObjectiveCount           = 0x800C75EC; // segment:mission_overlay
+getObjectiveCount                = 0x800C761C; // segment:mission_overlay
+setObjectiveHiddenFlag           = 0x800C7660; // segment:mission_overlay
+activateObjectiveCompleteFlag    = 0x800C76B0; // segment:mission_overlay
+getObjectiveTimer                = 0x800C76E0; // segment:mission_overlay
+setObjectiveTimer                = 0x800C76FC; // segment:mission_overlay
+setFriendliesSaved               = 0x800C77B0; // segment:mission_overlay
+addBooleanCountHandleWrapper     = 0x800C7830; // segment:mission_overlay
+addTimerHandleWrapper            = 0x800C7864; // segment:mission_overlay
+calculateDatItemDistanceToPlayer = 0x800C78A0; // segment:mission_overlay
+getDatItemHealth                 = 0x800C7B60; // segment:mission_overlay
+getDatItemHealthPercentage       = 0x800C7C28; // segment:mission_overlay
+playObjectiveVoiceLine1          = 0x800C7CF8; // segment:mission_overlay
+playObjectiveVoiceLine2          = 0x800C7D1C; // segment:mission_overlay
+
+npcTurretUpdate = 0x800C8F90; // segment:mission_overlay
+npcProbeDriod   = 0x800CABD4; // segment:mission_overlay
+npcAtAtUpdate   = 0x800CD71C; // segment:mission_overlay
+
+npcAtStUpdate    = 0x800CFE7C; // segment:mission_overlay
+playerAtStInit   = 0x800D1088; // segment:mission_overlay
+playerAtStUpdate = 0x800D2208; // segment:mission_overlay
+
+npcShuttleUpdate = 0x800D3894; // segment:mission_overlay
+
+npcTankDroidUpdate = 0x800D6998; // segment:mission_overlay
+
+npcWingmanUpdate = 0x800D93C0; // segment:mission_overlay
+
+npcTieVariantUpdate = 0x800DB11C; // segment:mission_overlay
+
+npcRadarDishUpdate = 0x800DC6F0; // segment:mission_overlay
+
+npcGroundTransportUpdate = 0x800DE80C; // segment:mission_overlay
+
+npcTrainCarUpdate = 0x800E2818; // segment:mission_overlay
+
+npcWaterCraftUpdate = 0x800E614C; // segment:mission_overlay
+
+npcGroundTroopUpdate = 0x800E7860; // segment:mission_overlay
+
+npcAtPtUpdate = 0x800EA5E0; // segment:mission_overlay
+
+npcPowerUpUpdate = 0x800EB990; // segment:mission_overlay
+
+setNpcHealth           = 0x800F2070; // segment:mission_overlay
+getNpcCurrentHealth    = 0x800F20EC; // segment:mission_overlay
+dealDamageToNpc        = 0x800F2120; // segment:mission_overlay
+getNpcMissingHealth    = 0x800F215C; // segment:mission_overlay
+getNpcHealthPercentage = 0x800F219C; // segment:mission_overlay
+
+load_model_animation            = 0x800F9E40; // segment:mission_overlay
+reset_model_animations          = 0x800F9F2C; // segment:mission_overlay
+reset_and_free_model_animations = 0x800F9F6C; // segment:mission_overlay
+
+checkObjectiveHandles      = 0x800F9FD0; // segment:mission_overlay
+initializeObjectiveHandles = 0x800FA134; // segment:mission_overlay
+addBooleanCountHandle      = 0x800FA15C; // segment:mission_overlay
+addTimerHandle             = 0x800FA1DC; // segment:mission_overlay
+
+getHudSecondaryWeponCount = 0x800FEEF4; // segment:mission_overlay
 
 // Fake Function Fixing
-fake_func_800AA6CC = 0x800AA6CC; // type:func segment:mission_overlay
-func_800AA6D0      = 0x800AA6D0; // type:func segment:mission_overlay
+fake_func_800AA6CC = 0x800AA6CC; // segment:mission_overlay
+func_800AA6D0      = 0x800AA6D0; // segment:mission_overlay
 
-fake_func_800AAADC = 0x800AAADC; // type:func segment:mission_overlay
-func_800AAAE0      = 0x800AAAE0; // type:func segment:mission_overlay
+fake_func_800AAADC = 0x800AAADC; // segment:mission_overlay
+// real function is playerSnowSpeederInit
 
-fake_func_800AD378 = 0x800AD378; // type:func segment:mission_overlay
-func_800AD380      = 0x800AD380; // type:func segment:mission_overlay
+fake_func_800AD378 = 0x800AD378; // segment:mission_overlay
+func_800AD380      = 0x800AD380; // segment:mission_overlay
 
-fake_func_800AE3E4 = 0x800AE3E4; // type:func segment:mission_overlay
-func_800AE3F0      = 0x800AE3F0; // type:func segment:mission_overlay
+fake_func_800AE3E4 = 0x800AE3E4; // segment:mission_overlay
+func_800AE3F0      = 0x800AE3F0; // segment:mission_overlay
 
-fake_func_800B42BC = 0x800B42BC; // type:func segment:mission_overlay
-func_800B42C0      = 0x800B42C0; // type:func segment:mission_overlay
+fake_func_800B42BC = 0x800B42BC; // segment:mission_overlay
+// real function is playerXwingInit
 
 // Annoyingly the fake function here, when interpreted as real coode, contains a reference
 // to func_800E9B10 which isn't real. This causes a real function (func_800E9AE0) to get
 // split in two
-fake_func_800B58B4 = 0x800B58B4; // type:func segment:mission_overlay
-func_800B58C0      = 0x800B58C0; // type:func segment:mission_overlay
+fake_func_800B58B4 = 0x800B58B4; // segment:mission_overlay
+// real function is playerAwingInit
 
-fake_func_800B75C4 = 0x800B75C4; // type:func segment:mission_overlay
-func_800B75D0      = 0x800B75D0; // type:func segment:mission_overlay
+fake_func_800B75C4 = 0x800B75C4; // segment:mission_overlay
+// real function is playerYwingInit
 
-fake_func_800B89F4 = 0x800B89F4; // type:func segment:mission_overlay
-func_800B8A00      = 0x800B8A00; // type:func segment:mission_overlay
+fake_func_800B89F4 = 0x800B89F4; // segment:mission_overlay
+// real function is playerVwingInit
 
-fake_func_800BCC38 = 0x800BCC38; // type:func segment:mission_overlay
-func_800BCC40      = 0x800BCC40; // type:func segment:mission_overlay
+fake_func_800BCC38 = 0x800BCC38; // segment:mission_overlay
+// real function is playerT16Init
 
-fake_func_800BEBFC = 0x800BEBFC; // type:func segment:mission_overlay
-func_800BEC00      = 0x800BEC00; // type:func segment:mission_overlay
+fake_func_800BEBFC = 0x800BEBFC; // segment:mission_overlay
+func_800BEC00      = 0x800BEC00; // segment:mission_overlay
 
-fake_func_800BF498 = 0x800BF498; // type:func segment:mission_overlay
-func_800BF4A0      = 0x800BF4A0; // type:func segment:mission_overlay
+fake_func_800BF498 = 0x800BF498; // segment:mission_overlay
+func_800BF4A0      = 0x800BF4A0; // segment:mission_overlay
 
-fake_func_800BF784 = 0x800BF784; // type:func segment:mission_overlay
-func_800BF790      = 0x800BF790; // type:func segment:mission_overlay
+fake_func_800BF784 = 0x800BF784; // segment:mission_overlay
+func_800BF790      = 0x800BF790; // segment:mission_overlay
 
-fake_func_800C41AC = 0x800C41AC; // type:func segment:mission_overlay
-func_800C41B0      = 0x800C41B0; // type:func segment:mission_overlay
+fake_func_800C41AC = 0x800C41AC; // segment:mission_overlay
+func_800C41B0      = 0x800C41B0; // segment:mission_overlay
 
-fake_func_800C64A4 = 0x800C64A4; // type:func segment:mission_overlay
-func_800C64B0      = 0x800C64B0; // type:func segment:mission_overlay
+fake_func_800C64A4 = 0x800C64A4; // segment:mission_overlay
+func_800C64B0      = 0x800C64B0; // segment:mission_overlay
 
-fake_func_800C7DB4 = 0x800C7DB4; // type:func segment:mission_overlay
-func_800C7DC0      = 0x800C7DC0; // type:func segment:mission_overlay
+fake_func_800C7DB4 = 0x800C7DB4; // segment:mission_overlay
+func_800C7DC0      = 0x800C7DC0; // segment:mission_overlay
 
-fake_func_800CA26C = 0x800CA26C; // type:func segment:mission_overlay
-func_800CA270      = 0x800CA270; // type:func segment:mission_overlay
+fake_func_800CA26C = 0x800CA26C; // segment:mission_overlay
+func_800CA270      = 0x800CA270; // segment:mission_overlay
 
-fake_func_800CEF1C = 0x800CEF1C; // type:func segment:mission_overlay
-func_800CEF20      = 0x800CEF20; // type:func segment:mission_overlay
+fake_func_800CEF1C = 0x800CEF1C; // segment:mission_overlay
+func_800CEF20      = 0x800CEF20; // segment:mission_overlay
 
-fake_func_800D2C98 = 0x800D2C98; // type:func segment:mission_overlay
-func_800D2CA0      = 0x800D2CA0; // type:func segment:mission_overlay
+fake_func_800D2C98 = 0x800D2C98; // segment:mission_overlay
+func_800D2CA0      = 0x800D2CA0; // segment:mission_overlay
 
-fake_func_800D4EC4 = 0x800D4EC4; // type:func segment:mission_overlay
-func_800D4ED0      = 0x800D4ED0; // type:func segment:mission_overlay
+fake_func_800D4EC4 = 0x800D4EC4; // segment:mission_overlay
+func_800D4ED0      = 0x800D4ED0; // segment:mission_overlay
 
-fake_func_800DD2C4 = 0x800DD2C4; // type:func segment:mission_overlay
-func_800DD2D0      = 0x800DD2D0; // type:func segment:mission_overlay
+fake_func_800DD2C4 = 0x800DD2C4; // segment:mission_overlay
+func_800DD2D0      = 0x800DD2D0; // segment:mission_overlay
 
-fake_func_800DFB8C = 0x800DFB8C; // type:func segment:mission_overlay
-func_800DFB90      = 0x800DFB90; // type:func segment:mission_overlay
+fake_func_800DFB8C = 0x800DFB8C; // segment:mission_overlay
+func_800DFB90      = 0x800DFB90; // segment:mission_overlay
 
-fake_func_800E406C = 0x800E406C; // type:func segment:mission_overlay
-func_800E4070      = 0x800E4070; // type:func segment:mission_overlay
+fake_func_800E406C = 0x800E406C; // segment:mission_overlay
+func_800E4070      = 0x800E4070; // segment:mission_overlay
 
-fake_func_800E447C = 0x800E447C; // type:func segment:mission_overlay
-func_800E4480      = 0x800E4480; // type:func segment:mission_overlay
+fake_func_800E447C = 0x800E447C; // segment:mission_overlay
+func_800E4480      = 0x800E4480; // segment:mission_overlay
 
-fake_func_800E71C8 = 0x800E71C8; // type:func segment:mission_overlay
-func_800E71D0      = 0x800E71D0; // type:func segment:mission_overlay
+fake_func_800E71C8 = 0x800E71C8; // segment:mission_overlay
+func_800E71D0      = 0x800E71D0; // segment:mission_overlay
 
-fake_func_800E8A34 = 0x800E8A34; // type:func segment:mission_overlay
-func_800E8A40      = 0x800E8A40; // type:func segment:mission_overlay
+fake_func_800E8A34 = 0x800E8A34; // segment:mission_overlay
+func_800E8A40      = 0x800E8A40; // segment:mission_overlay
 
-fake_func_800E9AD8 = 0x800E9AD8; // type:func segment:mission_overlay
-func_800E9AE0      = 0x800E9AE0; // type:func segment:mission_overlay
+fake_func_800E9AD8 = 0x800E9AD8; // segment:mission_overlay
+func_800E9AE0      = 0x800E9AE0; // segment:mission_overlay
 
-fake_func_800EC10C = 0x800EC10C; // type:func segment:mission_overlay
-func_800EC110      = 0x800EC110; // type:func segment:mission_overlay
+fake_func_800EC10C = 0x800EC10C; // segment:mission_overlay
+func_800EC110      = 0x800EC110; // segment:mission_overlay
 
-fake_func_800EC6EC = 0x800EC6EC; // type:func segment:mission_overlay
-func_800EC6F0      = 0x800EC6F0; // type:func segment:mission_overlay
+fake_func_800EC6EC = 0x800EC6EC; // segment:mission_overlay
+func_800EC6F0      = 0x800EC6F0; // segment:mission_overlay
 
-fake_func_800ECE04 = 0x800ECE04; // type:func segment:mission_overlay
-func_800ECE10      = 0x800ECE10; // type:func segment:mission_overlay
+fake_func_800ECE04 = 0x800ECE04; // segment:mission_overlay
+func_800ECE10      = 0x800ECE10; // segment:mission_overlay
 
-fake_func_800ED148 = 0x800ED148; // type:func segment:mission_overlay
-func_800ED150      = 0x800ED150; // type:func segment:mission_overlay
+fake_func_800ED148 = 0x800ED148; // segment:mission_overlay
+func_800ED150      = 0x800ED150; // segment:mission_overlay
 
-fake_func_800EFD74 = 0x800EFD74; // type:func segment:mission_overlay
-func_800EFD80      = 0x800EFD80; // type:func segment:mission_overlay
+fake_func_800EFD74 = 0x800EFD74; // segment:mission_overlay
+func_800EFD80      = 0x800EFD80; // segment:mission_overlay
 
-fake_func_800EFDDC = 0x800EFDDC; // type:func segment:mission_overlay
-func_800EFDE0      = 0x800EFDE0; // type:func segment:mission_overlay
+fake_func_800EFDDC = 0x800EFDDC; // segment:mission_overlay
+func_800EFDE0      = 0x800EFDE0; // segment:mission_overlay
 
-fake_func_800FA248 = 0x800FA248; // type:func segment:mission_overlay
-func_800FA250      = 0x800FA250; // type:func segment:mission_overlay
+fake_func_800FA248 = 0x800FA248; // segment:mission_overlay
+func_800FA250      = 0x800FA250; // segment:mission_overlay
 
-fake_func_800FBE14 = 0x800FBE14; // type:func segment:mission_overlay
-func_800FBE20      = 0x800FBE20; // type:func segment:mission_overlay
+fake_func_800FBE14 = 0x800FBE14; // segment:mission_overlay
+func_800FBE20      = 0x800FBE20; // segment:mission_overlay
 
-fake_func_800FEF04 = 0x800FEF04; // type:func segment:mission_overlay
-func_800FEF10      = 0x800FEF10; // type:func segment:mission_overlay
+fake_func_800FEF04 = 0x800FEF04; // segment:mission_overlay
+func_800FEF10      = 0x800FEF10; // segment:mission_overlay
 
-fake_func_80101CCC = 0x80101CCC; // type:func segment:mission_overlay
-func_80101CD0      = 0x80101CD0; // type:func segment:mission_overlay
+fake_func_80101CCC = 0x80101CCC; // segment:mission_overlay
+func_80101CD0      = 0x80101CD0; // segment:mission_overlay
 
-fake_func_80102A98 = 0x80102A98; // type:func segment:mission_overlay
-func_80102AA0      = 0x80102AA0; // type:func segment:mission_overlay
+fake_func_80102A98 = 0x80102A98; // segment:mission_overlay
+func_80102AA0      = 0x80102AA0; // segment:mission_overlay
 
-fake_func_8010357C = 0x8010357C; // type:func segment:mission_overlay
-func_80103580      = 0x80103580; // type:func segment:mission_overlay
+fake_func_8010357C = 0x8010357C; // segment:mission_overlay
+func_80103580      = 0x80103580; // segment:mission_overlay
 
-fake_func_80103D08 = 0x80103D08; // type:func segment:mission_overlay
-func_80103D10      = 0x80103D10; // type:func segment:mission_overlay
+fake_func_80103D08 = 0x80103D08; // segment:mission_overlay
+func_80103D10      = 0x80103D10; // segment:mission_overlay
 
-fake_func_80104208 = 0x80104208; // type:func segment:mission_overlay
-func_80104210      = 0x80104210; // type:func segment:mission_overlay
+fake_func_80104208 = 0x80104208; // segment:mission_overlay
+func_80104210      = 0x80104210; // segment:mission_overlay
 
-fake_func_801044D8 = 0x801044D8; // type:func segment:mission_overlay
-func_801044E0      = 0x801044E0; // type:func segment:mission_overlay
+fake_func_801044D8 = 0x801044D8; // segment:mission_overlay
+func_801044E0      = 0x801044E0; // segment:mission_overlay
 
-fake_func_80105B54 = 0x80105B54; // type:func segment:mission_overlay
-func_80105B60      = 0x80105B60; // type:func segment:mission_overlay
+fake_func_80105B54 = 0x80105B54; // segment:mission_overlay
+func_80105B60      = 0x80105B60; // segment:mission_overlay
 
-fake_func_8010619C = 0x8010619C; // type:func segment:mission_overlay
-func_801061A0      = 0x801061A0; // type:func segment:mission_overlay
+fake_func_8010619C = 0x8010619C; // segment:mission_overlay
+func_801061A0      = 0x801061A0; // segment:mission_overlay
 
-fake_func_80106BE8 = 0x80106BE8; // type:func segment:mission_overlay
-func_80106BF0      = 0x80106BF0; // type:func segment:mission_overlay
+fake_func_80106BE8 = 0x80106BE8; // segment:mission_overlay
+func_80106BF0      = 0x80106BF0; // segment:mission_overlay
 
-fake_func_8010721C = 0x8010721C; // type:func segment:mission_overlay
-func_80107220      = 0x80107220; // type:func segment:mission_overlay
+fake_func_8010721C = 0x8010721C; // segment:mission_overlay
+func_80107220      = 0x80107220; // segment:mission_overlay
 
-fake_func_80107EA4 = 0x80107EA4; // type:func segment:mission_overlay
-func_80107EB0      = 0x80107EB0; // type:func segment:mission_overlay
+fake_func_80107EA4 = 0x80107EA4; // segment:mission_overlay
+func_80107EB0      = 0x80107EB0; // segment:mission_overlay
 
-fake_func_80108B8C = 0x80108B8C; // type:func segment:mission_overlay
-func_80108B90      = 0x80108B90; // type:func segment:mission_overlay
+fake_func_80108B8C = 0x80108B8C; // segment:mission_overlay
+func_80108B90      = 0x80108B90; // segment:mission_overlay
 
-fake_func_80109428 = 0x80109428; // type:func segment:mission_overlay
-func_80109430      = 0x80109430; // type:func segment:mission_overlay
+fake_func_80109428 = 0x80109428; // segment:mission_overlay
+func_80109430      = 0x80109430; // segment:mission_overlay
 
-fake_func_80109618 = 0x80109618; // type:func segment:mission_overlay
-func_80109620      = 0x80109620; // type:func segment:mission_overlay
+fake_func_80109618 = 0x80109618; // segment:mission_overlay
+func_80109620      = 0x80109620; // segment:mission_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Variables ///////////////////////////////////
@@ -447,7 +493,10 @@ D_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
 D_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
 D_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
 D_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
-D_8010A090 = 0x8010A090; // type:f32 segment:mission_overlay
+D_8010A090 = 0x8010A090; // type:f32           segment:mission_overlay
+D_8010A120 = 0x8010A120; // type:f32 size:0x24 segment:mission_overlay
+// 9 Vec3fs
+D_8010A144 = 0x8010A144; // type:f32 size:0x6C segment:mission_overlay
 D_8010A204 = 0x8010A204; // type:f32 size:0x30 segment:mission_overlay
 
 D_8010A234 = 0x8010A234; // type:u32 size:0x38 segment:mission_overlay

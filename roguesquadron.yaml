@@ -484,7 +484,9 @@ segments:
       - [0x000B81D0, asm,    "mission_overlay/0B81D0"]
       - [0x000B9600, asm,    "mission_overlay/0B9600"]
       - [0x000BAFF0, asm,    "mission_overlay/0BAFF0"]
+      - [0x000BC930, asm,    "mission_overlay/0BC930"]
       - [0x000BD840, asm,    "mission_overlay/0BD840"]
+      - [0x000BE650, asm,    "mission_overlay/0BE650"]
       - [0x000BF800, asm,    "mission_overlay/0BF800"]
       - [0x000C00A0, asm,    "mission_overlay/0C00A0"]
       - [0x000C0390, asm,    "mission_overlay/0C0390"]
@@ -492,9 +494,13 @@ segments:
       - [0x000C70B0, asm,    "mission_overlay/0C70B0"]
       - [0x000C89C0, asm,    "mission_overlay/0C89C0"]
       - [0x000CAE70, asm,    "mission_overlay/0CAE70"]
+      - [0x000CC9A0, asm,    "mission_overlay/0CC9A0"]
       - [0x000CFB20, asm,    "mission_overlay/0CFB20"]
       - [0x000D38A0, asm,    "mission_overlay/0D38A0"]
       - [0x000D5AD0, asm,    "mission_overlay/0D5AD0"]
+      - [0x000D6BE0, asm,    "mission_overlay/0D6BE0"]
+      - [0x000D8450, asm,    "mission_overlay/0D8450"]
+      - [0x000DCF00, asm,    "mission_overlay/0DCF00"]
       - [0x000DDED0, asm,    "mission_overlay/0DDED0"]
       - [0x000E0790, asm,    "mission_overlay/0E0790"]
       - [0x000E4C70, asm,    "mission_overlay/0E4C70"]
@@ -601,7 +607,6 @@ segments:
       - [0x00130D90, asm,    "menu_overlay/130D90"]
       - [0x001331E0, asm,    "menu_overlay/1331E0"]
       - [0x00133580, data,   "menu_overlay/133580"]
-      - [0x00133640, data,   "menu_overlay/133640"]
       - [0x00133890, data,   "menu_overlay/133890"]
       - [0x001339F0, data,   "menu_overlay/1339F0"]
       - [0x00133A10, data,   "menu_overlay/133A10"]
@@ -609,6 +614,8 @@ segments:
       - [0x00134610, data,   "menu_overlay/134610"]
       - [0x001346B0, data,   "menu_overlay/1346B0"]
       - {type: bss, vram: 0x800CD520, name: "menu_overlay/800CD520"}
+      - {type: bss, vram: 0x800CDCF0, name: "menu_overlay/800CDCF0"}
+      - {type: bss, vram: 0x800CDD80, name: "menu_overlay/800CDD80"}
 
   # This segment has 5 non-zero words in it
   # That I can tell nothing in this segment is ever referenced
