@@ -3,7 +3,6 @@ assets/**
 data_blob/**
 m2c_output/**
 output_pngs/**
-tools/*
 venv/**
 .vscode/**
 *.z64
