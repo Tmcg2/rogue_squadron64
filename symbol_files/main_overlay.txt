@@ -206,6 +206,478 @@ D_8003D660   = 0x8003D660; // type:asciz
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+// === Renames added 2026-05-11 (RogueSquadron64Recomp RE session) ===
+// These names were applied to the splat ELF via llvm-objcopy --redefine-sym.
+// Adding them here makes them durable across splat rebuilds.
+// See /Projects/RogueSquadron64Recomp memory/project_recomp_function_map.md
+// for the full subsystem documentation.
+
+// Bootstrap / main game loop
+getGameConfig                        = 0x80000C44; // returns ptr to gBootConfig
+mainBootstrapWorker                  = 0x80000C68; // boot thread; reads gBootConfig, calls loadDebugAssets/initSiQueue/setDisplayMode
+mainGameLoop                         = 0x8003DFA0; // outer game loop, entry from gBootConfig+0x04
+
+// Service-worker subsystem (generic message-queue worker pattern)
+initServiceRegistry                  = 0x80006C00; // zeros service registry head/tail/count at 0x801128D0
+registerServiceWorker                = 0x80006C28; // (numMsgSlots, stackSize, threadPriority, entryFn) -> uniqueId
+startServiceWorker                   = 0x80006D9C; // looks up worker by id, osStartThread
+saveLoadDispatcher                   = 0x80006798; // SAVE/LOAD message state machine (msg=1=SAVE uses adler32+EEPROM write, msg=2=LOAD)
+recvServiceMessage                   = 0x80006F24; // walks registry by id, osRecvMesg(BLOCK)
+tryRecvServiceMessage                = 0x80006EC4; // non-blocking variant of recvServiceMessage
+sendServiceMessage                   = 0x80006F78; // producer; walks registry by id, osSendMesg
+
+// Save / account subsystem
+saveServiceWorker                    = 0x8006F2CC; // save-service worker thread (key=auto, slots=4)
+registerSaveService                  = 0x8006EF98; // calls registerServiceWorker for saveServiceWorker
+triggerSaveMessage                   = 0x8006F274; // allocates 20B msg, sends to saveServiceWorker
+loadAccountDataIntoStruct            = 0x8006EAAC; // copies game-state bytes from 0x80130B47 to working buffer at 0x80145AB0
+postLevelSaveInit                    = 0x800C06D0; // post-level save init (medal screen path)
+
+// NPC update dispatcher (gNpcSlotList: 0x800-entry list, gNpcContextArray: 0xC0 NPC contexts)
+// Per docs/npc_stuff/npc_stuff.md - each NPC context has update_func ptr at +0x00
+slotDispatcherIter                   = 0x8003E8DC; // walks gNpcSlotList, calls each NPC update_func per frame
+slotDispatcherInner                  = 0x8003EA4C; // inner per-slot dispatch; mallocs D_80130BC0/BC4 linked list entries
+slotEffectHandlerDispatch            = 0x800A71B8; // dispatches effect handlers from cinematic loop
+
+// Cinematic timing chain
+cinematicLoopBody                    = 0x800A5D80; // inner cinematic frame loop
+cinematicInitializer                 = 0x800AF408; // sets state ptr at 0x800B0934
+cinematicStageAdvancer               = 0x800AF550; // per-frame stage counter advance
+cinematicDeactivator                 = 0x800AF60C; // clears cinematic state
+cinematicComputeDt                   = 0x800AF360; // per-frame delta-time computer
+cinematicInterpRatio                 = 0x800AF668; // computes interpolation ratio from byte counter / float threshold
+
+// SI (Serial Interface / controllers)
+siServiceThread                      = 0x80002E10; // controller polling thread
+initSiQueue                          = 0x80003308; // initializes SI message queue + flags (0x80110740-748)
+waitForSerialIdle                    = 0x80003284; // spin-yields until 0x80110741 (SI busy flag) clears
+releaseSerialLock                    = 0x800032E0; // sibling of waitForSerialIdle - releases the SI lock
+
+// Save subsystem (CONFIRMED via docs/save_data/save_data.md)
+initSaveData                         = 0x80006338; // EEPROM sanity check + reinit on mismatch
+loadDefaultHighScores                = 0x8006DCCC; // loads 10 default high scores from D_8003CB10
+highScoreBubbleSort                  = 0x8006DD50; // bubble sort for high score list
+
+// Heap allocator helpers
+heapWalker                           = 0x800079F0; // heap free-list walker (used by rs_malloc/rs_free chain)
+heapFreeListDequeue                  = 0x8000CFD4; // dequeue from heap free-list head
+
+// DMA / asset loader subsystem (CONFIRMED via docs/dma_slots/dma_slots.md)
+initDmaSlots                         = 0x800045E8; // initializes 8 DMA slot state + msg queues
+submitDmaSlot                        = 0x80003480; // submits a DMA via osPiStartDma; round-robin slot allocator
+findManifestEntryByName              = 0x800047F4; // walks 32B manifest entries at 0x80110A74 by name string
+loadDebugAssets                      = 0x800246E8; // loads "dbg_data"/"dbg_font" assets at boot
+pushEventToRingBuffer                = 0x80003BCC; // producer for 8-slot x 116B ring at 0x80111D60 (likely DMA-related)
+subscribeEventHandler                = 0x80003C98; // claims slot in 0x80111BC0 table (likely DMA-related)
+
+// Event/object workers
+mainEventQueueWorker                 = 0x80004360; // worker that drains service msgs into ring buffer
+piDmaWorker                          = 0x80005570; // cartridge PI DMA worker; ring at 0x801112B0 (256 x 20B); osPiStartDma
+unidentifiedServiceWorker            = 0x80022048; // sibling service worker, stubbed in RogueSquadron64Recomp
+hudDisplayUpdateWorker               = 0x800495FC; // level-time HUD worker; processes material/texture update msgs (per docs/hud_stuff/hud_stuff.md)
+getTextureDataByMaterialId           = 0x800232F8; // material_id -> D_8011A444 -> D_80128F08 -> texture_data ptr
+
+// Display mode
+setDisplayMode                       = 0x8008EA14; // validates mode < 0x21, stores at 0x80151AD0, calls inner mode-setter
+menuOverlayInit                      = 0x800C58A0; // menu overlay init (calls registerSaveService)
+
+// Misc utility
+timeSnapshotFiller                   = 0x8000BC00; // fills time-snapshot struct
+floatModulo                          = 0x8001E20C; // f0 = f12 - trunc(f12/f14)*f14, then *f14
+
+// Factor 5 recursive mutex primitives (832A0.s) - STUBBED in recomp
+initFactor5Mutex                     = 0x80091FC4; // creates queue D_80149990 + posts initial token
+factor5MutexAcquire                  = 0x80092010; // recursive: if D_800A1780 > 0 increment; else osRecvMesg
+factor5MutexRelease                  = 0x8009205C; // decrement D_800A1780; if reaches 0, osSendMesg
+factor5QueueBlock                    = 0x800920A4; // low-level osRecvMesg(BLOCK), no counter touch
+factor5QueueSignal                   = 0x800920D0; // low-level osSendMesg(NOBLOCK), no counter touch
+waitForMusyXAudioTaskDone            = 0x80091EB0; // busy-spins on D_8014998A halfword (hangs without MusyX RSP task)
+
+// Mission/DAT/HUD/Account renames (batches 18-22, 2026-05-11)
+controllerStickXToPercent            = 0x8007A068; // stick_x / 128 → percent
+controllerStickYToPercent            = 0x8007A0A8; // stick_y / 128 → percent
+choosePlayerCraftAssets              = 0x800FB6C0; // DMAs HMT/HOB for chosen craft (per notes.txt)
+getSecondaryWeaponForCraftLevel      = 0x800C6728; // craft + level → secondary weapon id
+setDmaSlotMaxTxStepSize              = 0x80005938; // sets D_80111254 (unused in practice)
+parseImageFile                       = 0x8001EB24; // switch/case on image type, parses headers
+loadTextureToMemory                  = 0x8001F954; // loads a texture into D_80128F08 chain
+getTextureDataByMaterialId           = 0x800232F8; // material_id → texture_data ptr (D_8011A444 → D_80128F08)
+hudDisplayUpdateWorker               = 0x800495FC; // service worker; processes HUD material/texture msgs
+menuControllerInput                  = 0x800B47C4; // big menu controller input handler (per docs/menus + controller)
+setupMenuData                        = 0x800BA0F0; // sets up D_800CE730 per current menu
+updateMenuPerFrame                   = 0x800BB394; // per-frame menu update (highlighting etc)
+handleGameSettingsMenu               = 0x800BB234; // game settings menu input handler
+setHudSecondaryWeaponInfo            = 0x800BFDC4; // sets secondary weapon type/level fields in HUD struct
+initHudStruct                        = 0x800C0084; // initializes 0xF80-byte HUD struct
+parseDatSpawnPositions               = 0x80065790; // parses DAT file Type 0 (spawn positions)
+parseDatEventTriggers                = 0x800AA870; // parses DAT file Type 7 (events)
+setupNpcUpdateFunctions              = 0x800653B4; // sets up NPC update function pointers (DAT Type 6)
+allocNpcContextArrays                = 0x8003FD54; // mallocs gNpcContextArray (0xC0 × 0x3C) + gNpcContextArrayPtrs
+readAccountForSelectionScreen        = 0x800B85B4; // reads account data for account selection screen
+getActiveAccountsBitmask             = 0x8006E8AC; // returns D_8013A5C0_type.unk50 (active account bitmask)
+getAccountUnk51                      = 0x8006E8BC; // returns D_8013A5C0_type.unk51
+parseAccountDataBytes                = 0x8006EB48; // parses byte-packed account data (medals etc)
+eliteRoguesMenuHandler               = 0x800BEA00; // Elite Rogues highscore screen handler
+initControllerSettingsStructs        = 0x800BCE2C; // mallocs/inits controller settings UI structs
+controllerSettingsScreen             = 0x800BD274; // controller settings menu screen handler
+
+// Save subsystem + asset DMA + craft selection (batch 23)
+initMemoryPack                       = 0x80005960; // initializes the memory pack
+writeSaveBodyToEeprom                = 0x80005B9C; // writes save_data_body to EEPROM
+writeSaveDataBodyToEeprom            = 0x80005F18; // writes gSaveDataBody (D_8013A5C0) to EEPROM
+copySaveUnk08                        = 0x80006198; // copies save_data_body.unk08 (purpose unclear per docs)
+getAccountDataPtr                    = 0x8006EE5C; // returns ptr to account_data from gSaveDataBody
+setupAssetDma                        = 0x80004E70; // setup for DMAs related to asset loading (uses gServiceRegistry list)
+teardownAssetDma                     = 0x80004C70; // teardown for asset-loading DMAs
+mallocCraftSelectionData             = 0x800A9364; // rs_malloc's D_800CDA5C craft selection structs
+buildSecondaryWeaponString           = 0x800AE530; // builds secondary weapon string for craft selection display
+printLevelSelectWeaponText           = 0x800B19EC; // prints weapon/shield text on level select screen
+getAvailableShipsForLevel            = 0x800C63C0; // returns u32 of available ships per level
+mallocVoiceLineStruct                = 0x800CBF60; // rs_malloc's voice-line related struct for craft selection
+
+// Batch 24: docs-driven (asset/dma/snd/animation subsystems)
+processOverlayDmaStruct              = 0x800033A0; // handles overlay-DMA struct (src/dest/sizes + BSS zero-fill) per docs/unsorted_thoughts
+waitDmaSlotComplete                  = 0x80003638; // blocking DMA-slot drain: osRecvMesg + chain continuation per docs/dma_slots
+pollDmaSlotStep                      = 0x80003824; // non-blocking DMA-slot step: returns 1 when chain done per docs/dma_slots
+parseDatItemCommon                   = 0x80046620; // common DAT-item subroutine (called from Type 0 and Type 7 parsers) per docs/dat_files
+walkMeshdef0List                     = 0x80056EB0; // walks 0x4C-sized meshdef0 linked list per docs/hob_files
+loadSndFiles                         = 0x800663B0; // loads 4 SND files (pool/proj/sdir/samp) per docs/snd_files
+readControllerInputs                 = 0x80079F20; // inner controller-input fetch (called by setNewAndPreviousButtonsPressed) per docs/controller_stuff
+parseModelAnimType2Entry             = 0x80083468; // parses singlet/triplet/quadlet lists in model_anim_type2 per docs/model_animations
+parseSndFiles                        = 0x80097518; // parses SND file sections (pool/proj/sdir) per docs/snd_files
+craftSelectionVoiceLineHelper        = 0x800AE264; // craft-selection voice-line helper (D_800CC4F8 lists) per docs/unsorted_thoughts
+
+// Batch 25: menu subsystem
+menuSubtype02Handler                 = 0x800C30C8; // ~0xF18B handler for menu sub-type 02 per docs/menus
+
+// Batch 26: cinematic helpers
+cinematicSlotBatchDispatch           = 0x800A70E4; // calls slotDispatcherIter for each active cinematic slot index (read from 0x80139560)
+
+// Batch 27: audio / HMT
+initAudioSubsystem                   = 0x80091B3C; // calls initFactor5Mutex + osAiSetFrequency + creates audio thread/mq/event; called from setDisplayMode
+registerHmtTextureInTable            = 0x80022B90; // translates HMT material's texture_index into D_80128F08_index via D_8011A444 (per docs/load_hmt_and_hob)
+
+// Batch 28: video subsystem init/swap
+initVideoSubsystem                   = 0x8001A098; // huge VI init (osViSetMode/SpecialFeatures, creates 3 threads); called from initVideoBootWrapper
+initVideoBootWrapper                 = 0x80018468; // wraps initVideoSubsystem; called from thread3_video_handle with display config dimensions
+swapBufferWithViMode                 = 0x8001BA9C; // osViSetMode + osViSwapBuffer (small wrapper called from per-screen video reconfig)
+
+// Batch 29: per-frame rendering threads (created by initVideoSubsystem)
+viRetraceHandlerThread               = 0x80019868; // VI retrace handler thread (prio 0x75); per-frame loop at L_800198E8: osRecvMesg → osViSwapBuffer → osSendMesg; also does state 4→5 and 5→0 transitions
+spTaskSchedulerThread                = 0x80019BF4; // RSP task dispatcher thread; osSpTaskLoad/StartGo/Yield/Yielded
+dpInterruptHandlerThread             = 0x8001C328; // RDP done handler thread; osSetEventMesg(OS_EVENT_DP=9, q), waits, notifies
+
+// Batch 30: framebuffer arbiter state-machine (6 states: FREE/ALLOC/READY/CONSUMED/PRESENTED/DISPLAYED)
+bufferArbiterAllocSlot               = 0x8001BF20; // 0→1: scans for FREE slot, marks ALLOC
+bufferArbiterMarkSlotReady           = 0x8001BEC8; // 1→2: scans for ALLOC slot, marks READY
+bufferArbiterProducerMark            = 0x8001BCE4; // 2→3 (mark CONSUMED) and X→4 (post-osViSwapBuffer mark PRESENTED); the SP task producer
+
+// Batch 31: per-frame gfx orchestrator (THE key function — each screen calls this to present)
+submitGfxFrame                       = 0x8000C07C; // per-frame: alloc → markReady → SP task → 3× producerMark + osViSwapBuffer; called from ~14 screen handlers (cinematic/menu/mission overlays)
+getInactiveBufferIndex               = 0x80019BE4; // returns byte at 0x80138D2C XOR 1 (binary inactive-fb index for double-buffer)
+
+// Batch 32: timing + yield helpers (used by submitGfxFrame)
+getTimeSinceLastFrame                = 0x80023D08; // osGetTime() − previous-timestamp-at-0x80138F10; returns delta in $v0
+recordFrameTimestamp                 = 0x80023CC0; // osGetTime() → store to 0x80138F10 (last-frame-time)
+getTimeLow32                         = 0x80023CE8; // osGetTime() → return low 32 bits (drops high)
+postSwapRdpReset                     = 0x8001C12C; // post-osViSwapBuffer: osDpSetStatus + osWritebackDCacheAll + osSendMesg
+yieldFromSpThread                    = 0x8001A018; // tiny osYieldThread wrapper (called by submitGfxFrame after SP task kick)
+yieldFromGfxFrame                    = 0x8001A038; // tiny osYieldThread wrapper (called twice mid-submitGfxFrame)
+
+// Batch 33: cinematic asset init
+initCinematicSceneAssets             = 0x800AE518; // cinematic asset loader (mallocs, registerHmtTextureInTable); called by cinematicInitializer
+
+// Batch 34: post-osViSwapBuffer DP-completion handshake (2026-05-11)
+// submitGfxFrame calls setPostSwapPendingFlags right after osViSwapBuffer.
+// dpInterruptHandlerThread is *supposed* to clear them when RDP completes
+// after the swap (signalling "frame fully displayed"). Code elsewhere uses
+// waitForPostSwapAck to block until that signal. Under HLE this never fires
+// without the toml gate-NOP patch at 0x8001C3C4 (see project memory).
+setPostSwapPendingFlags              = 0x8001C244; // sets both flag bytes at 0x8011A8C8/C9 to 1 (called from submitGfxFrame after osViSwapBuffer)
+waitForPostSwapAck                   = 0x8001C260; // polls flag at 0x8011A8C9 in a osRecvMesg/yield loop until cleared
+clearPostSwapPendingFlags            = 0x8001C2F8; // clears both flag bytes at 0x8011A8C8/C9 (called by func_8001818C, initVideoBootWrapper)
+
+// Batch 35: audio-slot validity check + busy-wait pattern (2026-05-11)
+// Pattern: a slot table at *(0x801487F8), 0x88 bytes per entry. The first
+// byte of each entry is the "active" flag. waitForAnyAudioSlot busy-waits
+// in cinematic/menu init for any slot to become active — under HLE with
+// stubbed MusyX audio it never does. Three NOPs in rogue_squadron.toml
+// break the resulting infinite spin.
+isAudioSlotActive                    = 0x800920FC; // returns 1 if MEM_BU(*(0x801487F8) + i*0x88, 0) != 0 else 0
+anyAudioSlotActive                   = 0x8008E57C; // loops i=0..MEM_BU(0x80141AD0), OR-aggregates isAudioSlotActive(i)
+waitForAnyAudioSlot                  = 0x800668B0; // busy-wait: loops calling anyAudioSlotActive until non-zero (NOPed in toml at 0x800668CC)
+
+// Batch 36: zlib internals + HMT loader helper (per docs/unsorted_thoughts/notes.txt)
+// Game embeds zlib v0.99-1.08 (per notes line 128-135). Function names match
+// upstream zlib conventions exactly.
+adler32                              = 0x800269B0; // zlib adler32 hash (per notes line 131)
+inflateInit2_                        = 0x80026C7C; // zlib inflateInit2_ entry (per notes line 132)
+inflate_blocks_new                   = 0x800276C4; // zlib inflate_blocks_new with reset inlined (per notes line 133-134)
+inflate_trees_free                   = 0x80029A68; // zlib inflate_trees_free (per notes line 135)
+parseHmtMaterials                    = 0x80022A00; // load_hmt_and_hob inner helper (count, material_entry*, texture_entry*) per notes line 256
+
+// Batch 37: per-frame screen primitives + post-cinematic save-data load (2026-05-11)
+// Same primitive sequence appears in every "screen" handler in the game —
+// boot/scene init (func_8006D900) and controller config (func_800B47C4) both
+// call this exact order: poll input → frame-start reset → wait prev frame
+// done → render setup → audio submit → submitGfxFrame. Confirmed via
+// sister-repo docs/controller_stuff/func_800B47C4.c.
+pollControllerInputs                 = 0x80002FF4; // 4-iter loop over controllers, copies pad data into output buffer at MEM_W(0x80110748)+i*6
+waitForPrevFrameDone                 = 0x8000A86C; // calls waitForPostSwapAck then func_80001880 (clears flag at 0x8010FEFC)
+frameStartReset                      = 0x8000A6CC; // resets per-frame counters at 0x8011A90A/0C/0E/10, calls heapWalker, slot dispatch
+clearFrameReadyFlag                  = 0x80001880; // clears word at 0x8010FEFC to 0 (used by waitForPrevFrameDone)
+clearVec4QuadStruct                  = 0x8001CA50; // zeros 12 floats in struct (offsets 0x00-0x2C) — looks like 4x vec3 or 3x vec4 setup
+
+// Post-cinematic save-data loader (called from func_8003DFA0 = scene-init).
+// Runs 32 frames of normal game loop (keeps screen rendered while loading),
+// then clears gSaveDataBody (0x8013A5C0), loads "save" manifest entry,
+// decompresses asset, initSaveData. This is where the game returns from
+// cinematic into the menu — AV inside this function (offset +0x22C host
+// bytes) blocks the menu from appearing. See
+// project_osviblack_rendering_unblocked_2026_05_11.md
+runIdleFramesAndLoadSaveData         = 0x8006D900; // 32-iter frame loop + load+init save data; AVs ~iter 1023 (post-cinematic)
+
+// Cinematic slot interpolation (called by cinematicLoopBody iter).
+// Walks a slot table at offset 0x13D8 within a struct, stride 76 bytes per
+// entry, calling cinematicSlotUpdate on each. Used during cinematic to
+// advance per-slot state machines (object position, fade, particle).
+cinematicSlotUpdate                  = 0x800A6904; // per-slot cutscene math: reads gCutsceneInfo[0x44] (frame counter), interpolates value/a3, multiplies by a2
+cinematicSlotDispatcher              = 0x800A76B8; // iterates over slot table (idx*76+0x13D8), calls cinematicSlotUpdate on each
+
+// Batch 38: per-frame camera + pre-load game-state reset + HUD/asset helpers (2026-05-11)
+// setupCameraMatrices is the 5th call in each game-screen handler's per-frame
+// primitive sequence (after pollControllerInputs / frameStartReset etc).
+// Confirmed via guPerspective call inside the function body.
+setupCameraMatrices                  = 0x80016C44; // takes camera/viewport struct, computes aspect ratio, calls guPerspective → guScale → guMtxCatL (result at MEM_W(0x8011DC5C))
+resetGameSettingsAndMissionStats     = 0x8006E53C; // called by runIdleFramesAndLoadSaveData before save load — zeroes gGameSettings(0x30), D_80130B10(0x28), missionStats(0x10)
+
+// HUD + asset helpers (cross-referenced with sister-repo docs)
+findHudElementExtremes               = 0x800BFEA0; // 4-pass minimax: finds index of corner element (top/bottom/left/right) over 8B-stride array; sets bounding rect in arg0 (see docs/hud_stuff/func_800BFEA0.c)
+getPlanetAssetForLevel               = 0x800C6900; // returns "planet" asset id for text-crawl pan-down (per docs/unsorted_thoughts/func_800C6900.c) — 0xFF for levels without text crawl
+
+// Batch 39: high-frequency vec3/struct helpers + NPC slot list pop (2026-05-11)
+// These are tiny utility functions called 100+ times across the codebase —
+// renaming them buys big readability gains everywhere.
+addVec3At0x24                        = 0x8001CA90; // 204 callers: adds 3 floats (a1,a2,a3 interpreted as f32 bits) into struct at a0+0x24, +0x28, +0x2C
+setVec3At0x24                        = 0x8001CAC4; // sets struct at a0: +0x24/+0x28/+0x2C = (a1,a2,a3); also writes constant from 0x80000880 to +0x00/+0x10/+0x20 and zeros to +0x04/+0x08/+0x0C/+0x14/+0x18/+0x1C
+popNpcSlotFromTail                   = 0x8003E684; // 222 callers: walks gNpcSlotListTail (0x80130BB4) via "next" halfword at slot+0x4 in gNpcContextArray (0x80130BB0); marks freed slot's +0x6 = 0xFFFF
+clearDeferredClearRequest            = 0x8003DF78; // tiny wrapper: func_80001820(0,0) — clears the deferred-clear-region flag at 0x8010FF00 (counterpart to clearFrameReadyFlag at 0x8010FEFC)
+queueDeferredClearRequest            = 0x80001820; // if (addr,size) non-zero: posts (addr, addr+size, 1) to deferred-clear handler at 0x8010FF00 via func_80001F8C; else clears the flag
+clearSceneBssRegion                  = 0x8003DF20; // takes scene_id arg: clears BSS region 0x800B1EF0..0x8010D200 (scene 2) or 0x800D03E0..0x8010D200 (scene 1) before scene-init by queueDeferredClearRequest
+
+// Batch 40: vec3 math primitives + affine transform + NPC slot destroy (2026-05-11)
+// Tiny pure-math leaf functions called 100-200+ times across the codebase.
+// Pattern matches libultra/math conventions exactly: vec3 = (x,y,z) at offsets +0x0/+0x4/+0x8.
+vec3Length                           = 0x8001CF2C; // 192 callers: sqrtf(a0.x*a0.x + a0.y*a0.y + a0.z*a0.z) — magnitude of a 3D vector at a0
+vec3Dot                              = 0x8001CFE8; // 152 callers: a0.x*a1.x + a0.y*a1.y + a0.z*a1.z — dot product of two vec3s
+vec2Cross2D                          = 0x8001D018; // a0.x*a1.y - a0.y*a1.x — 2D cross product (z-component of 3D cross, signed area)
+vec3Cross                            = 0x80019548; // 127 callers: 3D cross product — out=a0, u=a1, v=a2; out.x=u.y*v.z-u.z*v.y, out.y=u.z*v.x-u.x*v.z, out.z=u.x*v.y-u.y*v.x
+transformVec3ByMat34                 = 0x800193E8; // 169 callers: applies 3x4 affine matrix (3x3 rotation/scale at a0+0x00..0x1F + translation at a0+0x24/+0x28/+0x2C) to vec3 at a1, writes to a2
+
+// NPC slot system (gNpcSlotList/gNpcContextArray)
+destroyNpcSlotByIndex                = 0x8003ED74; // 124 callers: looks up gNpcSlotList[idx*8], reads handler ptr at slot+0x0; if active, calls handler(slot, action=2, 0) to deactivate
+
+// Batch 41: vec3 out-of-place normalize + quaternion from axis-angle (2026-05-11)
+// Math siblings of normalize_vector (0x8001CF58 = in-place) and quaternion helpers.
+vec3NormalizeInto                    = 0x8001CFA0; // out=a0, in=a1: computes magnitude of a1, divides each component by magnitude, writes to a0 (out-of-place variant of normalize_vector at 0x8001CF58)
+quatFromAxisAngle                    = 0x8001D240; // 77 callers: builds quaternion in a0 from axis (vec3 at a1) and angle (a2 as f32). a0.w=cos(angle/2); a0.xyz = sin(angle/2) * axis.xyz
+
+// Batch 42: NPC slot getters + Factor 5 list helper (2026-05-11)
+// Trivial high-frequency getters into gNpcSlotList (0x80130BB0) + a doubly-linked
+// list removal under factor5 mutex used by MusyX-related subsystems.
+getNpcContextByIndex                 = 0x8004013C; // 94 callers: trivial getter — returns MEM_W(gNpcSlotList[idx*8] + 0x0) = pointer to NPC context for slot idx
+getNpcContextField8                  = 0x8004015C; // 59 callers: same as getNpcContextByIndex but returns context->field_8 (offset 0x8 within context); 0 if slot is empty
+factor5RemoveListNode                = 0x80098DE0; // 67 callers: under factor5MutexAcquire — removes node from doubly-linked list (prev.next = next, next.prev = prev; updates list head at 0x80153414). Gated by MusyX-active flag at 0x800A0F50.
+
+// Batch 43: NPC slot list lifecycle (2026-05-11)
+// The NPC slot subsystem manages 0x800 entries in a doubly-linked free list.
+// Each slot is 8B: +0x00 ctx_ptr, +0x04 next_idx (u16), +0x06 prev_idx (u16).
+// initNpcSlotList allocates the 16KB list, allocateNpcSlot pops a free slot,
+// unregisterAndFreeNpcSlot returns a slot via context-registration array.
+initNpcSlotList                      = 0x8003E560; // one-shot: rs_malloc(0x4000) for gNpcSlotList; loops 0..0x7FF building doubly-linked free list; sets gNpcSlotListTail=2 and seeds head/last sentinels
+allocateNpcSlot                      = 0x8003E5F8; // pops head from free list at gNpcSlotListTail; if list empty returns -1; if a0!=NULL registers idx in context's array at *(a0+0x1C+count*2), increments count byte at a0+0x1B
+unregisterAndFreeNpcSlot             = 0x8003E7D0; // 127 callers: unregisters slot_idx (a0) from context's (a1) array at +0x1C, decrements count at +0x1B (compact-shift entries), then returns slot to free list (doubly-linked unlink at gNpcSlotList[idx*8])
+
+// Batch 44: matrix multiply + DL buffer allocator (2026-05-11)
+// func_800191C4 is the core 3x4 matrix multiply used by 0x8001CB9C/CC3C/CCCC/CD6C/CDFC
+// rotation builders (which prepare a rotation matrix then concat it onto another).
+// func_80007D74 allocates a 256-byte DL buffer node from a free pool, splices it
+// into a doubly-linked active list, returns pointer past the 8-byte header.
+mat3x4Multiply                       = 0x800191C4; // multiplies 3x4 matrix at a0 by 3x4 matrix at a1; result destination = a0 (or somewhere — both matrices are 12 floats at offsets 0x00-0x2C)
+allocateDisplayListBuffer            = 0x80007D74; // 96 callers: pops a 256-byte node from MEM_W(0x80116AB0) free list, splices into active doubly-linked list at MEM_W(0x80128EDC); returns ptr+8 (past header). Allocates fresh node via findAndUnlinkSmallestEntry if free list empty.
+
+// Batch 45: free-list best-fit allocator + texture LUT init (2026-05-11)
+// Two more high-frequency allocator/init helpers used by the texture/DL
+// management system. findAndUnlinkSmallestEntry is the best-fit search used
+// when allocateDisplayListBuffer's free list is empty.
+findAndUnlinkSmallestEntry           = 0x8002221C; // 110 callers: walks N buckets at *(0x80138F00), per-bucket linked via .next (offset 0); finds entry with smallest .size halfword at +0x8; unlinks it from its doubly-linked list (offsets 0x0/0x4). Used as fallback by allocateDisplayListBuffer.
+initTextureLUTAndAllocBuffers        = 0x8001E230; // takes (count1 u16, count2 u16); allocates count1*36-byte buffer at 0x80128F08 (texture LUT — used by getTextureDataByMaterialId), then allocates count1*4-byte index buffer; stores counts at 0x80128EF0/0x80128EF4
+
+// Batch 46: HMT material lookup + quaternion-from-cardinal-axis + slot getter (2026-05-11)
+// More high-confidence math + asset helpers.
+lookupHmtMaterialByName              = 0x80059434; // 76 callers: walks 10-byte-stride name table at *(struct+0x28) matching 9-char a1 string. Returns ptr to data at idx*76+0xC offset within struct (76-byte material entry stride). Used by HMT/HOB asset parsing.
+getNpcContextFloatAt34               = 0x800594E8; // trivial: returns *(MEM_W(a0+0x0) + 0x34) as float — context's f32 field at offset 0x34
+quatFromCardinalAxis                 = 0x8001D038; // a0=out quat, a1=axis_id(0-5), a2=angle. Zeros q.xyz, switches on (axis_id%6): case 0→q.x, 1→q.y, 2→q.z (positives), 3-5 negative directions. Used for axis-aligned rotations.
+
+// Batch 47: HMT texture lookup + HOB mesh vertex coloring (2026-05-11)
+// HMT/HOB asset parsing helpers. lookupHmtTextureByName (112 callers) is the
+// counterpart to lookupHmtMaterialByName (76 callers): textures are 6-byte
+// names in a 36-byte-stride table, materials are 9-byte names in 76-byte stride.
+// Both walk *(a0+0x30) which is the HMT struct's entry-table pointer.
+lookupHmtTextureByName               = 0x80058360; // 112 callers: walks 6-byte-name table at *(struct+0x30); each entry is 36 bytes (9*4 = u32 count*9 fields). Used for HMT texture entry lookup.
+applyMeshdef1AnimColors              = 0x80058B40; // walks meshdef1 sub-meshes at a0+0x20; for each vertex with flag bit 0x10 set, multiplies u8 color by f32 from a1 array (clamps to 0..255). Used for per-vertex color animation. Selector bits at vertex+0x4 (shifted >>10 & 0xFC) index into a1 array.
+
+// Batch 48: Euler-angle rotation matrix construction (2026-05-11)
+// Discovered via func_80059D78 (22 callers) which calls 3 rotation builders in
+// sequence to compose XYZ Euler rotation. The "init" variants (CC3C, CD6C, CB64)
+// write directly to passed-in dest. The "compose" variants (CB9C, CCCC, CDFC, CB04)
+// build on stack then mat3x4Multiply onto dest. Exact axis assignment uncertain —
+// they all sin/cos angle*PI/180 with subtly different matrix layouts. Names use
+// "Slot" rather than X/Y/Z since the layouts don't match standard rotation
+// matrices (Row 1 has -sin AND +sin at different offsets — likely game-specific).
+composeEulerRotationXYZ              = 0x80059D78; // 22 callers: a0=out 3x3 ptr, a2=angle1, a3=angle2 — calls init→composeY(angle1)→composeZ(angle2), then copies 6 specific elements from stack matrix to a0
+buildRotationMatrixSlot0             = 0x8001CC3C; // (a0=dest mat, a1=angle) — sin/cos-fills dest matrix at offsets 0x00,0x10..0x20; no mat-mul. Companion init for slot 0.
+buildRotationMatrixSlot1             = 0x8001CD6C; // (a0=dest mat, a1=angle) — sin/cos-fills dest matrix offsets differently; no mat-mul. Companion init for slot 1.
+composeRotationMatrixSlot0           = 0x8001CB9C; // (a0=dest mat, a1=angle) — builds rotation on stack with constant 0x884, then mat3x4Multiply onto dest
+composeRotationMatrixSlot1           = 0x8001CCCC; // (a0=dest mat, a1=angle) — same pattern with constant 0x894
+composeRotationMatrixSlot2           = 0x8001CDFC; // (a0=dest mat, a1=angle) — same pattern with constant 0x8A4
+
+// Batch 49: Gram-Schmidt orthonormalization + mat3x4 inverse-rotation builder (2026-05-11)
+// More 3D math helpers from the HOB rendering / object orientation system.
+orthonormalizeFrame                  = 0x80059F10; // 31 callers: Gram-Schmidt — given struct at a0 with right vec3 (+0xC) and up vec3 (+0x18): normalize right, compute temp=cross(right,up)/normalized, then up=cross(right,temp). Result: orthonormal {right, ?, up}.
+mat34CrossRowsAndCopyPos             = 0x80059B50; // 91 callers: a0=out, a1=in mat3x4, a2=scalar bits. Computes (row1 × row0) for each output element (0x0,0xC,0x18), scales by a2. Then scales 6 matrix elements by a2 (0x4,0x8,0x10,0x14,0x1C,0x20). Copies position (a1+0/4/8 → a0+0x24/0x28/0x2C). Likely builds normal-matrix / inverse-rotation for graphics.
+mat34CrossRowsAndCopyPosPtr          = 0x80059C24; // similar to mat34CrossRowsAndCopyPos but a2=POINTER to scalar (loads via lwc1 0x0(a2) instead of mtc1 a2)
+
+// Batch 50: NPC/effect spawner (2026-05-11)
+// spawnNpcOfType is the central allocator for new NPC contexts. It:
+//   1. If gNpcNextOpenSlot < 0: walks gNpcContextArray free list looking for
+//      first slot where slot[0x1A] == 0 (inactive); when found, destroys that
+//      slot via destroyNpcSlotByIndex to reclaim it.
+//   2. Pops from gNpcNextOpenSlot in gNpcContextArrayPtrs (0x80130BBC) to get
+//      a fresh slot pointer.
+//   3. Initializes slot with handler (a0), args (a1, a2, a3), and stack params.
+spawnNpcOfType                       = 0x8003FFEC; // 69 callers: (handler_table_ptr, struct_data_ptr, arg1, arg2, stack_args...) — allocates+initializes NPC context. Will recycle inactive slot if no free slots remain.
+
+// Batch 51: Factor 5 audio binary-search lookup (2026-05-11)
+// MusyX/Factor 5 audio system uses a sorted u16-keyed table at 0x8013CC80 with
+// 12-byte entries (count at 0x80140800). Found via the standard binary-search
+// pattern (mid = (hi+lo)/2, multiplied by stride, compared via subtractive cmp).
+bsearchFactor5TableByU16Key          = 0x80087EE8; // 91 callers: under factor5MutexAcquire — binary search in 12-byte-stride table at 0x8013CC80 for entry with u16 key matching a1. Returns ptr to matching entry or NULL.
+cmpU16ByValue                        = 0x80086218; // trivial: return *(u16*)a0 - *(u16*)a1 — the comparator used by bsearchFactor5TableByU16Key
+
+// Batch 52: asset loader + render state init + table lookup (2026-05-11)
+// Solid utility renames discovered while mapping out HOB subsystem.
+loadAndRelocateAsset                 = 0x800554D8; // 10 callers: calls load_asset(rdram, ctx); walks 8 ptr fields at result+0x4..+0x20 and result+0x20/0x24 to add (base, a2) — relocates file-relative offsets to absolute pointers
+initRenderStateArrays                = 0x8000B654; // 17 callers: zeros 4 entries × 0x180-byte stride render-state array at 0x8011D498, plus globals at 0x8011A460/0x8011A4A8/0x80117C00
+setLookupEntryField5ByKey            = 0x800646AC; // 56 callers: walks 8-byte-stride table at *(a0+0x0) count=*(u16*)(a0+0x4); when entry.field0 == a1, sets entry.byte_at_0x5 = a2 and returns
+
+// Batch 53: quadratic ease-in-out curve (2026-05-11)
+// Classic smoothstep/easing function used 59 times across animation code.
+quadraticEaseInOut                   = 0x800662E0; // 59 callers: clamps f12 to [0, 1]; if t<=0.5 returns 2t² (ease-in), else returns 1 - 2(1-t)² (ease-out). Constants at 0x8003C2C4 (=1.0), 0x8003C2C8 (=0.5), 0x8003C2CC (=1.0).
+
+// Batch 54: texture LUT destructor (2026-05-11)
+// Pair-counterpart to initTextureLUTAndAllocBuffers.
+destroyTextureLUTs                   = 0x8001E334; // frees the texture LUT at 0x80128F08 and the count1*4 index buffer at 0x80128EFC via rs_free (counterpart to initTextureLUTAndAllocBuffers at 0x8001E230)
+
+// Batch 55: math + texture LUT getters (2026-05-11)
+// More math primitives + simple texture LUT entry-field getters.
+rotateVec3ByMat3x3                   = 0x800194A4; // 24 callers: applies 3x3 rotation matrix at a0 (offsets 0x00-0x20, 9 floats) to vec3 at a1, writes to a2. Pure rotation (no translation). Distinct from transformVec3ByMat34.
+getTextureLUTFieldAt8                = 0x80022740; // trivial: returns *(u16*)(*(0x80128F08) + idx*36 + 0x8) — likely texture width or u16 field at +0x8 of texture entry
+getTextureLUTFieldAtA                = 0x80022768; // trivial: returns *(u16*)(*(0x80128F08) + idx*36 + 0xA) — likely texture height or u16 field at +0xA
+
+// Batch 56: time/angle wrap helper (2026-05-11)
+// Wraps an input time/angle value into a configured cyclic range.
+wrapAngleToCyclicRange               = 0x80067D90; // 60 callers: f12 = input angle; subtracts global cycle-start at 0x80136DE0; if <0 wraps by adding range (modulo-style); if >=cycle-end-at-0x80136DE4 wraps too. Returns wrapped value in f0.
+
+// Batch 57: sinf approximation + quaternion-vector rotation (2026-05-11)
+// Final big math wins. sinfApprox is the game's custom Taylor-series sine,
+// used by rotation builders. rotateVec3ByQuat is the standard q*v*q⁻¹ formula.
+sinfApprox                           = 0x8001C400; // 65 callers: custom Taylor-series sin(x) — range-reduces against constants at 0x810-0x824, then sum: x - x³/6 + x⁵/120 - x⁷/5040 + x⁹/362880. Constants 0x838=-1/6, 0x83C=1/120, 0x840=-1/5040, 0x844=1/362880.
+constMinusSinfApprox                 = 0x8001C5CC; // 99 callers: returns const_at_0x80000850 - sinfApprox(x) — likely π/2-sin or 1-sin (versine). Wrapper used to compute cosine via co-function identity.
+rotateVec3ByQuat                     = 0x8001D3C4; // 145 callers: rotates vec3 at a1 by quaternion at a0 using formula q*(0,v)*q⁻¹. Writes result to a2. Intermediate q*v computed on stack first then multiplied by conjugate.
+
+// Batch 58: 3D positional audio registration (2026-05-11)
+// MAJOR find — the central 3D audio playback function. Used 177 times across
+// the codebase for every spatialized sound (explosions, engines, weapons, etc).
+play3DSoundEvent                     = 0x800989D8; // 177 callers: under factor5MutexAcquire — registers a spatial audio source with position (a1 vec3), velocity (a2 vec3), volume (a3 normalized by /32768), pitch (sp+0x78 normalized), id (sp+0x82 u16), flags. Calls func_80098310 to enqueue.
+
+// Batch 59: quaternion-to-matrix conversion + compose (2026-05-11)
+// The standard quat-to-rotation-matrix formula, with normalization built in.
+// Converts a quaternion to a 3x4 affine rotation matrix on stack, then mat3x4Multiplies
+// it onto the passed-in destination matrix.
+composeQuatToMat3x4                  = 0x8001DAEC; // 68 callers: a0=dest mat3x4, a1=quaternion (w,x,y,z at +0/4/8/C). Computes 1/(x²+y²+z²+w²) for normalization, then builds 3x3 rotation matrix: m00=1-2(y²+z²), m01=2(xy-wz), m02=2(xz+wy), etc. Stores to stack, then calls mat3x4Multiply(stack, a0).
+
+// Batch 60: safer quaternion-from-axis-angle (2026-05-11)
+// Variant of quatFromAxisAngle (0x8001D240) that handles non-unit axes —
+// computes |axis|², normalizes-and-scales sin(angle/2) by /|axis|, with
+// short-circuit return (1,0,0,0) identity for zero axis or zero angle.
+quatFromAxisAngleSafe                = 0x8001D144; // 42 callers: same args as quatFromAxisAngle, but normalizes axis during build. If axis or angle is zero, returns identity quat. Constants: 0x8E8 (=PI/180 for deg-to-rad).
+
+// Batch 61: player-slot table getters + animation activator (2026-05-11)
+// gPlayerSlotTable at 0x8009FC10 — 12 entries × 4 bytes each = pointers to player/object
+// slot structs (initialized by func_80063B58, marker byte at +0xF8 = 'A','B',...,'L').
+// Each struct has flags at +0x30 and an animation array at +0x34, +0xEC, +0xF0, +0xF4.
+getPlayerSlotFieldAt34               = 0x80063C3C; // 68 callers: takes (slot_idx u16, sub_idx u16). Returns *(u32*)(gPlayerSlotTable[idx0]->field_34 + idx1*4) — looks up u32 in slot's array at +0x34
+setPlayerSlotAnimationFlag           = 0x80063CFC; // 64 callers: sets bit (1<<a2) in gPlayerSlotTable[a0]->flags_at_0x30, snapshots counter byte at +0x1F into +0x84+a2, then sets up animation arrays at +0xEC/+0xF0/+0xF4
+activateAnimationKeyframe            = 0x80061C74; // 71 callers: blends animation keyframe data into player slot's frame buffer at +0x84, sets bit 0x1 of *(a1+0x14) (animating flag), updates current frame byte at +0x2F. Recursively walks track at *(a1+0xC). Uses setLookupEntryField5ByKey.
+
+// Batch 62: HUD enable-bit setters + screen-state gate (2026-05-11)
+// HUD flag bits at MEM_W(0x8010CFE0). Each setter OR-s a bit into the flags.
+// Gated by zero check at 0x8010CA20 (probably the "HUD active" master toggle).
+// Bits found so far: 0x4, 0x8, 0x40. Each likely controls a specific HUD element
+// (player score, secondary weapon, debug info, etc).
+setHudEnableBit4                     = 0x800C7738; // 43 callers: if MEM_W(0x8010CA20) == 0: OR bit 0x4 into HUD flags at 0x8010CFE0 and call func_80067938 (effect dispatcher)
+setHudEnableBit8                     = 0x800C776C; // 23 callers: same pattern, bit 0x8
+setHudFlagBit40AndStoreArg           = 0x800C7884; // 44 callers: writes a0 to 0x8008EC10 and sets bit 0x40 in HUD flags at 0x8010CFE0 (no master-toggle gate — runs unconditionally)
+
+// Batch 63: player slot entry RGB color setter (2026-05-11)
+// Sets RGB bytes for an animation/object entry within a player slot.
+setPlayerSlotEntryRGB                = 0x80063E54; // 47 callers: (slot_idx u16, sub_idx u16, color_ptr u8*) — looks up gPlayerSlotTable[idx0]->field_34[sub_idx]; writes 3 bytes from color_ptr to entry's +0x2C, +0x2D, +0x2E (RGB)
+
+// Batch 64: 3D audio source updater + lookup find-by-key + getter (2026-05-11)
+// More high-call utility functions. updateActive3DAudioSource is the counterpart
+// to play3DSoundEvent — updates already-playing source position/velocity/pan.
+updateActive3DAudioSource            = 0x800988E8; // 33 callers: under factor5MutexAcquire — (audio_entry, position vec3, velocity vec3, pan u8 normalized by /127). Updates entry's spatial fields at +0xC/+0x10/+0x14 (pos), +0x18/+0x1C/+0x20 (vel), +0x28/+0x2C (pan). Gated by MusyX-active flag.
+findLookupEntryByKey                 = 0x800642A0; // 32 callers: read-version of setLookupEntryField5ByKey. Walks 8-byte stride table at *(a0+0x0) count=*(u16*)(a0+0x4), finds entry where entry.field0 == a1, returns it.
+getStructField0xC                    = 0x800B3D08; // 36 callers: trivial — returns *(u32*)(a0 + 0xC). Generic pointer-at-offset-0xC getter used across many subsystems.
+
+// Batch 65: random scale + factor5 audio wrapper variants (2026-05-11)
+// More high-call utility functions discovered in 0x80072* (effects/particles)
+// and 0x80098* (audio) ranges.
+scaleVec3ByRandomRange               = 0x80072300; // 37 callers: scales in-place vec3 at a0 by a random factor in [a1, a2]. Uses rand_recomp() & 0xFFF / 4095.0 for normalized random.
+playSimpleAudioCmd                   = 0x8008E0B0; // 33 callers: under factor5MutexAcquire — thin wrapper for func_8008DD60(a0 u8, a1 u16, a2 u8, 0). Likely simple audio command (channel, sound_id, volume).
+play3DSoundEventVariant              = 0x80098BDC; // 36 callers: sibling of play3DSoundEvent (0x800989D8) with different param positions. Same factor5 mutex + audio entry pattern. Likely looped/repeated variant.
+
+// Batch 66: vec3 length clamp + gPlayers field getter (2026-05-11)
+// More high-value primitives discovered while mapping remaining unnamed functions.
+clampVec3ToUnitIfLongerThan          = 0x800AA350; // 30 callers: calls vec3Length(a0); if length >= constant_at_0x800A51D0, divides each component (x/y/z) by length (normalizes to unit). Otherwise unchanged. Used for direction/velocity clamping.
+getPlayerField2                      = 0x8006C994; // 28 callers: returns *(u16*)(gPlayers + a0*0x2A0 + 0x2). Simple per-player u16 field getter (likely state, team, or status flags).
+
+// Batch 67: 3x3 matrix inverse via adjugate/determinant (2026-05-11)
+// Standard matrix inverse formula: M⁻¹ = adj(M) / det(M).
+// Computes 3 cofactors (via cross-product pattern), then det = row0 · cofactor_col0.
+// Divides 1.0/det and multiplies cofactors by it. Writes result into output rows at +0x0, +0xC, +0x18.
+mat3x3InverseInto                    = 0x8001C774; // 38 callers: a0=out 3x3 inverse, a1=in 3x3 matrix at offsets 0xC..0x20 (9 floats). Computes adjugate/determinant. Constant at 0x80000870 = 1.0.
+
+// Batch 68: oriented NPC spawn helper (2026-05-11)
+// Wraps spawnNpcOfType with an optional orientation. Builds a position+up-vector
+// struct on stack (using orthonormalizeFrame to compute right/forward), then
+// spawns the NPC with handler at 0x8006FC90.
+spawnOrientedNpc                     = 0x80072684; // 54 callers: (position vec3, up vec3 or NULL, ...) — copies position to sp+0x10, up to sp+0x28 (default (0,1.0,0) if a2=NULL), calls orthonormalizeFrame, then spawnNpcOfType(0x8006FC90, sp+0x40, 1, 0xF, ...)
+
+// Batch 69: NPC slot chain destroyer (2026-05-11)
+// Walks gNpcSlotList starting from a0, calls unregisterAndFreeNpcSlot on each
+// slot, follows .next chain. Used to clear groups of related NPCs at once.
+destroyNpcSlotChain                  = 0x8003F0C8; // 32 callers: starts at slot_idx (a0 u16), follows slot[idx].next until 0xFFFF terminator, calls unregisterAndFreeNpcSlot on each. If next is invalid, also updates prev/next links to maintain list integrity.
+
+// Batch 70: object detail-level setter + getter (2026-05-11)
+// Setter/getter pair for an object's "detail level" or "quality" field at +0x19A.
+// The setter also updates flag bits (clears 0xC0, sets (3-level)<<6) and reads field +0x198.
+setObjectDetailLevel                 = 0x800F2830; // 34 callers: (object_ptr, level u16) — stores level at +0x19A, fetches +0x198 → getNpcContextByIndex, updates flag bits in +0x14
+getObjectDetailLevel                 = 0x800F287C; // 14 callers: returns *(s16*)(a0 + 0x19A) — counterpart getter
+
+// === End RogueSquadron64Recomp renames ===
+
 loadOverlay                          = 0x80000B20; // defined:true
 thread3_video_handle                 = 0x80001088; // defined:true
 main                                 = 0x8000161C; // defined:true
@@ -443,7 +915,6 @@ fake_func_8006B704 = 0x8006B704; // defined:true
 func_8006B710      = 0x8006B710; // defined:true
 
 fake_func_8006D8FC = 0x8006D8FC; // defined:true
-func_8006D900      = 0x8006D900; // defined:true
 
 fake_func_8006F4AC = 0x8006F4AC; // defined:true
 func_8006F4B0      = 0x8006F4B0; // defined:true
@@ -513,7 +984,10 @@ rngSeed    = 0x80003470; // type:u32 size:0x4
 D_800186E0 = 0x800186E0; // type:f32
 
 gspF3DEXTextStart     = 0x80024A10; // size:0x1FA0 name_end:gspF3DEXTextEnd
-D_80037560            = 0x80037560; // size:0x50
+gBootConfig           = 0x80037560; // size:0x50 - boot config struct; renamed from D_80037560 (2026-05-11)
+gCutsceneAssetPaths   = 0x800AF92C; // 32 x 0x5C cutscene asset path entries (per docs/cutscenes/cutscenes.md)
+gCutsceneEntries      = 0x800B1900; // ptr to cuts_13D8_active_count entries of struct D_800B1900_type
+gCurrentCutsceneFile  = 0x800B1904; // ptr to currently loaded cuts_file_constant
 D_800375B0            = 0x800375B0; // type:u32 size:0x4
 D_80037620            = 0x80037620; // type:u32 size:0x4
 D_80037630            = 0x80037630; // type:s32 size:0x4
@@ -706,7 +1180,7 @@ dmaSlotTxRemaning    = 0x80110A30; // type:u32          size:0x20
 dmaSlotTxThisStep    = 0x80110A50; // type:u32          size:0x20
 dmaSlotMutex         = 0x80110A70; // type:u8
 // type_size:0x50 count:0x04
-D_80110A80           = 0x80110A80; //                   size:0x140
+gManifestTable        = 0x80110A80; // size:0x140 - array of {manifest_entry*, entry_count} per segment; renamed from D_80110A80 (2026-05-11)
 // type_size:0x18 count:0x10
 D_80110BC0           = 0x80110BC0; //                   size:0x180
 // type_size:0x74 count:0x08
@@ -733,10 +1207,13 @@ D_80128C80 = 0x80128C80; // type:OSMesg size:0x4
 D_80128CE0 = 0x80128CE0; // type:OSMesg size:0x4
 
 D_80130B10   = 0x80130B10; // size:0x28
-D_80130B40   = 0x80130B40; // size:0x30
+gGameSettings = 0x80130B40; // size:0x30 - game settings struct (per docs/unsorted_thoughts/unsorted_thoughts.md D_80130B40_type)
 missionStats = 0x80130B78; // size:0x10
-D_80130BB0   = 0x80130BB0; // size:0x04
-D_80130BB4   = 0x80130BB4; // type:u16
+gNpcSlotList    = 0x80130BB0; // size:0x04 - ptr to 0x800 x 8B NPC slot list (D_80130BB0_type)
+gNpcSlotListTail = 0x80130BB4; // type:u16 - tail index into gNpcSlotList
+gNpcContextArray = 0x80130BB8; // size:0x04 - ptr to 0xC0 x 0x3C NPC contexts (D_80130BB8_type with update_func at +0x00)
+gNpcContextArrayPtrs = 0x80130BBC; // size:0x04 - ptr to 0xC0 NPC context pointers
+gNpcNextOpenSlot = 0x80130BC8; // size:0x04 - next open slot in gNpcContextArray
 hmpFile      = 0x80136FC4; // type:u32
 gPlayers     = 0x80137DB8; // size:0x2A0
 
@@ -771,7 +1248,7 @@ D_8013A498 = 0x8013A498; // type:u8  size:0x80
 
 gUnlockString = 0x8013A570; // type:u8 size:0x40
 
-D_8013A5C0 = 0x8013A5C0; // size:0xB0
+gSaveDataBody = 0x8013A5C0; // size:0xB0 - in-mem save data body (per docs/save_data/save_data.md D_8013A5C0_type)
 D_8013A670 = 0x8013A670; // size:0x224
 
 gPreviousButtonsPressed = 0x8013A950; // type:u32 size:0x10
