@@ -4,203 +4,203 @@
 
 D_80000440   = 0x80000440; // type:asciz size:0xA
 zlib_version = 0x80000474; // type:asciz size:0x3
-D_800007D0   = 0x800007D0; // type:asciz
-D_80000A00   = 0x80000A00; // type:asciz
-D_80000A3C   = 0x80000A3C; // type:asciz
-D_80000A48   = 0x80000A48; // type:asciz
-D_80000A54   = 0x80000A54; // type:asciz
-D_80000A60   = 0x80000A60; // type:asciz size:0xC
+strMatDefault           = 0x800007D0; // type:asciz - 'mat_default'
+gCheatCodeAlphabet = 0x80000A00; // type:asciz - "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-=()!..." alphabet used by cheat-code/passcode screen (per docs/unsorted_thoughts notes.txt)
+strDbgData              = 0x80000A3C; // type:asciz - 'dbg_data'
+strDbgFont              = 0x80000A48; // type:asciz - 'dbg_font'
+strDbgFonttex           = 0x80000A54; // type:asciz - 'dbg_fonttex'
+strDbgFontmat           = 0x80000A60; // type:asciz size:0xC - 'dbg_fontmat'
 D_80038CF0   = 0x80038CF0; // type:char* size:0x4
-D_8003A8C0   = 0x8003A8C0; // type:asciz
-D_8003AF60   = 0x8003AF60; // type:asciz
-D_8003AF68   = 0x8003AF68; // type:asciz
-D_8003AF74   = 0x8003AF74; // type:asciz
-D_8003AF80   = 0x8003AF80; // type:asciz
-D_8003AF8C   = 0x8003AF8C; // type:asciz
-D_8003B404   = 0x8003B404; // type:asciz size:0xC
+strCableCam             = 0x8003A8C0; // type:asciz - '__cable_cam'
+strPhTorp               = 0x8003AF60; // type:asciz - 'ph_torp'
+strIonLaser             = 0x8003AF68; // type:asciz - 'ion_laser'
+strIMissile             = 0x8003AF74; // type:asciz - 'i_missile'
+strGreenLaser           = 0x8003AF80; // type:asciz - 'green_laser'
+strRedLaser             = 0x8003AF8C; // type:asciz - 'red_laser'
+strLoTx                 = 0x8003B404; // type:asciz size:0xC - 'lo_tx'
 D_8003B410   = 0x8003B410; // type:asciz
 D_8003B414   = 0x8003B414; // type:asciz
-D_8003B418   = 0x8003B418; // type:asciz
-D_8003B420   = 0x8003B420; // type:asciz
-D_8003B42C   = 0x8003B42C; // type:asciz
-D_8003B438   = 0x8003B438; // type:asciz
-D_8003B444   = 0x8003B444; // type:asciz
+strMGold                = 0x8003B418; // type:asciz - 'm_gold'
+strMSilver              = 0x8003B420; // type:asciz - 'm_silver'
+strMBronze              = 0x8003B42C; // type:asciz - 'm_bronze'
+strYellowBnt            = 0x8003B438; // type:asciz - 'yellow_bnt'
+strItalic35             = 0x8003B444; // type:asciz - 'italic35'
 D_8003B450   = 0x8003B450; // type:asciz
-D_8003B488   = 0x8003B488; // type:asciz
+strNormal10             = 0x8003B488; // type:asciz - 'normal10'
 D_8003B494   = 0x8003B494; // type:asciz
 D_8003B4DC   = 0x8003B4DC; // type:asciz
-D_8003B514   = 0x8003B514; // type:asciz
+strStarwars50           = 0x8003B514; // type:asciz - 'starwars50'
 D_8003B520   = 0x8003B520; // type:asciz
-D_8003B588   = 0x8003B588; // type:asciz
+strSubtitle8            = 0x8003B588; // type:asciz - 'subtitle8'
 D_8003B594   = 0x8003B594; // type:asciz
-D_8003B5D4   = 0x8003B5D4; // type:asciz
+strSubtitle20           = 0x8003B5D4; // type:asciz - 'subtitle20'
 D_8003B5E0   = 0x8003B5E0; // type:asciz
-D_8003B618   = 0x8003B618; // type:asciz
+strHatten13             = 0x8003B618; // type:asciz - 'hatten13'
 D_8003B624   = 0x8003B624; // type:asciz
-D_8003B65C   = 0x8003B65C; // type:asciz
+strCredits              = 0x8003B65C; // type:asciz - 'credits'
 D_8003B664   = 0x8003B664; // type:asciz
-D_8003B7DC   = 0x8003B7DC; // type:asciz
-D_8003B834   = 0x8003B834; // type:asciz
-D_8003B8B0   = 0x8003B8B0; // type:asciz
-D_8003B8E8   = 0x8003B8E8; // type:asciz
-D_8003C2E0   = 0x8003C2E0; // type:asciz
-D_8003C2E8   = 0x8003C2E8; // type:asciz
+strZAFnt                = 0x8003B7DC; // type:asciz - 'ZA_fnt'
+strImpStuff             = 0x8003B834; // type:asciz - 'imp_stuff/'
+strGnrcStuff            = 0x8003B8B0; // type:asciz - 'gnrc_stuff/'
+strRebStuff             = 0x8003B8E8; // type:asciz - 'reb_stuff/'
+strKasan1               = 0x8003C2E0; // type:asciz - 'kasan1'
+strOutro                = 0x8003C2E8; // type:asciz - 'outro'
 D_8003C2F0   = 0x8003C2F0; // type:asciz
-D_8003C2F8   = 0x8003C2F8; // type:asciz
-D_8003C300   = 0x8003C300; // type:asciz
-D_8003C308   = 0x8003C308; // type:asciz
-D_8003C310   = 0x8003C310; // type:asciz
-D_8003C318   = 0x8003C318; // type:asciz
-D_8003C320   = 0x8003C320; // type:asciz
-D_8003C32C   = 0x8003C32C; // type:asciz
-D_8003C338   = 0x8003C338; // type:asciz
-D_8003C344   = 0x8003C344; // type:asciz
-D_8003C350   = 0x8003C350; // type:asciz
-D_8003C35C   = 0x8003C35C; // type:asciz
-D_8003C368   = 0x8003C368; // type:asciz
-D_8003C374   = 0x8003C374; // type:asciz
-D_8003C380   = 0x8003C380; // type:asciz
-D_8003C38C   = 0x8003C38C; // type:asciz
-D_8003C398   = 0x8003C398; // type:asciz
-D_8003C3A4   = 0x8003C3A4; // type:asciz
-D_8003C3B0   = 0x8003C3B0; // type:asciz
-D_8003C3BC   = 0x8003C3BC; // type:asciz
-D_8003C3C8   = 0x8003C3C8; // type:asciz
-D_8003C3D4   = 0x8003C3D4; // type:asciz
-D_8003C3E0   = 0x8003C3E0; // type:asciz
-D_8003C3EC   = 0x8003C3EC; // type:asciz
-D_8003C3F8   = 0x8003C3F8; // type:asciz
-D_8003C404   = 0x8003C404; // type:asciz
-D_8003C410   = 0x8003C410; // type:asciz
-D_8003C41C   = 0x8003C41C; // type:asciz
-D_8003C428   = 0x8003C428; // type:asciz
-D_8003C434   = 0x8003C434; // type:asciz
-D_8003C440   = 0x8003C440; // type:asciz
-D_8003C44C   = 0x8003C44C; // type:asciz
-D_8003C458   = 0x8003C458; // type:asciz
-D_8003C464   = 0x8003C464; // type:asciz
-D_8003C470   = 0x8003C470; // type:asciz
-D_8003C47C   = 0x8003C47C; // type:asciz
-D_8003C488   = 0x8003C488; // type:asciz
-D_8003C494   = 0x8003C494; // type:asciz
-D_8003C4A0   = 0x8003C4A0; // type:asciz
-D_8003C4AC   = 0x8003C4AC; // type:asciz
-D_8003C4B4   = 0x8003C4B4; // type:asciz
-D_8003C4C0   = 0x8003C4C0; // type:asciz
-D_8003C4CC   = 0x8003C4CC; // type:asciz
-D_8003C4D8   = 0x8003C4D8; // type:asciz
-D_8003C4E4   = 0x8003C4E4; // type:asciz
-D_8003C4F0   = 0x8003C4F0; // type:asciz
-D_8003C4FC   = 0x8003C4FC; // type:asciz
-D_8003C508   = 0x8003C508; // type:asciz
-D_8003C514   = 0x8003C514; // type:asciz
-D_8003C51C   = 0x8003C51C; // type:asciz
-D_8003C528   = 0x8003C528; // type:asciz
-D_8003C534   = 0x8003C534; // type:asciz
-D_8003C540   = 0x8003C540; // type:asciz
-D_8003C54C   = 0x8003C54C; // type:asciz
-D_8003C558   = 0x8003C558; // type:asciz
-D_8003C564   = 0x8003C564; // type:asciz
-D_8003C570   = 0x8003C570; // type:asciz
-D_8003C57C   = 0x8003C57C; // type:asciz
-D_8003C588   = 0x8003C588; // type:asciz
-D_8003C594   = 0x8003C594; // type:asciz
-D_8003C5A0   = 0x8003C5A0; // type:asciz
-D_8003C5AC   = 0x8003C5AC; // type:asciz
-D_8003C5B4   = 0x8003C5B4; // type:asciz
-D_8003C5BC   = 0x8003C5BC; // type:asciz
-D_8003C5C4   = 0x8003C5C4; // type:asciz
-D_8003C5D0   = 0x8003C5D0; // type:asciz
-D_8003C5DC   = 0x8003C5DC; // type:asciz
-D_8003C5E8   = 0x8003C5E8; // type:asciz
-D_8003C5F4   = 0x8003C5F4; // type:asciz
-D_8003C600   = 0x8003C600; // type:asciz
-D_8003C60C   = 0x8003C60C; // type:asciz
-D_8003C618   = 0x8003C618; // type:asciz
-D_8003C624   = 0x8003C624; // type:asciz
-D_8003C630   = 0x8003C630; // type:asciz
-D_8003C63C   = 0x8003C63C; // type:asciz
-D_8003C648   = 0x8003C648; // type:asciz
-D_8003C654   = 0x8003C654; // type:asciz
-D_8003C660   = 0x8003C660; // type:asciz
-D_8003C66C   = 0x8003C66C; // type:asciz
-D_8003C678   = 0x8003C678; // type:asciz
-D_8003C684   = 0x8003C684; // type:asciz
-D_8003C690   = 0x8003C690; // type:asciz
-D_8003C69C   = 0x8003C69C; // type:asciz
-D_8003C6A8   = 0x8003C6A8; // type:asciz
-D_8003C6B4   = 0x8003C6B4; // type:asciz
-D_8003C6C0   = 0x8003C6C0; // type:asciz
-D_8003C6CC   = 0x8003C6CC; // type:asciz
-D_8003C6D8   = 0x8003C6D8; // type:asciz
-D_8003C6E4   = 0x8003C6E4; // type:asciz
-D_8003C6F0   = 0x8003C6F0; // type:asciz
-D_8003C6FC   = 0x8003C6FC; // type:asciz
-D_8003C708   = 0x8003C708; // type:asciz
-D_8003C714   = 0x8003C714; // type:asciz
-D_8003C720   = 0x8003C720; // type:asciz
-D_8003C790   = 0x8003C790; // type:asciz
+strLogo1                = 0x8003C2F8; // type:asciz - 'logo1'
+strHangar3              = 0x8003C300; // type:asciz - 'hangar3'
+strHangar2              = 0x8003C308; // type:asciz - 'hangar2'
+strHangar1              = 0x8003C310; // type:asciz - 'hangar1'
+strTitle                = 0x8003C318; // type:asciz - 'title'
+strImperial             = 0x8003C320; // type:asciz - 'imperial'
+strRoguetitle           = 0x8003C32C; // type:asciz - 'roguetitle'
+strRoguetheme           = 0x8003C338; // type:asciz - 'roguetheme'
+strCutJing2             = 0x8003C344; // type:asciz - 'cut_jing2'
+strCutJing1             = 0x8003C350; // type:asciz - 'cut_jing1'
+strCutSeq8              = 0x8003C35C; // type:asciz - 'cut_seq8'
+strCutSeq7              = 0x8003C368; // type:asciz - 'cut_seq7'
+strCutSeq6              = 0x8003C374; // type:asciz - 'cut_seq6'
+strCutSeq5              = 0x8003C380; // type:asciz - 'cut_seq5'
+strCutSeq4              = 0x8003C38C; // type:asciz - 'cut_seq4'
+strCutSeq3              = 0x8003C398; // type:asciz - 'cut_seq3'
+strCutSeq2              = 0x8003C3A4; // type:asciz - 'cut_seq2'
+strCutSeq1              = 0x8003C3B0; // type:asciz - 'cut_seq1'
+strExtrCut1             = 0x8003C3BC; // type:asciz - 'extr_cut1'
+strC5l3Cut1             = 0x8003C3C8; // type:asciz - 'c5l3_cut1'
+strC5l2Cut1             = 0x8003C3D4; // type:asciz - 'c5l2_cut1'
+strC5l1Cut1             = 0x8003C3E0; // type:asciz - 'c5l1_cut1'
+strC4l1Cut1             = 0x8003C3EC; // type:asciz - 'c4l1_cut1'
+strC3l5Cut1             = 0x8003C3F8; // type:asciz - 'c3l5_cut1'
+strC3l4Cut1             = 0x8003C404; // type:asciz - 'c3l4_cut1'
+strC3l3Cut1             = 0x8003C410; // type:asciz - 'c3l3_cut1'
+strC3l2Cut1             = 0x8003C41C; // type:asciz - 'c3l2_cut1'
+strC3l1Cut1             = 0x8003C428; // type:asciz - 'c3l1_cut1'
+strC2l6Cut1             = 0x8003C434; // type:asciz - 'c2l6_cut1'
+strC2l5Cut1             = 0x8003C440; // type:asciz - 'c2l5_cut1'
+strC2l3Cut1             = 0x8003C44C; // type:asciz - 'c2l3_cut1'
+strC2l2Cut1             = 0x8003C458; // type:asciz - 'c2l2_cut1'
+strC2l1Cut1             = 0x8003C464; // type:asciz - 'c2l1_cut1'
+strC1l5Cut1             = 0x8003C470; // type:asciz - 'c1l5_cut1'
+strC1l4Cut1             = 0x8003C47C; // type:asciz - 'c1l4_cut1'
+strC1l3Cut1             = 0x8003C488; // type:asciz - 'c1l3_cut1'
+strC1l2Cut1             = 0x8003C494; // type:asciz - 'c1l2_cut1'
+strC1l1Cut1             = 0x8003C4A0; // type:asciz - 'c1l1_cut1'
+strEmpty                = 0x8003C4AC; // type:asciz - 'empty'
+strJingle08             = 0x8003C4B4; // type:asciz - 'jingle08'
+strJingle07             = 0x8003C4C0; // type:asciz - 'jingle07'
+strJingle06             = 0x8003C4CC; // type:asciz - 'jingle06'
+strJingle05             = 0x8003C4D8; // type:asciz - 'jingle05'
+strJingle04             = 0x8003C4E4; // type:asciz - 'jingle04'
+strJingle03             = 0x8003C4F0; // type:asciz - 'jingle03'
+strJingle02             = 0x8003C4FC; // type:asciz - 'jingle02'
+strJingle01             = 0x8003C508; // type:asciz - 'jingle01'
+strAddtl                = 0x8003C514; // type:asciz - 'addtl'
+strSilent02             = 0x8003C51C; // type:asciz - 'silent02'
+strSilent01             = 0x8003C528; // type:asciz - 'silent01'
+strAction07             = 0x8003C534; // type:asciz - 'action07'
+strAction06             = 0x8003C540; // type:asciz - 'action06'
+strAction05             = 0x8003C54C; // type:asciz - 'action05'
+strAction04             = 0x8003C558; // type:asciz - 'action04'
+strAction02             = 0x8003C564; // type:asciz - 'action02'
+strAction01             = 0x8003C570; // type:asciz - 'action01'
+strAction01b            = 0x8003C57C; // type:asciz - 'action01b'
+strC5l3Theme            = 0x8003C588; // type:asciz - 'c5l3_theme'
+strC5l2Spc01            = 0x8003C594; // type:asciz - 'c5l2_spc01'
+strC5l2Theme            = 0x8003C5A0; // type:asciz - 'c5l2_theme'
+strC5l13                = 0x8003C5AC; // type:asciz - 'c5l1_3'
+strC5l12                = 0x8003C5B4; // type:asciz - 'c5l1_2'
+strC5l11                = 0x8003C5BC; // type:asciz - 'c5l1_1'
+strC5l1Start            = 0x8003C5C4; // type:asciz - 'c5l1_start'
+strC4l1Theme            = 0x8003C5D0; // type:asciz - 'c4l1_theme'
+strC3l5Spc01            = 0x8003C5DC; // type:asciz - 'c3l5_spc01'
+strC3l5Theme            = 0x8003C5E8; // type:asciz - 'c3l5_theme'
+strC3l4Spc01            = 0x8003C5F4; // type:asciz - 'c3l4_spc01'
+strC3l4Theme            = 0x8003C600; // type:asciz - 'c3l4_theme'
+strC3l2Theme            = 0x8003C60C; // type:asciz - 'c3l2_theme'
+strC3l1Theme            = 0x8003C618; // type:asciz - 'c3l1_theme'
+strC2l5Theme            = 0x8003C624; // type:asciz - 'c2l5_theme'
+strC2l3Spc01            = 0x8003C630; // type:asciz - 'c2l3_spc01'
+strC2l3Theme            = 0x8003C63C; // type:asciz - 'c2l3_theme'
+strC2l2Spc01            = 0x8003C648; // type:asciz - 'c2l2_spc01'
+strC2l2Theme            = 0x8003C654; // type:asciz - 'c2l2_theme'
+strC2l1Spc01            = 0x8003C660; // type:asciz - 'c2l1_spc01'
+strC2l1Theme            = 0x8003C66C; // type:asciz - 'c2l1_theme'
+strC1l5Act02            = 0x8003C678; // type:asciz - 'c1l5_act02'
+strC1l5Act01            = 0x8003C684; // type:asciz - 'c1l5_act01'
+strC1l5Spc01            = 0x8003C690; // type:asciz - 'c1l5_spc01'
+strC1l5Theme            = 0x8003C69C; // type:asciz - 'c1l5_theme'
+strC1l4Spc01            = 0x8003C6A8; // type:asciz - 'c1l4_spc01'
+strC1l4Theme            = 0x8003C6B4; // type:asciz - 'c1l4_theme'
+strC1l3Spc01            = 0x8003C6C0; // type:asciz - 'c1l3_spc01'
+strC1l3Theme            = 0x8003C6CC; // type:asciz - 'c1l3_theme'
+strC1l2Spc01            = 0x8003C6D8; // type:asciz - 'c1l2_spc01'
+strC1l2Theme            = 0x8003C6E4; // type:asciz - 'c1l2_theme'
+strC1l1Prob2            = 0x8003C6F0; // type:asciz - 'c1l1_prob2'
+strC1l1Prob1            = 0x8003C6FC; // type:asciz - 'c1l1_prob1'
+strC1l1Spc02            = 0x8003C708; // type:asciz - 'c1l1_spc02'
+strC1l1Spc01            = 0x8003C714; // type:asciz - 'c1l1_spc01'
+strC1l1Theme            = 0x8003C720; // type:asciz - 'c1l1_theme'
+strSpeech               = 0x8003C790; // type:asciz - 'speech'
 D_8003C9B0   = 0x8003C9B0; // type:asciz size:0x16
-D_8003CB10   = 0x8003CB10; // type:asciz
-D_8003CB14   = 0x8003CB14; // type:asciz
-D_8003CB18   = 0x8003CB18; // type:asciz
-D_8003CB1C   = 0x8003CB1C; // type:asciz
-D_8003CB20   = 0x8003CB20; // type:asciz
-D_8003CB24   = 0x8003CB24; // type:asciz
-D_8003CB28   = 0x8003CB28; // type:asciz
-D_8003CB2C   = 0x8003CB2C; // type:asciz
-D_8003CB30   = 0x8003CB30; // type:asciz
-D_8003CB34   = 0x8003CB34; // type:asciz
-D_8003CBCC   = 0x8003CBCC; // type:asciz
-D_8003CBD8   = 0x8003CBD8; // type:asciz
-D_8003CBE4   = 0x8003CBE4; // type:asciz
-D_8003CCD4   = 0x8003CCD4; // type:asciz
-D_8003CCE0   = 0x8003CCE0; // type:asciz
-D_8003CCEC   = 0x8003CCEC; // type:asciz
-D_8003CCF8   = 0x8003CCF8; // type:asciz
-D_8003CD04   = 0x8003CD04; // type:asciz
-D_8003CD10   = 0x8003CD10; // type:asciz
-D_8003CD1C   = 0x8003CD1C; // type:asciz
-D_8003CD28   = 0x8003CD28; // type:asciz
-D_8003CD34   = 0x8003CD34; // type:asciz
-D_8003CD40   = 0x8003CD40; // type:asciz
-D_8003CD48   = 0x8003CD48; // type:asciz
-D_8003CD58   = 0x8003CD58; // type:asciz
-D_8003CD64   = 0x8003CD64; // type:asciz
-D_8003CD70   = 0x8003CD70; // type:asciz
-D_8003CD7C   = 0x8003CD7C; // type:asciz
-D_8003CD8C   = 0x8003CD8C; // type:asciz
-D_8003CD98   = 0x8003CD98; // type:asciz
-D_8003CDA4   = 0x8003CDA4; // type:asciz
-D_8003CDB0   = 0x8003CDB0; // type:asciz
-D_8003CDBC   = 0x8003CDBC; // type:asciz
-D_8003CDC8   = 0x8003CDC8; // type:asciz
-D_8003CDD4   = 0x8003CDD4; // type:asciz
-D_8003CDE0   = 0x8003CDE0; // type:asciz
-D_8003CDEC   = 0x8003CDEC; // type:asciz
-D_8003CDF8   = 0x8003CDF8; // type:asciz
-D_8003CE04   = 0x8003CE04; // type:asciz
-D_8003CE10   = 0x8003CE10; // type:asciz
-D_8003CE1C   = 0x8003CE1C; // type:asciz
-D_8003CE28   = 0x8003CE28; // type:asciz
-D_8003CE34   = 0x8003CE34; // type:asciz
-D_8003CE40   = 0x8003CE40; // type:asciz
-D_8003CE4C   = 0x8003CE4C; // type:asciz
-D_8003CE58   = 0x8003CE58; // type:asciz
-D_8003CE64   = 0x8003CE64; // type:asciz
-D_8003CE70   = 0x8003CE70; // type:asciz
-D_8003CE7C   = 0x8003CE7C; // type:asciz
-D_8003CE88   = 0x8003CE88; // type:asciz
-D_8003CE90   = 0x8003CE90; // type:asciz
-D_8003CE9C   = 0x8003CE9C; // type:asciz
-D_8003CEA8   = 0x8003CEA8; // type:asciz
-D_8003D374   = 0x8003D374; // type:asciz
+strCHR                        = 0x8003CB10; // type:asciz - 'CHR'
+strRFH                        = 0x8003CB14; // type:asciz - 'RFH'
+strBST                        = 0x8003CB18; // type:asciz - 'BST'
+strMAR                        = 0x8003CB1C; // type:asciz - 'MAR'
+strSIR                        = 0x8003CB20; // type:asciz - 'SIR'
+strTHG                        = 0x8003CB24; // type:asciz - 'THG'
+strJUE                        = 0x8003CB28; // type:asciz - 'JUE'
+strTOM                        = 0x8003CB2C; // type:asciz - 'TOM'
+strHOL                        = 0x8003CB30; // type:asciz - 'HOL'
+strFLO                        = 0x8003CB34; // type:asciz - 'FLO'
+strShockSph             = 0x8003CBCC; // type:asciz - 'shock_sph'
+strShockBig             = 0x8003CBD8; // type:asciz - 'shock_big'
+strShockSml             = 0x8003CBE4; // type:asciz - 'shock_sml'
+strVYa4Hi               = 0x8003CCD4; // type:asciz - 'v_ya4_hi'
+strVYa2Hi               = 0x8003CCE0; // type:asciz - 'v_ya2_hi'
+strProbeDroid           = 0x8003CCEC; // type:asciz - 'probe_droid'
+strVCrsHi               = 0x8003CCF8; // type:asciz - 'v_crs_hi'
+strRTrPillar            = 0x8003CD04; // type:asciz - 'r_tr_pillar'
+strBThcapHi             = 0x8003CD10; // type:asciz - 'b_thcap_hi'
+strRBlkHi               = 0x8003CD1C; // type:asciz - 'r_blk_hi'
+strBTspHi               = 0x8003CD28; // type:asciz - 'b_tsp_hi'
+strBTrpHi               = 0x8003CD34; // type:asciz - 'b_trp_hi'
+strRaptor               = 0x8003CD40; // type:asciz - 'raptor'
+strRebTransport         = 0x8003CD48; // type:asciz - 'reb_transport'
+strWrldDvstr            = 0x8003CD58; // type:asciz - 'wrld_dvstr'
+strVHlsHi               = 0x8003CD64; // type:asciz - 'v_hls_hi'
+strWaveskimmer          = 0x8003CD70; // type:asciz - 'waveskimmer'
+strBPwrtranHi           = 0x8003CD7C; // type:asciz - 'b_pwrtran_hi'
+strBMedHi               = 0x8003CD8C; // type:asciz - 'b_med_hi'
+strBMe5Hi               = 0x8003CD98; // type:asciz - 'b_me5_hi'
+strIRfcHi               = 0x8003CDA4; // type:asciz - 'i_rfc_hi'
+strBGs2Hi               = 0x8003CDB0; // type:asciz - 'b_gs2_hi'
+strBGs1Hi               = 0x8003CDBC; // type:asciz - 'b_gs1_hi'
+strITrd2Hi              = 0x8003CDC8; // type:asciz - 'i_trd2_hi'
+strBKm7Hi               = 0x8003CDD4; // type:asciz - 'b_km7_hi'
+strBKm6Hi               = 0x8003CDE0; // type:asciz - 'b_km6_hi'
+strBKm5newHi            = 0x8003CDEC; // type:asciz - 'b_km5new_hi'
+strBKm4Hi               = 0x8003CDF8; // type:asciz - 'b_km4_hi'
+strBKm3Hi               = 0x8003CE04; // type:asciz - 'b_km3_hi'
+strBKm2Hi               = 0x8003CE10; // type:asciz - 'b_km2_hi'
+strBKm1Hi               = 0x8003CE1C; // type:asciz - 'b_km1_hi'
+strBTecHi               = 0x8003CE28; // type:asciz - 'b_tec_hi'
+strB20sbHi              = 0x8003CE34; // type:asciz - 'b_20sb_hi'
+strBCr8Hi               = 0x8003CE40; // type:asciz - 'b_cr8_hi'
+strBCr7Hi               = 0x8003CE4C; // type:asciz - 'b_cr7_hi'
+strBCr6Hi               = 0x8003CE58; // type:asciz - 'b_cr6_hi'
+strBCr5Hi               = 0x8003CE64; // type:asciz - 'b_cr5_hi'
+strBCr4Hi               = 0x8003CE70; // type:asciz - 'b_cr4_hi'
+strBCr2Hi               = 0x8003CE7C; // type:asciz - 'b_cr2_hi'
+strBLrsp                = 0x8003CE88; // type:asciz - 'b_lrsp'
+strImpShuttle           = 0x8003CE90; // type:asciz - 'imp_shuttle'
+strILndHi               = 0x8003CE9C; // type:asciz - 'i_lnd_hi'
+strILtsrcHi             = 0x8003CEA8; // type:asciz - 'i_ltsrc_hi'
+strCb1                        = 0x8003D374; // type:asciz - 'cb1'
 D_8003D624   = 0x8003D624; // type:asciz size:0xB
-D_8003D630   = 0x8003D630; // type:asciz
-D_8003D63C   = 0x8003D63C; // type:asciz
-D_8003D648   = 0x8003D648; // type:asciz
-D_8003D654   = 0x8003D654; // type:asciz
-D_8003D660   = 0x8003D660; // type:asciz
+strRarmTra              = 0x8003D630; // type:asciz - 'rarm_tra'
+strLarmTra              = 0x8003D63C; // type:asciz - 'larm_tra'
+strRohrTra              = 0x8003D648; // type:asciz - 'rohr_tra'
+strBarrelT              = 0x8003D654; // type:asciz - 'barrel_t'
+strTopTran              = 0x8003D660; // type:asciz - 'top_tran'
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
@@ -225,6 +225,24 @@ saveLoadDispatcher                   = 0x80006798; // SAVE/LOAD message state ma
 recvServiceMessage                   = 0x80006F24; // walks registry by id, osRecvMesg(BLOCK)
 tryRecvServiceMessage                = 0x80006EC4; // non-blocking variant of recvServiceMessage
 sendServiceMessage                   = 0x80006F78; // producer; walks registry by id, osSendMesg
+peekServiceMessage                   = 0x80006E48; // (key) → osRecvMesg(NOBLOCK), if got msg, osJamMesg restores it to queue front; returns 1 if msg pending
+postMessageToServiceWorker           = 0x80007070; // (key, msg) → osSendMesg(node+0x1D0, msg, BLOCK) — direct post to worker's queue
+unregisterServiceWorker              = 0x800070BC; // (key) → osDestroyThread, state=0, unlinks node from registry, rs_free
+yieldThreadRet1                      = 0x800072AC; // 6 callers (mainEventQueueWorker, piDmaWorker, pollDmaSlotStep, setupAssetDma...): osYieldThread + return 1
+setServiceWorkerPriority             = 0x8000725C; // (key, prio) → walks registry, sets node[+0x4]=prio, osSetThreadPri(node+0x20, prio)
+getDmaSlotMutex                      = 0x8000533C; // returns MEM_BU(dmaSlotMutex) — single-instruction byte getter for the DMA-slot mutex flag
+setDmaWorkerPriority                 = 0x8000534C; // (prio) — clamps to [1, 0x20], looks up the DMA service-worker ID stored at 0x80110D54, calls setServiceWorkerPriority(id, prio_byte)
+freeSaveDataBuffer                   = 0x80006764; // reads ptr from D_80112724 (save data buffer, malloc'd by initSaveData), calls rs_free
+setSaveDataCallback                  = 0x8000678C; // (callback) — stores callback fn ptr at D_801126F0 (s32 (*)(?) per docs/save_data/func_80006338.c); used by initSaveData to register save-complete callback
+stopServiceWorker                    = 0x800072CC; // (key) → walks registry, sets state=4, osStopThread(node+0x20)
+
+// Audio mixer S16 sample helpers (tail-call chain into companding saturator)
+audioMixSampleS16_1_3                = 0x8009DD3C; // weighted mix 0.25*t2 + 0.75*t4, falls through to audioCompandS16
+audioMixSampleS16_1_1                = 0x8009DD54; // equal mix 0.5*t2 + 0.5*t4, falls through to audioCompandS16
+audioMixSampleS16_3_1                = 0x8009DD64; // weighted mix 0.75*t2 + 0.25*t4, falls through to audioCompandS16
+audioCompandS16                      = 0x8009DD7C; // 3-region piecewise-linear soft-clip on $t2: |x|<0x2B33→2x, <0x4E66→x+0x2B33, else→x/4+0x6600; clamp ±0x7FFF; restore sign
+audioMixStereoBlock8                 = 0x8009DC98; // mixes 8 s16 sample pairs from voice buffer (L at +0x168, R at +0x178) via $t3 mix-function pointer; packs results to t6..t9
+initN64RspMixer                      = 0x8009189C; // MusyX-style audio init; references "N64 RSP mixer V1.0" string; clamps voiceCount to 0x20, installs DMEM-mixer callback function pointers at 0x801499D0..0x801499E0
 
 // Save / account subsystem
 saveServiceWorker                    = 0x8006F2CC; // save-service worker thread (key=auto, slots=4)
@@ -246,6 +264,7 @@ cinematicStageAdvancer               = 0x800AF550; // per-frame stage counter ad
 cinematicDeactivator                 = 0x800AF60C; // clears cinematic state
 cinematicComputeDt                   = 0x800AF360; // per-frame delta-time computer
 cinematicInterpRatio                 = 0x800AF668; // computes interpolation ratio from byte counter / float threshold
+isCinematicActive                    = 0x800AF540; // returns 1 if MEM_W(0x800B0934) != 0 (cinematic state ptr set by cinematicInitializer), else 0
 
 // SI (Serial Interface / controllers)
 siServiceThread                      = 0x80002E10; // controller polling thread
@@ -294,16 +313,13 @@ factor5QueueSignal                   = 0x800920D0; // low-level osSendMesg(NOBLO
 waitForMusyXAudioTaskDone            = 0x80091EB0; // busy-spins on D_8014998A halfword (hangs without MusyX RSP task)
 
 // Mission/DAT/HUD/Account renames (batches 18-22, 2026-05-11)
-controllerStickXToPercent            = 0x8007A068; // stick_x / 128 → percent
-controllerStickYToPercent            = 0x8007A0A8; // stick_y / 128 → percent
+// 0x8007A068 + 0x8007A0A8 are named below as getControllerStickXPercentage / getControllerStickYPercentage (defined:true variants — same fn, kept one)
 choosePlayerCraftAssets              = 0x800FB6C0; // DMAs HMT/HOB for chosen craft (per notes.txt)
 getSecondaryWeaponForCraftLevel      = 0x800C6728; // craft + level → secondary weapon id
 setDmaSlotMaxTxStepSize              = 0x80005938; // sets D_80111254 (unused in practice)
 parseImageFile                       = 0x8001EB24; // switch/case on image type, parses headers
 loadTextureToMemory                  = 0x8001F954; // loads a texture into D_80128F08 chain
-getTextureDataByMaterialId           = 0x800232F8; // material_id → texture_data ptr (D_8011A444 → D_80128F08)
-hudDisplayUpdateWorker               = 0x800495FC; // service worker; processes HUD material/texture msgs
-menuControllerInput                  = 0x800B47C4; // big menu controller input handler (per docs/menus + controller)
+menuControllerInput                  = 0x800B47D0; // big menu controller input handler (0x38E4 bytes); 0x800B47C4 is fake_func splat trampoline preceding it (per docs/menus + controller)
 setupMenuData                        = 0x800BA0F0; // sets up D_800CE730 per current menu
 updateMenuPerFrame                   = 0x800BB394; // per-frame menu update (highlighting etc)
 handleGameSettingsMenu               = 0x800BB234; // game settings menu input handler
@@ -333,6 +349,7 @@ mallocCraftSelectionData             = 0x800A9364; // rs_malloc's D_800CDA5C cra
 buildSecondaryWeaponString           = 0x800AE530; // builds secondary weapon string for craft selection display
 printLevelSelectWeaponText           = 0x800B19EC; // prints weapon/shield text on level select screen
 getAvailableShipsForLevel            = 0x800C63C0; // returns u32 of available ships per level
+getAvailableShipsForLevelAlt         = 0x800C6234; // sibling of getAvailableShipsForLevel; differs in some minor ways, also returns a u32 bitmask of craft available for given level (per docs/unsorted_thoughts)
 mallocVoiceLineStruct                = 0x800CBF60; // rs_malloc's voice-line related struct for craft selection
 
 // Batch 24: docs-driven (asset/dma/snd/animation subsystems)
@@ -371,6 +388,7 @@ dpInterruptHandlerThread             = 0x8001C328; // RDP done handler thread; o
 bufferArbiterAllocSlot               = 0x8001BF20; // 0→1: scans for FREE slot, marks ALLOC
 bufferArbiterMarkSlotReady           = 0x8001BEC8; // 1→2: scans for ALLOC slot, marks READY
 bufferArbiterProducerMark            = 0x8001BCE4; // 2→3 (mark CONSUMED) and X→4 (post-osViSwapBuffer mark PRESENTED); the SP task producer
+bufferArbiterProducerScanWait        = 0x8000BF60; // producer-side wait: calls bufferArbiterMarkSlotReady + bufferArbiterProducerMark, scans 4-slot state table at 0x80128EAA looking for any slot in state 3 (CONSUMED) or 4 (PRESENTED); osRecvMesg on consumer-ack queue, osYield, repeat (per src/main/rt64_render_context.cpp comment "scan loop spinning waiting for state 3 or 4")
 
 // Batch 31: per-frame gfx orchestrator (THE key function — each screen calls this to present)
 submitGfxFrame                       = 0x8000C07C; // per-frame: alloc → markReady → SP task → 3× producerMark + osViSwapBuffer; called from ~14 screen handlers (cinematic/menu/mission overlays)
@@ -504,6 +522,7 @@ unregisterAndFreeNpcSlot             = 0x8003E7D0; // 127 callers: unregisters s
 // func_80007D74 allocates a 256-byte DL buffer node from a free pool, splices it
 // into a doubly-linked active list, returns pointer past the 8-byte header.
 mat3x4Multiply                       = 0x800191C4; // multiplies 3x4 matrix at a0 by 3x4 matrix at a1; result destination = a0 (or somewhere — both matrices are 12 floats at offsets 0x00-0x2C)
+applyScaleToMat3x4                   = 0x8001CB04; // 29 callers: (mat3x4, sx, sy, sz as u32-encoded floats) — builds diagonal scale matrix on stack with sx,sy,sz at [0][0],[1][1],[2][2] (translation row=0), then mat3x4Multiply(scaleMat, mat, mat) — applies scale in-place
 allocateDisplayListBuffer            = 0x80007D74; // 96 callers: pops a 256-byte node from MEM_W(0x80116AB0) free list, splices into active doubly-linked list at MEM_W(0x80128EDC); returns ptr+8 (past header). Allocates fresh node via findAndUnlinkSmallestEntry if free list empty.
 
 // Batch 45: free-list best-fit allocator + texture LUT init (2026-05-11)
@@ -538,6 +557,7 @@ applyMeshdef1AnimColors              = 0x80058B40; // walks meshdef1 sub-meshes 
 composeEulerRotationXYZ              = 0x80059D78; // 22 callers: a0=out 3x3 ptr, a2=angle1, a3=angle2 — calls init→composeY(angle1)→composeZ(angle2), then copies 6 specific elements from stack matrix to a0
 buildRotationMatrixSlot0             = 0x8001CC3C; // (a0=dest mat, a1=angle) — sin/cos-fills dest matrix at offsets 0x00,0x10..0x20; no mat-mul. Companion init for slot 0.
 buildRotationMatrixSlot1             = 0x8001CD6C; // (a0=dest mat, a1=angle) — sin/cos-fills dest matrix offsets differently; no mat-mul. Companion init for slot 1.
+buildRotationMatrixSlot2             = 0x8001CE9C; // (a0=dest mat, a1=angle) — sin/cos-fills dest matrix at offsets 0x00/0x04/0x0C/0x10, zeros translation row; constant 0x800008AC (deg-to-rad). Companion init for slot 2.
 composeRotationMatrixSlot0           = 0x8001CB9C; // (a0=dest mat, a1=angle) — builds rotation on stack with constant 0x884, then mat3x4Multiply onto dest
 composeRotationMatrixSlot1           = 0x8001CCCC; // (a0=dest mat, a1=angle) — same pattern with constant 0x894
 composeRotationMatrixSlot2           = 0x8001CDFC; // (a0=dest mat, a1=angle) — same pattern with constant 0x8A4
@@ -676,6 +696,445 @@ destroyNpcSlotChain                  = 0x8003F0C8; // 32 callers: starts at slot
 setObjectDetailLevel                 = 0x800F2830; // 34 callers: (object_ptr, level u16) — stores level at +0x19A, fetches +0x198 → getNpcContextByIndex, updates flag bits in +0x14
 getObjectDetailLevel                 = 0x800F287C; // 14 callers: returns *(s16*)(a0 + 0x19A) — counterpart getter
 
+// Batch 71 (2026-05-11): clearly-identifiable utility/getter/setter functions
+// covering the highest-caller unnamed funcs after batch 70. Each is a thin
+// wrapper, simple state-machine accessor, or refcount/cleanup primitive.
+
+// Default empty handler — literal `jr ra` only. Used wherever the engine
+// stores a function pointer needing a no-op fallback.
+noopHandler                          = 0x800EFD6C; // 17 callers: empty `jr ra` — default/stub callback
+
+// NPC slot table accessors. Together with the existing getNpcContextByIndex
+// (0x8004013C) and getNpcContextField8 (0x8004015C), these complete the
+// gNpcSlotList[idx] = {data*, next_idx} accessor family.
+getNpcNextSlotIndex                  = 0x8004025C; // 17 callers: (slot_idx u16) — returns gNpcSlotList[idx].next (halfword at slot+0x4); 0xFFFF sentinel preserved
+getNextSlotNpcTypeId                 = 0x80040218; // 26 callers: (slot_idx u16) — chases gNpcSlotList[idx].next once; returns next slot's data->+0x16 (NPC type id), 0xFFFF if no chain
+
+// NPC slot chain lookup — walks the next-slot-idx chain following slot+0x4
+// until it finds a slot with non-null data ptr. Optional out-struct (a1)
+// receives {slot_idx u16, next_idx u16, chain_end_idx u16}. Returns the
+// active slot's data->+0x16 (NPC type id).
+findActiveNpcInSlotChain             = 0x8003FC28; // 49 callers: (start_idx u16, out_chain_info_or_null) — walks NPC slot chain, returns first active slot's NPC type; 0xFFFF if none
+
+// Object flag-bit pair (bit 0x10 of obj+0x14 = pending-update marker?).
+// Pattern mirrors setHudEnableBit4 (0x10 already named).
+setObjectFlagBit4                    = 0x800F2AA4; // 27 callers: (object_ptr) — *(u16*)(obj+0x14) |= 0x10
+clearObjectFlagBit4                  = 0x800F2AB4; //  3 callers: (object_ptr) — *(u16*)(obj+0x14) &= ~0x10
+
+// Asset-release primitive for the mesh-tree (HOB/HMT) family. Decrements
+// refcount at *(u16*)(node+0x3A) of node = node[0]; if zero, walks 4
+// child-tree arrays at node[0]+0x18/+0x1C/+0x20/+0x24, runs cleanup on each
+// child sharing the refcount; updates global tracking counters and free-list
+// counter at 0x80138490+ (lui 0x8014 -0x5B70 etc); finally calls rs_free
+// unless the (flags & 0x10010000) == 0x10000 pinning condition holds.
+releaseMeshAsset                     = 0x8005779C; // 64 callers: (mesh_wrapper) — refcount-decrement + recursive child cleanup + bookkeeping + rs_free
+
+// Object-spawn wrapper for NPC type 0xA via spawnNpcOfType. Template pointer
+// 0x80060690 hardcoded; priority=1, count=0xA. Caller supplies position (a0)
+// and one float (a1) saved at +0x18 and +0x1C of the local NPC arg struct.
+spawnNpcType0xAFromTemplate          = 0x800612A4; // 45 callers: (position_ptr, y_velocity_f32) — wrapper around spawnNpcOfType
+
+// Defensive pending-child npc cleanup. Op on sub-struct obj+0x114:
+// if (p[0x20]==1 && p[0x1A]!=0xFFFF) { resolve via findActiveNpcInSlotChain
+// on p[0x1C]; if result is valid, unregisterAndFreeNpcSlot the npc at p[0x1E]
+// and clear p[0x1A]/p[0x1E] to 0xFFFF; clear p[0x20] to 0 }.
+clearPendingChildNpc                 = 0x800F2A24; // 17 callers: (object_ptr) — clears the per-object pending child npc slot on cleanup
+
+// Thin wrapper: reads obj->+0x130 (the obj's primary npc-index halfword) and
+// looks it up via findActiveNpcInSlotChain. Returns the NPC type id or 0xFFFF.
+getObjectNpcTypeId                   = 0x800F2A00; // 10 callers: (object_ptr) — convenience accessor returning findActiveNpcInSlotChain(obj+0x130, NULL)
+
+// Computes effective object detail level (range 0-3). Used to gate which LOD
+// mesh / draw-detail path to take. If the npc has a linked object (npc_ctx+0x10
+// non-null), returns that object's stored level (obj+0x19A). Otherwise derives
+// it from npc_ctx+0x15's top 2 bits: detail = (3 - (byte>>6)).
+getNpcDetailLevelByIndex             = 0x800F27F0; //  2 callers: (slot_idx u16) — returns effective detail-level 0..3
+
+// Object spawn/init — the canonical "create and initialize" function. Calls
+// the lower-level allocator func_800EC110, then zeros and stamps the standard
+// object fields (+0x14 flags, +0x19A detail=3 default, +0x130 npc slot via
+// allocateNpcSlot, +0x1A8 self-ref to obj+0x1AC). If an optional extras struct
+// (a3) is provided, copies its +0x10/+0x14 words and runs the optional
+// callback (jalr a4). Returns 1 on success, 3 on alloc failure.
+createAndInitObject                  = 0x800EC588; // 21 callers: (out_ptr_storage, spawn_data, template, extras_struct_or_null, callback_or_null) — returns 1/3
+
+// Increments a per-stage "level-1 detail" object counter at 0x80130B84 when
+// the obj's stored detail-level (top 2 bits of obj+0x15) equals 0b10. Used
+// at the end of per-object update to tally objects rendered at mid-detail
+// for the current frame's perf/draw-budget tracking.
+tallyMidDetailObject                 = 0x800F3260; // 21 callers: (object_ptr) — increments mid-detail object counter at 0x80130B84
+
+// Transforms a mesh-part's local-space vector at +0x4C of obj->[0x0] (the
+// linked mesh struct) by obj's matrix at +0x28, writing into caller-provided
+// vec3 out. Thin wrapper over transformVec3ByMat34.
+transformMeshPartIntoWorld           = 0x8006AC7C; // 21 callers: (obj_ptr, out_vec3) — out = obj.matrix * mesh.localPart_0x4C
+
+// Defensive 2-field clear at struct+0x2C/+0x30; returns 1. Called during
+// mesh-instance/refl-buffer init to reset paired bookkeeping pointers.
+clearStructPair2C30                  = 0x8000A85C; // 21 callers: (struct_ptr) — MEM_W(+0x2C)=0; MEM_W(+0x30)=0; return 1
+
+// Boot config halfword accessors. gBootConfig is at 0x80037560 (size 0x50);
+// fields at +0x12 and +0x14 are read by these getters but never written
+// via these addresses (writers use different addressing). Inferred from
+// gBootConfig usage — likely runtime mode flags (e.g. resolution mode bits).
+getBootConfigField12                 = 0x8006B3D0; // 23 callers: returns *(u16*)(0x80037572) — gBootConfig+0x12
+getBootConfigField14                 = 0x8006B3E0; // 19 callers: returns *(u16*)(0x80037574) — gBootConfig+0x14
+
+// func_80017AB0: thin byte setter for 0x8011A870; reverted from setGlobalByte_*
+// (user instructed not to address-encode names) — 20 callers, semantics unclear.
+
+// Initializes a 3-vec4 struct (12 floats) from 3 integer args: each vec4 gets
+// {arg_as_int_in_word0, 0.0, 0.0, 0.0}. Used as the input-builder for
+// func_8001CB04 (a thin wrapper that calls mat3x4Multiply on this layout).
+// Has a defensive KSEG0 guard added in rogue_squadron.toml.
+initVec4TripletFromArgs              = 0x8001CB64; // 65 callers: (out_ptr, a1, a2, a3) — sets vec4-triplet with args at word0 and 0.0 elsewhere
+
+// Factor 5 audio API entry — gated by MusyX-active flag at 0x800A0F50 and
+// wrapped by factor5MutexAcquire/Release; calls inner func_80096284 (audio
+// voice/channel allocator) with 4 args.
+queueAudioVoiceCmd                   = 0x800964C8; // 23 callers: (type u8, id u16, param u32, flags u8) — mutex'd queue of audio-voice command
+
+// NPC slot-chain iterator cache validator. Takes a 4-halfword chain-info
+// struct: {start_idx, cur_idx, next_idx, ?}. Verifies the cached chain pointers
+// are still valid by re-resolving via gNpcSlotList[0x80130BB0]; if stale,
+// re-walks the chain from the cur position; updates struct in place. Returns
+// the active slot's data->+0x16 (NPC type id).
+revalidateNpcSlotIterator            = 0x8003EEF4; // 29 callers: (chain_info_struct) — cached lookup-validator returning current NPC type id
+
+// Reads "player_StartPosition" from the loaded level dat (`getLevelDatItemByName`)
+// and copies its position (3 floats at +0x10/+0x14/+0x18) and rotation (3 words
+// at +0x1C/+0x20/+0x24) into the caller's struct at offsets +0x4..+0x18. Used
+// during mission/level setup. Has an a1 pre-flag that short-circuits the load.
+loadPlayerStartPosition              = 0x800AFE4C; // 23 callers: (out_struct, skip_flag) — fills out_struct with level-dat "player_StartPosition" entry
+
+// Dispatcher: routes to func_800F0DC4 with either obj+0x138 or obj+0x164 as
+// the sub-struct ptr, based on a flag arg. Used to apply same operation to
+// one of two embedded sub-objects.
+applyToObjectSubstructByFlag         = 0x800F2D38; // 20 callers: (obj, f1, f2, flag) — call func_800F0DC4 with obj+0x138 or obj+0x164
+
+// Conditional float-set on the same obj+0x138 / obj+0x164 sub-struct family.
+// Only writes the float at sub_struct+0x10 if sub_struct[+0x18]!=0 AND
+// sub_struct[+0x2B]==0. The flag arg selects which sub-struct.
+setObjectSubstructF10IfReady         = 0x800F2D74; // 14 callers: (obj, f_value, flag) — conditional setter on obj+0x138/+0x164 sub-struct
+
+// Object action dispatcher: gated by struct[+0x4]==1. Reads struct[+0x8] (sub-
+// ptr) and struct[+0x2] (slot index), builds an action argv on stack
+// {0xFFFF, 7, sub->[0], 0}, then calls slotDispatcherIter(slot_idx, action=5).
+// Returns 1 on dispatch, 0 if gated off.
+dispatchSlotAction5IfActive          = 0x800EFD80; // 21 callers: (unused, action_struct) — invoke slot dispatcher action 5 when struct active
+
+// Batch 73 (2026-05-11): more object-substruct / NPC-pending-child accessors.
+
+// Status check for the obj+0x114 pending-child-npc sub-struct (same struct as
+// clearPendingChildNpc). Returns 1 only if all of: p[+0x21]!=0, p[+0x20]!=0,
+// none of p[+0x1A]/+0x1C/+0x1E are 0xFFFF, the chain-resolved npc exists,
+// and that npc's obj+0x14 has bit 0x10 set. Otherwise returns 0.
+isPendingChildNpcActive              = 0x800F06BC; // 27 callers: (obj_ptr) — true iff obj's queued child NPC slot is live and flagged active
+
+// Initializes the obj+0x138/+0x164 anim sub-struct from many args. The flag
+// at sp+0x18 selects which sub-struct (0x164 if non-zero, else 0x138). Sets
+// 10+ fields: position floats at +0x0/+0x4, dest float at +0x8, timer/halfword
+// at +0x1C (with off-by-one fixup), counter words at +0x10/+0x18, flag byte
+// at +0x2B=1, plus several globals multiplied in.
+initObjectAnimSubstruct              = 0x800F2B88; // 25 callers: (obj, f_pos_x, f_pos_y, f_timer, ...stack args, flag) — full init of obj anim sub-struct
+
+// Combined mesh-position getter: looks up the obj's chained NPC (via
+// findActiveNpcInSlotChain on obj+0x130) and its context. If the caller passes
+// a non-null out-buffer AND the npc has a mesh ptr (ctx+0xC != 0), copies
+// 48 bytes of npc data starting at ctx+0x8 into the buffer, then transforms
+// the mesh part into world space via transformMeshPartIntoWorld. Returns
+// either the populated out-buffer or the npc's direct local-space data ptr.
+getObjectMeshTransformOrLocal        = 0x800F2988; // 17 callers: (obj, optional_out_buffer) — returns world-transformed mesh data or local ptr
+
+// 16-bit RMW flag update for object field +0x110. (set_mask, clear_mask)
+// args: new_val = (current | set) & ~clear; store back.
+updateObjectFlags110                 = 0x800F9AF4; // 18 callers: (obj, set_mask u16, clear_mask u16) — RMW of *(u16*)(obj+0x110)
+
+// Quaternion multiply in (w, x, y, z) component order. Computes q1 * q2 → out:
+//   out.w = q1.w*q2.w - (q1.x*q2.x + q1.y*q2.y + q1.z*q2.z)
+//   out.xyz = q1.w*q2.xyz + q2.w*q1.xyz + q1.xyz × q2.xyz
+// Uses a sp+0x10 scratch via vec3Cross. Mirrors composeQuatToMat3x4 conventions.
+quatMultiply                         = 0x8001D2C0; // 17 callers: (q1, q2, out) — quaternion product in (w, x, y, z) order
+
+// Batch 74 (2026-05-11): small low-caller stubs/getters/setters.
+// Strategy: prioritize trivially-confirmed names — pure jr-ra stubs, return-0/1
+// stubs, single-byte setters for the global config struct at 0x8011A87x.
+
+// Pure `jr ra` stubs. All 11 listed below are byte-identical to noopHandler
+// (already named at 0x800EFD6C). They exist as default/inert callbacks in
+// various per-system dispatch tables. Naming them lets grep find calls cleanly.
+noopHandler_80004FC8                 = 0x80004FC8; // pure jr-ra stub
+noopHandler_80004FD0                 = 0x80004FD0; // pure jr-ra stub
+noopHandler_80005560                 = 0x80005560; // pure jr-ra stub
+noopHandler_80036B88                 = 0x80036B88; // pure jr-ra stub
+noopHandler_800825C0                 = 0x800825C0; // pure jr-ra stub
+noopHandler_80092388                 = 0x80092388; // pure jr-ra stub (Factor 5 audio)
+noopHandler_80099C44                 = 0x80099C44; // pure jr-ra stub (Factor 5 audio)
+noopHandler_800AEB30                 = 0x800AEB30; // pure jr-ra stub
+noopHandler_800DFB84                 = 0x800DFB84; // pure jr-ra stub
+noopHandler_800EFD64                 = 0x800EFD64; // pure jr-ra stub (adjacent to noopHandler at 0x800EFD6C)
+noopHandler_800FBBA0                 = 0x800FBBA0; // pure jr-ra stub
+
+// "return 1" stubs (jr ra + addiu v0, zero, 1). Used as default-success
+// callbacks where a non-zero return means "handled, continue".
+returnOne_80023334                   = 0x80023334; // pure `return 1` stub
+returnOne_8002335C                   = 0x8002335C; // pure `return 1` stub
+
+// "return 0" stub. Used as default-fail/skip callback.
+returnZero_800F3258                  = 0x800F3258; // pure `return 0` stub
+
+// Single-float setter at 0x8011A840 in the same config region. Reverted other
+// address-encoded entries in this cluster (8011A871/872/873/898) per user
+// directive — kept this one only because "Float" qualifies the type.
+setGlobalFloat_8011A840              = 0x80017B78; // 2 callers: stores $f12 to 0x8011A840
+
+// Trivial object-byte clearer: stores 0 to obj+0x112. Counterpart to many
+// other obj+0x112 (state-byte) accessors.
+clearObjectField112                  = 0x800F9474; // 2 callers: MEM_B(obj+0x112) = 0
+
+// NPC slot-table allocator. Allocates a 8-byte header struct + (capacity*8)
+// data array via rs_malloc. Stores: hdr->+0x0 = data_ptr, +0x4 = 0 (count),
+// +0x6 = capacity. Used by inventory/audio/effect systems for fixed-size
+// dynamic slot tables. Counterpart destructor at func_80064628.
+allocateSlotTable                    = 0x800645CC; // 15 callers: (capacity u16) -> *table_hdr
+
+// Indexed pointer-table accessor. Returns word at table[a0&0xFFFF] where
+// table base = MEM_W(0x800CEEFC). Used as a generic "lookup-by-index" for
+// some pointer table.
+lookupIndexedPointer_8002333C        = 0x8002333C; // 2 callers: (idx u16) -> ptr from table at 0x800CEEFC
+
+// Linked-list mass flag-update helper. Walks a singly-linked list (via
+// node->+0x0 = next), updating each node's +0xC word: new = (old & ~clear) | set.
+// Used to apply flag changes across all members of a per-system list.
+walkListAndUpdateFlagsAt0xC          = 0x800599C0; // (list_head, set_mask, clear_mask) — iterates next-pointer-list, RMW each node's +0xC
+applyFlagsToMeshdef1List             = 0x800599EC; // (meshdef0_head, set_mask, clear_mask) — for each meshdef0, walks its meshdef1 sub-list at +0x10 and RMWs each meshdef1's +0xC flags
+applyFlagsToMeshTreeOrList           = 0x8005955C; // (parent_or_null, fallback_list, set, clear) — if parent: walks parent->mesh tree via applyFlagsToMeshdef1List; else walks fallback flat list via walkListAndUpdateFlagsAt0xC. Common NPC visibility update path (23+ callers).
+walkMeshdef0TreeApplyAnimColors      = 0x800596C4; // (meshdef0_head, a1_arr) — recursive: applyMeshdef1AnimColors on each meshdef0->+0x10 sublist, then recurse into meshdef0->+0xC subtree
+
+// Mesh-cleanup queue enqueuer. If mesh->+0xB (type tag byte) is non-zero and
+// bit 0x20 of mesh->+0x8 (flags) is clear, increments halfword counter at
+// 0x8013A490, writes the type-tag byte into queue at 0x8013A498[counter],
+// and clears mesh->+0xB. Defers actual cleanup to a later pass that drains
+// the queue. Lightweight version of releaseMeshAsset's per-frame queueing path.
+enqueueMeshTypeForCleanup            = 0x80059970; // 15 callers: (mesh_ptr) — queue mesh's type tag for deferred cleanup
+
+// Lookup in audio-channel-id table at 0x8013A000 (16 entries, 8B each).
+// For each entry: if entry+0x0 == a0, return entry+0x4. Else return 0.
+// Called from the audio voice dispatch path. Same table func_80096284 iterates.
+findAudioChannelById                 = 0x80066A18; // 18 callers: (id u32) -> matched word or 0
+
+// Batch 75 (2026-05-11): meaningful-only renames.
+// After a failed agent batch produced address-encoded noise, this batch
+// includes only names that encode game-domain meaning (asset names,
+// object lifecycle phases) — nothing that just encodes coordinates.
+
+// Asset-loader wrappers identified by the string literal they pass to the
+// loader. Both load a specific named asset with fixed arguments.
+loadTieBomberSprite                  = 0x8005ECE8; // 1 caller: loadAndRelocateAsset("weapon_spr/tie_bomb"), stores result halfword to global at 0x80139738
+loadShieldPalette                    = 0x8007C268; // 1 caller: load_asset("shield_PAL")
+
+// Destroys an object's owned NPC slot if the ownership flag is set.
+// Pairs with createAndInitObject (0x800EC588) which sets obj+0x1A4=1 and
+// stores the slot index at obj+0x198. Pure cleanup path called from various
+// per-object destroy paths.
+destroyObjectOwnedNpcSlot            = 0x800EC6C0; // 22 callers: (obj_ptr) — if obj+0x1A4!=0 → destroyNpcSlotByIndex(obj+0x198)
+
+// Float-to-int via truncation: trunc.w.s f12 → v0. Two-instruction utility.
+// The name encodes the operation, not coordinates.
+floatToInt                           = 0x80007510; // 2 callers: (f32 arg) → int via trunc.w.s
+
+// Subtitle text rendering path. Per docs/unsorted_thoughts/notes.txt line 237:
+// "D_8011DC58 is a Gfx*, used minimally to set the color of the subtitles in
+// func_800159B4". Long function (~250 lines of MIPS) that builds the DL for a
+// subtitle line and emits it via the gfx queue.
+drawSubtitleText                     = 0x800159B4; // (subtitle struct) — builds + emits subtitle DL, sets color via D_8011DC58
+
+// Batch 76 (2026-05-11): names derived from named-caller context. Each was
+// identified by finding unnamed funcs called by 5+ semantically-named callers,
+// then verifying behavior from the disassembly.
+
+// Inner asset-lookup helper: when called with segment_id == -1, iterates 4
+// segment-table entries at 0x80110A80 (each 0x50B) and calls find_manifest_entry
+// per segment until a manifest entry matches. When called with a specific
+// segment_id, looks up that segment directly. Sets the matched segment_id at
+// caller's out-pointer. Called from load_asset, loadJfifAsset, loadSndFiles,
+// loadTxtFile, loadDebugAssets, and other public asset loaders.
+findAssetAcrossSegments              = 0x80004AAC; // 21 callers, 10 of them named loaders — segment-fallback wrapper around find_manifest_entry
+
+// (segment_idx | -1=all) — walks gManifestTable (4×0x50B entries) and, for each
+// active segment (flag at +0x4E==1), iterates a 16-entry back-ref table at
+// gManifestTable+0xBC0 (0x18B stride): zeroes entries whose +0x10 word matches
+// the segment index, then rs_free's the segment data pointer at +0x40 and
+// clears the active flag. Pass -1 to free every active segment.
+freeManifestSegmentAssets            = 0x80004994; // 4 callers (loadDebugAssets, mainGameLoop, menuOverlayInit, runIdleFramesAndLoadSaveData)
+
+// 8 callers (hangarInitialize, initMission, +6 unnamed): builds 0x60-entry
+// linked-list-by-index at MEM[0x80139020] (slot[i]=i+1), zeros bucket counters
+// at 0x801394E2/0x801394E4 (used by addNpcToVisibilityBucket / func_80057C8C),
+// rs_malloc's 0x4380B scratch at 0x801394E8, fills indices 0..0x5F downward.
+initNpcBookkeepingTables             = 0x80056350; // resets NPC free-list + visibility buckets + per-frame scratch buffer
+
+// 43+ callers (all NPC update handlers): takes (npc_self, ?, ?, sortKey_float)
+// and adds NPC to whichever of two render buckets (A=bit 0x80, B=bit 0x100)
+// has the lower current count. Increments the chosen bucket's counter at
+// 0x801394E2/0x801394E4. Used for per-frame NPC visibility-list dispatch.
+addNpcToVisibilityBucket             = 0x80057C8C; // load-balanced enqueue into 1 of 2 NPC render buckets
+
+// Player-init common helper: called from every playerXxxInit (Awing, Falcon,
+// AtSt, NabooStarfighter, SnowSpeeder, ...). Resets 0x8011A6B0/B4, reads the
+// craft's flags at gPlayers[craft_idx]+0x184, then branches on bit 0x40:
+// when set (atmospheric/ground craft), stamps byte 1 at 0x8011A6B8 and uses
+// the slot-chain at player+0x1CC; otherwise sets player+0x1C8=2, clears
+// +0x184/+0x15C, and stamps 0xFFFF at +0x1CC.
+initPlayerCraftMovementMode          = 0x800B37C0; // 10 callers, all playerXxxInit — sets up flight-vs-ground state from craft flags
+
+// Per-player update-step helper: indexes per-player slot at 0x8010CF20 +
+// idx*24, checks slot->+0x4->+0x0 byte (active flag). If active, calls
+// func_80100594, then rs_free(slot->+0x8) and rs_free(slot->+0xC).
+// Effectively a per-frame cleanup pass for the player's two aux buffers
+// when an "active" flag has been set since the previous frame. Called from
+// every playerXxxUpdate function.
+freePlayerAuxBuffersIfActive         = 0x80100F40; // 9 callers, all playerXxxUpdate — conditional aux-buffer free
+
+// Batch 77 (2026-05-11): asset-loader wrappers identified by the string
+// literals they sprintf or pass to the loader. Each name encodes what the
+// loaded asset IS — strongest possible semantic anchor.
+
+// Level loader: sprintf "level/lv_%c" → calls loadDatFile, load_level_hmp,
+// load_full_header_image. Composes the per-level asset basename from a
+// character (e.g. 'a', 'b', 'c'...) and loads DAT/HMP/image for that level.
+loadLevelAssets                      = 0x800453C8; // 3 callers: (level_letter) → loads level DAT + HMP + image
+
+// Level texture-cache loader: sprintf "ltex_cache_%d" + 'level/tex' literals,
+// calls findAssetAcrossSegments + registerHmtTextureInTable. Loads cached
+// level textures via HMT registry, registers them via the standard table.
+loadLevelTextureCache                = 0x80048104; // 3 callers: loads per-level texture cache (HMT-registered)
+
+// Sound/song asset loader: sprintf "sound/%s_SNG" → findAssetAcrossSegments
+// + setupAssetDma. Top-level by-name SNG loader; 22 callers across the
+// game's music/sfx subsystem.
+loadSongAssetByName                  = 0x8006657C; // 22 callers: (song_name str) → loads "sound/<name>_SNG" via DMA
+
+// Font asset loader: sprintf "fonts/%s" → load_asset + registerHmtTextureInTable
+// Loads a named font HMT and registers its textures.
+loadFontAsset                        = 0x80061A88; // 4 callers: (font_name str) → load "fonts/<name>"
+
+// Player-craft shadow textures loader: loads "pl_crafts/shadows_TM" via
+// load_asset, registers via registerHmtTextureInTable. The shared shadow
+// texture set used by all flyable craft.
+loadCraftShadowTextures              = 0x8006B710; // 4 callers: loads pl_crafts/shadows_TM
+loadExplosionTextures                = 0x8006108C; // gates on gGameSettings+0xB63 (hi-res mode flag); loads explh_tex/explo2hi_IMGS (hi-res) or explo_tex/explo2_IMGS (lo-res)
+loadTopCloudsAsset                   = 0x8005A120; // (parent_struct) — rs_malloc(0x2C90) + func_80054EF0("gnrc_stuff/tl_clouds"); stores buffer at parent[+0xF00], inits ~16 sub-struct slots
+npcDebris1Update                     = 0x8006F6A0; // NPC update handler for "debris1" type (per string scan); state machine dispatched via a1 in 0..4+
+spawnDebris1Npc                      = 0x80072384; // (npc_ctx, ...) → calls spawnNpcOfType(npcDebris1Update=0x8006F6A0, sp+0x10, 1, 0xF, ...); 26 callers (debris spawn helper)
+getLocalPlayerVehicleId              = 0x800C7524; // thin wrapper: getPlayerVehicleId(0) — convenience getter for player 0's vehicle ID
+updatePlayerHudFrame                 = 0x800FD31C; // per-frame HUD struct updater (per docs/unsorted_thoughts: "very involved in [hud_struct] innerworkings"); called from 10+ playerXxxUpdate functions
+releaseTextureLutEntry               = 0x80022790; // (texLutIdx u16) — clears D_8011A444[idx]; scans for other refs to same D_80128F08_index; if none, frees texture data via func_8001E7D0 (refcount release)
+appendRdpStateDl                     = 0x8000DE70; // (dlPtr, flags) — appends RDP state-setup commands to dlPtr based on flag bits: 0xE7000000 (PIPESYNC) header, then per-flag G_SETOTHERMODE_L/H variants, depth/alpha modes, scissor; used by mesh dispatch (per docs/unsorted_thoughts)
+loadSfxAsset                         = 0x80071D20; // load_hmt_and_hob("gnrc_stuff/sfx") + init sub-structs at 0x8013A670; per string scan
+npcWakeUpdate                        = 0x80076BE4; // NPC update handler for "wake" effect (per string scan); state machine on a1 in 0..4+
+npcVortexUpdate                      = 0x80081ABC; // NPC update handler for "vortex" effect (per string scan)
+npcShieldUpdate                      = 0x8007AEF8; // NPC update handler for "shield" effect (5-case state machine on a1-1; per string scan); distinct from npcShieldGeneratorUpdate
+npcIncomingMissileUpdate             = 0x800ABD0C; // NPC update handler for "i_missile" (incoming missile) per string scan
+npcWaterSprayUpdate                  = 0x80072EC4; // NPC update handler for "wtrspray" effect (per string scan); per-frame counterpart to initWaterSprayParticles
+spawnWaterSprayNpc                   = 0x800777F0; // (pos, vel, ...) → calls spawnNpcOfType(npcWaterSprayUpdate=0x80072EC4, ...); per spawn-wrapper handler-addr analysis
+maybeLoadYwingCutscene               = 0x800AF0EC; // (a0=stateA, a1=stateB) — if (a0==4&&a1==1) OR (a0==7&&a1==0): load_hmt_and_hob("frontend/cut_ywng/cut_ywng") + walkMeshdef0List("cut_ywng"), stores result at MEM_W(0x800B0B18); otherwise clears it
+
+// Sky horizon HOB loader: getHobObjectByName("sky_horizon"), allocates and
+// copies into a per-scene buffer. Initializes the skybox horizon mesh.
+loadSkyHorizonHob                    = 0x8005AB34; // 2 callers: loads "sky_horizon" HOB into scene buffer
+
+// Voice subtitle system init: loads "voice_TXT" via loadVoiceTxtFile,
+// allocates a 0x20-byte voice context at 0x80139010, initializes it (sets
+// 0xFFFF sentinel at +0x0), and configures based on gBootConfig fields.
+initVoiceSubtitleSystem              = 0x80055A30; // 3 callers: bootstrap the voice-subtitle subsystem
+
+// 76-case jump table dispatcher on NPC type id (0..0x4B). Returns the per-type
+// asset name string (e.g. 'b_lrsp', 'megaturret', 'b_ttu_hi') or NULL for
+// types without an associated asset. Pure lookup function (no allocations,
+// no side effects).
+getAssetNameForNpcType               = 0x800AE98C; // 2 callers: (npc_type_id u8) → const char* or NULL
+
+// Backdrop asset loader: sprintf "backdrop/<name>" using format strings at
+// 0x800A5B60. Mallocs a 0x38-byte context, memsets to 0, then load_asset's
+// the named backdrop file. Caller-supplied name (a0) selects which backdrop.
+loadBackdropAsset                    = 0x800ADF74; // 5 callers: (name str, ...) → loads "backdrop/<name>"
+
+// Scene init / per-level asset loader: zmemcpy's defaults (0x50 bytes from
+// 0x80037560 = gBootConfig area), loads "game_TXT" via findManifestEntryByName,
+// calls clearSceneBssRegion, allocNpcContextArrays, initNpcSlotList,
+// loadSndFiles. The entry point for setting up a mission/scene's runtime state.
+initSceneForMission                  = 0x800A9ABC; // 2 callers: bootstrap mission-scene runtime (text + NPCs + sound)
+
+// Particle pool allocator: mallocs 0x3600 bytes (128 entries of 0x6C each),
+// stores at 0x80130BD0, links them into a per-index chain (-1 sentinel at
+// idx=0, prev index at others). Also references 'part_pal' and 'part_spr'
+// strings to load the particle palette and sprite atlas via load_asset.
+allocAndInitParticlePool             = 0x80040310; // 4 callers: allocates particle pool + loads palette/sprite assets
+
+// Weapons-HMT loader: load_hmt_and_hob("weapons"), then iterates 15 weapon
+// names from the table at 0x8009ED00, calling getHobObjectByName for each,
+// storing the resulting hob-object ptrs at 0x80139600+ and setting bit
+// 0x10000 in each obj's flags chain.
+loadWeaponsHobObjects                = 0x8005E7EC; // 3 callers: load "weapons" HMT, register 15 weapon HOBs by name
+
+// Count trailing zero bits in a 16-bit value. When (a0 & 1) is set, returns 0.
+// Otherwise shifts right until the low bit is set, counting iterations.
+// Called from playerXxxInit to convert a craft-mask bit (e.g. 0x0008) to a
+// craft index (e.g. 3). Behavior on a0==0 is unsafe (infinite loop in a path
+// that assumes a high bit will eventually appear).
+countTrailingZeros16                 = 0x800BF2F4; // 5 callers, all playerXxxInit — bit-to-index converter
+
+// Math primitives. Two-instruction floating-point utilities that the compiler
+// emitted as named functions rather than inlining (probably because of `-O2
+// -mips2` ABI conventions for FPU call/return). Strong semantic names because
+// the operation is the function — no game-domain context required.
+truncDouble                          = 0x80093E54; // 5 callers: trunc.w.d + cvt.d.w — truncate-toward-zero on a double, returns as double
+ceilDouble                           = 0x80093E60; // ceil.w.d + cvt.d.w — ceiling of a double, returns as double
+sqrtf_recomp                         = 0x80093E6C; // 5 callers: pure sqrt.s f0, f12 — single-precision square root
+
+// SND-file dispatcher: 12 callers. Reads the SND-loader state globals at
+// 0x8013BF50/0x8013BF54/0x8013BF4C plus 0x8009FCD0, packages them as args
+// 1-3 for parseSndFiles, then forwards a0 (sub-file kind) and returns 1.
+parseLoadedSndSection                = 0x80066918; // 12 callers: (sub_file_kind) → parseSndFiles with prepared globals
+
+// osWritebackDCache wrapper: a0 = address, a1 = halfword count. Doubles a1 to
+// get a byte count, then calls osWritebackDCache(a0, a1*2). 3 callers in the
+// MusyX/SND path where buffers are sized in halfwords.
+writebackDCacheHalfwords             = 0x80092588; // 3 callers: (addr, halfword_count) → osWritebackDCache(addr, count * 2)
+
+// Per-player HUD-struct setup for the current secondary weapon. Indexes
+// gHudStructArray (D_8010CA30) by player_idx, stamps secondaryWeapon/Count/
+// Reset/IsAdvanced + crosshair flag from cheat-code state, builds 10 texture
+// IDs via func_800554D8 in a loop, then copies hud_elements forward via a
+// rotate-then-overwrite pattern. Documented in docs/hud_stuff/func_800FBE20.c.
+configurePlayerSecondaryWeaponHud    = 0x800FBE20; // 3 callers: (player_idx, weapon, count, isAdvanced) — populates hud_struct slice
+
+// Pause-screen init/update. On first call (when arg0->unk258==0 AND game
+// state D_8010CA20==5), builds the dim-quad mini-hob: 4 vertices at
+// ±0x100, single quad face, color (0,0,0,0). Plays UI sound effects via
+// func_800880D8/func_8008E0B0. Documented in docs/hud_stuff/func_800C1D3C.c.
+initOrUpdatePauseScreenDim           = 0x800C1D3C; // 2 callers: (hud_ext_struct, transition_f32) — pause-screen dim quad setup + ongoing update
+
+// Pause-menu state machine. Dispatches on game state via 20-entry jump table
+// at 0x800A66A8 covering pause-menu phases (entry anim, hover, exit anim,
+// selection feedback). Operates on the hud_ext struct (func_800C0084_type).
+// Documented in docs/hud_stuff/func_800C298C.c.
+runPauseMenuStateMachine             = 0x800C298C; // 2 callers: (caller_ctx, hud_ext_struct) — 20-state pause menu dispatcher
+
+// MusyX note-rate compute: a0=note_id, a1=context_word (-1 → default 0x40005622
+// where the low 24 bits 0x5622=22050 is NTSC sample rate). Extracts the top
+// byte of a1 as "base note", looks up a multiplier from one of two LUTs at
+// 0x800A31D0 / 0x800A2FD0 based on sign of (note - base), multiplies by the
+// low 24 bits of a1, takes high 32 bits >> 20, then forwards to func_80093F18.
+// The classic semitone-relative pitch shift for sample playback.
+musyxComputeNotePlaybackRate         = 0x80093E80; // 10 callers: (note, ctx_or_-1) → adjusted playback rate
+
+// Returns the address of voiceTxtString (0x80138E90). Pure 2-instruction
+// constant-pointer getter — used wherever code needs to write/read the voice
+// text buffer's first slot.
+getVoiceTxtStringPtr                 = 0x80055A20; // 2 callers: returns &voiceTxtString
+
 // === End RogueSquadron64Recomp renames ===
 
 loadOverlay                          = 0x80000B20; // defined:true
@@ -697,7 +1156,6 @@ get_asset_size_simple                = 0x80005134; // defined:true
 // The zcfree and zcalloc functions are effectively just wrappers for these functions
 rs_zcfree                            = 0x8000525C; // defined:true
 rs_zcalloc                           = 0x8000527C; // defined:true
-setDmaSlotMaxTxSize                  = 0x80005938; // defined:true
 rs_strcasecmp                        = 0x80007520; // defined:true
 rs_strcpy                            = 0x8000761C; // defined:true
 rs_strncpy                           = 0x80007640; // defined:true
@@ -721,7 +1179,6 @@ getGameOrFrontText                   = 0x8005589C; // defined:true
 freeTxtFile                          = 0x800558D4; // defined:true
 loadVoiceTxtFile                     = 0x8005595C; // defined:true
 getVoiceText                         = 0x80055978; // defined:true
-func_80055A20                        = 0x80055A20; // defined:true
 load_hmt_and_hob                     = 0x8005645C; // defined:true
 isHobObjectLoaded                    = 0x80056DA4; // defined:true
 getHobObjectByName                   = 0x80057B4C; // defined:true
@@ -735,15 +1192,20 @@ datItemSetObjectiveBooleanCount      = 0x80065914; // defined:true
 decrypt_ns_hmt                       = 0x8006AFC0; // defined:true
 load_naboo_starfighter               = 0x8006C780; // defined:true
 getPlayerVehicleId                   = 0x8006C940; // defined:true
-loadDefaultHighscores                = 0x8006DCCC; // defined:true
 generateUnlockString                 = 0x8006E638; // defined:true
 initializeNumLives                   = 0x8006EA78; // defined:true
+// Unlock-flag bitmap accessors: 8-byte-aligned bitmap at gSaveDataBody+0xA3.
+// Bit index = $a0 (byte_idx = a0>>3, shift = a0&7). Used to track per-level /
+// per-feature unlock progress.
+isUnlockBitSet                       = 0x8006ED90; // returns ((gSaveDataBody[0xA3 + a0>>3] >> (a0&7)) & 1)
 gatherActiveUnlockFlags              = 0x8006EDB8; // defined:true
 unlockMissleUpgradeOnLevelCompletion = 0x8006EE14; // defined:true
+setUnlockBitAndPersist               = 0x8006E360; // 2 callers (cinematicLoopBody, mainGameLoop): if bit a0 unset, OR it in, then saveLoadDispatcher(SAVE) twice to persist gSaveDataBody to EEPROM
 isViModeTypePal                      = 0x8006F01C; // defined:true
+cycleIdleDemoId                      = 0x8006F044; // increments gGameSettings+0x14 (demoId) mod 6 (via 0xAAAAAAAB div-by-6); when wrap-back to 5, increments wrap counter at +0x15 (capped at 4)
 setAccountHighscore                  = 0x8006F39C; // defined:true
 getAccountHighscore                  = 0x8006F3E8; // defined:true
-getSecondaryWeaponCount              = 0x8006F43C; // defined:true
+getSecondaryWeaponCount              = 0x8006F43C; // (PlayerCraft, SecondaryWeapon) — max secondary weapon capacity per craft: X-Wing=6 (-1 for weapon-1), A-Wing=20, Falcon/Rmobil=6, Snowspeeder=15, B-Wing/AtSt=8, Naboo=10 (per docs/unsorted_thoughts/func_8006F43C.c)
 setNewAndPreviousButtonsPressed      = 0x80079CE0; // defined:true
 getControllerButtonAndStick          = 0x80079D54; // defined:true
 initNewAndPreviousButtonsPressed     = 0x80079EB0; // defined:true
@@ -762,12 +1224,12 @@ loadSpeechFile                       = 0x8009BA38; // defined:true
 
 // Real functions missed by splat
 
-func_80002F4C = 0x80002F4C; // defined:true
-func_800045E8 = 0x800045E8; // defined:true
+startSiPollingThread = 0x80002F4C; // called from initSiQueue; zeros 4 controller pad slots at 0x80110520, clears flag at 0x80110741, osCreateThread for siServiceThread (prio 0x76)
 func_8000569C = 0x8000569C; // defined:true
-func_80018E60 = 0x80018E60; // defined:true
+convertMat3x4ToN64Mtx = 0x80018D80; // (dst=a0, src=mat3x4 ptr=a1) — converts a row-major 3x3 rotation + translation to N64 Mtx fixed-point format using packMtxRowFloatToFixed for each of 3 rotation rows; constants at 0x800186EC are scale factors
+packMtxRowFloatToFixed = 0x80018E60; // (f4=x,f6=y,f8=z,f10=scale) — multiplies by scale, cvt.w.s, packs into 64-bit s16-int + s16-frac halves at $t7+0x20 and $t7+0x0 (N64 Mtx row layout); advances $t7+=8
 func_800403EC = 0x800403EC; // defined:true
-func_8006F388 = 0x8006F388; // defined:true
+isSaveStateNotPending = 0x8006F388; // returns 1 if gSaveDataBody[+0xA2] != 0x3A (the save-pending marker set by setUnlockBitAndPersist); used by runIdleFramesAndLoadSaveData to gate idle progression
 func_800927B0 = 0x800927B0; // defined:true
 func_80092A54 = 0x80092A54; // defined:true
 func_80092CF0 = 0x80092CF0; // defined:true
@@ -778,14 +1240,13 @@ func_80092F94 = 0x80092F94; // defined:true
 fake_func_800027B8 = 0x800027B8; // defined:true
 // Called after osContGetReadData in func_80002E10
 // Probably something akin to `update_controller` from MK64
-func_800027C0      = 0x800027C0; // defined:true
+processPolledControllerData = 0x800027C0; // called by siServiceThread after osContGetReadData; iterates 4 slots at 0x80110520 (per-slot active flag +0x6B, u16-ptr +0x70, f32 timer +0x80, flags +0x6C) — likely rumble timing/pattern advance
 
 fake_func_8000337C = 0x8000337C; // defined:true
 func_80003380      = 0x80003380; // defined:true
 
 fake_func_80003424 = 0x80003424; // defined:true
 
-func_80003480      = 0x80003480; // defined:true
 
 // Annoyingly the fake function here, when interpreted as real coode, contains a reference
 // to func_80007064 which isn't real. This causes a real function (func_8000703C) to get split in two
@@ -793,16 +1254,14 @@ fake_func_8000537C = 0x8000537C; // defined:true
 func_80005380      = 0x80005380; // defined:true
 
 fake_func_80005568 = 0x80005568; // defined:true
-func_80005570      = 0x80005570; // defined:true
 
 fake_func_8000595C = 0x8000595C; // defined:true
-func_80005960      = 0x80005960; // defined:true
 
 fake_func_80006BFC = 0x80006BFC; // defined:true
-func_80006C00      = 0x80006C00; // defined:true
 
 fake_func_8000737C = 0x8000737C; // defined:true
-func_80007380      = 0x80007380; // defined:true
+installPeriodicCallback = 0x80007380; // (callback, intervalUnits) → creates mq+thread+osTimer for periodic callback. Stores callback at 0x801128E0, spawns periodicCallbackWorker (prio 0x14), osSetTimer with period = 46875*intervalUnits cycles
+periodicCallbackWorker = 0x80007480; // worker thread for installPeriodicCallback: osRecvMesg(BLOCK) → osYieldThread → LOOKUP_FUNC(*0x801128E0) → loop
 
 fake_func_800074D8 = 0x800074D8; // defined:true
 func_800074E0      = 0x800074E0; // defined:true
@@ -816,10 +1275,10 @@ func_80007910      = 0x80007910; // defined:true
 fake_func_800186D8 = 0x800186D8; // defined:true
 
 fake_func_80019808 = 0x80019808; // defined:true
-func_80019810      = 0x80019810; // defined:true
+awaitFrameSyncMesgBlock  = 0x80019810; // osRecvMesg(mq=0x80138D10, NULL, BLOCK) — frame-sync mq, used by bufferArbiterProducerScanWait + timeSnapshotFiller
+signalFrameSyncMesgNonblock = 0x8001983C; // osSendMesg(mq=0x80138D10, NULL, NOBLOCK) — paired sender to awaitFrameSyncMesgBlock
 
 fake_func_80024878 = 0x80024878; // defined:true
-func_8001C400      = 0x8001C400; // defined:true
 
 fake_func_8001C3FC = 0x8001C3FC; // defined:true
 func_80024880      = 0x80024880; // defined:true
@@ -834,13 +1293,10 @@ fake_func_80024A0C = 0x80024A0C; // defined:true
 // No accompanying "real" function
 
 fake_func_8003DF98 = 0x8003DF98; // defined:true
-func_8003DFA0      = 0x8003DFA0; // defined:true
 
 fake_func_8003E55C = 0x8003E55C; // defined:true
-func_8003E560      = 0x8003E560; // defined:true
 
 fake_func_80040304 = 0x80040304; // defined:true
-func_80040310      = 0x80040310; // defined:true
 
 fake_func_80041EEC = 0x80041EEC; // defined:true
 func_80041EF0      = 0x80041EF0; // defined:true
@@ -849,7 +1305,6 @@ fake_func_800457CC = 0x800457CC; // defined:true
 func_800457D0      = 0x800457D0; // defined:true
 
 fake_func_8004661C = 0x8004661C; // defined:true
-func_80046620      = 0x80046620; // defined:true
 
 fake_func_800496F4 = 0x800496F4; // defined:true
 func_80049700      = 0x80049700; // defined:true
@@ -870,16 +1325,13 @@ fake_func_80055698 = 0x80055698; // defined:true
 // real function is loadTxtFile
 
 fake_func_80055A2C = 0x80055A2C; // defined:true
-func_80055A30      = 0x80055A30; // defined:true
 
 fake_func_80056344 = 0x80056344; // defined:true
 func_80056350      = 0x80056350; // defined:true
 
 fake_func_80059B4C = 0x80059B4C; // defined:true
-func_80059B50      = 0x80059B50; // defined:true
 
 fake_func_8005A11C = 0x8005A11C; // defined:true
-func_8005A120      = 0x8005A120; // defined:true
 
 fake_func_8005C61C = 0x8005C61C; // defined:true
 func_8005C620      = 0x8005C620; // defined:true
@@ -891,7 +1343,6 @@ fake_func_800613B8 = 0x800613B8; // defined:true
 func_800613C0      = 0x800613C0; // defined:true
 
 fake_func_80064294 = 0x80064294; // defined:true
-func_800642A0      = 0x800642A0; // defined:true
 
 fake_func_80064934 = 0x80064934; // defined:true
 // Accompanying real function is load_dat_file_assets
@@ -900,7 +1351,6 @@ fake_func_80065A5C = 0x80065A5C; // defined:true
 func_80065A60      = 0x80065A60; // defined:true
 
 fake_func_800663AC = 0x800663AC; // defined:true
-func_800663B0      = 0x800663B0; // defined:true
 
 fake_func_80069AEC = 0x80069AEC; // defined:true
 func_80069AF0      = 0x80069AF0; // defined:true
@@ -912,7 +1362,6 @@ func_8006ACB0      = 0x8006ACB0; // defined:true
 func_8006AE58      = 0x8006AE58; // defined:true
 
 fake_func_8006B704 = 0x8006B704; // defined:true
-func_8006B710      = 0x8006B710; // defined:true
 
 fake_func_8006D8FC = 0x8006D8FC; // defined:true
 
@@ -920,7 +1369,7 @@ fake_func_8006F4AC = 0x8006F4AC; // defined:true
 func_8006F4B0      = 0x8006F4B0; // defined:true
 
 fake_func_80072CE8 = 0x80072CE8; // defined:true
-func_80072CF0      = 0x80072CF0; // defined:true
+initWaterSprayParticles = 0x80072CF0; // loads "gnrc_stuff/wtrspray" HMT/HOB via load_hmt_and_hob, inits 3 particle sub-structs at 0x8013A8C0/+0x30/+0x60 (per docs/unsorted notes referencing waterwhite_1/wtrspray strings)
 
 fake_func_80079278 = 0x80079278; // defined:true
 func_80079280      = 0x80079280; // defined:true
@@ -938,13 +1387,12 @@ fake_func_8007C298 = 0x8007C298; // defined:true
 func_8007C2A0      = 0x8007C2A0; // defined:true
 
 fake_func_80082268 = 0x80082268; // defined:true
-func_80082270      = 0x80082270; // defined:true
+applyCheatCodeFromInput = 0x80082270; // (input_str, mode) — CRCs input via make_crc32_lut + rs_crc32(8), looks up in gCheatCodeCrc32Table at 0x800A0ED0, sets/clears bit (1 << matched_idx) in gActiveCheatFlags (0x80130B58). Special case: if "Naboo unlocked" bit pre-set, calls load_naboo_starfighter
 
 fake_func_800825C8 = 0x800825C8; // defined:true
 // No accompanying "real" function
 
 fake_func_80093E74 = 0x80093E74; // defined:true
-func_80093E80      = 0x80093E80; // defined:true
 
 fake_func_80094348 = 0x80094348; // defined:true
 func_80094350      = 0x80094350; // defined:true
@@ -988,7 +1436,7 @@ gBootConfig           = 0x80037560; // size:0x50 - boot config struct; renamed f
 gCutsceneAssetPaths   = 0x800AF92C; // 32 x 0x5C cutscene asset path entries (per docs/cutscenes/cutscenes.md)
 gCutsceneEntries      = 0x800B1900; // ptr to cuts_13D8_active_count entries of struct D_800B1900_type
 gCurrentCutsceneFile  = 0x800B1904; // ptr to currently loaded cuts_file_constant
-D_800375B0            = 0x800375B0; // type:u32 size:0x4
+gCurrentLoadedOverlay = 0x800375B0; // type:u32 size:0x4 - currently-loaded overlay id (0=in-mission/1=menus/2=cinematic per docs/unsorted_thoughts)
 D_80037620            = 0x80037620; // type:u32 size:0x4
 D_80037630            = 0x80037630; // type:s32 size:0x4
 gspTask               = 0x800377C8; // type:OSTask size:0x40
@@ -1162,8 +1610,8 @@ D_801107E0           = 0x801107E0; // type:OSIoMesg     size:0xC0
 dmaSlotMesgBuffer    = 0x801108A0; // type:OSMesg       size:0x20
 // type_size:0x18 count:0x08
 dmaSlotMesgQueue     = 0x801108C0; // type:OSMesgQueue  size:0xC0
-D_80110980           = 0x80110980; // type:OSMesg       size:0x04
-D_80110990           = 0x80110990; // type:OSMesgQueue  size:0x18
+gDmaSlotLockMesg     = 0x80110980; // type:OSMesg size:0x4 - single-slot OSMesg storage for gDmaSlotLockQueue (initialized by initDmaSlots)
+gDmaSlotLockQueue    = 0x80110990; // type:OSMesgQueue size:0x18 - 1-slot binary semaphore guarding the DMA slot table (initDmaSlots osSendMesg's a token after creation)
 nextOpenDmaSlot      = 0x801109A8; // type:s32
 dmaSlotsAvailable    = 0x801109AC; // type:s32
 // type_size:0x04 count:0x08
@@ -1181,23 +1629,51 @@ dmaSlotTxThisStep    = 0x80110A50; // type:u32          size:0x20
 dmaSlotMutex         = 0x80110A70; // type:u8
 // type_size:0x50 count:0x04
 gManifestTable        = 0x80110A80; // size:0x140 - array of {manifest_entry*, entry_count} per segment; renamed from D_80110A80 (2026-05-11)
+gRadarPaletteNormal   = 0x80109FF8; // size:0x30 - 16-entry RGB radar palette (normal) per docs/hud_stuff
+gRadarPaletteInverted = 0x8010A028; // size:0x30 - 16-entry RGB radar palette (height-inverted) per docs/hud_stuff
+gRadarPaletteAtSt     = 0x8010A058; // size:0x30 - 16-entry RGB radar palette (AT-ST level) per docs/hud_stuff
+gRadar                = 0x8010BFE0; // size:0xDD4 - radar HUD struct (CI4 octagonal image + meshdef + dot backups) per docs/hud_stuff
+gCurrentMenuData      = 0x800CE730; // size:0xF8 - D_800CE730_type menu state struct (title/entries/sub-type/xy_offsets/scalers etc per docs/menus/menus.md)
+gPlayerCraftAssetPaths    = 0x80109CB0; // type:char* array - per-craft "ov_*" asset path strings per docs/unsorted_thoughts (used by choosePlayerCraftAssets)
+gSecondaryWeaponAssetPaths = 0x80109CD4; // type:char* array - per-weapon "ov_2_*" overlay-image asset path strings per docs/unsorted_thoughts
+// gSecondaryWeaponTextIds was claimed at 0x800A5840 per docs/unsorted_thoughts but
+// that address is actually the asciz string "trl2" (mission_overlay rodata). The
+// real text-id mapping is probably elsewhere; doc was stale. Leaving unnamed.
+gCurrentSecondaryWeaponStringIdx = 0x800CC6E8; // type:u8 - index into gSecondaryWeaponStringSlots, set by buildSecondaryWeaponString
+gHangarCraftList         = 0x800CC3F0; // type:u8 array of enum PlayerCraft - hangar bay populated craft list (first entry is 0, NOT X-Wing) per docs/unsorted_thoughts
+gHangarBayToCraftIdx     = 0x800CC404; // type:u8 array - intermediate bay-number → index map (into gHangarCraftList and gCraftSelectScreenData) per docs/unsorted_thoughts
+gHangarBayCraftAssign    = 0x800CC40C; // type:u8 array of enum PlayerCraft - which craft is currently parked in each bay per docs/unsorted_thoughts
+gCraftVoiceLineLists     = 0x800CC4F8; // type:u16** - array of pointers to 0xFFFF-terminated voice-line-id lists, picked by bay-index per docs/unsorted_thoughts
+gFalconAvailable         = 0x800CD6CD; // type:u8 - Millennium Falcon availability flag per docs/unsorted_thoughts
+gTieInterceptorAvailable = 0x800CD6CE; // type:u8 - TIE Interceptor availability flag per docs/unsorted_thoughts
+gNabooStarfighterAvail   = 0x800CD6CF; // type:u8 - Naboo Starfighter availability flag per docs/unsorted_thoughts
+gAvailableCraftBitsForLevel = 0x800CD6D0; // type:u32 - bitmask of craft available for currently-selected level per docs/unsorted_thoughts
+gHangarCurrentBayCraft   = 0x800CD6E4; // type:u8 - = gHangarBayToCraftIdx[gHangarCurrentBay] per docs/unsorted_thoughts
+gHangarCurrentBay        = 0x800CD6E8; // type:u8 - currently-looked-at hangar bay index per docs/unsorted_thoughts
+gMissionObjectiveTextIds = 0x80109D2C; // type:u16 - array of mission-objective text IDs (4 per level, 0-padded if fewer) per docs/hud_stuff
+gSecondaryWeaponStringSlots = 0x800CD540; // size:0xC0 - 4 entries × 0x30B strings; current visible slot selected by gCurrentSecondaryWeaponStringIdx
+dLevelByDemoId         = 0x800CD404; // type:u8 size:0x6 - level enum to play per demoId (per docs/unsorted_thoughts)
+gCraftSelectScreenData = 0x800CDA5C; // type:u32* - ptr to 0x278-byte craft-selection screen state struct (per docs/unsorted_thoughts)
 // type_size:0x18 count:0x10
 D_80110BC0           = 0x80110BC0; //                   size:0x180
 // type_size:0x74 count:0x08
 D_80110D60           = 0x80110D60; //                   size:0x3A0
 // type_size:0x18 count:0x08
-D_80111100           = 0x80111100; //                   size:0x140
+gServiceWorkerMesgBuf = 0x80111100; // size:0x140 - DMA-related OSMesg buffer used by service-worker entries (per docs/dma_linked_list)
 D_80111240           = 0x80111240; //                   size:0x04
 dmaSlotMaxTxStepSize = 0x80111254; // type:u32
 D_80111288           = 0x80111288; // type:OSMesg       size:0x04
 D_80111290           = 0x80111290; // type:OSMesgQueue  size:0x18
 // type_size:0x14 count:0x100
 D_801112B0           = 0x801112B0; //                   size:0x1400
+gGamesaveAsset       = 0x801126C0; // type:gamesave_asset size:0x20 - DMA'd "gamesave" asset (game_code/save_file_size/save_data_size/company_code/game_name) per docs/save_data
+gSaveDataBuffer      = 0x80112724; // type:save_data_body* - malloc'd save buffer (0x1C8 bytes, oddly large per docs/save_data); read by freeSaveDataBuffer
+gSaveDataBodySize    = 0x80112728; // type:u32 - save_data_body size = gamesave_asset.save_data_size (0xB0) + 0x18 header = 0xC8
 D_80112AE0           = 0x80112AE0; // type:OSMesg       size:0x04
 
 D_801128D0   = 0x801128D0; // type:u32
-D_801128D4   = 0x801128D4; // type:u32
-D_801128D8   = 0x801128D8; // type:u16
+gServiceWorkerNextId = 0x801128D4; // type:u32 - monotonically-increasing unique ID for new service workers (per docs/dma_linked_list)
+D_801128D8           = 0x801128D8; // type:u16 - set but never read (per docs/dma_linked_list)
 D_801132C0   = 0x801132C0; // size:0x1000
 D_8011A420   = 0x8011A420; // type:OSMesgQueue size:0x18
 D_8011A7E8   = 0x8011A7E8; // type:OSMesgQueue size:0x18
@@ -1209,6 +1685,7 @@ D_80128CE0 = 0x80128CE0; // type:OSMesg size:0x4
 D_80130B10   = 0x80130B10; // size:0x28
 gGameSettings = 0x80130B40; // size:0x30 - game settings struct (per docs/unsorted_thoughts/unsorted_thoughts.md D_80130B40_type)
 missionStats = 0x80130B78; // size:0x10
+gActiveCheatFlags = 0x80130B58; // type:u32 — bit flags for activated cheat codes (see docs/cheat_codes/cheat_codes.md table)
 gNpcSlotList    = 0x80130BB0; // size:0x04 - ptr to 0x800 x 8B NPC slot list (D_80130BB0_type)
 gNpcSlotListTail = 0x80130BB4; // type:u16 - tail index into gNpcSlotList
 gNpcContextArray = 0x80130BB8; // size:0x04 - ptr to 0xC0 x 0x3C NPC contexts (D_80130BB8_type with update_func at +0x00)

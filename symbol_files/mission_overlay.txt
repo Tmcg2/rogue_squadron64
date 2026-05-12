@@ -2,104 +2,101 @@
 /////////////////////////////////// Strings ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_800A5820 = 0x800A5820; // type:asciz segment:mission_overlay
-D_800A5828 = 0x800A5828; // type:asciz segment:mission_overlay
-D_800A5830 = 0x800A5830; // type:asciz segment:mission_overlay
-D_800A5838 = 0x800A5838; // type:asciz segment:mission_overlay
-D_800A5840 = 0x800A5840; // type:asciz segment:mission_overlay
-D_800A5848 = 0x800A5848; // type:asciz segment:mission_overlay
+strMissGlwb                   = 0x800A5820; // type:asciz segment:mission_overlay - 'glwb'
+strMissGlwa                   = 0x800A5828; // type:asciz segment:mission_overlay - 'glwa'
+strMissTrl4                   = 0x800A5830; // type:asciz segment:mission_overlay - 'trl4'
+strMissTrl3                   = 0x800A5838; // type:asciz segment:mission_overlay - 'trl3'
+strMissTrl1                   = 0x800A5848; // type:asciz segment:mission_overlay - 'trl1'
 D_800A5990 = 0x800A5990; // type:asciz segment:mission_overlay
 D_800A5998 = 0x800A5998; // type:asciz segment:mission_overlay
-D_800A59A0 = 0x800A59A0; // type:asciz segment:mission_overlay
 D_800A5B20 = 0x800A5B20; // type:asciz segment:mission_overlay
 D_800A5C20 = 0x800A5C20; // type:asciz segment:mission_overlay
-D_800A5C28 = 0x800A5C28; // type:asciz segment:mission_overlay
+strMissTrl                    = 0x800A5C28; // type:asciz segment:mission_overlay - 'trl'
 D_800A5E00 = 0x800A5E00; // type:asciz segment:mission_overlay
 D_800A5E04 = 0x800A5E04; // type:asciz segment:mission_overlay
 D_800A5FE0 = 0x800A5FE0; // type:asciz segment:mission_overlay
 D_800A5FE8 = 0x800A5FE8; // type:asciz segment:mission_overlay
 D_800A60D0 = 0x800A60D0; // type:asciz segment:mission_overlay
 D_800A60D8 = 0x800A60D8; // type:asciz segment:mission_overlay
-D_800A61E0 = 0x800A61E0; // type:asciz segment:mission_overlay
-D_800A61E8 = 0x800A61E8; // type:asciz segment:mission_overlay
-D_800A61F0 = 0x800A61F0; // type:asciz segment:mission_overlay
-D_800A61F8 = 0x800A61F8; // type:asciz segment:mission_overlay
-D_800A6200 = 0x800A6200; // type:asciz segment:mission_overlay
-D_800A6208 = 0x800A6208; // type:asciz segment:mission_overlay
-D_800A6250 = 0x800A6250; // type:asciz segment:mission_overlay
-D_800A6260 = 0x800A6260; // type:asciz segment:mission_overlay
-D_800A626C = 0x800A626C; // type:asciz segment:mission_overlay
-D_800A627C = 0x800A627C; // type:asciz segment:mission_overlay
-D_800A628C = 0x800A628C; // type:asciz segment:mission_overlay
-D_800A6298 = 0x800A6298; // type:asciz segment:mission_overlay
-D_800A62A4 = 0x800A62A4; // type:asciz segment:mission_overlay
-D_800A62B0 = 0x800A62B0; // type:asciz segment:mission_overlay
-D_800A62BC = 0x800A62BC; // type:asciz segment:mission_overlay
-D_800A62C8 = 0x800A62C8; // type:asciz segment:mission_overlay
-D_800A62D0 = 0x800A62D0; // type:asciz segment:mission_overlay
-D_800A62D8 = 0x800A62D8; // type:asciz segment:mission_overlay
-D_800A62E0 = 0x800A62E0; // type:asciz segment:mission_overlay
-D_800A6420 = 0x800A6420; // type:asciz segment:mission_overlay
-D_800A6880 = 0x800A6880; // type:asciz segment:mission_overlay
-D_800A688C = 0x800A688C; // type:asciz segment:mission_overlay
-D_800A6894 = 0x800A6894; // type:asciz segment:mission_overlay
-D_800A689C = 0x800A689C; // type:asciz segment:mission_overlay
-D_800A68A4 = 0x800A68A4; // type:asciz segment:mission_overlay
-D_800A68AC = 0x800A68AC; // type:asciz segment:mission_overlay
-D_800A68B4 = 0x800A68B4; // type:asciz segment:mission_overlay
-D_800A68BC = 0x800A68BC; // type:asciz segment:mission_overlay
-D_800A68C4 = 0x800A68C4; // type:asciz segment:mission_overlay
-D_800A68CC = 0x800A68CC; // type:asciz segment:mission_overlay
-D_800A68D4 = 0x800A68D4; // type:asciz segment:mission_overlay
-D_800A68DC = 0x800A68DC; // type:asciz segment:mission_overlay
-D_800A68E4 = 0x800A68E4; // type:asciz segment:mission_overlay
-D_800A68EC = 0x800A68EC; // type:asciz segment:mission_overlay
-D_800A68F4 = 0x800A68F4; // type:asciz segment:mission_overlay
-D_800A68FC = 0x800A68FC; // type:asciz segment:mission_overlay
-D_800A6904 = 0x800A6904; // type:asciz segment:mission_overlay
-D_800A6D10 = 0x800A6D10; // type:asciz segment:mission_overlay
-D_800A6D18 = 0x800A6D18; // type:asciz segment:mission_overlay
-D_800A6D20 = 0x800A6D20; // type:asciz segment:mission_overlay
-D_800A6D28 = 0x800A6D28; // type:asciz segment:mission_overlay
-D_800A6D30 = 0x800A6D30; // type:asciz segment:mission_overlay
-D_800A6D38 = 0x800A6D38; // type:asciz segment:mission_overlay
-D_800A6D40 = 0x800A6D40; // type:asciz segment:mission_overlay
-D_800A6D48 = 0x800A6D48; // type:asciz segment:mission_overlay
-D_800A7DE0 = 0x800A7DE0; // type:asciz segment:mission_overlay
-D_800A7DEC = 0x800A7DEC; // type:asciz segment:mission_overlay
-D_800A7DF8 = 0x800A7DF8; // type:asciz segment:mission_overlay
-D_800A7E00 = 0x800A7E00; // type:asciz segment:mission_overlay
-D_800A7E0C = 0x800A7E0C; // type:asciz segment:mission_overlay
-D_800A7F60 = 0x800A7F60; // type:asciz segment:mission_overlay
-D_800A7F68 = 0x800A7F68; // type:asciz segment:mission_overlay
-D_800A7F74 = 0x800A7F74; // type:asciz segment:mission_overlay
-D_800A7F80 = 0x800A7F80; // type:asciz segment:mission_overlay
-D_800A7F88 = 0x800A7F88; // type:asciz segment:mission_overlay
-D_800A7F94 = 0x800A7F94; // type:asciz segment:mission_overlay
-D_800A8290 = 0x800A8290; // type:asciz segment:mission_overlay
-D_800A8298 = 0x800A8298; // type:asciz segment:mission_overlay
-D_800A82A0 = 0x800A82A0; // type:asciz segment:mission_overlay
-D_800A82AC = 0x800A82AC; // type:asciz segment:mission_overlay
-D_800A82B8 = 0x800A82B8; // type:asciz segment:mission_overlay
-D_800A8FE4 = 0x800A8FE4; // type:asciz segment:mission_overlay
-D_800A8FEC = 0x800A8FEC; // type:asciz segment:mission_overlay
-D_800A8FF0 = 0x800A8FF0; // type:asciz segment:mission_overlay
-D_800A8FFC = 0x800A8FFC; // type:asciz segment:mission_overlay
-D_800A9004 = 0x800A9004; // type:asciz segment:mission_overlay
-D_800A9010 = 0x800A9010; // type:asciz segment:mission_overlay
-D_800A9018 = 0x800A9018; // type:asciz segment:mission_overlay
-D_800A9020 = 0x800A9020; // type:asciz segment:mission_overlay
-D_800A9028 = 0x800A9028; // type:asciz segment:mission_overlay
-D_800A90B0 = 0x800A90B0; // type:asciz segment:mission_overlay
-D_800A90C0 = 0x800A90C0; // type:asciz segment:mission_overlay
-D_800A90D0 = 0x800A90D0; // type:asciz segment:mission_overlay
-D_800A90DC = 0x800A90DC; // type:asciz segment:mission_overlay
-D_800A90E8 = 0x800A90E8; // type:asciz segment:mission_overlay
-D_800A90F4 = 0x800A90F4; // type:asciz segment:mission_overlay
-D_800A9100 = 0x800A9100; // type:asciz segment:mission_overlay
-D_800A910C = 0x800A910C; // type:asciz segment:mission_overlay
-D_800A9118 = 0x800A9118; // type:asciz segment:mission_overlay
-D_800A9124 = 0x800A9124; // type:asciz segment:mission_overlay
+strMissC5L2                   = 0x800A61E0; // type:asciz segment:mission_overlay - 'c5_l2'
+strMissC3L2                   = 0x800A61E8; // type:asciz segment:mission_overlay - 'c3_l2'
+strMissC3L1                   = 0x800A61F0; // type:asciz segment:mission_overlay - 'c3_l1'
+strMissC2L3                   = 0x800A61F8; // type:asciz segment:mission_overlay - 'c2_l3'
+strMissC2L1                   = 0x800A6200; // type:asciz segment:mission_overlay - 'c2_l1'
+strMissC1L1                   = 0x800A6208; // type:asciz segment:mission_overlay - 'c1_l1'
+strMissOvOvKoelsch            = 0x800A6250; // type:asciz segment:mission_overlay - 'ov/ov_koelsch'
+strMissOvOvT16                = 0x800A6260; // type:asciz segment:mission_overlay - 'ov/ov_t16'
+strMissOvOvIntercept          = 0x800A626C; // type:asciz segment:mission_overlay - 'ov/ov_intercept'
+strMissOvOvFalcon             = 0x800A627C; // type:asciz segment:mission_overlay - 'ov/ov_falcon'
+strMissOvOvSpdr               = 0x800A628C; // type:asciz segment:mission_overlay - 'ov/ov_spdr'
+strMissOvOvVwing              = 0x800A6298; // type:asciz segment:mission_overlay - 'ov/ov_vwing'
+strMissOvOvAwing              = 0x800A62A4; // type:asciz segment:mission_overlay - 'ov/ov_awing'
+strMissOvOvYwing              = 0x800A62B0; // type:asciz segment:mission_overlay - 'ov/ov_ywing'
+strMissOvOvXwing              = 0x800A62BC; // type:asciz segment:mission_overlay - 'ov/ov_xwing'
+strMissBomb                   = 0x800A62C8; // type:asciz segment:mission_overlay - 'bomb'
+strMissTorp                   = 0x800A62D0; // type:asciz segment:mission_overlay - 'torp'
+strMissClust                  = 0x800A62D8; // type:asciz segment:mission_overlay - 'clust'
+strMissMissl                  = 0x800A62E0; // type:asciz segment:mission_overlay - 'missl'
+strMissGnrcStuffRLogo         = 0x800A6420; // type:asciz segment:mission_overlay - 'gnrc_stuff/r_logo'
+strMissCKolsch                = 0x800A6880; // type:asciz segment:mission_overlay - 'c_kolsch'
+strMissCT16                   = 0x800A688C; // type:asciz segment:mission_overlay - 'c_t16'
+strMissCTie                   = 0x800A6894; // type:asciz segment:mission_overlay - 'c_tie'
+strMissCFal                   = 0x800A689C; // type:asciz segment:mission_overlay - 'c_fal'
+strMissCSpdr                  = 0x800A68A4; // type:asciz segment:mission_overlay - 'c_spdr'
+strMissCVwg                   = 0x800A68AC; // type:asciz segment:mission_overlay - 'c_vwg'
+strMissCAwg                   = 0x800A68B4; // type:asciz segment:mission_overlay - 'c_awg'
+strMissCYwg                   = 0x800A68BC; // type:asciz segment:mission_overlay - 'c_ywg'
+strMissCXwg                   = 0x800A68C4; // type:asciz segment:mission_overlay - 'c_xwg'
+strMissCkpg2w                 = 0x800A68CC; // type:asciz segment:mission_overlay - 'ckpg2w'
+strMissCkpg2g                 = 0x800A68D4; // type:asciz segment:mission_overlay - 'ckpg2g'
+strMissCkpg2r                 = 0x800A68DC; // type:asciz segment:mission_overlay - 'ckpg2r'
+strMissCkpg1w                 = 0x800A68E4; // type:asciz segment:mission_overlay - 'ckpg1w'
+strMissCkpg1g                 = 0x800A68EC; // type:asciz segment:mission_overlay - 'ckpg1g'
+strMissCkpg1r                 = 0x800A68F4; // type:asciz segment:mission_overlay - 'ckpg1r'
+strMissCkpg3r                 = 0x800A68FC; // type:asciz segment:mission_overlay - 'ckpg3r'
+strMissRlfb                   = 0x800A6D10; // type:asciz segment:mission_overlay - 'rlfb'
+strMissRlrb                   = 0x800A6D18; // type:asciz segment:mission_overlay - 'rlrb'
+strMissLlrb                   = 0x800A6D20; // type:asciz segment:mission_overlay - 'llrb'
+strMissLlfb                   = 0x800A6D28; // type:asciz segment:mission_overlay - 'llfb'
+strMissRlft                   = 0x800A6D30; // type:asciz segment:mission_overlay - 'rlft'
+strMissRlrt                   = 0x800A6D38; // type:asciz segment:mission_overlay - 'rlrt'
+strMissLlrt                   = 0x800A6D40; // type:asciz segment:mission_overlay - 'llrt'
+strMissLlft                   = 0x800A6D48; // type:asciz segment:mission_overlay - 'llft'
+strMissRohrTr2                = 0x800A7DE0; // type:asciz segment:mission_overlay - 'rohr_tr2'
+strMissBarrelT                = 0x800A7DEC; // type:asciz segment:mission_overlay - 'barrel_t'
+strMissTopTr2                 = 0x800A7DF8; // type:asciz segment:mission_overlay - 'top_tr2'
+strMissRohrTra                = 0x800A7E00; // type:asciz segment:mission_overlay - 'rohr_tra'
+strMissTopTran                = 0x800A7E0C; // type:asciz segment:mission_overlay - 'top_tran'
+strMissArmTrn                 = 0x800A7F60; // type:asciz segment:mission_overlay - 'arm_trn'
+strMissTpTrn3                 = 0x800A7F68; // type:asciz segment:mission_overlay - 'tp_trn_3'
+strMissBrTrn2                 = 0x800A7F74; // type:asciz segment:mission_overlay - 'br_trn_2'
+strMissBrTrn                  = 0x800A7F80; // type:asciz segment:mission_overlay - 'br_trn'
+strMissTpTrn2                 = 0x800A7F88; // type:asciz segment:mission_overlay - 'tp_trn_2'
+strMissTpTrn                  = 0x800A7F94; // type:asciz segment:mission_overlay - 'tp_trn'
+strMissGun1                   = 0x800A8290; // type:asciz segment:mission_overlay - 'gun_1'
+strMissGun2                   = 0x800A8298; // type:asciz segment:mission_overlay - 'gun_2'
+strMissRohrTrn                = 0x800A82A0; // type:asciz segment:mission_overlay - 'rohr_trn'
+strMissBrrlTrn                = 0x800A82AC; // type:asciz segment:mission_overlay - 'brrl_trn'
+strMissTopTrn                 = 0x800A82B8; // type:asciz segment:mission_overlay - 'top_trn'
+strMissKoelsch                = 0x800A8FE4; // type:asciz segment:mission_overlay - 'koelsch'
+strMissT16                    = 0x800A8FEC; // type:asciz segment:mission_overlay - 't16'
+strMissTieinter               = 0x800A8FF0; // type:asciz segment:mission_overlay - 'tieinter'
+strMissFalcon                 = 0x800A8FFC; // type:asciz segment:mission_overlay - 'falcon'
+strMissSnowspeeder            = 0x800A9004; // type:asciz segment:mission_overlay - 'snowspeeder'
+strMissVwing                  = 0x800A9010; // type:asciz segment:mission_overlay - 'vwing'
+strMissAwing                  = 0x800A9018; // type:asciz segment:mission_overlay - 'awing'
+strMissYwing                  = 0x800A9020; // type:asciz segment:mission_overlay - 'ywing'
+strMissXwing                  = 0x800A9028; // type:asciz segment:mission_overlay - 'xwing'
+strMissOvOvMtrack             = 0x800A90B0; // type:asciz segment:mission_overlay - 'ov/ov_mtrack'
+strMissOvOvMtarget            = 0x800A90C0; // type:asciz segment:mission_overlay - 'ov/ov_mtarget'
+strMissOvOvLockb              = 0x800A90D0; // type:asciz segment:mission_overlay - 'ov/ov_lockb'
+strMissOvOvLockt              = 0x800A90DC; // type:asciz segment:mission_overlay - 'ov/ov_lockt'
+strMissOvOvLockr              = 0x800A90E8; // type:asciz segment:mission_overlay - 'ov/ov_lockr'
+strMissOvOvLockl              = 0x800A90F4; // type:asciz segment:mission_overlay - 'ov/ov_lockl'
+strMissOvOvLockc              = 0x800A9100; // type:asciz segment:mission_overlay - 'ov/ov_lockc'
+strMissOvOvBomb               = 0x800A910C; // type:asciz segment:mission_overlay - 'ov/ov_bomb'
+strMissOvOvTrack              = 0x800A9118; // type:asciz segment:mission_overlay - 'ov/ov_track'
+strMissOvOvTarget             = 0x800A9124; // type:asciz segment:mission_overlay - 'ov/ov_target'
 D_800A9430 = 0x800A9430; // type:asciz segment:mission_overlay
 D_800A9434 = 0x800A9434; // type:asciz segment:mission_overlay
 D_800A9438 = 0x800A9438; // type:asciz segment:mission_overlay
@@ -107,11 +104,11 @@ D_800A943C = 0x800A943C; // type:asciz segment:mission_overlay
 D_800A9440 = 0x800A9440; // type:asciz segment:mission_overlay
 D_800A9590 = 0x800A9590; // type:asciz size:0x15 segment:mission_overlay
 D_800A9614 = 0x800A9614; // type:asciz size:0xA  segment:mission_overlay
-D_800A9714 = 0x800A9714; // type:asciz size:0x10 segment:mission_overlay
+strMissCutTieInt2             = 0x800A9714; // type:asciz size:0x10 segment:mission_overlay - 'cut_tie_int2'
 D_800A9850 = 0x800A9850; // type:asciz size:0xB  segment:mission_overlay
 D_800A9A5C = 0x800A9A5C; // type:asciz size:0x17 segment:mission_overlay
-D_800A9B48 = 0x800A9B48; // type:asciz size:0x10 segment:mission_overlay
-D_800A9B60 = 0x800A9B60; // type:asciz size:0x18 segment:mission_overlay
+strMissCameraOnRogue          = 0x800A9B48; // type:asciz size:0x10 segment:mission_overlay - 'Camera_on_Rogue'
+strMissMUSICRNGLevelSettings  = 0x800A9B60; // type:asciz size:0x18 segment:mission_overlay - 'MUSICRNG_LevelSettings'
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
@@ -158,10 +155,10 @@ placeRadarDots  = 0x800C51E0; // segment:mission_overlay
 
 getCurrentLevel = 0x800C7504; // segment:mission_overlay
 
-initializeObjectiveTracking = 0x800C72B0; // segment:mission_overlay
-func_800C72E8               = 0x800C72E8; // segment:mission_overlay
-calculateFriendliesSaved    = 0x800C7320; // segment:mission_overlay
-checkComplexObjectives      = 0x800C7358; // segment:mission_overlay
+initializeObjectiveTracking = 0x800C72B0; // segment:mission_overlay - dispatcher: calls D_8010A450[gCurrentLevel].slot0
+dispatchObjectiveSlot1      = 0x800C72E8; // segment:mission_overlay - dispatcher: calls D_8010A450[gCurrentLevel].slot1 (the lvN_objectiveSlot1 vtable slot)
+calculateFriendliesSaved    = 0x800C7320; // segment:mission_overlay - dispatcher: calls D_8010A450[gCurrentLevel].slot2
+checkComplexObjectives      = 0x800C7358; // segment:mission_overlay - dispatcher: calls D_8010A450[gCurrentLevel].slot3
 
 dealDamagetoDatItem              = 0x800C7390; // segment:mission_overlay
 setObjectiveBoolean              = 0x800C7540; // segment:mission_overlay
@@ -232,112 +229,112 @@ getHudSecondaryWeponCount = 0x800FEEF4; // segment:mission_overlay
 
 lv0_initializeObjectTracking = 0x80101090; // segment:mission_overlay
 lv0_checkComplexObjectives   = 0x8010119C; // segment:mission_overlay
-lv0_80101954                 = 0x80101954; // segment:mission_overlay
+lv0_objectiveSlot1          = 0x80101954; // segment:mission_overlay
 lv0_calculateFriendliesSaved = 0x8010195C; // segment:mission_overlay
 
 lv1_initializeObjectTracking = 0x801019A0; // segment:mission_overlay
-lv1_80101BE4                 = 0x80101BE4; // segment:mission_overlay
+lv1_objectiveSlot1          = 0x80101BE4; // segment:mission_overlay
 lv1_calculateFriendliesSaved = 0x80101BEC; // segment:mission_overlay
 lv1_checkComplexObjectives   = 0x80101C48; // segment:mission_overlay
 
 lv2_initializeObjectTracking = 0x80101CD0; // segment:mission_overlay
 lv2_checkComplexObjectives   = 0x80101EF4; // segment:mission_overlay
-lv2_80102A64                 = 0x80102A64; // segment:mission_overlay
+lv2_objectiveSlot1          = 0x80102A64; // segment:mission_overlay
 lv2_calculateFriendliesSaved = 0x80102A6C; // segment:mission_overlay
 
 lv3_initializeObjectTracking = 0x80102AA0; // segment:mission_overlay
 lv3_checkComplexObjectives   = 0x80102D08; // segment:mission_overlay
-lv3_80103528                 = 0x80103528; // segment:mission_overlay
+lv3_objectiveSlot1          = 0x80103528; // segment:mission_overlay
 lv3_calculateFriendliesSaved = 0x80103530; // segment:mission_overlay
 
 lv4_initializeObjectTracking = 0x80103580; // segment:mission_overlay
 lv4_checkComplexObjectives   = 0x80103720; // segment:mission_overlay
-lv4_80103CBC                 = 0x80103CBC; // segment:mission_overlay
+lv4_objectiveSlot1          = 0x80103CBC; // segment:mission_overlay
 lv4_calculateFriendliesSaved = 0x80103CC4; // segment:mission_overlay
 
 lv5_initializeObjectTracking = 0x80103D10; // segment:mission_overlay
-lv5_80104110                 = 0x80104110; // segment:mission_overlay
+lv5_objectiveSlot1          = 0x80104110; // segment:mission_overlay
 lv5_calculateFriendliesSaved = 0x80104118; // segment:mission_overlay
 lv5_checkComplexObjectives   = 0x8010415C; // segment:mission_overlay
 
 lv6_checkComplexObjectives   = 0x80104210; // segment:mission_overlay
 lv6_initializeObjectTracking = 0x8010439C; // segment:mission_overlay
-lv6_8010443C                 = 0x8010443C; // segment:mission_overlay
+lv6_objectiveSlot1          = 0x8010443C; // segment:mission_overlay
 lv6_calculateFriendliesSaved = 0x80104444; // segment:mission_overlay
 
 lv7_checkComplexObjectives   = 0x801044E0; // segment:mission_overlay
 lv7_initializeObjectTracking = 0x80104A0C; // segment:mission_overlay
-lv7_80104A58                 = 0x80104A58; // segment:mission_overlay
+lv7_objectiveSlot1          = 0x80104A58; // segment:mission_overlay
 lv7_calculateFriendliesSaved = 0x80104A60; // segment:mission_overlay
 
 lv8_checkComplexObjectives   = 0x80104AA0; // segment:mission_overlay
 lv8_initializeObjectTracking = 0x80104D8C; // segment:mission_overlay
-lv8_80104E64                 = 0x80104E64; // segment:mission_overlay
+lv8_objectiveSlot1          = 0x80104E64; // segment:mission_overlay
 lv8_calculateFriendliesSaved = 0x80104E9C; // segment:mission_overlay
 
 lv9_initializeObjectTracking = 0x80104F80; // segment:mission_overlay
 lv9_checkComplexObjectives   = 0x801051CC; // segment:mission_overlay
-lv9_80105B00                 = 0x80105B00; // segment:mission_overlay
+lv9_objectiveSlot1          = 0x80105B00; // segment:mission_overlay
 lv9_calculateFriendliesSaved = 0x80105B08; // segment:mission_overlay
 
 lva_initializeObjectTracking = 0x80105B60; // segment:mission_overlay
-lva_80106100                 = 0x80106100; // segment:mission_overlay
+lva_objectiveSlot1          = 0x80106100; // segment:mission_overlay
 lva_calculateFriendliesSaved = 0x80106108; // segment:mission_overlay
 lva_checkComplexObjectives   = 0x80106134; // segment:mission_overlay
 
 lvb_initializeObjectTracking = 0x801061A0; // segment:mission_overlay
 lvb_checkComplexObjectives   = 0x801062E4; // segment:mission_overlay
-lvb_80106B98                 = 0x80106B98; // segment:mission_overlay
+lvb_objectiveSlot1          = 0x80106B98; // segment:mission_overlay
 lvb_calculateFriendliesSaved = 0x80106BA0; // segment:mission_overlay
 
 lvc_initializeObjectTracking = 0x80106BF0; // segment:mission_overlay
 lvc_checkComplexObjectives   = 0x80106D3C; // segment:mission_overlay
-lvc_801071E8                 = 0x801071E8; // segment:mission_overlay
+lvc_objectiveSlot1          = 0x801071E8; // segment:mission_overlay
 lvc_calculateFriendliesSaved = 0x801071F0; // segment:mission_overlay
 
 lvd_initializeObjectTracking = 0x80107220; // segment:mission_overlay
-lvd_80107290                 = 0x80107290; // segment:mission_overlay
+lvd_objectiveSlot1          = 0x80107290; // segment:mission_overlay
 lvd_calculateFriendliesSaved = 0x80107298; // segment:mission_overlay
 lvd_checkComplexObjectives   = 0x801072A0; // segment:mission_overlay
 
 lve_initializeObjectTracking = 0x80107370; // segment:mission_overlay
 lve_checkComplexObjectives   = 0x80107578; // segment:mission_overlay
-lve_80107E58                 = 0x80107E58; // segment:mission_overlay
+lve_objectiveSlot1          = 0x80107E58; // segment:mission_overlay
 lve_calculateFriendliesSaved = 0x80107E60; // segment:mission_overlay
 
 lvf_initializeObjectTracking = 0x80107EB0; // segment:mission_overlay
 lvf_checkComplexObjectives   = 0x8010802C; // segment:mission_overlay
-lvf_80108494                 = 0x80108494; // segment:mission_overlay
+lvf_objectiveSlot1          = 0x80108494; // segment:mission_overlay
 lvf_calculateFriendliesSaved = 0x8010849C; // segment:mission_overlay
 
 lvg_checkComplexObjectives   = 0x801084E0; // segment:mission_overlay
 lvg_initializeObjectTracking = 0x80108B34; // segment:mission_overlay
-lvg_80108B7C                 = 0x80108B7C; // segment:mission_overlay
+lvg_objectiveSlot1          = 0x80108B7C; // segment:mission_overlay
 lvg_calculateFriendliesSaved = 0x80108B84; // segment:mission_overlay
 
 lvh_initializeObjectTracking = 0x80108B90; // segment:mission_overlay
-lvh_80108E68                 = 0x80108E68; // segment:mission_overlay
+lvh_objectiveSlot1          = 0x80108E68; // segment:mission_overlay
 lvh_calculateFriendliesSaved = 0x80108E70; // segment:mission_overlay
 lvh_checkComplexObjectives   = 0x80108EB0; // segment:mission_overlay
 
 lvi_checkComplexObjectives   = 0x80108F60; // segment:mission_overlay
 lvi_initializeObjectTracking = 0x80109114; // segment:mission_overlay
-lvi_801091F8                 = 0x801091F8; // segment:mission_overlay
+lvi_objectiveSlot1          = 0x801091F8; // segment:mission_overlay
 lvi_calculateFriendliesSaved = 0x80109200; // segment:mission_overlay
 
 lvk_checkComplexObjectives   = 0x80109430; // segment:mission_overlay
 lvk_initializeObjectTracking = 0x80109590; // segment:mission_overlay
-lvk_801095CC                 = 0x801095CC; // segment:mission_overlay
+lvk_objectiveSlot1          = 0x801095CC; // segment:mission_overlay
 lvk_calculateFriendliesSaved = 0x801095D4; // segment:mission_overlay
 
 lvj_initializeObjectTracking = 0x80109620; // segment:mission_overlay
-lvj_80109628                 = 0x80109628; // segment:mission_overlay
+lvj_objectiveSlot1          = 0x80109628; // segment:mission_overlay
 lvj_calculateFriendliesSaved = 0x80109630; // segment:mission_overlay
 lvj_checkComplexObjectives   = 0x80109638; // segment:mission_overlay
 
 // Fake Function Fixing
 fake_func_800AA6CC = 0x800AA6CC; // segment:mission_overlay
-func_800AA6D0      = 0x800AA6D0; // segment:mission_overlay
+npcPredictedRangeCheck = 0x800AA6D0; // segment:mission_overlay - 13+ NPC callers: extrapolates NPC pos by vel*dt, squared-distance against +0x10/+0x14/+0x18 target, vs +0x1C threshold; walks NPC chain via u16 indices from arg2[+0x0]
 
 fake_func_800AAADC = 0x800AAADC; // segment:mission_overlay
 // real function is playerSnowSpeederInit
@@ -367,7 +364,10 @@ fake_func_800BCC38 = 0x800BCC38; // segment:mission_overlay
 // real function is playerT16Init
 
 fake_func_800BEBFC = 0x800BEBFC; // segment:mission_overlay
-func_800BEC00      = 0x800BEC00; // segment:mission_overlay
+initDemoPlayState  = 0x800BEC00; // segment:mission_overlay - resets gGameSettings flags/channels/seeds RNG for demo playback (called by loadAndStartDemo); saves originals to 0x8010BCA4..BCB2
+applyResModeFromSettings = 0x800BF358; // segment:mission_overlay - if gGameSettings.flags has bit 0x60 (demo/cinematic) AND +0x23 != 0, OR bit 0x1 into flags and propagates to MEM[0x80137D00] and MEM[0x8013805C]
+restoreGameSettingsAfterDemo = 0x800BF3A4; // segment:mission_overlay - symmetric counterpart of initDemoPlayState: copies 0x8010BCA4..BCB2 snapshot back to gGameSettings (+0xC, +0x10, +0x5, +0x20..22), then func_8006E468 (3-channel reset)
+loadAndStartDemo   = 0x800BF408; // segment:mission_overlay - (demoIdx) → sprintf "demo/%s_DEM" from gDemoFilenames[idx], load_asset, initDemoPlayState, OR bit 0x20 into gGameSettings+0x10
 
 fake_func_800BF498 = 0x800BF498; // segment:mission_overlay
 func_800BF4A0      = 0x800BF4A0; // segment:mission_overlay
@@ -430,16 +430,16 @@ fake_func_800ED148 = 0x800ED148; // segment:mission_overlay
 func_800ED150      = 0x800ED150; // segment:mission_overlay
 
 fake_func_800EFD74 = 0x800EFD74; // segment:mission_overlay
-func_800EFD80      = 0x800EFD80; // segment:mission_overlay
 
 fake_func_800EFDDC = 0x800EFDDC; // segment:mission_overlay
-func_800EFDE0      = 0x800EFDE0; // segment:mission_overlay
+updateNpcEventTimer = 0x800EFDE0; // segment:mission_overlay - 14+ NPC callers: decrements timer at npc[+0x124] by dt; when expired, looks up dat-item via getLevelDatItemByName and triggers event
 
 fake_func_800FA248 = 0x800FA248; // segment:mission_overlay
-func_800FA250      = 0x800FA250; // segment:mission_overlay
+initMission        = 0x800FA250; // segment:mission_overlay - one-time mission init from mainGameLoop: setRngSeed, initNpcSlotList, allocNpcContextArrays, loadSndFiles, etc.
+runInMissionFrame  = 0x800FA6A4; // segment:mission_overlay - in-mission per-frame update (called from mainGameLoop); kicks demos when gGameSettings flag 0x20 set, then runs main update logic
 
+tickMissionObjectives = 0x800FBC4C; // segment:mission_overlay - per-frame mission-objective state machine: timer (MEM[0x8010C9EC]) + state (MEM[0x8010C9F0]); transitions call slotDispatcherIter, dispatchObjectiveSlot1, audio cmds
 fake_func_800FBE14 = 0x800FBE14; // segment:mission_overlay
-func_800FBE20      = 0x800FBE20; // segment:mission_overlay
 
 fake_func_800FEF04 = 0x800FEF04; // segment:mission_overlay
 func_800FEF10      = 0x800FEF10; // segment:mission_overlay
@@ -573,10 +573,9 @@ D_80109AD0 = 0x80109AD0; //          size:0x10 segment:mission_overlay
 
 demoStep = 0x80109AE0; // type:u32 segment:mission_overlay
 
-D_80109AE4 = 0x80109AE4; // type:char* size:0x18  segment:mission_overlay
+gDemoFilenames = 0x80109AE4; // type:char* size:0x18  segment:mission_overlay - 6 demo asset name strings ("c1_l1", "c2_l1", "c2_l3", "c3_l1", "c3_l2", "c5_l2") indexed by demoId, used with "demo/%s_DEM" format
 // type_size:0x18 count:0x12
 D_80109B00 = 0x80109B00; //            size:0x1B0 segment:mission_overlay
-D_80109CB0 = 0x80109CB0; // type:char* size:0x24  segment:mission_overlay
 
 secondaryWeaponRingColors   = 0x80109CE4; // type:u32 size:0xC  segment:mission_overlay
 secondaryWeaponSymbolColors = 0x80109CF0; // type:u32 size:0xC  segment:mission_overlay
@@ -595,9 +594,6 @@ D_80109F24 = 0x80109F24; // type:u32 size:0x58 segment:mission_overlay
 
 D_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
 
-D_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
-D_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
-D_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
 D_8010A090 = 0x8010A090; // type:f32           segment:mission_overlay
 D_8010A120 = 0x8010A120; // type:f32 size:0x24 segment:mission_overlay
 // 9 Vec3fs
@@ -618,7 +614,7 @@ D_8010A3DC = 0x8010A3DC; // type:u32 size:0x38 segment:mission_overlay
 
 D_8010A420 = 0x8010A420; // size:0x24 segment:mission_overlay
 
-D_8010A450 = 0x8010A450; // size:0x150 segment:mission_overlay
+gMissionObjectiveVtable = 0x8010A450; // size:0x150 segment:mission_overlay - 21 entries of {init, slot1, calculateFriendliesSaved, checkComplex} fn ptrs (per docs/mission_objectives)
 D_8010A5AC = 0x8010A5AC; // type:f32 size:0xC  segment:mission_overlay
 D_8010A5CC = 0x8010A5CC; // type:f32 size:0x2C segment:mission_overlay
 D_8010A600 = 0x8010A600; // type:f32 size:0x4  segment:mission_overlay

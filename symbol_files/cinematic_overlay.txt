@@ -2,18 +2,18 @@
 /////////////////////////////////// Strings ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_800A5140 = 0x800A5140; // type:asciz segment:cinematic_overlay
-D_800A5148 = 0x800A5148; // type:asciz segment:cinematic_overlay
-D_800A5150 = 0x800A5150; // type:asciz segment:cinematic_overlay
-D_800A517C = 0x800A517C; // type:asciz segment:cinematic_overlay
+strCutsceneTypeSpecial = 0x800A5140; // type:asciz segment:cinematic_overlay - "special" (CUTSCENE_SPECIAL type)
+strCutsceneTypeExtro   = 0x800A5148; // type:asciz segment:cinematic_overlay - "extro" (CUTSCENE_EXTRO type)
+strCutsceneTypeIntro   = 0x800A5150; // type:asciz segment:cinematic_overlay - "intro" (CUTSCENE_INTRO type)
+strCinPlCraftsVwing    = 0x800A517C; // type:asciz segment:cinematic_overlay - "pl_crafts/vwing"
 D_800A5300 = 0x800A5300; // type:asciz segment:cinematic_overlay
-D_800A5304 = 0x800A5304; // type:asciz segment:cinematic_overlay
+strCinRedbox1                 = 0x800A5304; // type:asciz segment:cinematic_overlay - '-redbox#1'
 D_800A5308 = 0x800A5308; // type:asciz segment:cinematic_overlay
 D_800A530C = 0x800A530C; // type:asciz segment:cinematic_overlay
-D_800A5984 = 0x800A5984; // type:asciz segment:cinematic_overlay
-D_800A5994 = 0x800A5994; // type:asciz segment:cinematic_overlay
-D_800A59A4 = 0x800A59A4; // type:asciz segment:cinematic_overlay
-D_800A5B9C = 0x800A5B9C; // type:asciz segment:cinematic_overlay
+strCinPlCraftsXwing = 0x800A5984; // type:asciz segment:cinematic_overlay - "pl_crafts/xwing"
+strCinPlCraftsYwing = 0x800A5994; // type:asciz segment:cinematic_overlay - "pl_crafts/ywing"
+strCinPlCraftsAwing = 0x800A59A4; // type:asciz segment:cinematic_overlay - "pl_crafts/awing"
+D_800A5B9C = 0x800A5B9C; // type:asciz segment:cinematic_overlay - corrupted/short "P\0\0\0\0\0"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
@@ -21,6 +21,14 @@ D_800A5B9C = 0x800A5B9C; // type:asciz segment:cinematic_overlay
 
 load_cutscene         = 0x800A6620; // segment:cinematic_overlay
 cuts_0058_bubble_sort = 0x800AEA28; // segment:cinematic_overlay
+freeCutsceneResources = 0x800AEB38; // segment:cinematic_overlay - calls freeTxtFile, freeManifestSegmentAssets(MEM[0x80137CFC]), zmemcpy 0x50B default config to 0x800B0960
+processCutsceneActions = 0x800ACE8C; // segment:cinematic_overlay - iterates cuts_file.unk0058 entries (active count at +0x4E); for sub_type==0x15 stores +0x62 halfword; gated by MEM[0x80130B38] + MEM[0x800B0B1E]; called from load_cutscene
+computeCutsceneScreenScale = 0x800AD224; // segment:cinematic_overlay - per-frame screen-scale computation; reads MEM[0x800B0B0C/B2/B6] halfwords and 0x800A5A24/5A28 FP constants. Returns f24=2.0 in hi-res mode, 1.0 in lo-res (per project_cinematic_dual_drive memory)
+setupCutsceneLevel    = 0x800A6CE4; // segment:cinematic_overlay - cinematic level setup: initNpcBookkeepingTables + scene globals + loadLevelAssets(MEM[0x800B090C+idx*2]); called from cinematicLoopBody
+initCinematicDispatchSlots = 0x800A6FC0; // segment:cinematic_overlay - zeros 4-entry dispatcher table at MEM[0x800B09C0] and builds linked-list-by-pointer at MEM[0x800B0A00..A14]; called once per cinematic from cinematicLoopBody
+initCutsceneSlotTable      = 0x800AEFC8; // segment:cinematic_overlay - zeros halfword[0] of each of 64 slots (0x30B stride) at MEM[0x800B0D00..0x800B1900]; per-cutscene init from cinematicLoopBody
+insertCutsceneSlot         = 0x800AEFF0; // segment:cinematic_overlay - finds first slot in MEM[0x800B0D00] table whose halfword[0]==0 and zmemcpy's 0x30B from $a0 into it
+lookupCutsceneIdMapping    = 0x800AF03C; // segment:cinematic_overlay - (key:u16) linear search of 94-entry {u16 key, u16 value} table at MEM[0x800AF7B4]; returns value or 0xFFFF
 
 // Fake Function Fixing
 fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay
@@ -29,6 +37,7 @@ fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay
 ////////////////////////////////// Variables ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+gCutsceneIdMappingTable = 0x800AF7B4; // type:u32 size:0x178 segment:cinematic_overlay - 94 entries of {u16 key, u16 value}, linear-searched by lookupCutsceneIdMapping
 // type_size:0x5C count:0x20
 D_800AF92C = 0x800AF92C; // type:u32 size:0xB80 segment:cinematic_overlay
 // type_size:0x14 count:0x20
