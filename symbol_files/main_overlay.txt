@@ -319,6 +319,213 @@ getSecondaryWeaponForCraftLevel      = 0x800C6728; // craft + level → secondar
 setDmaSlotMaxTxStepSize              = 0x80005938; // sets D_80111254 (unused in practice)
 parseImageFile                       = 0x8001EB24; // switch/case on image type, parses headers
 loadTextureToMemory                  = 0x8001F954; // loads a texture into D_80128F08 chain
+decodeRdpFormatFlags                 = 0x8001E978; // 6-case jump table mapping texture-format codes 0..5 to RDP G_IM_FMT_* values, preserves upper tile-mode flag bits (0x80-0x8000). Called from texture-descriptor parsers.
+decodeRdpSizeFlags                   = 0x8001EA50; // sister to decodeRdpFormatFlags; 6-case jump table mapping texture-size codes (mask 0xF) to RDP G_IM_SIZ_* values, preserves upper bits. Called from loadTextureToMemory.
+freeTextureDataSlot                  = 0x8001E7D0; // takes (texIdx); first calls unlinkTextureMaterialList to dispose materials, then locates slot in 36-byte-stride texture LUT at 0x80128F08[texIdx], computes (base+size) tail-extent vs heap top (0x800FA7D8), and shifts trailing texture data down by entry.size to compact. Called from releaseTextureLutEntry.
+freeTextureTlutBlock                 = 0x8001E6E0; // (texIdx u16, format u8) — releases TLUT/palette block for a texture: CI4 format (1) uses 16-color (32-byte) stride, else 256-color (512-byte) stride. Reads ptr from texture LUT (0x80128EFC) by texIdx*4, shifts subsequent TLUT memory at MEM[0x8011A7D0] down to compact. Called from freeTextureDataSlot.
+allocTextureTlutBlock                = 0x8001E5A0; // (texIdx u16, tlutSrc u32, format u32, count u16, ...) — allocates a TLUT/palette block in the texture LUT: format & 0xF selects size (0 → 16-color/32B, 1 → 256-color/512B, else returns 0xFFFF). If texIdx == 0xFFFF, scans texture LUT at 0x80128EFC for a free slot. Validates that tlutSrc is a kseg0 (0x80000000-prefix) ptr. Companion allocator to freeTextureTlutBlock; calls the per-format pixel-pack helper packTlutEntriesRgba5551.
+packTlutEntriesRgba5551              = 0x8001E36C; // (dst, formatFlag, src, count, [sp+0x10]=alphaSrc) — packs `count` 4-byte source palette entries into RGBA5551 halfwords at `dst`. Source byte layout reads bytes at src+1 (R), src+0 (B), src-1 (G); alpha bit derived per-pixel from alphaSrc byte 0 (set if non-zero, else 0). Result halfword = (R<<11 & 0xF800) | (G<<3 & 0x7C0) | (B>>2 & 0x3E) | A. Called from allocTextureTlutBlock.
+findTextureByName                    = 0x80022D68; // (name str) — searches the loaded-texture name table: count at MEM_HU[0x8011A8B4], indices at 0x8011A444 (stride 2 halfwords). For each entry, switches between primary (texture LUT at 0x80128F08, 36-byte stride, name at +0x14) and alternate (MEM_W[0x801143AC] table, 16-byte entries, gated by halfword bit 0x2) source based on flags. Returns matching index via rs_strncmp(name, table_entry, 0x10), or 0 if not found.
+loadAndDecodeTexture                 = 0x80022FF8; // (texLutEntry, bufPtrPtr, ?, ?) — main texture decode driver: if *bufPtrPtr is null, rs_mallocs a buffer (size from texLutEntry+0xC), stores at *bufPtrPtr, marks owner flag at texLutEntry+0x2. Looks up real texture index via gTextureIndex (0x8011A444), reads w/h/format/etc from main texture LUT (0x80128F08, 36-byte stride), calls parseImageFile to decode the asset stream, then applies tile-mode flags (bit 0x800 / 0x400). Called from func_800547C0.
+texPackTlutAtAllocSlot               = 0x800233B0; // (key u32, fmt u8, alphaFlag u8, hasAlphaSrc u8) — TLUT pack wrapper that always searches for a free slot then allocates fresh storage. Builds flag word (0x10-XOR'd fmt bit | 0x8000 if alphaFlag | 0x4000 if hasAlphaSrc), validates key has 0x8000_xxxx magic, walks TLUT registry at 0x80128EFC[count=0x80128F04] for value==0, decrements high-water allocator at 0x8012A7D0 by sizeof(entries)*2, writes new chunk into slot, then calls packTlutEntriesRgba5551. Format & 0xF dispatches size: 0 → 16 entries / 1 → 256 entries / else returns 0xFFFF.
+texPackTlutSlotOrAlloc               = 0x80023514; // (slotHint u16, key u32, fmt u8, alphaFlag u8, hasAlphaSrc u8 [sp+0x30]) — sister of texPackTlutAtAllocSlot that accepts a hint slot index. If slotHint==0xFFFF behaves like the search-and-alloc path; otherwise reuses MEM[0x80128EFC + slotHint*4] as the destination chunk and calls packTlutEntriesRgba5551 directly. Same fmt & 0xF size dispatch (16 vs 256 entries).
+texPackTlutAtIndex                   = 0x80023678; // (slotIdx u16, basePtr, offsetMul u8, fmtCount u8, byteMode u8 [sp+0x33], hasAlpha u8 [sp+0x34]) — direct TLUT dispatcher with no slot mgmt or magic-key check: reads MEM[0x80128EFC + slotIdx*4], adds (basePtr + offsetMul*4) when byteMode is set or (basePtr + offsetMul*3) otherwise, then forwards to packTlutEntriesRgba5551. Hot-path entry used when caller has already resolved the slot.
+emitProfilerBarSegment               = 0x80023D40; // (dlBuf, microseconds, rowY i16, alpha u8, [sp+0x10]=fillByte u8, [sp+0x14]=zero) — emits one horizontal time-bar into the active display-list buffer as chained RDP commands (0xB500 LOADSYNC, 0xE700 FULLSYNC, 0xB900 SETOTHERMODE_L, 0xF0A4000 SETCONVERT, then TEXRECTs). Converts the µs value via (val*1e9 / MEM_W[0x80039100..04]) / 0x32DCD5, clamps pixel width to 0x140 (320 = NTSC visible). Allocates more DL buffer via allocateDisplayListBuffer when current chunk overflows. Returns updated DL ptr in v0. Gated by debug flag MEM_BU[0x80038CE0] — early-out as no-op when 0. Called 7× from func_8000B6F4 to draw a row-stacked profiler bar overlay.
+beginFrameDLChunk                    = 0x8000A8A0; // per-frame display-list chunk allocator: pops a 0x100-byte buffer from freelist head at MEM_W[0x801173B0] (refills via findAndUnlinkSmallestEntry → walk-and-append if empty). Sets globals: cursor at 0x8012DC58 = chunk+0x8, end-of-chunk at 0x801183D4 = chunk+0x100, active-buf at 0x80124C0 = chunk. Chains via G_NOOP (0x70000000) into prior DL's tail (ptr at 0x8012A4C0), and writes G_DL (0x60000000, 0x80037658) at chunk+0x8 — the static-DL header. Then iterates count at MEM_W[0x80117C00] emitting per-slot LOADSYNC+G_DL preamble jumps from a halfword index table at 0x80124470. Called from initRenderStateArrays (main frame) and func_8000B6F4 (profiler overlay).
+dispatchCueByCategory                = 0x8005E3B0; // (cueType u8, halfword_id u16, dataPtr, positionPtr (XYZ floats), [sp+0x58]=auxId u32, [sp+0x5C]=auxFloat) — primary cue/event submitter (28 callers across game). 13-case switch on (cueType - 2) at L_8005E448 selects per-category handler; pulls a cue ID halfword from a per-player localized table at MEM_W[0x80137CE4] + (playerIdx × stride) + MEM_W[0x80129610] using category-specific offset (+0x0, +0x10, +0x20, +0x38). Builds local cue descriptor at sp+0x1C..0x30 (slot, position × global scale at MEM_W[0x80043120], cue ID). Re-dispatches through a 14-case switch on (cueType - 1) at L_8005E6D8. Gates noopHandler calls and increments counter at MEM_W[0x80130B7C] only when mute byte at MEM_BU[0x80130B39] is 0. Listener position via getPlayerField2(0).
+tickProgressChannel                  = 0x800F1870; // (state, mode u8 [0/1/else], altState, outFloatPtr) — ticks one of 3 (raw_timer i16, norm_float, advanced_flag u8) triplets. Mode 0 → state+0x15C/+0x158/+0x161. Mode 1 → state+0x188/+0x184/+0x18D. Else → altState+0x24/+0x20/+0x29. Reads the raw timer as i16, normalizes via division by float at MEM_W[0x800A89D4] (max-range constant), then calls sister func_800F1310 (~heavy actor-state updater that transforms position and resolves NPC slot via findActiveNpcInSlotChain). Writes the normalized value back to the matching float slot; sets the "advanced" byte flag to 1 if the value changed, else 0. When `outFloatPtr` (a3) is non-null, also publishes the new normalized value (or 0 if unchanged) there. 45 callers across funcs_36..40 — primary entry for ticking per-actor animation/interp channels.
+composeRandomRotationMatrix          = 0x8007202C; // (outMatrix=a0, ?=a1, f20=a2 float, randomSpread i32=a3, [sp+0x70]=fixedYaw i32, [sp+0x74]=fixedPitch i32) — builds a 3D rotation matrix at outMatrix typically sp+0x10. Picks random roll in [0, randomSpread) via rand_recomp() % a3 (returns 0 if spread==0), passes to buildRotationMatrixSlot0. Picks a second random angle (raw int16) via rand_recomp(), composes via composeRotationMatrixSlot1. Then optionally composes with two fixed angles from stack: fixedYaw via composeRotationMatrixSlot0 (skipped when 0), and fixedPitch via similar (truncated). 35 callers across game — the standard "spawn-direction randomizer" for particles/debris/projectile cones.
+samplePlayerAnimChannel              = 0x80061F34; // (playerSlot u16, channelIdx u16, phase f32, ...) — samples a keyframed animation channel from a player slot. a0 indexes gPlayerSlotTable (0x8009FC10) to fetch player ptr. a1 indexes into the channel sub-table at player+0x34 (count u16 at +0x8, key array halfwords at +0xC, value array halfwords at +0x10). Walks all entries finding the bounding (min,max) value pair, computes interpolated result scaled by globals at MEM_W[0x8003B73C..0x8003B740]. Calls func_80063A68 per-iteration (probably the keyframe-fetch helper). Combines with player base offset at player+0x6. 29 callers — primary entry for player-anim sampling during cinematic / scripted scenes.
+triggerSoundCueByType                = 0x800C7D98; // (cueType u8) — 1-line wrapper that forwards a0 to initSoundCueRequest at 0x800EFCD4. 28 callers across game (gameplay events, weapon fire, UI clicks, etc). Companion wrappers at 0x800C7D60 → func_800EF770 (named-asset trigger) and 0x800C7D7C → func_800EF95C are sister entry points for different cue subsystems.
+initSoundCueRequest                  = 0x800EFCD4; // (cueType u8 in [0..7]) — initializes the pending audio cue config struct at MEM_W[0x8010C200]: byte +0x8 = 0x7F (volume 127/127), halfword +0x4 = (cueType==3 ? 0x1D : 0x1E) priority, halfword +0x6 = MEM_HU[0x8010B304 + cueType*2] (the actual sound asset ID), halfword +0xA = 1 (request flag), halfwords +0x10..+0x12 = 0x64 (pan center), byte +0xF = 0, halfword +0xC..0xE bytes = 0. Also raises two pending-request flags: MEM_B[0x8010C262] = 1, MEM_B[0x8010C268] = 1. Early-out (no change) when cueType >= 8.
+triggerCueWithSlotEffect             = 0x800F2FCC; // (state, dispatchArg, dataPtr, sharedPtr, [f24], [f25], [sp+0x7B]=byte, [sp+0x7C]=...) — top-level "fire effect" entry, 54 callers across funcs_19/36..40. Reads state+0x14C float via getEffectIntensity (returned in f0). Submits a cue via dispatchCueByCategory with the asset's halfword ID from state+0x198, the f0 intensity, and the caller's float/byte aux params. If the caller's f22 float is strictly > 0.0, additionally calls slotDispatcherIter(returnedSlot, 0xA, &localTbl) to fire the slot-A effect chain. Used as the "play SFX + spawn visual" composite trigger.
+getEffectIntensity                   = 0x800F2FB4; // (state) -> f0 — 2-instr leaf getter: returns f0 = MEM_W[state+0x14C] (the per-asset effect intensity float). Companion to setEffectIntensity. Used by triggerCueWithSlotEffect to read intensity before submitting a cue.
+setEffectIntensity                   = 0x800F2FC0; // (state, intensity f32) -> v0=1 — 2-instr leaf setter: writes MEM_W[state+0x14C] = a1 and returns 1 (always success). Companion to getEffectIntensity.
+resolveNpcAttachmentPos              = 0x800F0F94; // (state, positionPtr, scaleA f32, scaleB f32) — 22 callers, computes a world-space position anchored to an NPC. Reads state+0x130 (npc handle u16), resolves the active NPC via findActiveNpcInSlotChain + getNpcContextByIndex to get an NPC context (ctx). If ctx+0xC (mesh-part ref) is non-null, zmemcpy's a 0x30-byte transform from ctx+0x8 into local stack, then calls transformMeshPartIntoWorld(ctx+0xC, localTransform) to place the mesh part in world space. Otherwise uses state+0x8 as the base position. Calls func_800F2AC4(state, localTransform, scaleA, sp+0x40) — final transform helper — which writes 3 floats to sp+0x40..0x48 (final world position). Returns the deltas (sp+0x40 - positionPtr[0..8]) at sp+0x10..0x18 (and stores f0 at sp+0x50). Used by effect spawners to anchor visuals to an NPC's mesh part.
+dispatchEffectByActorType            = 0x800F9A14; // (actor, intensity f32) — 23 callers, type-keyed effect dispatcher on actor type byte at actor+0x112. Type 0 → no-op (early return). Type 1 → func_800F410C(actor, intensity). Type 2 → func_800F4E74. Type 3 → func_800F538C. Type 4 → func_800F8398. All handlers take (actor, intensity) as (a0, f0). Sister functions like func_800F9AB8 use the same +0x112 type byte for related per-type operations — actor+0x100..0x118 is the per-actor effect data block (+0x104..0x106 bytes, +0x108 word, +0x10C float intensity, +0x110 flags halfword, +0x112 type, +0x113..). Read state+0x110 flags via updateObjectFlags110.
+initActorMotionParams                = 0x800F2888; // (actor, angle1 f32, magnitude1 f32, angle2 f32, [sp+0x50]=magnitude2 f32) — 19 callers, initializes actor's motion/velocity parameter block at actor+0x114..+0x137 from 2 (angle, magnitude) pairs. Multiplies each angle by deg-to-rad scale at MEM_W[0x800A89EC] then passes to cosf_recomp. Multiplies each magnitude by scale at MEM_W[0x800A89F0]. Writes (cos1, mag1*scale, cos2, mag2*scale) into actor+0x114/+0x118/+0x11C/+0x120. Adds random ±8-step jitter (rand_recomp % 17) scaled by MEM_W[0x800A89F4] at actor+0x124. Resets state bytes: actor+0x135 = 1 (motion-active flag), +0x136 = 0, +0x137 = 0. Used by effect spawners to initialize particle/projectile motion from polar inputs.
+stepAndTickProgressChannel           = 0x800F2F10; // (actor, srcXform, scale f32, mode, [sp+0x68]=outFloatPtr) — 11 callers, Euler integration wrapper around tickProgressChannel. zmemcpy's a 0x30-byte transform from a1 into local at sp+0x10. Reads velocity at local+0xC/+0x10/+0x14, integrates: local+0x0..+0x8 (position) += velocity × scale. Then forwards (actor, mode, local, outFloatPtr) to tickProgressChannel — when mode != 0/1, the function reads timer/norm/flag from this integrated local-state's +0x24/+0x20/+0x29 fields. Returns the tick result byte from tickProgressChannel.
+setType1ActorParams                  = 0x800F9AB8; // (actor, intensity f32, byte0 u8, byte1 u8, [sp+0x10]=byte2 u8, [sp+0x14]=param u32) -> v0 — 12 callers, type-guarded setter for the type-1 actor extended params block. Reads actor+0x112; if != 1, returns 0 immediately (type mismatch). On match (type == 1): writes intensity to actor+0x10C, byte0/1/2 to actor+0x104/+0x105/+0x106, param to actor+0x108. Returns 1 on success. Sister to dispatchEffectByActorType — operates on the same +0x112 type byte but is the WRITER for the type-1-specific +0x104..+0x10C block (vs. the dispatcher which is the type-keyed READER/INVOKER).
+updateType1AnimRamp                  = 0x800F9B34; // (actor, target f32, floor f32, duration f32, [sp+0x13]=channel u8) — 7 callers, type-1-guarded animation ramp updater. Returns immediately if actor+0x112 != 1. Selects between two parallel ramp channels at actor+0x48..+0x50 vs actor+0x50..+0x58 based on the channel byte (channel == 1 → actor+0x48 base, else → actor+0x50 base via a0 += 8). Per-channel layout (currentValue, delta, targetValue): writes scaled target, clamps to floor, recomputes delta. When delta > 0 also writes target to channel+0x10 and 1/duration to channel+0x14 (the inverse-duration speed). Otherwise rolls current = target and rescales actor+0x2C by MEM_W[actor+0x24]+0x24.
+executeActorType1Effect              = 0x800F410C; // (actor, intensity f32) — type-1 actor effect executor, dispatched from dispatchEffectByActorType when actor+0x112 == 1. ~600-instr handler (stack 0x1A8). Reads actor+0x198 (cue id) → getNpcContextField8 to get NPC ref. Reads actor+0xD8/+0xDC/+0xE0 (a base position triplet) and stages it on the stack. Reads s5+0x104 = actor+0x10C (type-1 intensity from setType1ActorParams) and gates further work on whether it's non-zero. The remainder is type-1 specific effect rendering / state update.
+executeActorType2Effect              = 0x800F4E74; // (actor, intensity f32) — type-2 effect executor, dispatched from dispatchEffectByActorType. Stack 0x88. Same prologue as type-1 (reads actor+0x198 → getNpcContextField8 → NPC ctx in s3). Reads ctx+0x24 (likely a scale/distance ref) and ctx+0x0 (position). Diverges from type-1 with shorter / position-update-focused body. 1 caller (only invoked via the dispatcher).
+executeActorType3Effect              = 0x800F538C; // (actor, intensity f32) — type-3 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as type-1/2.
+executeActorType4Effect              = 0x800F8398; // (actor, intensity f32) — type-4 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as the other Type{N} impls.
+setType1ActorVelocity                = 0x800F97B4; // (actor, a1 f32, a2 f32, a3 f32) — type-1-guarded setter. Returns 0 silently if actor+0x112 != 1. On match: writes (a1 × MEM_W[0x800A8F50]) to actor+0x68, (a2) to actor+0x84, (a3) to actor+0xD4. All offsets are relative to actor+0x8 base. Velocity-style 3-component setter for type-1 actors.
+setType1ActorField40                 = 0x800F97F4; // (actor, value f32) — type-1-guarded swap of actor+0x40 float. If actor+0x112 != 1: returns 0. Else: reads old MEM_W[actor+0x40] into f0 (return), writes new value (a1) to actor+0x40, returns the old value.
+initActorAsType2                     = 0x800F981C; // (actor, parent_ref u32, init_f f32, init_f2 f32) — converts an actor into a type-2 actor: sets actor+0x112 = 2, then reads actor+0x198 (cue id), looks up via getNpcContextField8 to get NPC context, copies its position (ctx+0xC/+0x10/+0x14) into actor+0x8/+0xC/+0x10. Zero-initializes a 0x25-byte block at actor+0x18..+0x3D (the type-2 extended state — float fields at +0x1C/+0x20/+0x24/+0x28/+0x2C all set to 0). Writes a3 (init_f2) → actor+0x14, a2 (init_f) → actor+0x18, actor+0x1C/+0x20/+0x24, a1 (parent_ref) → actor+0x38, zero bytes at actor+0x3C and +0x3D. Returns 1.
+setType2ActorVelocity                = 0x800F98CC; // (actor, a1 f32, a2 f32, a3 f32) — sister to setType1ActorVelocity for type 2. Returns 0 if actor+0x112 != 2. On match: writes the 3 floats into actor+0x8+0xZZ offsets (similar layout to type-1 variant; sister handler for type-2 actors).
+getActorCurrentValueByType           = 0x800F9BEC; // (actor) -> f0 — 3 callers, type-polymorphic getter returning the actor's "current value" float based on actor+0x112: type 1 → MEM_W[actor+0x50] (the type-1 ramp current from updateType1AnimRamp), type 4 → MEM_W[actor+0x28] (type-4 storage offset). Returns 0.0 for any other type. Used by external readers that don't care about which type-specific storage the actor uses.
+setType3ActorParams                  = 0x800F99C8; // (actor, a1 f32, a2 f32, a3 f32, [sp+0x10]=p4 f32, [sp+0x14]=p5 f32) -> v0 — type-3-guarded setter. Returns 0 if actor+0x112 != 3. On match (a0+8 base): writes 0 to base+0x18, a1 → base+0x24 (actor+0x2C), a2 → base+0x28 (actor+0x30), a3 → base+0x1C (actor+0x24), p4 → base+0x20 (actor+0x28), p5 → base+0x2C (actor+0x34). Returns 1. The 5-float type-3 extended-state setter (block layout at actor+0x24..+0x34).
+initActorAsType1                     = 0x800F947C; // (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 15 callers, comprehensive type-1 initializer. Sets actor+0x112 = 1, stores src ptr at actor+0x2C, copies src+0x1C → actor+0x8 (id field), src+0x20 → actor+0xC. Computes actor+0x10 = src+0x20 + src+0x1C * 12 (stride-12 array index). Zeroes the ramp channels at actor+0x4C/0x50/0x54/0x60 etc. Initializes ramp constants: actor+0x24 = MEM_W[0x800A8F2C] (1.0 float?), actor+0x48 = actor+0x50 = target (a2), actor+0x2C = target / src+0x24 (rate). Clamps actor+0x30 = duration × rate against MEM_W[0x800A8F2C]. If src+0x28 ptr is non-null, reads src+0x2C[0] → actor+0x40 (color/scale lookup); else uses default MEM_W[0x800A8F30]. Companion to initActorAsType2.
+initActorAsType1WithAnchor           = 0x800F9674; // (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 1 caller. Nearly-identical variant of initActorAsType1 (same field layout, same ramp/duration math) but after the base init, additionally calls getNpcContextField8(actor+0x198) to fetch NPC ctx, then func_800662A0(actor+0x8, src+0x10, npcCtx, actor+0xC, actor+0x30) to apply an NPC-anchored transform/position setup. Use the variant when the actor needs world-space positioning from the NPC anchor; use the bare initActorAsType1 when caller will handle positioning itself.
+initActorAsType3                     = 0x800F9918; // (actor, parent_ref u32, init_f f32, init_f2 f32) — 1 caller, sister of initActorAsType2. Sets actor+0x112 = 3, reads actor+0x198 → getNpcContextField8 → NPC ctx, copies ctx+0xC/+0x10/+0x14 (NPC pos XYZ) into actor+0x8/+0xC/+0x10. Zeroes the 0x25-byte extended state at actor+0x18..+0x3D. Writes init_f2 → actor+0x14, init_f → actor+0x18, parent_ref → actor+0x38, zero bytes at +0x3C/+0x3D. Returns 1. Almost identical to initActorAsType2 except for the type byte value.
+initActorAsType4                     = 0x800F5A30; // (actor, assetName ptr u32, ...) — 4 callers. Sets actor+0x112 = 4, then if assetName+0x0 is non-null: looks up the named DAT item via getLevelDatItemByName, validates result, branches on the item's byte at +0x2 (== 6, == 7, etc.) into format-specific paths. Sets actor+0x58 (= s2 = actor+0x50+0x8) for further setup. The type-4 actor variant is asset-name-driven (different from types 1-3 which are NPC-anchored). Likely used for spawning level-defined effects/objects by name.
+requestSpeechResponseMode2           = 0x800FBAE8; // () — gates on MEM_BU[0x8010C9F0] (request counter, must be 0 = idle); calls isSpeechBusyOrQueued. If speech is busy/queued: writes MEM_B[0x80130B14] = 2 (response-mode 2), OR's MEM_W[0x8010C9E0] with 0x1 (request-pending bit), increments MEM_B[0x8010C9F0] (counter). Sister of requestSpeechResponseMode1 — same shape, different mode value.
+requestSpeechResponseMode1           = 0x800FBB44; // () — sister of requestSpeechResponseMode2; identical shape except writes MEM_B[0x80130B14] = 1 (response-mode 1) instead of 2. Same idle-counter gate, same isSpeechBusyOrQueued check, same pending-bit and counter increments.
+resetType1FxFields                   = 0x800F9B0C; // (actor) — 2 callers, type-1-guarded short reset. Returns immediately if actor+0x112 != 1. Else writes MEM_W[actor+0xFC] = 0 and MEM_W[actor+0x100] = MEM_W[0x800A8F54] (constant float, likely default "rate" or "alpha"). Pairs with setType1ActorParams (which writes the broader +0x104..+0x10C block) but resets just the +0xFC/+0x100 pair.
+seqCmdHandler40                      = 0x8008B33C; // (channel, programPtr=0x80130CC0) — MusyX sequencer command-0x40 handler (decimal 64) dispatched from tickAudioChannel. Pushes one event into the channel's event ring at channel+0xC0 (4-byte entries, max 4 entries gated by counter at channel+0xD0). Each entry: byte+0 = MIDI status (0x80/0x82/0xA0/0xA1/0x83/0x84 selected from 6-entry sub-switch on the program byte's mid nibble), byte+1 = src+0x4, halfword+2 = src+0x0 scaled by a fixed-point quotient. Ring entry counter clamped to <4. Also OR's flag 0x100000 (bit 20) into channel+0x24 if the program byte+0x7 is zero. Companion ring to the other 6 seqCmd handlers (each writes a different ring on the channel).
+seqCmdHandler41                      = 0x8008B42C; // (channel, programPtr) — MusyX cmd-0x41 (decimal 65). Writes to the event ring at channel+0xD2, counter at channel+0xE2.
+seqCmdHandler42                      = 0x8008B51C; // (channel, programPtr) — MusyX cmd-0x42 (decimal 66). Writes to the event ring at channel+0xF6, counter at channel+0x106. (Note: skips the ring at channel+0xE4/+0xF4 which is managed by a different code path — that slot's default status byte is 0x83 per tickAudioChannel init.)
+seqCmdHandler43                      = 0x8008B60C; // (channel, programPtr) — MusyX cmd-0x43 (decimal 67). Writes to channel+0x11A ring, counter at channel+0x12A. (Skips the +0x108/+0x118 ring — that slot's default status is 0x84.)
+seqCmdHandler44                      = 0x8008B6FC; // (channel, programPtr) — MusyX cmd-0x44 (decimal 68). Writes to channel+0x12C ring, counter at channel+0x13C. Default initial status byte for this ring is 0x40 (MIDI CC#64 Sustain Pedal per tickAudioChannel init).
+seqCmdHandler45                      = 0x8008B7EC; // (channel, programPtr) — MusyX cmd-0x45 (decimal 69). Writes to channel+0x13E ring, counter at channel+0x14E. Default initial status byte is 0x41 (MIDI CC#65 Portamento).
+seqCmdHandler46                      = 0x8008B8DC; // (channel, programPtr) — MusyX cmd-0x46 (decimal 70). Writes to channel+0x150 ring, counter at channel+0x160. Default initial status byte is 0x5B (MIDI CC#91 Reverb Send Level).
+tickAudioSequencerFrame              = 0x8008D960; // 3 callers, per-frame audio sequencer driver: zeroes 4 frame counters (MEM_W[0x80140448], +0x80140458, +0x8013F03C, +0x80140454). Reads global tempo from MEM_W[0x80142038]; if non-zero, computes samples-per-tick via `(tempo × 0x7C × 0x100) / MEM_W[0x801440C0]` (the tempo divisor), shifts left 3, and stores result to MEM_W[0x8014ACC8] (the per-tick sample budget consumed by tickAudioChannel's +0x40 counter). Then calls tickAllAudioChannels to advance every active channel's sequencer one tick.
+setChildPosFromI16Pair               = 0x800B3CD4; // (parent, x i16, y i16) — 10 callers. Sign-extends a1/a2 from 16-bit, converts to float, writes the floats to MEM[parent+0xC]+0x18 and +0x1C respectively. Companion to getStructField0xC at 0x800B3D08 (the trivial getter for parent+0xC ptr). Used to set a sub-struct's 2D position fields from integer screen-space coords — likely HUD / UI / 2D-overlay positioning.
+tickFormatMessageWorker              = 0x800B3650; // service-worker tick handler. Loops: recvServiceMessage(workerKey) (blocking) → process result msg s3 via func_800B2630(msg+0x14, msg+0x18, workerKey). Then walks msg+0x14 → +0x8 chain doing sprintf_recomp formatting (uses global format string at MEM_W[0x800A5C40] as fmt arg) into local stack buffers at sp+0x52 and sp+0x84+0x2. Registered at priority 5 by initFormatMessageWorker.
+initFormatMessageWorker              = 0x800B3EB8; // (priorityOverride u8) — registers + starts the tickFormatMessageWorker via registerServiceWorker(8 msgSlots, 0x800 stack, priority, &tickFormatMessageWorker). Stores returned worker ID at MEM_W[0x800CC854] and the same value at MEM_W[0x800CC858] (registry handle). Then calls startServiceWorker to launch the thread. Both callers pass priorityOverride = 5.
+shutdownFormatMessageWorker          = 0x800B3F00; // unregisters the format-message worker thread. Reads stored handle from MEM_W[0x800CC858] and calls unregisterServiceWorker(handle).
+disposeFormatMsgQueueMember          = 0x800B3E5C; // (parent, member) — disposes a queue member's allocated buffers. If parent+0x1C flag bits 0x6 are set: rs_free(member+0x3C) and func_800C6DBC(member+0x70) (alternate-format buffer). Always: rs_free(member+0x38) and func_800C6DBC(member+0x6C) (primary buffer). Cleanup helper used when removing a member from the format-message queue.
+destroySceneNpcsAndUnlink            = 0x800B4134; // (scene) — 9 callers, scene cleanup. If scene+0x1CC (NPC slot chain head u16) != 0xFFFF: loops calling getNextSlotNpcTypeId(slot) then destroyNpcSlotByIndex(slot) until type == 0xFFFF, then destroyNpcSlotChain(slot), then resets scene+0x1CC = 0xFFFF. If scene+0x24C (active byte) is non-zero: clears it and calls factor5RemoveListNode(scene+0x208) to unlink the scene from its parent list. Used by mission/objective scenes when shutting down (mission complete, fail, restart).
+tryPlaySpatialSoundWithGates         = 0x800B3A10; // (config, triggerSpec) — 9 callers, guarded 3D sound trigger. Multiple gates: global mute at MEM_BU[0x80138838], system mute at MEM_BU[0x80138926], per-player level flag at MEM_W[0x80130B40 + config+0xB8 * 4]+0xC bit 0x800000, per-player NPC flag at gPlayerSlotTable[playerIdx]+0x184 bits 0x78. When all gates pass AND triggerSpec+0x8 != 0: calls play3DSoundEvent with (sound=0, pos=config+0x4, alt=config+0x28, maxDist=24.0f, distScale=MEM_W[0x800A57BC], vol=0x7F, ?=0x1B, ?=0x5A). Used as the "play gated 3D effect sound" entry by various weapon/explosion/impact events.
+cancelSceneQueueHandle               = 0x800B3F0C; // (scene) — if scene+0x1C0 (queue handle u32, sentinel -1 = empty) is not -1: calls func_80002BA8(handle) to cancel/release the handle and resets scene+0x1C0 = -1. Companion to enqueueFormatMessage which would have populated +0x1C0 with an active handle. Used when shutting down a scene that has a pending format-message request.
+enqueueFormatMessage                 = 0x800B3F24; // (token u32, string ptr) — PRODUCER side of the format-message queue. Allocates a 0x60-byte queue member via rs_malloc, rs_memsets to 0. Fills: member+0x14 = token (a0, scene-correlation id), member+0x58 = MEM_W[0x80139920] (current state global), member+0x5C = MEM_W[0x800CC854] (the worker's registration ID — same one initFormatMessageWorker stored). rs_strcpy's the input string (a1) into member+0x18 (the queue member's string buffer). Then sendServiceMessage(workerKey=MEM_W[0x80139920], handle=MEM_W[0x800CC858], member, 0) to enqueue. The tickFormatMessageWorker thread will pick up the member, process the string, and call disposeFormatMsgQueueMember to free buffers when done.
+
+// Level 3 objective handlers (funcs_44, in cluster with lv3_initializeObjectTracking + lv3_checkComplexObjectives)
+lv3_startMissionAndBriefing          = 0x80102E50; // level-3 mission start: setObjectiveBoolean(0xB, 1), setObjectiveBoolean(0xC, 1), setHudFlagBit40AndStoreArg, plays 7 intro voice lines (0x1E8, 0x1E6, 0x156, 0x8D, 0x1, 0x13D, 0x8E), schedules 4 mission timers (15.0s/16.0s/20.0s/6.0s), setObjectiveBoolean(0x6F, 0). The mission-start initializer for level 3.
+lv3_triggerObjectiveProgressA        = 0x80102F58; // increaseObjectiveCount + setObjectiveBoolean — progress milestone trigger for one of the level-3 objectives.
+lv3_runDialogueSequenceA             = 0x8010304C; // chains multiple playObjectiveVoiceLine2 calls — a scripted dialogue sequence for a level-3 event.
+lv3_playPairedDialogueA              = 0x801030B8; // plays 2 consecutive playObjectiveVoiceLine2 calls — short paired dialogue event for level 3.
+lv3_scheduleObjectiveTimers          = 0x80103160; // schedules multiple addTimerHandleWrapper calls (delayed objective triggers) for level 3.
+lv3_updateHudAndProgress             = 0x801031C4; // setHudFlagBit40AndStoreArg + increaseObjectiveCount — combined HUD update with objective progress for level 3.
+lv3_progressWithDialogueA            = 0x801032B4; // playObjectiveVoiceLine2 + increaseObjectiveCount — dialogue line followed by objective progress.
+lv3_playPairedDialogueB              = 0x801032F0; // sister of lv3_playPairedDialogueA — plays 2 voice lines for a different level-3 event.
+lv3_setMissionStateBooleans          = 0x80103384; // 2× setObjectiveBoolean — state transition (likely mission-complete or stage transition booleans for level 3).
+lv3_progressWithDialogueB            = 0x801033EC; // increaseObjectiveCount + playObjectiveVoiceLine2 — sister of lv3_progressWithDialogueA for a different objective.
+
+// Level 4 objective handlers
+lv4_majorMidMissionEvent             = 0x80103AB0; // voice=3 + setObjectiveBoolean + 2× addTimer + setHudFlagBit40 — major mid-mission event handler for level 4 (dialogue + state change + timer reschedule + HUD update).
+
+// Level 5 objective handlers
+lv5_startMissionAndBriefing          = 0x80103E5C; // 8× playObjectiveVoiceLine2 + 2× setObjectiveBoolean + addTimer + setHudFlagBit40 + activateObjectiveComplete — level 5 mission-start with full briefing sequence (mirror of lv3_startMissionAndBriefing).
+lv5_dialogueWithStateChange          = 0x80103FC8; // 3× voice + 2× setObjectiveBoolean — dialogue scripted alongside a state transition for level 5.
+lv5_runDialogueSequenceA             = 0x80104030; // 4× playObjectiveVoiceLine2 — scripted multi-line dialogue sequence for a level-5 event.
+lv5_dialogueAndBool                  = 0x80104080; // voice + setObjectiveBoolean — single dialogue with state-flag update for level 5.
+
+// Level 9 objective handlers
+lv9_setMissionBooleansMass           = 0x80105304; // voice + 10× setObjectiveBoolean — bulk objective-boolean setter for level 9 (likely mission-state-machine transition with many flags).
+lv9_majorStateTransition             = 0x801053EC; // 2× voice + 3× setObjectiveBoolean + addTimer — significant state transition with dialogue, multi-flag update, and timer schedule for level 9.
+lv9_completeAndProgressObjective     = 0x801054C0; // voice + 3× setObjectiveBoolean + increaseObjectiveCount + activateObjectiveComplete — objective complete + progress trigger for level 9.
+lv9_updateHudAndStateBools           = 0x80105464; // 2× setObjectiveBoolean + setHudFlagBit40 — HUD update paired with state-flag transition for level 9.
+
+// Level 0 objective handlers
+lv0_runDialogueSequenceA             = 0x801018EC; // 3× playObjectiveVoiceLine2 — scripted multi-line dialogue sequence for a level-0 event.
+lv0_objectiveProgress                = 0x80101934; // increaseObjectiveCount — single objective progress trigger for level 0.
+
+// Level 1 objective handlers
+lv1_playPairedDialogueA              = 0x80101AF8; // 2× playObjectiveVoiceLine2 — paired dialogue event for level 1.
+lv1_playPairedDialogueB              = 0x80101BB8; // 2× playObjectiveVoiceLine2 — sister of lv1_playPairedDialogueA for a different level-1 event.
+
+// More level 4 handlers
+lv4_progressWithDialogueA            = 0x801039B0; // 2× playObjectiveVoiceLine2 + increaseObjectiveCount — paired dialogue followed by progress tick for level 4.
+lv4_progressWithDialogueB            = 0x80103A00; // sister of lv4_progressWithDialogueA — same shape (2 voice + count++) for a different level-4 event.
+lv4_dealMultiDamageEvent             = 0x80103B88; // 2× dealDamagetoDatItem — damage hook hitting two DAT items in sequence for level 4 (likely a destruction trigger).
+lv4_completeObjectiveWithVoice       = 0x80103BBC; // playObjectiveVoiceLine2 + activateObjectiveCompleteFlag — completes a level-4 objective with paired voice line announcement.
+
+// Level 6 handler
+lv6_playPairedDialogue               = 0x8010444C; // 2× playObjectiveVoiceLine2 — paired dialogue event for level 6.
+
+// Level 8 handler
+lv8_playPairedDialogue               = 0x80104F1C; // 2× playObjectiveVoiceLine2 — paired dialogue event for level 8.
+
+// More level 9 handlers
+lv9_playPairedDialogue               = 0x80105660; // 2× playObjectiveVoiceLine2 — paired dialogue event for level 9.
+lv9_progressAndRescheduleTimer       = 0x801056B0; // increaseObjectiveCount + addTimerHandleWrapper — progress objective + reschedule timer pattern. First of a 9-function sister family (0x801056B0..0x80105930) — each handles progress+reschedule for a different level-9 objective/timer slot.
+
+// Final lv3 sweep — multi-primitive handlers (funcs_44)
+lv3_runDialogueSequenceB             = 0x801027AC; // 3× playObjectiveVoiceLine2 — scripted dialogue sequence (member of a 3-function family with lv3_runDialogueSequenceC/D at 0x801027F0/0x80102834).
+lv3_runDialogueSequenceC             = 0x801027F0; // 3× playObjectiveVoiceLine2 — sister sequence.
+lv3_runDialogueSequenceD             = 0x80102834; // 3× playObjectiveVoiceLine2 — sister sequence.
+lv3_dialogueWithStateA               = 0x80102878; // 2× playObjectiveVoiceLine2 + setObjectiveBoolean — paired dialogue with state-flag transition. Member of a 3-function family with B/C at 0x801028B0/0x801028F4.
+lv3_dialogueWithStateB               = 0x801028B0; // 2× voice + 1× setObjectiveBoolean — sister of lv3_dialogueWithStateA.
+lv3_dialogueWithStateC               = 0x801028F4; // 2× voice + 1× setObjectiveBoolean — sister of lv3_dialogueWithStateA.
+lv3_dialogueWithHudUpdateA           = 0x8010295C; // 2× playObjectiveVoiceLine2 + setHudFlagBit40AndStoreArg — paired dialogue with HUD-flag update. Member of a 3-function family with B/C at 0x801029C0/0x80102A24.
+lv3_dialogueWithHudUpdateB           = 0x801029C0; // 2× voice + setHudFlagBit40 — sister of lv3_dialogueWithHudUpdateA.
+lv3_dialogueWithHudUpdateC           = 0x80102A24; // 2× voice + setHudFlagBit40 — sister of lv3_dialogueWithHudUpdateA.
+lv3_dialogueAndStateWithTimer        = 0x80103010; // playObjectiveVoiceLine2 + setObjectiveBoolean + addTimerHandleWrapper — UNIQUE three-way combo: dialogue + state transition + timer reschedule, distinct from any sister family.
+lv3_setDoubleBoolean                 = 0x80103288; // 2× setObjectiveBoolean — UNIQUE: only function in lv3 that sets exactly 2 objective flags with no other primitives.
+
+// MusyX micro-handlers (funcs_22) — each manipulates one specific channel struct field; likely called from a dispatcher table separate from the tickAudioChannel inline switch
+shiftChannelStreamLeft8              = 0x80089548; // (channel) — reads MEM_W[channel+0x0], shifts left 8 bits, writes back. Advances/manipulates the channel's program-stream state word.
+clearChannelFieldsAt1Cand20          = 0x80089B40; // (channel) — zeroes channel+0x1C and channel+0x20 in a single call. Used as a reset hook for these adjacent counter/timer fields.
+setChannelProgHalfwordAt28           = 0x80089E48; // (channel, programPtr) — reads u16 at MEM_HU[program+0], shifts left 16, writes the word at channel+0x28. Loads a high-half param.
+setChannelProgByteAt2E               = 0x80089ED0; // (channel, programPtr) — reads program word at MEM_W[program+0], shifts right 8, writes the byte at channel+0x2E (program byte 2 of a 4-byte cmd).
+setChannelFlag24Bit80                = 0x8008A6E8; // (channel) — OR's MEM_W[channel+0x24] with 0x80 (sets bit 7 of the channel flag word — matches a specific "needs reload" or "queued" semantic).
+setChannelKeyOffsetAt6E              = 0x80089F0C; // (channel, programPtr) — reads u16 at program+0 → byte at channel+0x6E; reads u32 at program+0, shifts right 8 → byte at channel+0x6F. Stores a halfword key/transpose pair. Matches the inline behavior of tickAudioChannel cmd 0x33 (which sets the same fields but is dispatched inline).
+
+// Generic binary-search primitive
+binarySearchWithComparator           = 0x80085C0C; // (a0=keyArgForCmp, a1=tableBase, a2=count, a3=entryStride, [sp+0x48]=cmpFuncPtr) -> entryPtr | 0. Generic binary search that calls the caller-provided comparator function (via LOOKUP_FUNC) at each midpoint. Returns the matching entry pointer (table + idx*stride) on hit, 0 on miss. Used with cmpU16ByValue and compareHalfwordAtOffset4 (already named) as sorted-table lookups for MusyX subsystem data (likely sample indices or program offsets). Returns 0 when a2 (count) is 0.
+
+// playObjectiveVoiceLine1 wrappers — each is a thin (23-instr) wrapper that calls playObjectiveVoiceLine1 with one hardcoded voice ID. Naming encodes that unique voice ID. Function-pointer-registered as objective hooks; no direct callers in .c output.
+playVoice_0x07                       = 0x80103508; // wrapper: playObjectiveVoiceLine1(0x7)
+playVoice_0x0A                       = 0x80103994; // wrapper: playObjectiveVoiceLine1(0xA)
+playVoice_0x0B                       = 0x80103F4C; // wrapper: playObjectiveVoiceLine1(0xB)
+playVoice_0x65                       = 0x801040F0; // wrapper: playObjectiveVoiceLine1(0x65)
+playVoice_0x150                      = 0x8010447C; // wrapper: playObjectiveVoiceLine1(0x150)
+playVoice_0x296                      = 0x80104498; // wrapper: playObjectiveVoiceLine1(0x296)
+playVoice_0x107                      = 0x80104EC8; // wrapper: playObjectiveVoiceLine1(0x107)
+playVoice_0xCC                       = 0x80104EE4; // wrapper: playObjectiveVoiceLine1(0xCC)
+playVoice_0xE4                       = 0x80104F00; // wrapper: playObjectiveVoiceLine1(0xE4)
+playVoice_0x11F                      = 0x80105E28; // wrapper: playObjectiveVoiceLine1(0x11F)
+playVoice_0x217                      = 0x80105E44; // wrapper: playObjectiveVoiceLine1(0x217)
+playVoice_0xAA                       = 0x80105E60; // wrapper: playObjectiveVoiceLine1(0xAA) — first of two wrappers playing this voice
+playVoice_0xB6                       = 0x80105E7C; // wrapper: playObjectiveVoiceLine1(0xB6)
+playVoice_0xC4                       = 0x80105E98; // wrapper: playObjectiveVoiceLine1(0xC4) — first of two wrappers playing this voice
+playVoice_0x21E                      = 0x80105ED0; // wrapper: playObjectiveVoiceLine1(0x21E) — first of two
+playVoice_0x21D                      = 0x80105EF8; // wrapper: playObjectiveVoiceLine1(0x21D) — first of two
+playVoice_0xE5                       = 0x80105F20; // wrapper: playObjectiveVoiceLine1(0xE5)
+playVoice_0xB1                       = 0x80105F70; // wrapper: playObjectiveVoiceLine1(0xB1)
+playVoice_0x21C                      = 0x80105FC0; // wrapper: playObjectiveVoiceLine1(0x21C)
+playVoice_0x259                      = 0x80105FDC; // wrapper: playObjectiveVoiceLine1(0x259)
+playVoice_0xEC                       = 0x80105FF8; // wrapper: playObjectiveVoiceLine1(0xEC)
+playVoice_0x167                      = 0x80106034; // wrapper: playObjectiveVoiceLine1(0x167)
+playVoice_0xEA                       = 0x8010606C; // wrapper: playObjectiveVoiceLine1(0xEA)
+playVoice_0x171                      = 0x80107338; // wrapper: playObjectiveVoiceLine1(0x171)
+playVoice_0x2F2                      = 0x80107354; // wrapper: playObjectiveVoiceLine1(0x2F2)
+playVoice_0x1FC                      = 0x80108388; // wrapper: playObjectiveVoiceLine1(0x1FC)
+playVoice_0x1EB                      = 0x801083B0; // wrapper: playObjectiveVoiceLine1(0x1EB)
+playVoice_0x230                      = 0x801083D8; // wrapper: playObjectiveVoiceLine1(0x230)
+playVoice_0x48                       = 0x8010842C; // wrapper: playObjectiveVoiceLine1(0x48)
+playVoice_0x26B                      = 0x80108488; // wrapper: playObjectiveVoiceLine1(0x26B)
+
+// playObjectiveVoiceLine2 wrappers (lv3, funcs_44) — thin wrappers calling Line2 variant with 2 args; second arg is always 0
+playVoice2_0xA4                      = 0x801026CC; // wrapper: playObjectiveVoiceLine2(0xA4, 0)
+playVoice2_0x233                     = 0x801030F0; // wrapper: playObjectiveVoiceLine2(0x233, 0)
+playVoice2_0x13C                     = 0x80103110; // wrapper: playObjectiveVoiceLine2(0x13C, 0)
+playVoice2_0x2F3                     = 0x80103424; // wrapper: playObjectiveVoiceLine2(0x2F3, 0)
+playVoice2_0x29F                     = 0x80103444; // wrapper: playObjectiveVoiceLine2(0x29F, 0)
+playVoice2_0x126                     = 0x80103464; // wrapper: playObjectiveVoiceLine2(0x126, 0)
+
+// Other thin wrappers (each is a 23-line wrapper around one named callee with hardcoded constant arg)
+triggerSoundCue5                     = 0x8010322C; // wrapper: triggerSoundCueByType(5) — fires sound cue type-5 from a specific call site (lv3).
+hookSetHudEnableBit8                 = 0x80109558; // wrapper: setHudEnableBit8() with no constant arg — function-pointer-registered hook that sets HUD enable bit 8.
+hookSetHudEnableBit4                 = 0x80109574; // wrapper: setHudEnableBit4() with no constant arg — function-pointer-registered hook that sets HUD enable bit 4.
+destroyNpcSlotByIndexU16             = 0x80041CEC; // wrapper: destroyNpcSlotByIndex(a0 & 0xFFFF) — masks arg to u16 before forwarding (caller passed a signed value that needs clamping).
+
+// lv9 progressObjective family — each wrapper calls increaseObjectiveCount(objId) then addTimerHandleWrapper to reschedule. ObjId is the unique identity per wrapper. Companion to already-named lv9_progressAndRescheduleTimer (which handles objId=0x10).
+lv9_progressObjective_0x13           = 0x801056E0; // increaseObjectiveCount(0x13) + addTimer
+lv9_progressObjective_0x11           = 0x80105710; // increaseObjectiveCount(0x11) + addTimer
+lv9_progressObjective_0x12           = 0x80105740; // increaseObjectiveCount(0x12) + addTimer
+lv9_progressObjective_0x14           = 0x801057C0; // increaseObjectiveCount(0x14) + addTimer
+lv9_progressObjective_0x17           = 0x801057F0; // increaseObjectiveCount(0x17) + addTimer
+lv9_progressObjective_0x15           = 0x80105820; // increaseObjectiveCount(0x15) + addTimer
+lv9_progressObjective_0x16           = 0x80105850; // increaseObjectiveCount(0x16) + addTimer
+lv9_progressObjective_0x18           = 0x801058D0; // increaseObjectiveCount(0x18) + addTimer
+lv9_progressObjective_0x1B           = 0x80105900; // increaseObjectiveCount(0x1B) + addTimer
+lv9_progressObjective_0x19           = 0x80105930; // increaseObjectiveCount(0x19) + addTimer
+lv9_progressObjective_0x1A           = 0x80105960; // increaseObjectiveCount(0x1A) + addTimer
+lv9_progressObjective_0x1C           = 0x801059E0; // increaseObjectiveCount(0x1C) + addTimer
+lv9_progressObjective_0x1F           = 0x80105A10; // increaseObjectiveCount(0x1F) + addTimer
+lv9_progressObjective_0x1D           = 0x80105A40; // increaseObjectiveCount(0x1D) + addTimer
+lv9_progressObjective_0x1E           = 0x80105A70; // increaseObjectiveCount(0x1E) + addTimer
+applySaveSlotToMissionState          = 0x8006DB2C; // (saveSlotIdx u8) — initializes gMissionState bytes 0..255 to 3 (default lives), then reads save-slot record from 20-byte-stride table at 0x8013A5D4; copies pilot name via rs_strcpy to gGameSettings+0x7, copies status byte at slot+0x4 to gMissionState+0x1, applies packed config bits from slot+0xC into gGameSettings+0xC. Called from menuControllerInput (save-select / new-game flow).
+enqueueMeshForDeferredRelease        = 0x80008350; // (meshAsset) — if meshAsset+0xC has "release pending" bit 0x10 set, copies 7 words of metadata (+0x3C, +0x44, +0x48..+0x58) into next slot of the 28-byte-stride per-frame release queue at 0x80112B30 (count u16 at 0x80113230, capacity 64). On success clears flag bits 3+4 of meshAsset+0xC. On overflow (count >= 64) returns silently leaving the pending bit set, so the caller retries next frame — the 64 ceiling is a per-frame work budget, not a total-mesh limit. Called from releaseMeshAsset and 3 sister funcs.
+commitMeshDrawBatchRefs              = 0x80008550; // (meshAsset) — per-frame deferred-ref resolver: requires meshAsset+0xC bits 0x10 AND 0x60 set, then clears bits 0x60 (keeps 0x10). Picks source-list pair based on meshAsset+0x2C bit 31 — either (+0x44/+0x4C) or (+0x48/+0x50). Walks both linked lists; for each ~64-entry batch chunk at meshAsset+0x58 (chained via +0x4), per entry: reads type byte at +0x8>>24, then writes resolved source ptr into entry+0x4 (type 0 → a2 list, type 1 → a1 list). Called per-frame from submitGfxFrame over the active-mesh array at 0x8010E090 (count u16 at 0x8010DFD4), immediately after drainMeshReleaseQueue.
+drainMeshReleaseQueue                = 0x8000815C; // per-submitGfxFrame: walks the deferred-release queue at 0x80112B30 (count at 0x80113230, capacity 64 × 28 bytes); for each entry traverses its attached resource list and frees each via the chain rooted at MEM[0x801143B0]. Resets count to 0 at end, so each frame starts with an empty queue. Companion to enqueueMeshForDeferredRelease.
+unlinkTextureMaterialList            = 0x80021F78; // takes (texIdx u16); walks doubly-linked list at materialListHead[texIdx] (head ptr table at 0x80128F00, stride 4). For each node: calls func_800079A4 (per-node cleanup), unlinks via next/prev (offsets 0x0/0x4), splices into free-list at 0x80128EF8. Called from freeTextureDataSlot.
+tickAudioChannel                     = 0x8008BC10; // per-channel sequencer tick: decrements wait counter at +0x40, processes one MIDI-like command from program stream, dispatches to one of 7 sub-handlers (8008B33C..8008B8DC). Channel struct size 0x17C.
+tickAllAudioChannels                 = 0x8008C9AC; // iterates 0x17C-stride active-channel array at 0x8013D880 (count at byte 0x80141AD0), calling tickAudioChannel for each populated slot. Outer MusyX sequencer tick.
 menuControllerInput                  = 0x800B47D0; // big menu controller input handler (0x38E4 bytes); 0x800B47C4 is fake_func splat trampoline preceding it (per docs/menus + controller)
 setupMenuData                        = 0x800BA0F0; // sets up D_800CE730 per current menu
 updateMenuPerFrame                   = 0x800BB394; // per-frame menu update (highlighting etc)
@@ -350,6 +557,7 @@ buildSecondaryWeaponString           = 0x800AE530; // builds secondary weapon st
 printLevelSelectWeaponText           = 0x800B19EC; // prints weapon/shield text on level select screen
 getAvailableShipsForLevel            = 0x800C63C0; // returns u32 of available ships per level
 getAvailableShipsForLevelAlt         = 0x800C6234; // sibling of getAvailableShipsForLevel; differs in some minor ways, also returns a u32 bitmask of craft available for given level (per docs/unsorted_thoughts)
+isCraftAvailableByIdx                = 0x8006B180; // (idx 0..7) — 8-way switch returning 0/1: tests per-craft availability against gGameSettings.flags + per-level table at 0x800A05D0 (stride 0x30). Called from func_8006B000 etc.
 mallocVoiceLineStruct                = 0x800CBF60; // rs_malloc's voice-line related struct for craft selection
 
 // Batch 24: docs-driven (asset/dma/snd/animation subsystems)
@@ -607,6 +815,40 @@ getTextureLUTFieldAtA                = 0x80022768; // trivial: returns *(u16*)(*
 
 // Batch 56: time/angle wrap helper (2026-05-11)
 // Wraps an input time/angle value into a configured cyclic range.
+setSpeechVolume                      = 0x80067AFC; // (volume_byte_0_127) — normalizes to 0..1 (/127.0), stores at MEM[0x80139C80], calls applySpeechVolumeScalar to push to active speech voice slots
+applySpeechVolumeScalar              = 0x80066D8C; // (f12 scalar 0..1) 4 callers (cinematicLoopBody/mallocVoiceLineStruct/func_800CBE00/setSpeechVolume): stores f12 at MEM[0x80139C88], computes scaled = MEM[0x80139C80] * f12, stores at MEM[0x80139C84], then iterates active speech voice slots applying scaled volume to each
+isSpeechSlotActive                   = 0x80067B3C; // (slotIdx 1..8) — looks up voice handle in 8-entry table at 0x80139B80; returns isVoiceHandleActive(handle), else 0 if slot is 0 or handle is -1. Called from speech-playback gating.
+stopSpeechSlotIfActive               = 0x80067B90; // (slotIdx 1..8) — looks up MusyX voice handle in 8-entry table at 0x80139B80; calls func_8009B3CC (status query) and if still active calls func_8009B33C (stop), then clears handle to -1.
+stopAllSpeechSlots                   = 0x80067C0C; // iterates all 8 speech slots in 0x80139B80 table; for each active voice queries status and stops if needed; finally zeros queue counter at MEM_H[0x80139BA8].
+advanceSpeechRingAndStopHead         = 0x80067CA8; // dequeue head of 8-slot speech ring buffer: reads head index from byte at 0x80139BA9, stops that slot's voice if active, then decrements ring count at MEM_H[0x80139BA8] (wraps -1 → 7).
+resetSpeechSubsystem                 = 0x80067820; // tickMissionObjectives/func_800FB9E4 cleanup: stops currently-active speech slot (1..8 from byte at 0x80139C73) via the stopSpeechSlotIfActive path, then resets the speech-state block at 0x80139C70..0x80139C8E (clears flags, sets +0x02=0x10, +0x1E=1).
+tickSpeechSubsystem                  = 0x80067300; // (f12 delta_time) per-frame speech update called from cinematicLoopBody + runInMissionFrame; drains queue ring (read=0x80139C70, write=0x80139C71), checks state byte (0x80139C72; 0x10 = special "advance"), polls active voice via isVoiceHandleActive; advances playback to next sample when current finishes.
+initSpeechSubsystem                  = 0x80066A90; // (mode u8, speedDivisor u8) — initializes the speech subsystem: calls initMusyXVoiceTable (func_8009BBA0), resets speech state block at 0x80139C70..C8E (zeros queue indices, state byte = 0x10, slot = 0), computes scaled rate float = speedDivisor/256.0 at 0x80139C84+C80, sets default constants. If mode==0, also loads the speech master asset via findAssetAcrossSegments using asset id at 0x800A05C8. Called from initMission, setupCutsceneLevel, hangarInitialize.
+updateAudioListenerPosFromPlayer     = 0x80066A50; // per-frame: reads vec3f at +0x4C..+0x54 of the active player/camera struct (ptr at MEM[0x80138D1C]); duplicates to two listener-position slots at 0x80139B10 and 0x80139B58. Called from many mission-state and per-NPC update functions.
+updateAudioListenerVelocity          = 0x800666DC; // (f12 delta_time) per-frame from runInMissionFrame: reads current player pos (vec3f at +0x4C of MEM[0x80138D1C]), stores to listener cache at 0x80139B58. If delta_time > 0 computes velocity = (curr - prev_at_0x80139B10) / delta_time stored at 0x80139B70; else velocity = 0. Forwards to vec3Length to get speed magnitude.
+freeAudioCacheEntry                  = 0x80066960; // (key u32) — 16-entry {key, ptr} cache at 0x80139A00 (stride 8). If key == -1: rs_frees every non-empty entry and marks all empty. Else: finds entry by matching key, rs_frees its pointer, and marks slot empty. Called from hangarInitialize (clears all on transition) and various asset cleanup paths.
+clearTrackedNpcSlots                 = 0x8006C6D0; // fills 14-halfword sentinel table at 0x8013A528..0x8013A542 with 0xFFFF ("no slot tracked"). Called once per scene from initMission and setupCutsceneLevel before NPCs are spawned.
+allocAllInitialNpcSlots              = 0x8005C5D0; // allocates 32 NPC slots via allocateNpcSlot(0) and stores their indices as halfwords at 0x80139560..0x801395BE (stride 2). Called from initMission / initSceneForMission / func_800C3FE0 to pre-reserve the per-scene NPC slot pool.
+initPlayerMissionStateFromSettings   = 0x8006E9E4; // populates gMissionState[0] (at 0x80130B10) from gGameSettings (at 0x80130B40): copies secondaryWeapon (byte +0x3 → state +0x2), looks up max via getSecondaryWeaponCount(vehicleId, secondaryWeapon) → state +0x3, zeros bytes +0x5/+0x6/+0x7, then rs_memsets 16 bytes at 0x80130B78 to 0. Called from initMission.
+initPlayerVehicleStateTables         = 0x8004FFA8; // sets init flag at 0x80138260; for player vehicle slot at 0x80138D18 (stride 0x144): zeros byte 0, writes link ptr to parallel data block at 0x80138268+i*0x5D0, copies default vec3f from constants and 16-byte template from MEM[0x8009DEE0]. Sets head ptr at 0x80138894. On first init (flag 0→1), also reads boot-config screen w/h via getBootConfigField12/14 and stores at +0x10/+0x14/+0x18/+0x1C of data block. Called from initMission.
+resetTransientPlayerStateFlags       = 0x800FED40; // per-frame from every playerXxxUpdate: iterates 2 player slots in the 632-byte-stride table at 0x8010CA30; switches on state byte +0x0 (cases 1..8) to clear transient flags (+0x1, +0x210, +0x211 for states 3/8; just +0x1 for states 1/2/4/5; skip for 6/7). Then sets float at +0x24 to default speed (const at 0x800A4404) if getPlayerVehicleId(0) is non-zero OR func_800B585C(0) is non-zero; else 0.
+applyLevelScreenAndCameraSettings    = 0x8006B000; // per-mainGameLoop-frame: reads currentLevel from gGameSettings+0x0, indexes 48-byte-stride table at 0x800A05D0; copies 3 halfwords (offsets +0x4/+0x6/+0x8) shifted <<10 to global block at 0x80037590 (+0x30/+0x34/+0x38). Sets screen w/h based on gGameSettings.flags bit 0 (hi-res = 512×448 at +0x12/+0x14, plus 0x40 at +0x44; lo-res = 320×224, 0 at +0x44 if expansion-pak byte +0x23 is 0).
+syncMissionUnlockBitsToSettings      = 0x8006EDD8; // per-mainGameLoop-frame: copies bits 9..22 (mask 0x007FFE00) of gMissionState+0x8 (at 0x80130B18) into gGameSettings+0xC (at 0x80130B4C), preserving the other bits. Keeps the gGameSettings unlock-flags field in sync with runtime mission progress. Companion to unlockMissleUpgradeOnLevelCompletion which sets specific bits in that same field.
+isSpeechBusyOrQueued                 = 0x80067A80; // returns 1 if speech queue has pending entries (read != write at 0x80139C70/C71) OR if current speech slot (byte at 0x80139C73) has a still-active voice handle; returns 0 only when nothing pending and no active voice.
+enqueueSpeechClip                    = 0x80066C00; // (speechId u32 (<0x2F4), priorityOrLength u8) — increments speech ring count at 0x80139BA8 (mod 8), gets head index byte, looks up slot in 8-entry ring at 0x80139B80; if slot has active voice handle, stops it. Then reads per-clip metadata at 0x800A09E0[speechId] (halfword) and applies volume scaling. Called from tickSpeechSubsystem and func_800CBE00.
+playSpeechClip                       = 0x80066EE4; // (speechId u32 (<0x2F4), s4 u32, f12 paramFloat, flags u32) — main speech-clip playback dispatcher: gates on bytes 0x80139C8E, 0x80139C8C, state byte 0x80139C72 (must be 0x10), gGameSettings.flags bit 3 (pause/disable), and speechId != 0x28C exception. flags bits 0x40/0x8/0x10 act as bypass overrides for each gate. Called from many speech-play sites including the func_80067D38 wrapper, mission-state and NPC handlers.
+finalizeCurrentSpeechBuffer          = 0x800678E4; // calls func_8009BCC4 (MusyX finalize), then frees the active speech-line buffer: if MEM_W(0x80139B74) is non-null it's an in-memory copy (rs_free), else it's a streamed segment (teardownAssetDma(asset@0x80138920, dmaId@0x80139B70)). Returns 1. Called from gracefulMenuShutdown, menuSubtype02Handler, cutscene speech finalize paths.
+stopVoiceByHandle                    = 0x8009B33C; // (handle u32) — MusyX: scans the active-voice table at 0x80154620 (stride 0x1228, count at byte 0x800A5121); finds slot whose handle (offset +0x24) matches, calls internal stop (func_8009B268). Returns 1 if found+stopped, 0 otherwise.
+isVoiceHandleActive                  = 0x8009B3CC; // (handle u32) — MusyX: sister of stopVoiceByHandle; scans the voice table for a handle match, returns 1 if that slot's active flag (byte at +0x4620 of slot base) is non-zero, else 0.
+initMusyXVoiceTable                  = 0x8009BBA0; // MusyX voice-table init (called from initSpeechSubsystem): walks voice table at 0x80154620 (stride 0x1228) clearing active flag and per-voice state via func_8009BE40; creates the voice control message queue at 0x80154650 (size 1, buffer at 0x80154668) and seeds it with one empty message.
+shutdownMusyXVoices                  = 0x8009BCC4; // MusyX teardown (called from finalizeCurrentSpeechBuffer): stops slot 0 via func_8009B268, walks voice table at 0x80154620 (stride 0x1228) to find empty slots, zeros max-voice-count byte at 0x800A5121, calls func_8000794C, then rs_frees voice control buffers at MEM[0x80154E7C] (if active per byte 0x800A5120) and MEM[0x80154E74].
+initMusyXVoiceSlot                   = 0x8009BE40; // (slotBase, ptr1, ptr2, ptr3, [sp+0x38]=ptr4) — initializes a single MusyX voice slot: bzero 0x190 bytes, sets size halfword 0x28 at +0x166, populates ptr fields at +0x190..+0x19C, creates per-slot OSMesgQueue at +0x11AC with buffer at +0x11C4 (size 1), zeros control fields at +0x11A0..+0x11DD. Called by initMusyXVoiceTable for each of the up-to-N voice slots in the table at 0x80154620.
+allocAndConfigureNewVoice            = 0x8009B048; // (voiceId u32, p1, p2, p3, [sp+0x53]=byte, [sp+0x57]=byte, [sp+0x5B]=byte) — finds an empty MusyX voice slot in the table at 0x80154620 (stride 0x1228), validates voiceId < max-id at 0x80154670, creates secondary OSMesgQueue at slotBase+0x11E0 with buffer at +0x11F8 (size 2), then calls initMusyXVoiceSlot to wire up the slot. Called from enqueueSpeechClip to begin playback of a new voice line.
+setMusyX3DProperties                 = 0x80098FA8; // (dst, pos vec3f, vec3f, vec3f, [sp+0x70]=velocity vec3f, [sp+0x77]=byte) — under factor5Mutex, sets a MusyX 3D entity's spatial properties on `dst` struct: position (+0xC..+0x14), two orientation/right/up vectors (+0x18..+0x20 and +0x24..+0x2C), and negated velocity for Doppler (+0x3C..+0x44). Called from updateAudioListenerVelocity (per-frame listener update) and cinematic/scene emitter sites.
+unlinkMusyXListNode                  = 0x80099310; // (node) — unlinks node from the doubly-linked list rooted at MEM[0x80153418] under factor5Mutex: writes node.prev (+0x4) into node.next.prev, writes node.next (+0x0) into node.prev.next; if no prev, updates head ptr. Returns 1 if MusyX is initialized (0x800A0F50 byte), 0 otherwise.
+isPointXzWithinRangeOfRef            = 0x80047DAC; // (refPoint, point) — xz-plane proximity test: dx=(rx-px)*scale, dz=(rz-pz)*scale, returns 1 if dx²+dz² < threshold. Scale at 0x8003A7D4, threshold at 0x8003A7D8. Called by isNpcWithinActiveReferenceRange.
+isNpcWithinActiveReferenceRange      = 0x80047D40; // (npc) — selects "active reference point" per scene state: (1) cinematic camera if scene byte 0x80130B39 nonzero (calls func_800AEA18); (2) fixed point 0x801375F8 if bit 3 of 0x8010CA1C set; (3) player slot 0 (func_8006C8F0) otherwise. Forwards (ref, npc) to isPointXzWithinRangeOfRef. Called by 25+ NPC update funcs to gate distant-NPC simulation.
+tickTrainCarStateMachine             = 0x800E1E1C; // (npc) — per-tick train car state machine: decrements byte +0xFC counter, when expired clears advance-flag at +0xFD and advances state from per-NPC table at npc+0x34. State table format selected by byte +0xB2: if 0 uses fields +0x134/+0x138, if non-zero uses +0xD4/+0xD8 offsets. Returns early if +0xFD already set or counter still > 0. Called by npcTrainCarUpdate.
 wrapAngleToCyclicRange               = 0x80067D90; // 60 callers: f12 = input angle; subtracts global cycle-start at 0x80136DE0; if <0 wraps by adding range (modulo-style); if >=cycle-end-at-0x80136DE4 wraps too. Returns wrapped value in f0.
 
 // Batch 57: sinf approximation + quaternion-vector rotation (2026-05-11)
@@ -659,6 +901,9 @@ setPlayerSlotEntryRGB                = 0x80063E54; // 47 callers: (slot_idx u16,
 // to play3DSoundEvent — updates already-playing source position/velocity/pan.
 updateActive3DAudioSource            = 0x800988E8; // 33 callers: under factor5MutexAcquire — (audio_entry, position vec3, velocity vec3, pan u8 normalized by /127). Updates entry's spatial fields at +0xC/+0x10/+0x14 (pos), +0x18/+0x1C/+0x20 (vel), +0x28/+0x2C (pan). Gated by MusyX-active flag.
 findLookupEntryByKey                 = 0x800642A0; // 32 callers: read-version of setLookupEntryField5ByKey. Walks 8-byte stride table at *(a0+0x0) count=*(u16*)(a0+0x4), finds entry where entry.field0 == a1, returns it.
+removeLookupTableEntry               = 0x800643C4; // (table, key) — searches 8-byte-stride table at *(a0+0x0) (count u16 at +0x4) for entry whose +0x0 word matches key; if found, shifts subsequent entries down to fill the gap and decrements count. Companion to findLookupEntryByKey/setLookupEntryField5ByKey.
+destroyLookupTable                   = 0x80064628; // (table) — rs_frees the entries array at table+0x0, then rs_frees the table struct itself. Companion destructor to the table allocator.
+getLookupEntryField5                 = 0x8006465C; // (table, key) — searches 8-byte-stride table for entry matching key (+0x0 word); returns the byte at +0x5 of the matching entry (0 if not found). Read-only companion to setLookupEntryField5ByKey.
 getStructField0xC                    = 0x800B3D08; // 36 callers: trivial — returns *(u32*)(a0 + 0xC). Generic pointer-at-offset-0xC getter used across many subsystems.
 
 // Batch 65: random scale + factor5 audio wrapper variants (2026-05-11)
@@ -666,6 +911,7 @@ getStructField0xC                    = 0x800B3D08; // 36 callers: trivial — re
 // and 0x80098* (audio) ranges.
 scaleVec3ByRandomRange               = 0x80072300; // 37 callers: scales in-place vec3 at a0 by a random factor in [a1, a2]. Uses rand_recomp() & 0xFFF / 4095.0 for normalized random.
 playSimpleAudioCmd                   = 0x8008E0B0; // 33 callers: under factor5MutexAcquire — thin wrapper for func_8008DD60(a0 u8, a1 u16, a2 u8, 0). Likely simple audio command (channel, sound_id, volume).
+applyMusicOrSfxVolume                = 0x8008E120; // (volume_byte, slot_u16, applyMusic_flag, applySfx_flag) — gated by MusyX active flag (0x800A0F50); under factor5 mutex, calls func_8008DD60 with category 0x15 (music) if applyMusic_flag set, then category 0x16 (sfx) if applySfx_flag set
 play3DSoundEventVariant              = 0x80098BDC; // 36 callers: sibling of play3DSoundEvent (0x800989D8) with different param positions. Same factor5 mutex + audio entry pattern. Likely looped/repeated variant.
 
 // Batch 66: vec3 length clamp + gPlayers field getter (2026-05-11)
@@ -1048,6 +1294,9 @@ loadSkyHorizonHob                    = 0x8005AB34; // 2 callers: loads "sky_hori
 // allocates a 0x20-byte voice context at 0x80139010, initializes it (sets
 // 0xFFFF sentinel at +0x0), and configures based on gBootConfig fields.
 initVoiceSubtitleSystem              = 0x80055A30; // 3 callers: bootstrap the voice-subtitle subsystem
+setActiveVoiceLine                   = 0x800562E0; // (textId u16, callback ptr) — writes to the 0x20-byte voice context at MEM[0x80139010]: stores textId at +0x0, calls getVoiceText(textId), stores callback at +0x8, zeros bytes at +0x2 and +0x3. Called from tickSpeechSubsystem when starting a new voice line.
+clearActiveVoiceLine                 = 0x80056330; // sets halfword at +0x0 of the voice context at MEM[0x80139010] to 0xFFFF (sentinel "no active voice line"). Called from tickSpeechSubsystem when voice playback finishes.
+tickVoiceSubtitleDisplay             = 0x80055CB0; // (f12 delta_time) per-frame from cinematicLoopBody + runInMissionFrame: manages the voice subtitle line in the 0x20-byte context at MEM[0x80139010]. Checks gGameSettings bits to select fallback subtitle id (0x222 if +0x16 set, 0x223 if +0x10 bit 0x20 set), invalidates outdated lines, and ticks the active line's animation/lifetime.
 
 // 76-case jump table dispatcher on NPC type id (0..0x4B). Returns the per-type
 // asset name string (e.g. 'b_lrsp', 'megaturret', 'b_ttu_hi') or NULL for
@@ -1109,6 +1358,7 @@ writebackDCacheHalfwords             = 0x80092588; // 3 callers: (addr, halfword
 // IDs via func_800554D8 in a loop, then copies hud_elements forward via a
 // rotate-then-overwrite pattern. Documented in docs/hud_stuff/func_800FBE20.c.
 configurePlayerSecondaryWeaponHud    = 0x800FBE20; // 3 callers: (player_idx, weapon, count, isAdvanced) — populates hud_struct slice
+refreshPlayerSecondaryWeaponHud      = 0x800FEC98; // state machine: switch on missionStats.secondaryWeapon (D_80130B10+0x2) ∈ {2..8} → check corresponding "advanced" bit (10/12/15) in gGameSettings.flags → call configurePlayerSecondaryWeaponHud(player_skip, secWeapon, secWeaponMax, is_advanced). Callers: playerAtStInit, playerAwingUpdate, playerFalconUpdate.
 
 // Pause-screen init/update. On first call (when arg0->unk258==0 AND game
 // state D_8010CA20==5), builds the dim-quad mini-hob: 4 vertices at
@@ -1168,6 +1418,7 @@ rs_tolower                           = 0x800078C0; // defined:true
 rs_memset                            = 0x800078E0; // defined:true
 normalize_vector                     = 0x8001CF58; // defined:true
 load_level_hmp                       = 0x80043D74; // defined:true
+getLevelTimeLimit                    = 0x8006B694; // (no args) — per-level lookup: if gGameSettings.unk23 (cheat?) → 2000; else by gCurrentLevel: GerrardV/KesselPrison/Sullust → 400, KileII → 500, Thyferra → 600, TrenchRun → 1000, default → 300. Called from load_level_hmp.
 loadDatFile                          = 0x80046784; // defined:true
 getLevelDatItemByName                = 0x80047B48; // defined:true
 getDatItemByName                     = 0x80047B70; // defined:true
@@ -1198,6 +1449,7 @@ initializeNumLives                   = 0x8006EA78; // defined:true
 // Bit index = $a0 (byte_idx = a0>>3, shift = a0&7). Used to track per-level /
 // per-feature unlock progress.
 isUnlockBitSet                       = 0x8006ED90; // returns ((gSaveDataBody[0xA3 + a0>>3] >> (a0&7)) & 1)
+applyVolumeSettingsToMixer           = 0x8006E468; // 6 callers (initDemoPlayState/restoreGameSettingsAfterDemo/cinematicLoopBody/initOrUpdatePauseScreenDim/loadSndFiles/menuControllerInput): reads gGameSettings.{musicVolume,soundFxVolume,speechVolume} at +0x20/21/22, updates "is-muted" flags in +0x10, pushes to mixer via func_8008E120 + func_80067AFC
 gatherActiveUnlockFlags              = 0x8006EDB8; // defined:true
 unlockMissleUpgradeOnLevelCompletion = 0x8006EE14; // defined:true
 setUnlockBitAndPersist               = 0x8006E360; // 2 callers (cinematicLoopBody, mainGameLoop): if bit a0 unset, OR it in, then saveLoadDispatcher(SAVE) twice to persist gSaveDataBody to EEPROM
@@ -1225,7 +1477,7 @@ loadSpeechFile                       = 0x8009BA38; // defined:true
 // Real functions missed by splat
 
 startSiPollingThread = 0x80002F4C; // called from initSiQueue; zeros 4 controller pad slots at 0x80110520, clears flag at 0x80110741, osCreateThread for siServiceThread (prio 0x76)
-func_8000569C = 0x8000569C; // defined:true
+submitDmaRequestBatch = 0x8000569C; // (req_ptr, count, ?) — adds `count` DMA requests to ring buffer at gDmaSlotRing (0x801112B0); checks queue free space (256 - (head-tail)+count+1 < 256) and dma mutex state != 2 (busy); called from mainBootstrapWorker boot-time asset batch
 convertMat3x4ToN64Mtx = 0x80018D80; // (dst=a0, src=mat3x4 ptr=a1) — converts a row-major 3x3 rotation + translation to N64 Mtx fixed-point format using packMtxRowFloatToFixed for each of 3 rotation rows; constants at 0x800186EC are scale factors
 packMtxRowFloatToFixed = 0x80018E60; // (f4=x,f6=y,f8=z,f10=scale) — multiplies by scale, cvt.w.s, packs into 64-bit s16-int + s16-frac halves at $t7+0x20 and $t7+0x0 (N64 Mtx row layout); advances $t7+=8
 func_800403EC = 0x800403EC; // defined:true
@@ -1251,7 +1503,8 @@ fake_func_80003424 = 0x80003424; // defined:true
 // Annoyingly the fake function here, when interpreted as real coode, contains a reference
 // to func_80007064 which isn't real. This causes a real function (func_8000703C) to get split in two
 fake_func_8000537C = 0x8000537C; // defined:true
-func_80005380      = 0x80005380; // defined:true
+initRsMallocHeap   = 0x80005380; // (base_ptr, size) — initializes rs_malloc heap: stores base at gRsHeapBase, creates head/tail free-list nodes, stores total_free at gRsHeapTotalFree, max_alloc at gRsHeapMaxAlloc
+getRsHeapMaxAllocSize = 0x800053F0; // returns gRsHeapMaxAlloc - 0x23 (max usable bytes after subtracting per-allocation header), or 0 if heap not yet initialized
 
 fake_func_80005568 = 0x80005568; // defined:true
 
@@ -1264,13 +1517,13 @@ installPeriodicCallback = 0x80007380; // (callback, intervalUnits) → creates m
 periodicCallbackWorker = 0x80007480; // worker thread for installPeriodicCallback: osRecvMesg(BLOCK) → osYieldThread → LOOKUP_FUNC(*0x801128E0) → loop
 
 fake_func_800074D8 = 0x800074D8; // defined:true
-func_800074E0      = 0x800074E0; // defined:true
+u64DivU64          = 0x800074E0; // GCC compiler helper __udivdi3-equivalent: 64-bit unsigned divide; combines (a0:a1) into dividend u64, (a2:a3) into divisor u64, ddivu, returns quotient in (v0:v1)
 
 fake_func_8000751C = 0x8000751C; // defined:true
 // real function rs_strcasecmp
 
 fake_func_80007908 = 0x80007908; // defined:true
-func_80007910      = 0x80007910; // defined:true
+registerSiCallback = 0x80007910; // (callback_ptr) — finds first empty slot in 4-entry table at MEM[0x8011A8A4], writes callback ptr; returns 1 on success, 0 if all 4 slots full. Called from startSiPollingThread.
 
 fake_func_800186D8 = 0x800186D8; // defined:true
 
@@ -1319,7 +1572,7 @@ fake_func_80054648 = 0x80054648; // defined:true
 func_80054650      = 0x80054650; // defined:true
 
 fake_func_800555E8 = 0x800555E8; // defined:true
-func_800555F0      = 0x800555F0; // defined:true
+initPlayerStructs  = 0x800555F0; // called from initMission: iterates gPlayers (0x80137DB8, stride 0x2A0); per-player calls clearVec4QuadStruct(player.inner), zeros player+0/+0x298/+0x29C, then sets player[0]+0 = 1. Loop only runs once (intended for multiplayer per docs/unsorted_thoughts).
 
 fake_func_80055698 = 0x80055698; // defined:true
 // real function is loadTxtFile
@@ -1327,7 +1580,6 @@ fake_func_80055698 = 0x80055698; // defined:true
 fake_func_80055A2C = 0x80055A2C; // defined:true
 
 fake_func_80056344 = 0x80056344; // defined:true
-func_80056350      = 0x80056350; // defined:true
 
 fake_func_80059B4C = 0x80059B4C; // defined:true
 
@@ -1662,6 +1914,10 @@ D_80110D60           = 0x80110D60; //                   size:0x3A0
 gServiceWorkerMesgBuf = 0x80111100; // size:0x140 - DMA-related OSMesg buffer used by service-worker entries (per docs/dma_linked_list)
 D_80111240           = 0x80111240; //                   size:0x04
 dmaSlotMaxTxStepSize = 0x80111254; // type:u32
+gRsHeapBase          = 0x80111260; // type:void* - rs_malloc heap base (head node ptr); set by initRsMallocHeap
+gRsHeapTail          = 0x80111264; // type:void* - rs_malloc heap tail node (sentinel) ptr
+gRsHeapTotalFree     = 0x80111268; // type:u32 - rs_malloc total bytes available (size - 0x10 header)
+gRsHeapMaxAlloc      = 0x8011126C; // type:u32 - rs_malloc max single-allocation size (size - 0x36 overhead); read by getRsHeapMaxAllocSize
 D_80111288           = 0x80111288; // type:OSMesg       size:0x04
 D_80111290           = 0x80111290; // type:OSMesgQueue  size:0x18
 // type_size:0x14 count:0x100
@@ -1682,7 +1938,7 @@ D_8011A8D0   = 0x8011A8D0; // type:OSMesg      size:0x4
 D_80128C80 = 0x80128C80; // type:OSMesg size:0x4
 D_80128CE0 = 0x80128CE0; // type:OSMesg size:0x4
 
-D_80130B10   = 0x80130B10; // size:0x28
+gMissionState = 0x80130B10; // size:0x28 - per-mission state struct (D_80130B10_type): numLives, playerRank, secondaryWeapon(+2), secondaryWeaponMax(+3), unk4, completedObjectiveFlags, hiddenObjectiveFlags, numMissionObjectives (per docs/unsorted_thoughts)
 gGameSettings = 0x80130B40; // size:0x30 - game settings struct (per docs/unsorted_thoughts/unsorted_thoughts.md D_80130B40_type)
 missionStats = 0x80130B78; // size:0x10
 gActiveCheatFlags = 0x80130B58; // type:u32 — bit flags for activated cheat codes (see docs/cheat_codes/cheat_codes.md table)

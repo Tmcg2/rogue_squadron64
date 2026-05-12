@@ -193,6 +193,7 @@ npcShuttleUpdate = 0x800D3894; // segment:mission_overlay
 npcTankDroidUpdate = 0x800D6998; // segment:mission_overlay
 
 npcWingmanUpdate = 0x800D93C0; // segment:mission_overlay
+getNpcWingmanStateData = 0x800D7974; // segment:mission_overlay - (npc) reads npc[+0x5D] state byte (0..7), clears +0x5E and +0x5F; if state < 8, switch returns per-state data ptr (0x800D7CF8/7EC0/9F90/E0064/...); else returns 0
 
 npcTieVariantUpdate = 0x800DB11C; // segment:mission_overlay
 

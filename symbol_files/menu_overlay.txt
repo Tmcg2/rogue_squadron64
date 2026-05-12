@@ -178,6 +178,10 @@ hangarInitializeShipShadowHob       = 0x800AE088; // segment:menu_overlay
 hangarGenerateSecondaryWeaponString = 0x800AE530; // segment:menu_overlay
 hangarLoadShadows                   = 0x800AE9E0; // segment:menu_overlay
 gracefulMenuShutdown                = 0x800AE74C; // segment:menu_overlay - calls func_8008DA00 (audio stop), spin-waits anyAudioSlotActive==0, bufferArbiterProducerScanWait, brief delay, func_800678E4 (asset teardown)
+initCraftSelectVectors              = 0x800AEAF0; // segment:menu_overlay - (vec3_a, vec3_b) — zeros MEM[0x800CD704/08], copies 3 words from a0 → gCraftSelectScreenData+0x4, 3 words from a1 → +0x14
+hangarSetSecondaryWeaponDisplay     = 0x800AEB48; // segment:menu_overlay - (craft_byte, weapon_byte) — calls hangarGenerateSecondaryWeaponString, dispatches text to slot 2 via func_800625C4, applies 2 RGB color updates via setPlayerSlotEntryRGB; stashes weapon at MEM[0x800CDA80]
+hangarUpdateSecWeaponIfChanged      = 0x800AEBD8; // segment:menu_overlay - (craft, weapon, alpha_f12) — if weapon != MEM[0x800CDA80] (last displayed), regenerates the secondary weapon string + dispatches text update via func_80062854; always calls func_80062B04 with alpha
+extractTextBeforeFmtChar            = 0x800AE7B0; // segment:menu_overlay - (text_ptr) — skips a0[0] type byte; copies chars from a0[1] onward into buffer at MEM[0x800CD520], stopping at 0/'#'(0x23)/'*'(0x2A); appends NUL. Used for text-files formatted strings (per docs/text_files.md)
 
 bridgeLoadShipBlueprints = 0x800B165C; // segment:menu_overlay
 
