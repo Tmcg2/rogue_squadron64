@@ -334,6 +334,7 @@ loadAndDecodeTexture                 = 0x80022FF8; // (texLutEntry, bufPtrPtr, ?
 texPackTlutAtAllocSlot               = 0x800233B0; // (key u32, fmt u8, alphaFlag u8, hasAlphaSrc u8) — TLUT pack wrapper that always searches for a free slot then allocates fresh storage. Builds flag word (0x10-XOR'd fmt bit | 0x8000 if alphaFlag | 0x4000 if hasAlphaSrc), validates key has 0x8000_xxxx magic, walks TLUT registry at 0x80128EFC[count=0x80128F04] for value==0, decrements high-water allocator at 0x8012A7D0 by sizeof(entries)*2, writes new chunk into slot, then calls packTlutEntriesRgba5551. Format & 0xF dispatches size: 0 → 16 entries / 1 → 256 entries / else returns 0xFFFF.
 texPackTlutSlotOrAlloc               = 0x80023514; // (slotHint u16, key u32, fmt u8, alphaFlag u8, hasAlphaSrc u8 [sp+0x30]) — sister of texPackTlutAtAllocSlot that accepts a hint slot index. If slotHint==0xFFFF behaves like the search-and-alloc path; otherwise reuses MEM[0x80128EFC + slotHint*4] as the destination chunk and calls packTlutEntriesRgba5551 directly. Same fmt & 0xF size dispatch (16 vs 256 entries).
 texPackTlutAtIndex                   = 0x80023678; // (slotIdx u16, basePtr, offsetMul u8, fmtCount u8, byteMode u8 [sp+0x33], hasAlpha u8 [sp+0x34]) — direct TLUT dispatcher with no slot mgmt or magic-key check: reads MEM[0x80128EFC + slotIdx*4], adds (basePtr + offsetMul*4) when byteMode is set or (basePtr + offsetMul*3) otherwise, then forwards to packTlutEntriesRgba5551. Hot-path entry used when caller has already resolved the slot.
+setProfilerBarGate                   = 0x80023D30; // (val u8) — one-line setter for the profiler-bar debug flag at MEM_B[0x80038CE0]. Read by emitProfilerBarSegment as its early-out gate. The retail ROM ships with the flag at 0 (HUD dormant) but the codepath is intact.
 emitProfilerBarSegment               = 0x80023D40; // (dlBuf, microseconds, rowY i16, alpha u8, [sp+0x10]=fillByte u8, [sp+0x14]=zero) — emits one horizontal time-bar into the active display-list buffer as chained RDP commands (0xB500 LOADSYNC, 0xE700 FULLSYNC, 0xB900 SETOTHERMODE_L, 0xF0A4000 SETCONVERT, then TEXRECTs). Converts the µs value via (val*1e9 / MEM_W[0x80039100..04]) / 0x32DCD5, clamps pixel width to 0x140 (320 = NTSC visible). Allocates more DL buffer via allocateDisplayListBuffer when current chunk overflows. Returns updated DL ptr in v0. Gated by debug flag MEM_BU[0x80038CE0] — early-out as no-op when 0. Called 7× from func_8000B6F4 to draw a row-stacked profiler bar overlay.
 beginFrameDLChunk                    = 0x8000A8A0; // per-frame display-list chunk allocator: pops a 0x100-byte buffer from freelist head at MEM_W[0x801173B0] (refills via findAndUnlinkSmallestEntry → walk-and-append if empty). Sets globals: cursor at 0x8012DC58 = chunk+0x8, end-of-chunk at 0x801183D4 = chunk+0x100, active-buf at 0x80124C0 = chunk. Chains via G_NOOP (0x70000000) into prior DL's tail (ptr at 0x8012A4C0), and writes G_DL (0x60000000, 0x80037658) at chunk+0x8 — the static-DL header. Then iterates count at MEM_W[0x80117C00] emitting per-slot LOADSYNC+G_DL preamble jumps from a halfword index table at 0x80124470. Called from initRenderStateArrays (main frame) and func_8000B6F4 (profiler overlay).
 dispatchCueByCategory                = 0x8005E3B0; // (cueType u8, halfword_id u16, dataPtr, positionPtr (XYZ floats), [sp+0x58]=auxId u32, [sp+0x5C]=auxFloat) — primary cue/event submitter (28 callers across game). 13-case switch on (cueType - 2) at L_8005E448 selects per-category handler; pulls a cue ID halfword from a per-player localized table at MEM_W[0x80137CE4] + (playerIdx × stride) + MEM_W[0x80129610] using category-specific offset (+0x0, +0x10, +0x20, +0x38). Builds local cue descriptor at sp+0x1C..0x30 (slot, position × global scale at MEM_W[0x80043120], cue ID). Re-dispatches through a 14-case switch on (cueType - 1) at L_8005E6D8. Gates noopHandler calls and increments counter at MEM_W[0x80130B7C] only when mute byte at MEM_BU[0x80130B39] is 0. Listener position via getPlayerField2(0).
@@ -416,7 +417,7 @@ lv9_updateHudAndStateBools           = 0x80105464; // 2× setObjectiveBoolean + 
 // Note: Levels 10-20 vtable handlers are already named in the ELF with letter
 // suffixes (lva_=10, lvb_=11, lvc_=12, ..., lvk_=20). See ELF symbols
 // `llvm-nm | grep lv[a-z]_initializeObjectTracking`. Entry[1] (unk4) slots are
-// left address-encoded (e.g. lva_80106100) per the no-address-encoded-name rule.
+// named `lvN_objectiveSlot1` in mission_overlay.txt.
 
 // Level 0 objective handlers
 lv0_runDialogueSequenceA             = 0x801018EC; // 3× playObjectiveVoiceLine2 — scripted multi-line dialogue sequence for a level-0 event.
@@ -1547,10 +1548,10 @@ returnOne_8002335C                   = 0x8002335C; // pure `return 1` stub
 // "return 0" stub. Used as default-fail/skip callback.
 returnZero_800F3258                  = 0x800F3258; // pure `return 0` stub
 
-// Single-float setter at 0x8011A840 in the same config region. Reverted other
-// address-encoded entries in this cluster (8011A871/872/873/898) per user
-// directive — kept this one only because "Float" qualifies the type.
-setGlobalFloat_8011A840              = 0x80017B78; // 2 callers: stores $f12 to 0x8011A840
+// Single-float setter at 0x8011A840. Left as default func_80017B78 — the
+// caller-side meaning of the float isn't identified yet, so a name like
+// `setGlobalFloat_8011A840` would only encode coordinates. Returns to the
+// no-address-encoded-name rule.
 
 // Trivial object-byte clearer: stores 0 to obj+0x112. Counterpart to many
 // other obj+0x112 (state-byte) accessors.
@@ -1562,10 +1563,11 @@ clearObjectField112                  = 0x800F9474; // 2 callers: MEM_B(obj+0x112
 // dynamic slot tables. Counterpart destructor at func_80064628.
 allocateSlotTable                    = 0x800645CC; // 15 callers: (capacity u16) -> *table_hdr
 
-// Indexed pointer-table accessor. Returns word at table[a0&0xFFFF] where
-// table base = MEM_W(0x800CEEFC). Used as a generic "lookup-by-index" for
-// some pointer table.
-lookupIndexedPointer_8002333C        = 0x8002333C; // 2 callers: (idx u16) -> ptr from table at 0x800CEEFC
+// Texture TLUT slot accessor. Returns MEM_W(0x80128EFC + (idx & 0xFFFF) * 4),
+// i.e. the entry at slot `idx` of the texture-LUT/palette table the TLUT
+// alloc family (allocTextureTlutBlock / freeTextureTlutBlock / texPackTlut*)
+// all read and write.
+getTextureTlutEntry                  = 0x8002333C; // (idx u16) -> ptr from texture TLUT table at 0x80128EFC
 
 // Linked-list mass flag-update helper. Walks a singly-linked list (via
 // node->+0x0 = next), updating each node's +0xC word: new = (old & ~clear) | set.

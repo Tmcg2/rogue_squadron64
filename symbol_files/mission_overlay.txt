@@ -116,7 +116,7 @@ strMissMUSICRNGLevelSettings  = 0x800A9B60; // type:asciz size:0x18 segment:miss
 
 npcPowerGeneratorUpdate = 0x80077AF0; // segment:mission_overlay
 
-npcWorldDevastator = 0x8007EF1C; // segment:mission_overlay
+npcWorldDevastatorUpdate = 0x8007EF1C; // segment:mission_overlay — per-frame update for the World Devastator NPC (matches the npc*Update naming convention)
 
 playerSnowSpeederInit   = 0x800AAAE0; // segment:mission_overlay
 playerSnowSpeederUpdate = 0x800ACD9C; // segment:mission_overlay
