@@ -440,6 +440,7 @@ initMission        = 0x800FA250; // segment:mission_overlay - one-time mission i
 runInMissionFrame  = 0x800FA6A4; // segment:mission_overlay - in-mission per-frame update (called from mainGameLoop); kicks demos when gGameSettings flag 0x20 set, then runs main update logic
 
 tickMissionObjectives = 0x800FBC4C; // segment:mission_overlay - per-frame mission-objective state machine: timer (MEM[0x8010C9EC]) + state (MEM[0x8010C9F0]); transitions call slotDispatcherIter, dispatchObjectiveSlot1, audio cmds
+tickMissionPhaseTransitionTimer = 0x800FBBA8; // segment:mission_overlay - mode-6 handler in runInMissionFrame's 7-mode state machine. Decrements master timer MEM[0x8010C9EC] by f12 delta; when delta-step crosses below threshold MEM[0x800A9094] stamps 0xFF byte + calls func_800C401C(buf, 2.0) which broadcasts via slotDispatcherIter; when timer drops below 0 ORs bit 0x40 into mission-state-flags byte MEM[0x8010CA1C].
 fake_func_800FBE14 = 0x800FBE14; // segment:mission_overlay
 
 fake_func_800FEF04 = 0x800FEF04; // segment:mission_overlay

@@ -292,7 +292,9 @@ subscribeEventHandler                = 0x80003C98; // claims slot in 0x80111BC0 
 // Event/object workers
 mainEventQueueWorker                 = 0x80004360; // worker that drains service msgs into ring buffer
 piDmaWorker                          = 0x80005570; // cartridge PI DMA worker; ring at 0x801112B0 (256 x 20B); osPiStartDma
-unidentifiedServiceWorker            = 0x80022048; // sibling service worker, stubbed in RogueSquadron64Recomp
+initPiDmaWorker                      = 0x80005850; // creates message queue at 0x80112BA0, clears producer/consumer indices, registers piDmaWorker as service worker (callback=0x80005570, prio=4, qsz=0x200), stores handle at 0x801126BC
+dispatchPendingPiDmaToWorker         = 0x800058C0; // checks ring producer/consumer at 0x801126B0/B4; if mismatch and busy flag set, sends service message to piDmaWorker queue at 0x801126BC. Returns 1=dispatched, 0=idle. Polled in yield loops by submitDmaSlot/waitDmaSlotComplete.
+tickTextureMaterialExpiry            = 0x80022048; // MISNAMED-IN-RECOMP. Not a service worker — per-frame texture-material-expiry walker called from frameStartReset (funcs_3.c:8096). Reads count at MEM_HU[0x80128EF0]; if 0, early-exits. Walks materialListHead[] at MEM_W[0x80128F00] (same head used by unlinkTextureMaterialList at 0x80021F78). Per entry: bumps +0x8 age halfword, when over threshold MEM_BU[0x80128EAD] calls func_800079A4(entry+0x14) (cleanup), unlinks via +0x0/+0x4 prev-next, splices into free-list at MEM_W[0x80128EF8]. Stubbed in toml as "unidentifiedServiceWorker" — early-exit defended against AV that's already handled by the zero-count gate. Re-enabling should be safe but the stub is redundant when count is properly inited.
 hudDisplayUpdateWorker               = 0x800495FC; // level-time HUD worker; processes material/texture update msgs (per docs/hud_stuff/hud_stuff.md)
 getTextureDataByMaterialId           = 0x800232F8; // material_id -> D_8011A444 -> D_80128F08 -> texture_data ptr
 
@@ -409,6 +411,11 @@ lv9_majorStateTransition             = 0x801053EC; // 2× voice + 3× setObjecti
 lv9_completeAndProgressObjective     = 0x801054C0; // voice + 3× setObjectiveBoolean + increaseObjectiveCount + activateObjectiveComplete — objective complete + progress trigger for level 9.
 lv9_updateHudAndStateBools           = 0x80105464; // 2× setObjectiveBoolean + setHudFlagBit40 — HUD update paired with state-flag transition for level 9.
 
+// Note: Levels 10-20 vtable handlers are already named in the ELF with letter
+// suffixes (lva_=10, lvb_=11, lvc_=12, ..., lvk_=20). See ELF symbols
+// `llvm-nm | grep lv[a-z]_initializeObjectTracking`. Entry[1] (unk4) slots are
+// left address-encoded (e.g. lva_80106100) per the no-address-encoded-name rule.
+
 // Level 0 objective handlers
 lv0_runDialogueSequenceA             = 0x801018EC; // 3× playObjectiveVoiceLine2 — scripted multi-line dialogue sequence for a level-0 event.
 lv0_objectiveProgress                = 0x80101934; // increaseObjectiveCount — single objective progress trigger for level 0.
@@ -472,6 +479,8 @@ playVoice_0x217                      = 0x80105E44; // wrapper: playObjectiveVoic
 playVoice_0xAA                       = 0x80105E60; // wrapper: playObjectiveVoiceLine1(0xAA) — first of two wrappers playing this voice
 playVoice_0xB6                       = 0x80105E7C; // wrapper: playObjectiveVoiceLine1(0xB6)
 playVoice_0xC4                       = 0x80105E98; // wrapper: playObjectiveVoiceLine1(0xC4) — first of two wrappers playing this voice
+playVoice_0xAA_v2                    = 0x80105EB4; // wrapper: playObjectiveVoiceLine1(0xAA) — second wrapper playing same voice
+playVoice_0xC4_v2                    = 0x80106050; // wrapper: playObjectiveVoiceLine1(0xC4) — second wrapper playing same voice
 playVoice_0x21E                      = 0x80105ED0; // wrapper: playObjectiveVoiceLine1(0x21E) — first of two
 playVoice_0x21D                      = 0x80105EF8; // wrapper: playObjectiveVoiceLine1(0x21D) — first of two
 playVoice_0xE5                       = 0x80105F20; // wrapper: playObjectiveVoiceLine1(0xE5)
@@ -489,13 +498,70 @@ playVoice_0x230                      = 0x801083D8; // wrapper: playObjectiveVoic
 playVoice_0x48                       = 0x8010842C; // wrapper: playObjectiveVoiceLine1(0x48)
 playVoice_0x26B                      = 0x80108488; // wrapper: playObjectiveVoiceLine1(0x26B)
 
-// playObjectiveVoiceLine2 wrappers (lv3, funcs_44) — thin wrappers calling Line2 variant with 2 args; second arg is always 0
+// playObjectiveVoiceLine2 wrappers — thin wrappers calling Line2 variant; r5 (second arg) is either 0 or a float scale (1.0f, 0.5f, 2.0f).
+// Voice ID in r4 is the semantic identity. Spans lv1-lv9 across funcs_43-48.
+playVoice2_0x21C                     = 0x80101B34; // wrapper: playObjectiveVoiceLine2(0x21C, 1.0f)
+playVoice2_0x04D                     = 0x80101B54; // wrapper: playObjectiveVoiceLine2(0x4D, 0.5f)
+playVoice2_0x1F8                     = 0x80101B74; // wrapper: playObjectiveVoiceLine2(0x1F8, 0.299f)
 playVoice2_0xA4                      = 0x801026CC; // wrapper: playObjectiveVoiceLine2(0xA4, 0)
 playVoice2_0x233                     = 0x801030F0; // wrapper: playObjectiveVoiceLine2(0x233, 0)
 playVoice2_0x13C                     = 0x80103110; // wrapper: playObjectiveVoiceLine2(0x13C, 0)
 playVoice2_0x2F3                     = 0x80103424; // wrapper: playObjectiveVoiceLine2(0x2F3, 0)
 playVoice2_0x29F                     = 0x80103444; // wrapper: playObjectiveVoiceLine2(0x29F, 0)
 playVoice2_0x126                     = 0x80103464; // wrapper: playObjectiveVoiceLine2(0x126, 0)
+playVoice2_0x034                     = 0x80103A50; // wrapper: playObjectiveVoiceLine2(0x34, 1.0f)
+playVoice2_0x028                     = 0x80103A70; // wrapper: playObjectiveVoiceLine2(0x28, 0.75f)
+playVoice2_0x032                     = 0x80103BF0; // wrapper: playObjectiveVoiceLine2(0x32, 2.0f)
+playVoice2_0x0FE                     = 0x80103C10; // wrapper: playObjectiveVoiceLine2(0xFE, 1.0f)
+playVoice2_0x00B                     = 0x80103F68; // wrapper: playObjectiveVoiceLine2(0xB, 1.0f)
+playVoice2_0x15D                     = 0x80103F88; // wrapper: playObjectiveVoiceLine2(0x15D, 1.0f)
+playVoice2_0x163                     = 0x801040B0; // wrapper: playObjectiveVoiceLine2(0x163, 1.0f)
+playVoice2_0x017                     = 0x801055E0; // wrapper: playObjectiveVoiceLine2(0x17, 0)
+playVoice2_0x299                     = 0x80105AC0; // wrapper: playObjectiveVoiceLine2(0x299, 0)
+playVoice2_0x293                     = 0x80108448; // wrapper: playObjectiveVoiceLine2(0x293, 0)
+playVoice2_0x22C                     = 0x80101B98; // wrapper: playObjectiveVoiceLine2(0x22C, 0.5f)
+playVoice2_0x027                     = 0x80103A90; // wrapper: playObjectiveVoiceLine2(0x27, 1.0f)
+playVoice2_0x0AF                     = 0x80103FA8; // wrapper: playObjectiveVoiceLine2(0xAF, 1.0f)
+playVoice2_0x2A4                     = 0x801040D0; // wrapper: playObjectiveVoiceLine2(0x2A4, 1.0f)
+playVoice2_0x0EE                     = 0x80106014; // wrapper: playObjectiveVoiceLine2(0xEE, 1.5f)
+playVoice2_0x159                     = 0x801060E0; // wrapper: playObjectiveVoiceLine2(0x159, 0)
+playVoice2_0x2F2                     = 0x80106B78; // wrapper: playObjectiveVoiceLine2(0x2F2, 2.0f)
+playVoice2_0x296                     = 0x801071C8; // wrapper: playObjectiveVoiceLine2(0x296, 0)
+playVoice2_0x0BA                     = 0x80108468; // wrapper: playObjectiveVoiceLine2(0xBA, 0)
+playVoice2_0x22E                     = 0x80108DF0; // wrapper: playObjectiveVoiceLine2(0x22E, 8.0f)
+playVoice2_0x219                     = 0x80108E48; // wrapper: playObjectiveVoiceLine2(0x219, 8.0f)
+
+// setObjectiveBoolean wrappers — thin wrappers around setObjectiveBoolean(bool_id, value). All set value=1 (TRUE).
+setObjBoolTrue_0x14                  = 0x80105770; // wrapper: setObjectiveBoolean(0x14, 1)
+setObjBoolTrue_0x15                  = 0x80105880; // wrapper: setObjectiveBoolean(0x15, 1)
+setObjBoolTrue_0x16                  = 0x80105990; // wrapper: setObjectiveBoolean(0x16, 1)
+setObjBoolTrue_0x17                  = 0x80105AA0; // wrapper: setObjectiveBoolean(0x17, 1)
+setObjBoolTrue_0x1F                  = 0x80103248; // wrapper: setObjectiveBoolean(0x1F, 1)
+
+// Paired-dialogue wrappers — 2x playObjectiveVoiceLine2 calls (with different voice IDs).
+// Each pair is semantically unique. Spans lv6-lv9 levels.
+playPairedDialogue_0x244_0x0EB       = 0x80106088; // 2x playObjectiveVoiceLine2(0x244 then 0xEB)
+playPairedDialogue_0x246_0x0ED       = 0x801060B4; // 2x playObjectiveVoiceLine2(0x246 then 0xED)
+playPairedDialogue_0x0AD_0x11A       = 0x80106B08; // 2x playObjectiveVoiceLine2(0xAD then 0x11A)
+playPairedDialogue_0x1F8_0x11B       = 0x80106B40; // 2x playObjectiveVoiceLine2(0x1F8 then 0x11B)
+playPairedDialogue_0x038_0x11A       = 0x80106FC4; // 2x playObjectiveVoiceLine2(0x38 then 0x11A)
+playPairedDialogue_0x1E6_0x256       = 0x80107124; // 2x playObjectiveVoiceLine2(0x1E6 then 0x256)
+playPairedDialogue_0x0AB_0x11B       = 0x80107190; // 2x playObjectiveVoiceLine2(0xAB then 0x11B)
+playPairedDialogue_0x093_0x096       = 0x80108D6C; // 2x playObjectiveVoiceLine2(0x93 then 0x96)
+playPairedDialogue_0x1EB_0x1AC       = 0x80108D98; // 2x playObjectiveVoiceLine2(0x1EB then 0x1AC)
+playPairedDialogue_0x246_0x11A       = 0x80108DC4; // 2x playObjectiveVoiceLine2(0x246 then 0x11A)
+playPairedDialogue_0x1F7_0x1F3       = 0x80108E10; // 2x playObjectiveVoiceLine2(0x1F7 then 0x1F3)
+playPairedDialogue_0x21C_0x13E       = 0x80109384; // 2x playObjectiveVoiceLine2(0x21C then 0x13E)
+playPairedDialogue_0x230_0x13A       = 0x801093B0; // 2x playObjectiveVoiceLine2(0x230 then 0x13A)
+
+// Scripted multi-line dialogue (3-4 sequential playVoice2 calls).
+runDialogueSeq_037_11A_0BF           = 0x80106F80; // 3x playObjectiveVoiceLine2(0x37, 0x11A, 0xBF)
+runDialogueSeq_2B4_142_1E6_11A       = 0x80108D1C; // 4x playObjectiveVoiceLine2(0x2B4, 0x142, 0x1E6, 0x11A)
+
+// Misc 2-primitive wrappers
+synchronousDmaTransfer               = 0x80005200; // submitDmaSlot + waitDmaSlotComplete — synchronous DMA helper
+initSongAssetLoadWorker              = 0x800C57CC; // registerServiceWorker(prio=4, qsz=0x800, tick=tickSongAssetLoadWorker) + startServiceWorker; stores handle at gSongAssetLoadWorkerHandle
+tickSongAssetLoadWorker              = 0x800C5834; // Service worker tick: recvServiceMessage + parseLoadedSndSection + loadSongAssetByName — loads sequenced sound assets on demand.
 
 // Other thin wrappers (each is a 23-line wrapper around one named callee with hardcoded constant arg)
 triggerSoundCue5                     = 0x8010322C; // wrapper: triggerSoundCueByType(5) — fires sound cue type-5 from a specific call site (lv3).
@@ -519,6 +585,19 @@ lv9_progressObjective_0x1C           = 0x801059E0; // increaseObjectiveCount(0x1
 lv9_progressObjective_0x1F           = 0x80105A10; // increaseObjectiveCount(0x1F) + addTimer
 lv9_progressObjective_0x1D           = 0x80105A40; // increaseObjectiveCount(0x1D) + addTimer
 lv9_progressObjective_0x1E           = 0x80105A70; // increaseObjectiveCount(0x1E) + addTimer
+
+// Timer-scheduler wrappers (each calls addTimerHandleWrapper with a hardcoded callback + delay; semantic identity = which callback gets scheduled)
+scheduleLv9MajorStateTransition_1s   = 0x801053C8; // wrapper: addTimerHandleWrapper(callback=lv9_majorStateTransition at 0x801053EC, delay=1.0f). Defers the lv9 state transition by 1 second.
+scheduleLv9CompleteAndProgress_4s    = 0x8010549C; // wrapper: addTimerHandleWrapper(callback=lv9_completeAndProgressObjective at 0x801054C0, delay=4.0f). Defers the lv9 objective-complete trigger by 4 seconds.
+bootstrapLv9ProgressTimerHead        = 0x8010568C; // wrapper: addTimerHandleWrapper(callback=lv9_progressAndRescheduleTimer at 0x801056B0, delay=1.0f). Kicks off the head of the lv9 progress-timer chain.
+
+// lv3 timer-scheduler wrappers (each defers a specific lv3 callback by a fixed delay)
+scheduleLv3DialogueWithHudA_1_5s     = 0x80102938; // wrapper: addTimerHandleWrapper(lv3_dialogueWithHudUpdateA at 0x8010295C, 1.5f)
+scheduleLv3DialogueWithHudB_1_5s     = 0x8010299C; // wrapper: addTimerHandleWrapper(lv3_dialogueWithHudUpdateB at 0x801029C0, 1.5f)
+scheduleLv3DialogueWithHudC_1_5s     = 0x80102A00; // wrapper: addTimerHandleWrapper(lv3_dialogueWithHudUpdateC at 0x80102A24, 1.5f)
+scheduleLv3TriggerProgressA_3s       = 0x80102F34; // wrapper: addTimerHandleWrapper(lv3_triggerObjectiveProgressA at 0x80102F58, 3.0f)
+scheduleLv3ObjectiveTimers_3s        = 0x8010313C; // wrapper: addTimerHandleWrapper(lv3_scheduleObjectiveTimers at 0x80103160, 3.0f)
+scheduleLv3SetStateBooleans_3s       = 0x80103360; // wrapper: addTimerHandleWrapper(lv3_setMissionStateBooleans at 0x80103384, 3.0f)
 applySaveSlotToMissionState          = 0x8006DB2C; // (saveSlotIdx u8) — initializes gMissionState bytes 0..255 to 3 (default lives), then reads save-slot record from 20-byte-stride table at 0x8013A5D4; copies pilot name via rs_strcpy to gGameSettings+0x7, copies status byte at slot+0x4 to gMissionState+0x1, applies packed config bits from slot+0xC into gGameSettings+0xC. Called from menuControllerInput (save-select / new-game flow).
 enqueueMeshForDeferredRelease        = 0x80008350; // (meshAsset) — if meshAsset+0xC has "release pending" bit 0x10 set, copies 7 words of metadata (+0x3C, +0x44, +0x48..+0x58) into next slot of the 28-byte-stride per-frame release queue at 0x80112B30 (count u16 at 0x80113230, capacity 64). On success clears flag bits 3+4 of meshAsset+0xC. On overflow (count >= 64) returns silently leaving the pending bit set, so the caller retries next frame — the 64 ceiling is a per-frame work budget, not a total-mesh limit. Called from releaseMeshAsset and 3 sister funcs.
 commitMeshDrawBatchRefs              = 0x80008550; // (meshAsset) — per-frame deferred-ref resolver: requires meshAsset+0xC bits 0x10 AND 0x60 set, then clears bits 0x60 (keeps 0x10). Picks source-list pair based on meshAsset+0x2C bit 31 — either (+0x44/+0x4C) or (+0x48/+0x50). Walks both linked lists; for each ~64-entry batch chunk at meshAsset+0x58 (chained via +0x4), per entry: reads type byte at +0x8>>24, then writes resolved source ptr into entry+0x4 (type 0 → a2 list, type 1 → a1 list). Called per-frame from submitGfxFrame over the active-mesh array at 0x8010E090 (count u16 at 0x8010DFD4), immediately after drainMeshReleaseQueue.
@@ -612,6 +691,296 @@ yieldFromGfxFrame                    = 0x8001A038; // tiny osYieldThread wrapper
 
 // Batch 33: cinematic asset init
 initCinematicSceneAssets             = 0x800AE518; // cinematic asset loader (mallocs, registerHmtTextureInTable); called by cinematicInitializer
+
+// DAT-file LOD bounding box markers — per docs/dat_files/load_level_dat.c.
+// Both convert (x_min, x_max, z_min, z_max) world coords to grid cell indices
+// (subtracting world origin at *(0x80136DE0) and multiplying by inverse cell size).
+// Discriminated by DAT subtype 4 (HIGH_LOD) vs subtype 5 (LOW_LOD) — fields
+// at +0x10, +0x18, +0x28, +0x30 are the rect's corners.
+markLowLodCellsInGrid                = 0x80043AEC; // DAT subtype 5 — uses inverse-cell-size at *0x8003A53C
+markHighLodCellsInGrid               = 0x80043C30; // DAT subtype 4 — uses inverse-cell-size at *0x8003A540 (finer grid)
+processMeshdef1ForLod                = 0x80014DE0; // (meshdef1_ptr, 0, 0) — called during load_hmt_and_hob per docs/hob_files; checks meshdef1->+0xC bit 0x80000, reads distance at +0x1C, applies LOD scaling using globals at 0x80125ECC and 0x800006A0/A4. Iterates through meshdef1 linked list during HOB load.
+
+// Menu-entry / overlay helpers (children of menuOverlayInit per call-graph analysis).
+runHangarMenuFromOverlay             = 0x800C6854; // (ctx_out, craft_idx_byte, _, _) — calls getAvailablePlayerCraftFlagsConsiderUnlocks + hangarInitialize, then polls func_800AAD9C in a loop until !=0xFFFFFFFF (user selection), calls gracefulMenuShutdown, stores selection in ctx_out+0x1, returns 0/1. Wraps the hangar selection flow when entered from a menu overlay.
+
+// NPC destruction handlers — share signature pattern: spawnDebris1Npc + spawnNpcType0xAFromTemplate
+// + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange + play3DSoundEvent.
+// Pattern matches across major destructible NPC types (AT-AT, water craft).
+npcAtAtHandleDestruction             = 0x800CCC98; // (1316 lines) AT-AT destruction: spawns debris/Type-0xA NPCs with random orientations + plays 3D sound. Exclusively called from npcAtAtUpdate.
+npcWaterCraftHandleDestruction       = 0x800E5B38; // (1174 lines) Water craft destruction handler: same spawn-debris + random + sound pattern as npcAtAtHandleDestruction. Exclusively called from npcWaterCraftUpdate.
+
+// Additional NPC destruction handlers — same signature pattern (spawnDebris1Npc
+// + spawnNpcType0xAFromTemplate + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange),
+// each exclusively called from its parent NPC update after unregisterAndFreeNpcSlot.
+npcAtStHandleDestruction             = 0x800CF898; // (849L) AT-ST walker destruction. Caller: npcAtStUpdate.
+npcShuttleHandleDestruction          = 0x800D33CC; // (931L) Imperial Shuttle destruction. Caller: npcShuttleUpdate.
+npcTieVariantHandleDestruction       = 0x800DAB98; // (1082L) TIE variant destruction. Caller: npcTieVariantUpdate. Called after unregisterAndFreeNpcSlot + popNpcSlotFromTail.
+npcPowerGeneratorHandleDestruction   = 0x8007636C; // (1185L) Power generator destruction. Caller: npcPowerGeneratorUpdate. Called immediately after releaseMeshAsset.
+
+// Mission/level-end cleanup — calls calculateFriendliesSaved, resetSpeechSubsystem,
+// finalizeCurrentSpeechBuffer, freeAllHobFiles, freeTxtFile,
+// reset_and_free_model_animations, waitForAnyAudioSlot. Reads timer at
+// 0x80130BA4 and game-state constants. Called from mainGameLoop at mission end.
+endMissionCleanup                    = 0x800FB9E4; // (234L) main-loop child
+
+// Cinematic dispatch from main loop. Scans 16-byte slot status array (a0[0..15])
+// for cinematic phase states (categories <3, <2, ==0), sets aggregate state byte
+// at 0x800B0B1E, then conditionally calls cinematicLoopBody. The "should a cinematic
+// run this frame?" gate driving the cutscene system from mainGameLoop.
+dispatchCinematicFromMainLoop        = 0x800AE878; // (139L) main-loop child
+
+// Initialize all 12 player slots. Iterates gPlayerSlotTable[0..11] and for
+// each slot pointer: zeros fields +0x20, +0x24, +0x28, +0x2C, +0x30, +0xEC,
+// +0xF0, +0xF4, +0xFC; inner-loops 20 entries at +0x34 (4-byte stride) clearing
+// +0x84 byte. Stamps slot[+0xF8] with ASCII identifier 'A'..'L' (0x41 + idx).
+// Finally sets state byte at 0x80139960=1, halfwords at +0x962/+0x964 = 0x140.
+// Called from mainGameLoop at game/level start.
+initAllPlayerSlots                   = 0x80063B58; // (90L) main-loop child
+
+// First-order Taylor expansion of a path/position: out = base - neg_velocity * t.
+// Equivalently P(t) ≈ P(0) + P'(0)*t with delta stored as -P'(0) ("approach delta"
+// pointing from target back to base). Per-frame path integrator for predefined enemy
+// flight paths and sound-position prediction. Pure vec3 math, no globals.
+// Args: (struct{vec3 base@0; vec3 negVel@C}* a0, ?, vec3* out, float t).
+// 7 callers across npcShuttleUpdate, npcTrainCarUpdate, npcWordDevastatorUpdate,
+// playerAtStUpdate, tryPlaySpatialSoundWithGates (3x for spatial sound offset).
+vec3ExtrapolateFirstOrder            = 0x80077784;
+
+// Second-order Taylor integrator with circular-motion cross-product correction.
+// Args: (?, npc_a1, pathState_a2, timeScalars_a3) where:
+//   pathState (a2): vec3 P @ +0x00, vec3 vel @ +0x0C, vec3 ang_vel @ +0x18
+//   timeScalars (a3): t²/2 (or weight) @ +0x00, t @ +0x04, more scalars @ +0x10
+// Math: result = P + vel·t + cross(ang_vel, vel) · (t²/2)
+//   (where cross(ω, v) is the centripetal-acceleration approximation for
+//   uniform circular motion). Per-axis formula matches:
+//     out.x = P.x + vel.x*s1[+4] + (ang_vel.x*vel.z - ang_vel.y*vel.y) * s1[+0]
+// Then calls wrapAngleToCyclicRange (orientation wrap), reads global config at
+// *(0x80136E08)+0x10, calls func_8006B844 (banking/orientation), and finally
+// setVec3At0x24(npc+0x3C, x, y, z) to overwrite the NPC transform matrix
+// with identity-rotation + new translation. 19 callers — the primary path-step
+// driver for npcAtAt/ShuttleUpdate/TrainCar/GroundTransport/GroundTroop/etc.
+advanceNpcOnCurvedPath               = 0x8006BEC8;
+
+// Companion to advanceNpcOnCurvedPath (only caller, 1099 lines).
+// Computes 4 banking-corrected world-space points at NPC+0x178..+0x198 from
+// pathState (vel, ang_vel) and writes them after wrapping with
+// wrapAngleToCyclicRange.
+// Per-corner formula: corner = anchor + base ± (ang_vel × vel) * scale
+// where sign of (ω×v) flips based on sign(ang_vel.y) (rotation direction).
+// The 4 corners are likely wing-tip / banking sample points used for
+// shadow casting, terrain collision, or follow-on transform composition.
+// f8 scaling factor = NPC[+0x8], f6 = NPC[+0xC] (per-craft tuning).
+applyCentripetalBankingToNpcCorners  = 0x8006B844;
+
+// Terrain-grid sampler — converts world (x,z) to grid cell index using level
+// grid block at *(0x80136DC0) (+0x20=origin x, +0x2C=origin y, +0x10=stride,
+// inverse-cell-size constants at 0x8003C838..0x8003C840), then walks the
+// grid to sample terrain height / orientation. Calls only func_80068A90
+// (1-of-1 helper, likely cell-data fetch) and wrapAngleToCyclicRange.
+// Args: (vec3* a0_pos, vec3* a1, vec3* a2, struct* a3_out) — writes terrain
+// height + orientation pair to a3_out+0x18/+0x1C. Returns 1 on success.
+// 10 callers — ground walkers (npcAtAt/AtSt/AtPt), advanceNpcOnCurvedPath,
+// and a few other path-following helpers (npcAtPt-related funcs).
+sampleTerrainAtNpcPosition           = 0x80068D5C;
+
+// Bicubic terrain-height interpolation from an HMP tile heightmap.
+// 4x4 nested loop: outer a2 iterates 0..3 (rows), inner a1 iterates 0..3
+// (cols). Reads byte heights at cell+0x5 (6-byte stride matches rerogue
+// HMP tile layout: 5 metadata bytes + 1 height byte per cell). Computes
+// finite-difference gradients between neighbor cells and accumulates a
+// smooth bicubic interpolation. No function calls — pure math.
+// Args: (f12 fract_x, f14 fract_z, a2 cell_offset, a3 ?, sp+0x40 weight_x,
+//        sp+0x44 weight_z, sp+0x48 tile_base_ptr). Returns interpolated
+// height in f0. Bounds-checked against constants at 0x80037628..0x80037638
+// (origin / scale / half_cell / inv_scale).
+sampleHmpTileHeightBicubic           = 0x80068A90;
+
+// DAT subtype dispatcher (subtypes 0x01..0x05) — invoked via vtable (no direct callers in .c).
+// 5-way switch on (a1-1) where a1 = DAT subtype byte:
+//   case 0 (0x01): DAT_TYPE_0_PLAYER_START_POSITION → L_800477F4
+//   case 1 (0x02): DAT_TYPE_0_RESTART_POSITION → L_800479A0
+//   case 2 (0x03): DAT_TYPE_3_03 spline → L_800479DC (calls getCraftRecordByIdx)
+//   case 3 (0x04): DAT_TYPE_6_HIGH_LOD_BOX → L_80047AA0
+//   case 4 (0x05): DAT_TYPE_6_LOW_LOD_BOX → L_80047A88
+// Each case calls parseDatItemCommon + subtype-specific setup.
+parseDatItemSubtypes1To5             = 0x800477A0;
+
+// Per-craft record table accessor — returns pointer to a 672-byte (0x2A0) stride record at
+// gCraftRecordTable+4 + idx*0x2A0 (base at 0x80137DBC; records start at +4). Math:
+//   v2 = (idx*5)*4 = 20*idx; v2 += idx → 21*idx; v2 <<= 5 → 672*idx; return base+v2+4.
+// 9 callers: per-craft DAT/object setup including npcWordDevastatorUpdate, getAvailableShipsForLevel,
+// npcPowerUpUpdate, executeActorType4Effect, and parseDatItemSubtypes1To5 case 2 (spline).
+getCraftRecordByIdx                  = 0x8006C8F0;
+// Note: func_8006C918 is a verbatim duplicate (same math, same table). Skipped per
+// no-address-encoded-name rule — there's no semantic distinction between the two.
+
+// Active-craft spatial-partition entry — converts position to grid cell index, clamps to
+// grid bounds (width at *0x801375F0, height at *0x801375EC), iterates the active-cell table
+// at *0x801375D0 to clear stale entries against count at *0x801375D4. Reads inv-cell-size
+// constants at 0x8003A7B8/0x8003A7BC (sector grid, distinct from the level LOD grid at
+// 0x80136DC0). 2 callers: lookupActivePlayerCraftGridCell + cinematicLoopBody (camera POV
+// during cutscenes).
+updateActiveGridCellState            = 0x80047368;
+
+// Per-frame from runInMissionFrame: fetches the default craft's record (or fallback
+// constant 0x801375F8 if game-state bit 3 at 0x8010CA1C is set), then calls
+// updateActiveGridCellState on it. Used to track where the player POV is in the world's
+// sector grid for spatial-partition lookups (nearby NPCs, terrain, audio gates).
+lookupActivePlayerCraftGridCell      = 0x80047E0C;
+
+// MusyX active flag — single byte gating most audio API entry points
+// (factor5RemoveListNode, unlinkMusyXListNode, applyMusicOrSfxVolume,
+// playSpeechClip, etc.). Set during MusyX init, cleared on shutdown.
+gMusyXActiveFlag                     = 0x800A0F50; // type:u8
+
+// One-line getter for gMusyXActiveFlag — returns the MusyX-active byte
+// in v0 with no other side effects. Likely the public API entry that
+// other modules call to test if audio is up.
+isMusyXActive                        = 0x8008ED5C;
+
+// AT-AT / Walker leg articulation pipeline (traced 2026-05-12).
+// Star Wars walker NPCs (AT-AT, World Devastator, etc.) use a shared leg-stride
+// animation primitive driven by a phase counter at npc+0x6D.
+
+// AT-AT-specific leg-stride update. Called from npcAtAtUpdate ONCE per frame
+// when a float condition is met (after incrementing npc+0x6D step counter).
+// Calls lookupHmtTextureByName("0x800A6DCC", npc.assetData, ..., stride_buf)
+// to fetch the next stride keyframe, then computeWalkerLimbStrideTargets to
+// derive 3 vec3 outputs (likely left foot, right foot, body offset). Scales
+// each by global at *(0x800A6EC8).
+updateAtAtLegArticulation            = 0x800CD558;
+
+// Shared walker leg-stride target computer (2 callers: AT-AT and World
+// Devastator). Args: (npcIdx u16, &posBuf out, &outBuf1 out, &outBuf2 out,
+// sp+0xA8=scale_f). Calls getNpcContextField8 + mat34CrossRowsAndCopyPos to
+// build the walker body's normal-frame, then transformLimbStrideAnchorsLocal
+// to fetch 2 foot-anchor positions in body-local space, then scales by global
+// at *(0x8003D1F8). Output: 3 vec3 buffers used as leg-IK targets.
+computeWalkerLimbStrideTargets       = 0x8007602C;
+
+// Transform 2 vec3 stride anchors (npc parent's +0x5C and +0x68 fields) into
+// body-local space via transformVec3ByMat34. Writes to sp+0x70 and sp+0x80
+// of the caller. 5 callers across walker / large-NPC update functions.
+// Per the shared pipeline, these 2 vec3s are the start-of-stride and
+// end-of-stride foot-target positions for one limb cycle.
+transformLimbStrideAnchorsLocal      = 0x80074B74;
+
+// Main AT-AT body transform updater (1473 lines, 51 named calls including
+// buildRotationMatrixSlot0/1, mat34CrossRowsAndCopyPos, factor5RemoveListNode,
+// getObjectMeshTransformOrLocal, isPendingChildNpcActive). Called twice from
+// npcAtAtUpdate per frame on alternative branches — the heavy per-frame body
+// pose update applying orientation, mesh transforms, and child-segment
+// management. Args: (npc s1, f22=animation_scale_float).
+tickAtAtBodyTransform                = 0x800CC2AC;
+
+// Per-frame round-robin sub-feature processor. Each call builds a 3-char
+// asset name "sf" + (npc[+0x6E] + '1') on the stack and looks it up via
+// lookupHmtTextureByName, then findActiveNpcInSlotChain on the result.
+// Counter byte at +0x6E advances frame-by-frame to cycle through child
+// segments (likely 4 AT-AT legs as "sf0" through "sf3", or similar
+// numbered sub-meshes). Single caller: npcAtAtUpdate.
+processAtAtSubFeatureSlot            = 0x800CCB1C;
+
+// AT-AT footstep/weapon audio + state update. Reads NPC weapon fields
+// at +0x7C, +0x78; calls func_80082EA0 + func_80082CFC; triggers
+// play3DSoundEvent; updates NPC state fields at +0xE7 (byte), +0xF0/+0xF4
+// (floats, likely cooldown timer), +0x90 (byte). Called BEFORE the body
+// transform pass each AT-AT update — likely the footstep thud or weapon
+// fire sound trigger synchronized to the +0x6D phase counter.
+tickAtAtAudioAndWeaponState          = 0x800CC9B8;
+
+// Model animation runtime slot table (32 slots × 20-byte stride at 0x80139AA0).
+// Each slot stores: +0x0 active byte, +0x4 entry count, +0x8 secondary table ptr.
+// Used by parseModelAnimType2Entry (write) and tickAtAtAudioAndWeaponState et al (read/clear).
+// Model-animation slot table — 32 × 20-byte slots. Indexed 1..32 via (slot_id-1)*20.
+// Per-slot layout (derived from allocateModelAnimSlot writes + clearModelAnimChannelEntry reads):
+//   +0x00: void* fieldA           // caller-supplied (a0 in allocate)
+//   +0x04: void* fieldB           // caller-supplied (a2 in allocate)
+//   +0x08: void* entryCountSrc    // ptr to count source (a1 in allocate)
+//   +0x0C: void* secondaryTable   // rs_malloc'd to *entryCountSrc * 16 bytes
+//   +0x10: u8   active            // (cleared on release, set on allocate)
+//   +0x11..+0x13: padding
+// MIPS access: `at = 0x80140000 + (slot-1)*20`, fields via `at + (-0x5670 + field_offset)`.
+gActiveModelAnimSlots                = 0x8013A990; // size:0x280 (32 × 20B)
+
+// Mark one entry inactive in a model-animation slot's secondary table.
+// Args: a0 = packed (slot_id<<16 | entry_idx). Bounds-checks slot_id ∈ 1..32,
+// validates slot is active, then clears byte at slot.secondaryTable[entry_idx*16 + 8].
+// 4+ callers across model-anim cleanup paths.
+clearModelAnimChannelEntry           = 0x80082EA0;
+
+// Release all entries in a model-animation slot. Args: a0 = slot_id (1..32).
+// Iterates slot.entryCount entries; for each, calls rs_free(entry[+0xC]) on the
+// per-entry data ptr. Then calls rs_free on the secondary table itself.
+// 4+ callers — animation-slot cleanup on NPC destruction / scene change.
+releaseModelAnimSlot                 = 0x80082CFC;
+
+// Binary-search keyframe lookup within a model-anim channel entry.
+// Args: a0 = slot_id (u8), a1 = entry_idx, a2 = phase float as int.
+// Reads slot.secondaryTable[entry_idx*16].keyframeArrayPtr at +0x8, then
+// binary-searches for the keyframe whose halfword key brackets the input
+// phase. Result placed in caller-supplied output buffer.
+findModelAnimKeyframeByPhase         = 0x800826A0;
+
+// Seek a model-animation channel to a specific time. Args: a0 packed
+// (slot_id<<16 | entry_idx), a1 = time float in seconds.
+// Reads entry.cycleDuration at secondaryTable[entry_idx*16+0x4], clamps
+// time to [0, duration], normalizes to phase via time/duration, then
+// calls findModelAnimKeyframeByPhase to advance the keyframe pointer.
+seekModelAnimChannelToTime           = 0x80082F18;
+
+// Allocate and initialize a model-animation slot. Args:
+//   a0 = void* fieldA (caller pointer, stored at slot+0x00)
+//   a1 = void* entryCountSrc (ptr to u32 count; *a1 used to size malloc)
+//   a2 = void* fieldB (stored at slot+0x04)
+// Scans the 32-slot table for the first inactive slot; on found:
+//   slot[+0x00] = a0
+//   slot[+0x04] = a2
+//   slot[+0x08] = a1 (entryCountSrc pointer)
+//   slot[+0x0C] = rs_malloc(*a1 * 16)  // secondary table
+//   (active flag at +0x10 set elsewhere in function)
+// Returns 1-indexed slot_id on success.
+allocateModelAnimSlot                = 0x800828D0;
+
+// Reset the entire model-anim slot table — zeros all 5 fields of all 32 slots
+// (+0x00, +0x04, +0x08, +0x0C all set to 0; +0x10 active byte cleared).
+// Returns 1. Called at scene/game init.
+resetModelAnimSlotTable              = 0x80082870;
+
+// Inverse of clearModelAnimChannelEntry — sets bit 0x1 of the entry's
+// active byte at slot.secondaryTable[entry_idx*16+0x8].
+// Args: a0 = slot_id (u8), a1 = entry_idx. Validates slot_id ∈ 1..32 and
+// slot is active. Returns packed ((slot_id<<16) | entry_idx) handle.
+markModelAnimChannelEntryActive      = 0x80082E18;
+
+// Broadcast a cycle-duration float to ALL entries of a model-anim slot.
+// Args: a0 = slot_id (u8), a1 = duration float (as int via mtc1).
+// For each entry in slot.secondaryTable[0..count-1], writes f0 to entry+0x4
+// (the cycle-duration field used by seekModelAnimChannelToTime to normalize).
+// 9 callers — all walker NPC updates (AT-AT, AT-PT, AT-ST, plus cinematic).
+// Likely per-frame animation-speed sync: faster walker = shorter cycle.
+setModelAnimSlotCycleDuration        = 0x80083258;
+
+// Set cycle duration on a SINGLE entry of a model-anim slot.
+// Args: a0 packed (slot_id<<16 | entry_idx), a1 = duration float (as int via mtc1).
+// Validates slot ∈ 1..32 + active, then writes f0 to
+// slot.secondaryTable[entry_idx*16+0x4]. Single-entry version of
+// setModelAnimSlotCycleDuration.
+setModelAnimChannelEntryDuration     = 0x80083154;
+
+// Read cycle duration from a SINGLE entry of a model-anim slot.
+// Args: a0 packed (slot_id<<16 | entry_idx). Returns f0 = duration if
+// slot active, else fallback constant from *(0x8003DB1C) (likely 0.0).
+// Mirror getter of setModelAnimChannelEntryDuration.
+getModelAnimChannelEntryDuration     = 0x800831D0;
+
+// Slot-broadcast version of seekModelAnimChannelToTime: applies the same
+// time-clamp + phase-normalize + keyframe seek to ALL entries in a slot.
+// Args: a0 = slot_id (u8), a1 = time float. Iterates secondaryTable[0..count-1]
+// and calls findModelAnimKeyframeByPhase for each. Used when a walker
+// advances all leg/segment channels in lockstep.
+seekAllModelAnimChannelsInSlotToTime = 0x80083008;
 
 // Batch 34: post-osViSwapBuffer DP-completion handshake (2026-05-11)
 // submitGfxFrame calls setPostSwapPendingFlags right after osViSwapBuffer.
@@ -792,6 +1161,48 @@ spawnNpcOfType                       = 0x8003FFEC; // 69 callers: (handler_table
 // pattern (mid = (hi+lo)/2, multiplied by stride, compared via subtractive cmp).
 bsearchFactor5TableByU16Key          = 0x80087EE8; // 91 callers: under factor5MutexAcquire — binary search in 12-byte-stride table at 0x8013CC80 for entry with u16 key matching a1. Returns ptr to matching entry or NULL.
 cmpU16ByValue                        = 0x80086218; // trivial: return *(u16*)a0 - *(u16*)a1 — the comparator used by bsearchFactor5TableByU16Key
+compareHalfwordAtOffset8             = 0x80085E10; // qsort comparator: return *(u16*)(a0+8) - *(u16*)(a1+8). Paired with sort routine at 0x80085E20 (which reads list ptr from MEM[0x8013C44C]).
+compareHalfwordAtOffset4_v2          = 0x80085F54; // qsort comparator: identical body to compareHalfwordAtOffset4 (return *(u16*)(a0+4) - *(u16*)(a1+4)). Compiler-duplicated for distinct sort routine at 0x80085F64 (reads MEM[0x8013AF0C]).
+compareHalfwordAtOffset4_v3          = 0x80086114; // qsort comparator: identical body to compareHalfwordAtOffset4. Compiler-duplicated for sort routine at 0x80086124 (reads MEM[0x8013AF08]).
+loadAssetIntoNewSlot = 0x800547C0; // (a0=assetGroup, a1=assetName) -> slot_idx | 0xFFFF. Resolves name via findTextureByName, runs func_80022F48 to fill a stack descriptor, walks the 16-byte slot table at MEM[0x80137C84]/count MEM[0x80137C80] for a free slot (halfword+0x6 bit 0x8000 set = free), reserves it, rs_malloc's buffer sized via get_asset_size_extra, DMAs the asset into it via findAssetAcrossSegments + setupAssetDma + teardownAssetDma, computes slot+0x4 = segment count. Called by hangarInitialize / initWaterSprayParticles / load_dat_file_assets / npcTrainCarUpdate.
+findLargestFreeHeapChunk = 0x80001A48; // walks two heap free-lists (heads at MEM[0x8010FF18] and MEM[0x8010FF00]); chunk header halfword+0x0 has bit 0x1=free, bit 0x8=end-marker, +0x4=chunk size, +0x10=next-chunk header. Tracks max size seen, returns it. Called by spawn-context functions (spawnDebris1Npc / spawnOrientedNpc / npcWaterSprayUpdate / gameStateByteGatedNpcHelper) to check if there's enough free heap before allocating. Sits directly before rs_malloc.
+playVoice2_0xB                      = 0x80101AD8; // wrapper: playObjectiveVoiceLine2(0xB, 0). Single dialogue line in lv1 cluster.
+playVoice2_0x139                    = 0x801026EC; // wrapper: playObjectiveVoiceLine2(0x139, 0). Six compiler-emitted duplicates exist at 0x20 stride for six callsites.
+playVoice2_0x139_v2                 = 0x8010270C; // duplicate of playVoice2_0x139.
+playVoice2_0x139_v3                 = 0x8010272C; // duplicate of playVoice2_0x139.
+playVoice2_0x139_v4                 = 0x8010274C; // duplicate of playVoice2_0x139.
+playVoice2_0x139_v5                 = 0x8010276C; // duplicate of playVoice2_0x139.
+playVoice2_0x139_v6                 = 0x8010278C; // duplicate of playVoice2_0x139.
+lv3_clearBoolean_0x6                = 0x80102FF0; // setObjectiveBoolean(0x6, 0). Clears boolean 0x6.
+lv3_setBoolean_0x10                 = 0x80103268; // setObjectiveBoolean(0x10, 1). Sets boolean 0x10.
+lv3_setBoolean_0x11                 = 0x80103340; // setObjectiveBoolean(0x11, 1). Sets boolean 0x11.
+lv10_dialogueHudAndSoundA = 0x80107018; // setHudFlagBit40AndStoreArg(D_800A98F4) + playObjectiveVoiceLine2(0x1D1) + triggerSoundCueByType(4). Composite HUD/dialogue/sound handler.
+lv10_dialogueHudAndSoundB = 0x80107094; // setHudFlagBit40AndStoreArg(D_800A9918) + playObjectiveVoiceLine2(0x2CA, 5.0) + triggerSoundCueByType(3). Sister of lv10_dialogueHudAndSoundA.
+lv10_dialogueHudAndSoundC = 0x801070F0; // setHudFlagBit40AndStoreArg(D_800A9928) + playObjectiveVoiceLine2(0x2A5) + triggerSoundCueByType(4). Third in family.
+lv11_playPairedDialogue = 0x801083F4; // 2× playObjectiveVoiceLine2 (voices 0x2AF, 0x2B0, both scale 0). Pair-of-dialogue handler, sister of lv9_playPairedDialogue.
+lv6_dispatchStageTick = 0x801044B4; // Thin wrapper: delegateToLevelStageTick(D_800A9760, 0). Sister of other lvN_dispatchStageTick wrappers.
+lv10_scheduleDialogueA = 0x80106FF4; // Thin wrapper: addTimerHandleWrapper(lv10_dialogueHudAndSoundA at 0x80107018, 1.5s).
+lv10_scheduleDialogueB = 0x80107070; // Thin wrapper: addTimerHandleWrapper(lv10_dialogueHudAndSoundB at 0x80107094, 1.5s).
+lv10_scheduleDialogueC = 0x801070C8; // Thin wrapper: addTimerHandleWrapper(lv10_dialogueHudAndSoundC at 0x801070F0, 0.2s).
+lv3_dealDamageHookA = 0x8010349C; // dealDamagetoDatItem(target=D_800A9694, dmg=0x3A98). Per-level damage event hook.
+lv4_dealDamageHookA = 0x80103C50; // dealDamagetoDatItem(target=D_800A96CC, dmg=0xD3). Per-level damage event hook (lv4 cluster, immediately before lv4_objectiveSlot1).
+lv4_dealDamageHookB = 0x80103C74; // dealDamagetoDatItem(target=D_800A96EC, dmg=0xD3). Sister of lv4_dealDamageHookA.
+lv4_dealDamageHookC = 0x80103C98; // dealDamagetoDatItem(target=D_800A96F8, dmg=0xD3). Third in lv4_dealDamageHook family.
+lv3_dealDamageHookB = 0x801034C0; // dealDamagetoDatItem(target=D_800A96A4, dmg=0x32C8). Sister of lv3_dealDamageHookA.
+lv3_dealDamageHookA_v2 = 0x801034E4; // duplicate of lv3_dealDamageHookA — compiler-emitted twice for two callsites.
+lv9_runDialogueSequenceA = 0x8010539C; // 2× playObjectiveVoiceLine2 (voices 0x26D w/scale 1.5, then 0x12 w/scale 0). Paired dialogue.
+lv9_dialogueAndStateA = 0x8010552C; // 2× voice (0x16, 0x2EB w/2.0) + setObjectiveBoolean(0x79,1) + triggerSoundCueByType(5). Dialogue + state advance.
+lv9_dialogueAndStateB = 0x8010556C; // 2× voice (0x16, 0x2EB w/2.0) + setObjectiveBoolean(0x7A,1) + triggerSoundCueByType(5). Sister of lv9_dialogueAndStateA, different bool id.
+lv9_dialogueWithStateA = 0x801055AC; // voice 0x16 + setObjectiveBoolean(0x7B,1) + triggerSoundCueByType(5). Single-voice variant of lv9_dialogueAndStateA family.
+lv9_dialogueWithStateB = 0x80105600; // voice 0x18 + setObjectiveBoolean(0x7C,1) + triggerSoundCueByType(7). Sister of lv9_dialogueWithStateA.
+lv9_playVoice7IfFlagClear = 0x80105634; // gated voice: skip if MEM[0x8010D0D0]!=0, else playObjectiveVoiceLine2(7,0). One-shot play-once-on-event.
+lv9_scheduleTimerAndDialogueA = 0x80105790; // addTimerHandleWrapper(callback=0x801057C0, 1.0s) + playObjectiveVoiceLine2(0x274). Defer-and-speak pattern.
+lv9_scheduleTimerAndDialogueB = 0x801058A0; // addTimerHandleWrapper(callback=lv9_progressObjective_0x18 at 0x801058D0, 1.0s) + playObjectiveVoiceLine2(7). Sister of lv9_scheduleTimerAndDialogueA.
+lv9_scheduleTimerAndDialogueC = 0x801059B0; // addTimerHandleWrapper(callback=0x801059E0, 1.0s) + playObjectiveVoiceLine2(7). Third in lv9_scheduleTimerAndDialogue family.
+lv9_setObjectiveBoolean_0x78 = 0x80105AE0; // setObjectiveBoolean(0x78,1). Single-action boolean setter, sits before lv9_objectiveSlot1.
+lv9_progressWithDialogueA = 0x80105F48; // playObjectiveVoiceLine1(0x21E) + increaseObjectiveCount(0x63, 1). Same pattern as lv3/lv4_progressWithDialogue.
+lv9_progressWithDialogueB = 0x80105F98; // playObjectiveVoiceLine1(0x21D) + increaseObjectiveCount(0x63, 1). Sister of lv9_progressWithDialogueA — same obj id, different voice.
+hangarVehicleDisplayNpcHandler = 0x800C68A0; // NPC slot handler (per project_npc_handler_protocol.md) sitting directly after runHangarMenuFromOverlay. Action 1 (spawn): rs_malloc(0x1E8), reads vec3 pos from a2, getPlayerVehicleId(), looks up mesh via walkMeshdef0List using vehicle-id table at 0x8010A0FC, clearVec4QuadStruct on slot+0x28, popNpcSlotFromTail with prev-slot-id from MEM[0x80139574], applyFlagsToMeshTreeOrList, stores singleton ptr at MEM[0x8010C090]. Displays the player's currently-selected craft in the hangar.
 
 // Batch 52: asset loader + render state init + table lookup (2026-05-11)
 // Solid utility renames discovered while mapping out HOB subsystem.
@@ -1479,6 +1890,84 @@ loadSpeechFile                       = 0x8009BA38; // defined:true
 startSiPollingThread = 0x80002F4C; // called from initSiQueue; zeros 4 controller pad slots at 0x80110520, clears flag at 0x80110741, osCreateThread for siServiceThread (prio 0x76)
 submitDmaRequestBatch = 0x8000569C; // (req_ptr, count, ?) — adds `count` DMA requests to ring buffer at gDmaSlotRing (0x801112B0); checks queue free space (256 - (head-tail)+count+1 < 256) and dma mutex state != 2 (busy); called from mainBootstrapWorker boot-time asset batch
 convertMat3x4ToN64Mtx = 0x80018D80; // (dst=a0, src=mat3x4 ptr=a1) — converts a row-major 3x3 rotation + translation to N64 Mtx fixed-point format using packMtxRowFloatToFixed for each of 3 rotation rows; constants at 0x800186EC are scale factors
+buildAndRegisterDefaultMaterial = 0x80017B88; // (a0-a3 = 4 signed shorts + ~9 word stack args + 3 hw stack args = 16 total) — material constructor wrapper: copies the 12-byte 'mat_default' literal from strMatDefault (0x800007D0) onto local stack as the material's name field, populates material entry from the many args, then calls registerHmtTextureInTable (0x80022B90) with sp+0x10 buffer. Only caller is func_8001818C. The default-named material is the engine's fallback when no explicit material name is provided.
+teardownHudInstancesAndUnbindNpcs = 0x800FE434; // Called from teardown chain of all 10 player*Update funcs (after destroySceneNpcsAndUnlink + rs_free + releaseMeshAsset). (1) Releases 10 texture LUT entries via releaseTextureLutEntry from u16 array at 0x8010CA3A (matches notes.txt "8010CA3A is the start of a u16 array 10(?) elements big"). (2) Iterates 2 HUD-instance structs of 0x278 bytes starting at 0x8010CA30 (0x4F0 total = 2 * 0x278): for each, if byte+0x0==3||==8 AND byte+0x210!=0 → destroyNpcSlotChain(halfword@+0x212) to unbind bound NPCs; if byte+0x274!=0 → factor5RemoveListNode(instance+0x230) to detach from scene graph.
+allocateAndInitCraftNpcContext = 0x8006BD18; // 20 named callers — generic craft-NPC factory. Args: (f12=x, f14=y, a2=craftType_lowNibble). rs_malloc(0x1E4=484) for new NPC context, calls loadCraftShadowTextures(type), initializes ~15 fields of the NPC: +0x78=0x02960001 flags, +0x80=9 typeID, self-pointers at +0x30/+0x8C/+0x90 to inner offsets +0x6C/+0xC8/+0x178, clears +0x20..0x2C/+0x70..0x88, looks up craft-specific halfword from secondary table at 0x8013A528 (2*type stride), sets +0xD8 to constant data at 0x800A09C0, calls clearStructPair2C30(entry+0xC8). Returns the new NPC pointer in v0. Called from npc*Update funcs (AT-AT, AT-PT, AT-ST, GroundTransport, etc.) when a missile / debris / sub-craft needs to spawn — often from a 20-byte stride spawn-table at 0x800B04AC keyed by parent's slot index.
+clearPendingAndDestroyChildNpc = 0x800EC684; // 17 named callers (across AT-AT, AT-PT, AT-ST, GroundTransport, ProbeDroid, PowerGenerator, RadarDish, etc. update funcs). Thin 2-step destroyer: (1) clearPendingChildNpc(MEM_W[a0+0]) clears pending-spawn state on the child reference; (2) func_800EC388(a0) unlinks the node from one of two doubly-linked lists at MEM[0x8011C0D0]/[0x8011C0D4] (chosen by node-byte0 zero check) when (node_byte0 + extra_byte_at_a0+4) == 4, then unconditionally rs_free()'s the node. Always returns 1.
+setLevelObjectTrackingScalar = 0x800C7CEC; // 12 callers, ALL `lvN_initializeObjectTracking` (for every level 0..b). One-instruction setter: MEM_W[0x8013973C] = f12. Each level passes its own per-level float during init. The paired byte at MEM_B[0x8013973A] is cleared by other writers (func_8005E950) that set both fields. Read by an object-init function around 0x800DA478 which stores the value into a stack slot at sp+0xC4 — i.e., per-object setup absorbs the level-wide scalar. Purpose of the scalar (probably a distance/scale/threshold factor) unknown without deeper trace; the setter signature is unambiguous.
+unlinkAndFreeChildNpcNode = 0x800EC388; // Sole non-internal caller is clearPendingAndDestroyChildNpc. Takes (a0=node-pair-struct). Reads node = MEM_W[a0+0] and extra_byte = MEM_BU[a0+4]. If (node_byte0 + extra_byte) == 4: unlinks the node from one of two doubly-linked lists by patching the prev/next pointers at node+0x8 / node+0xC, head ptr selected from MEM[0x8011C0D0] (when node_byte0 != 0) or MEM[0x8011C0D4] (when node_byte0 == 0). Then unconditionally rs_free(node). The (kind+extra)==4 condition is some refcount/state gate for "safe to detach".
+allocateCraftAnimationStateForSlot = 0x801007C0; // 9 callers, ALL player*Update — initializes a craft animation slot. (a0=craft_ptr, a1=slotIdx&0xFF, a2=animTemplate_ptr). Indexes into 24-byte-stride table at 0x8010CF20 (= 0x8011 - 0x30E0): entry = base + 24 * slotIdx. Writes entry+0x0=a0 (craft), entry+0x4=a2 (template). Reads count from MEM_BU[a2+0]; if zero, skip alloc. Otherwise rs_malloc(count*2) twice and stores at entry+0x8 and entry+0xC — paired anim parameter buffers. Then runs an inner loop walking the template entries.
+resetCraftAnimationStateForSlot = 0x80100FA8; // 9 callers, ALL player*Update — paired with allocateCraftAnimationStateForSlot. (a0=slotIdx&0xFF). Calls func_80100594(slotIdx) for pre-step, indexes same table at 0x8010CF20, clears 4 state bytes at entry+0x10..0x13, writes paired animation-timing globals: MEM_W[0x8010D028] = constant float from 0x800A9548, MEM_W[0x8010D02C] = MEM_W[craft+0xE8] (animation speed?). Effectively resets a craft's animation playback state.
+setMenuOverlayHeaderState = 0x80063E2C; // 6 callers (controllerSettingsScreen, eliteRoguesMenuHandler, hangarInitialize, initVoiceSubtitleSystem, menuControllerInput, postLevelStatScreen) — 3-field setter on the menu/player-slot-table state header at 0x80139960: byte_state=a0, x_hw=a1, y_hw=a2. Same fields are reset by initAllPlayerSlots (state byte =1, x_hw=y_hw=0x140 default). Typical menu-screen call shape: setMenuOverlayHeaderState(1, 0, 0) at screen entry.
+drawFrameProfilerBars = 0x8000B6F4; // 5 callers in every frame-rendering top-level loop (cinematicLoopBody, menuControllerInput, menuSubtype02Handler, runIdleFramesAndLoadSaveData, runInMissionFrame). Begins a frame DL chunk via beginFrameDLChunk then emits 7 profiler bar segments via emitProfilerBarSegment (matches `project_builtin_profiler_overlay.md`: "Caller emits 7 bars/frame"). Each call pulls bar timing/color from global timing block at 0x8012DC50 / 0x8012A910 / 0x8012A914 with per-bar Y-offsets descending from screen-width-minus-0x28. Profiler is dormant in retail (gated by MEM_B[0x80038CE0] = 0) but codepath intact.
+extractOrthonormalFrameFromStruct = 0x80059D18; // 6 callers (cutsceneDispatchSlotsByFlag, initCinematicDispatchSlots, loadPlayerStartPosition, npcShieldGeneratorUpdate, runInMissionFrame, runPauseMenuStateMachine). (a0=dst_9floats, a1=src). De-interleaves a 3x3 rotation/frame matrix from a scattered source layout (src offsets +0x24/+0x28/+0x2C, +0x08/+0x14/+0x20, +0x04/+0x10/+0x1C → dst+0x00..+0x20 packed), then calls orthonormalizeFrame(dst). Frame extraction for spline-following / cinematic-camera math — sibling to composeRotationMatrix*/mat34CrossRows/orthonormalizeFrame primitives.
+tickMusyXIfActive = 0x8008DA00; // 5 menu-lifecycle callers (gracefulMenuShutdown, menuControllerInput, menuOverlayInit, menuSubtype02Handler, waitForAnyAudioSlot). Gated on gMusyXActiveFlag (MEM_BU[0x800A0F50]); when active, takes factor5MutexAcquire, runs three MusyX sub-tasks: func_80095DA0 (iterates 8 voice slots at stride 0xEF8 base 0x80149A00 calling func_80095ADC per voice — likely the per-voice tick), func_80098EEC (unknown), func_8008DBF4(0) (unknown). Releases factor5Mutex on exit. Effectively the per-frame MusyX engine update from the menu/UI loop.
+loadAssetAndIterateSubchunks = 0x80054EF0; // 4 callers (allocAndInitParticlePool, handleHUD, loadExplosionTextures, loadTopCloudsAsset). Asset DMA-and-process pipeline: (1) get_asset_size_extra(name) → size, (2) rs_malloc(size, align=4) with align=0 fallback, (3) get_asset_size_simple + findAssetAcrossSegments + setupAssetDma + teardownAssetDma to DMA the asset into the buffer, (4) iterate sub-chunks at the buffer head — each entry has a size field that's read and used as (size+7)&~3 stride to step through. Generic asset loader for assets with self-describing sub-chunk tables.
+setupActorAnchorTransformType1 = 0x800662A0; // 4 callers in Actor type-1 family (executeActorType1Effect, initActorAsType1, initActorAsType1WithAnchor) + hangarInitialize. (a0, a1, a2, a3=actor_ptr, sp+0x38=fZ). Builds vec3 = (0, 0, fZ) on the stack (zero X/Y, caller-supplied forward), calls func_80065A60(...) which is the underlying 4-ptr+3-float transform helper to write into the actor's transform block, then clears actor+0x8 (the "base position ref" field per project_actor_effect_struct.md) so the actor uses local-frame instead of anchored ref. Per memory note, this is the specific anchor-transform setup that `initActorAsType1WithAnchor` uses to attach a type-1 actor's transform to its NPC anchor.
+initActorRenderDescriptorIfUninit = 0x800F1E7C; // 18 callers across npc*Update (Actor type-1/2/3/4 family). (a0=actor, a1=byte_flag, a2=out_render_descriptor, a3=mode_byte, sp+0x40=arg). Gated on MEM_BU[actor+0x1A7] — the "render descriptor initialized" flag per project_actor_effect_struct.md. When set, skips (descriptor already prepared this frame). When clear: marks out+0x6=0xFFFF (invalidate), early-exits if (a1&0xFF)!=0, checks 4-byte flags at actor+0x1A4 with 0xFF00FF00 mask (also early-exits if any selected bit set), then when a3==1 fetches NPC context via getNpcContextField8(actor+0x198) and copies its vec3 to out+0x10/+0x14/+0x18. First-time prep of the render descriptor; the init flag is set elsewhere in the caller chain after success.
+validateActorTargetLOS = 0x800F07AC; // 17 callers across Actor type-1/2/3/4 family npc*Update functions. (a0=actor, ...). Sets s0=actor+0x114, gates on motion-active flag MEM_BU[actor+0x135] (memory: +0x135 = motion-active byte), then byte at actor+0x134, then validates three anchor halfwords at actor+0x12A/+0x12C/+0x12E vs 0xFFFF sentinel. Calls findActiveNpcInSlotChain(slotHandle=halfword@+0x12C, 0) to resolve the NPC anchor, then performs LOS validation. Sister of func_800F09A8 ("computes delta vector after LOS" per memory). Per project_actor_effect_struct.md: this is the "target/LOS validation against NPC anchor".
+computeActorAnchorDeltaAfterLOS = 0x800F09A8; // 13 callers, sister of validateActorTargetLOS. Identical prologue: s0=actor+0x114, gates on motion-active flag at actor+0x135, gates on byte at actor+0x134, validates anchor halfword at actor+0x130 (NPC slot handle per project_actor_effect_struct.md) vs 0xFFFF sentinel. Then computes the delta vector from anchor NPC's world position to actor's local frame (per memory: "computes delta vector after LOS"). Used by the same Actor family npc*Update funcs after validateActorTargetLOS confirms anchor validity.
+generatePerpEmitDirectionWithJitter = 0x800F2DC8; // 11 callers in Actor cluster — perpendicular emit-direction generator with random rotation. Gated on actor+0x162 (per project_actor_effect_struct.md: "duration/count for perpendicular emit"). Args: (a0=actor, a1=src_vecs_struct, a2=flag_byte). (1) vec3Cross(sp+0x10, src+0x18, src+0xC) — perpendicular axis from two source vectors. (2) Uses count at +0x162 as angle-bound; two rand_recomp calls produce angles in [-1, 1] / count via constants at 0x800A9018/0x800A901C. (3) quatFromAxisAngle(perp_axis, angle1) and quatFromAxisAngle(src+0x18, angle2). (4) quatMultiply → combined rotation. (5) rotateVec3ByQuat(src+0xC) → write back rotated vector. Result is a randomly-rotated direction around the perpendicular axis, used for spawning debris/particles with directional spread.
+syncType1ActorFrameToAnchorIfZeroGate = 0x800F9C30; // 4 callers in Actor type-1 family. (a0=actor, a1=mat_target). Type-guard: actor+0x112 must == 1 (Actor type 1 per project_actor_effect_struct.md). Zero-gate: float at actor+0xF0 must == 0.0 (proceed only when this gate value is zero — likely "needs frame-sync this tick"). When both pass: getNpcContextField8(MEM_HU[actor+0x198]) → NPC anchor context, then mat34CrossRowsAndCopyPos(sp+0x10, ctx, 1.0) and matrix-inverse work to write the anchor's local frame into the actor's transform matrix. Per memory note: "type-1 large body, reads actor+0xF0 zero-gate then getNpcContextField8". Updates a type-1 actor's transform to track its NPC anchor when the zero-gate condition triggers.
+extrapolateNpcPositionForCurrentMode = 0x80076250; // 15 callers in NPC update funcs (AT-AT, AT-PT, AT-ST, GroundTransport, PowerGenerator, ProbeDroid, RadarDish, ShieldGenerator, etc.). (a0=npc, ...). Reads PathState ptr at MEM[npc+0x8]; if NULL, exits with original position. Then gates on mission-mode at MEM_W[0x8010CA20]: when mode != 0 (paused/cinematic) raw-copies the PathState base position (v1+0x0/+0x4/+0x8) into the output stack vec3 (sp+0x10..+0x18). When mode == 0 (active gameplay) applies first-order Taylor back-extrapolation `out[i] = base[i] - vel[i] * f4` using scale constant at MEM_W[0x8003D1FC] — same Taylor pattern as named primitive vec3ExtrapolateFirstOrder (0x80077784, per project_spline_based_architecture.md), but reads the PathState from npc+0x8 rather than a caller-supplied struct. After the position fill, reads halfword type at npc+0x4 and continues with type-specific work for types in [8..14]. Predictive position used downstream for spatial effects (e.g. sound/shadow placement) that need "where will this NPC be in 1 frame".
+spawnDestructionEffectBurst = 0x80073750; // 13 callers — mix of npc*Update (AT-PT, GroundTransport, ProbeDroid, RadarDish, ShuttleUpdate) + npc*HandleDestruction (AT-AT, AT-ST, Shuttle). Args: (a0=position vec3 ptr, a2=f10 scaleA, a3=f14 scaleB, sp+0xB0=f6 scaleC). Matches the destruction-effect-burst signature from project_spline_based_architecture.md: spawnDebris1Npc + spawnOrientedNpc + spawnNpcOfType (×N) + composeRandomRotationMatrix + scaleVec3ByRandomRange + rand_recomp — produces the debris + oriented-debris + explosion-NPC bursts at the supplied world position with caller-tuned scale parameters. Shared spawn-cascade primitive called whenever an NPC takes critical damage or explodes, including from inside update funcs (likely "secondary explosion" mid-life cases) — not only from per-NPC destruction handlers.
+appendAnimHandleAndDescendantsToBuffer = 0x80082A98; // Recursive binary-tree walker. (a0=anim_handle). Reads global ring head at MEM_W[0x8013AC10], advances head by 4 (consume one slot), writes (a0+0x1C) at the consumed slot — appends the handle's +0x1C value (anim-channel ref) to the flat output buffer. Then recurses on two children at a0+0xC and a0+0x0 when non-null. Effectively flattens an anim-handle tree into the global ring buffer at 0x8013AC10. Companion to flattenAnimTreeAndAllocateSlot which sets up the buffer + initial head before calling this.
+flattenAnimTreeAndAllocateSlot = 0x80082B00; // 5 callers in AT-AT family (npcAtAtUpdate, npcAtPtUpdate, npcAtStUpdate, playerAtStUpdate, tickAtAtAudioAndWeaponState). (a0=anim_handle_root, a1=template_holder). Reads count from MEM_HU[MEM_W[a1+0x4]+0xE] (anim template entry count), rs_malloc(count*4) for a flat buffer, sets global ring head MEM_W[0x8013AC10] = buffer+4, writes (a0+0x1C) at buffer+0 (root). Calls appendAnimHandleAndDescendantsToBuffer on a0+0xC and a0+0x0 children to fill the buffer with the tree's flattened anim-channel refs. Finally calls allocateModelAnimSlot(a0, a1, count) and stamps secondary-active byte at slot[id-1]+0x11 (gActiveModelAnimSlots = 0x8013A990, 20-byte stride per project_actor_effect_struct.md). Returns the new slot id.
+sampleModelAnimKeyframeVec3 = 0x80083318; // Per-slot keyframe vec3 sampler. (a0 = high 16 bits = 1-based slot index in gActiveModelAnimSlots, low 16 bits = sub-entry index; a1 = output vec3 ptr). Validates slot_idx in (0, 32] and slot[slot_idx-1]+0x10 (active byte) == 1. Reads slot+0x08 (entryCountSrc) then deref +0x4 for sub-entry table base, indexes by sub_idx*16 to get the 16-byte sub-entry. Checks bit 0x1 of MEM[sub_entry+0x4] — if clear, returns 0. Else reads 3 raw s16 halfwords at sub_entry+0x8/+0xA/+0xC, scales each by float at slot+0x0C (secondaryTable per project_actor_effect_struct.md) entry base (sub_idx*16 offset), then by constant float at 0x8003DB20 (likely fixed-point→float scale). Writes the resulting vec3 to a1+0x0/+0x4/+0x8. The "secondary-secondary-table" referenced in the actor-effect memory note is this 16-byte-stride sub-entry table reached through slot+0x08→deref+0x4.
+byteAnimatedDebrisNpcHandler = 0x8004C6C8; // **THE canonical NPC slot handler** documented in project_npc_handler_protocol.md. Signature: (a0=slot, a1=action_code, a2=msg). Dispatches on a1: action 1 = spawn (popNpcSlotFromTail + recursive self-call to 0x1000 if msg non-null), action 2 = destroy, action 3 = tick, action 4 = active-check (returns v0=1), action 0x1000 = position-update (reads vec3 from msg+0x0/+0x4/+0x8, subtracts global scene origin at 0x801396D4, writes scaled into slot+0x10/+0x14/+0x18). Tick path (action 3) branches on bit 0x100 of slot+0xA0: when set, plays back a byte-encoded animation table at slot+0xA4 (4-byte-stride entries, b/u8/u8 = x/y/z per frame), advancing time accumulator at slot+0xB0 by (msg+0x0 * slot+0xAC speed), with slot+0xA8 = anim length and slot+0xA9 = max frames, wrapping or destroying on overrun (bit 0x200 of slot+0xA0 = "destroy on anim end"); when clear, walks child slot chain at slot+0x20. Used by 11+ wrappers (spawnByteAnimDebris*) in destruction handlers. The handler is the most common "lightweight pre-baked animation" NPC in the engine.
+spawnByteAnimDebrisDefault = 0x8005EBD8; // 11 callers, mostly NPC destruction handlers + a few update funcs. Args: (a0=position_vec3_ptr). Builds a 16-byte spawn descriptor with pos.y-offset (subtracts constant float at MEM[0x8003B1A4]) and stores at sp+0x10..+0x18, fills additional fields (float at sp+0x1C from constant 0x8003B1A8, halfword 0x300 at sp+0x20, gActiveScene/effects ptr from MEM[0x80139740] at sp+0x24, byte 0 at sp+0x28, byte 0x10 at sp+0x29, float constant at sp+0x2C). Calls spawnNpcOfType(handler=byteAnimatedDebrisNpcHandler, descriptor=sp+0x10, type=2, idx=0xF). Thin wrapper that spawns the default-config byte-animated debris NPC at the supplied position with grounding Y-offset.
+spawnByteAnimDebrisWithParam = 0x8005EC60; // Sister of spawnByteAnimDebrisDefault. Same handler (byteAnimatedDebrisNpcHandler) and same descriptor shape, but takes (a0=pos, a1=byte_param) — stores a1 at sp+0x28 and a1+0x10 at sp+0x29 (vs both bytes hardcoded 0/0x10 in the default variant). Uses a different set of float scale constants from 0x8003B1B0/0x8003B1B4/0x8003B1B8 area, suggesting a different debris visual variant tuned by the caller-supplied byte param.
+splineWalkerCraftNpcHandler = 0x8006C3A0; // NPC slot handler following project_npc_handler_protocol.md (a0=slot, a1=action, a2=msg). Action 1 (spawn) path: reads craft type from MEM_HU[msg+0xC], pos from MEM_W[msg+0x4]/+0x8, calls allocateAndInitCraftNpcContext(x, y, type) → new NPC ctx, stores at slot+0xC, initializes the path state (clears NPC+0x10, sets NPC+0x14 to constant 0x8003C9A0), then calls advanceNpcOnCurvedPath(...) to seed the spline trajectory and finally popNpcSlotFromTail to claim the slot. Copies NPC's path-anchor vec3 (NPC+0x60/+0x64/+0x68) into slot+0x0/+0x4/+0x8. This is THE craft-on-spline spawner — used by every enemy craft that flies a predefined curved path (per project_spline_based_architecture.md).
+spawnSplineWalkerCraft = 0x8006C6FC; // 7 callers across AT-AT/AT-PT/AT-ST destruction handlers + GroundTransport/GroundTroop/RadarDish/TankDroid update funcs. Thin wrapper around spawnNpcOfType: builds 16-byte descriptor on stack (a0/a1/a2/a3=pos+type fields, a3=hw_param at sp+0x1C), then calls spawnNpcOfType(handler=splineWalkerCraftNpcHandler, descriptor=sp+0x10, type=1, subtype=0xA). Spawns a craft NPC that will fly a curved path — typical use: "after this large unit's death, spawn an escape craft / replacement squadron".
+attached3DSoundEmitterNpcHandler = 0x800BF4A0; // NPC slot handler per project_npc_handler_protocol.md. 10 spawn-sites from playerSnowSpeederUpdate (snow speeder's audio attachments). Action 1: reads parent_slot_idx halfword from msg+0x0 → stores at slot+0x0, reads sound_template_idx halfword from msg+0x2 → stores at slot+0x4, computes 24-byte-stride table index at MEM[0x8010BB00 + template_idx*24] (= 0x8011 - 0x6500 base), stores template ptr at slot+0x4C. Calls getNpcContextField8 to fetch parent NPC ctx; if null, self-destructs. Else: validates parent gear/state, calls play3DSoundEvent with templated 3-byte audio params (vol/pan/pitch) from the template entry and parent NPC's audio anchor at parentCtx+0x24. Action 2: destroyNpcSlotChain. Action 3 (tick): re-emit / position-track sound to follow parent. The 24-byte template table at 0x8010BB00 holds per-effect-type 3D sound presets — the snow speeder spawns 10 distinct sound instances (engine, cockpit, lasers, tow cable, etc.) via this handler.
+attachedMeshOverlayNpcHandler = 0x8005427C; // NPC slot handler per project_npc_handler_protocol.md. 9 spawn-sites from playerSnowSpeederUpdate (snow speeder's mesh attachments). Action 1: reads parent_slot_idx from msg+0x0, fetches parent context via getNpcContextByIndex; if parent_ctx+0xC (mesh part ref) is NULL, self-destructs. Otherwise calls dispatchOverlaySetupByParentAssetName(parentMeshPart, slot, parent_slot_idx) to per-asset-name route the overlay setup, then writes constant data pointer D_8009EBD0 (mesh template?) into parentMeshPart+0x4 — replacing the parent's mesh component with this attachment's geometry. Action 2 (destroy): iterates 2 buffers at slot+0x1C/+0x20 and rs_free's each (geometry buffers allocated during overlay setup). Used to attach detachable cosmetic / visual components to a parent NPC (tow cable rigging, weapon mounts, exhaust trails, etc.).
+dispatchOverlaySetupByParentAssetName = 0x80053C04; // Inner helper for attachedMeshOverlayNpcHandler (Action 1). (a0=overlay_slot, a1=parent_slot_id_hw). Reads parent NPC's HMT asset name string at MEM[overlay_slot+0x0+0x0], then does cascading rs_strcmp comparisons against a series of asset-name constants at 0x8003ABFC/0x8003AC04/0x8003AC0C/etc. — per-craft routing of the overlay setup (different code path for snow speeder vs other parent vehicles). The string-keyed dispatch is how the snow speeder's 9 distinct mesh attachments get configured: same handler, parent-asset-name selects which sub-handler logic runs.
+orientedNpcHandler = 0x8006FC90; // **THE oriented-NPC handler** used by spawnOrientedNpc (54 callers via that wrapper, plus 4 direct spawn-sites). Per project_npc_handler_protocol.md signature. Action 1 (spawn): copies 4 words (a position-and-orientation matrix block) from msg+0x0..+0xC to slot's mesh-state at s2+0x4. Action 2 (destroy): cleanup path. Action 3 (tick) and Action 4 (active-check) handled. The defining feature is that this handler expects the caller to supply BOTH a position AND a pre-orthonormalized 3x3 frame in the spawn descriptor — used for debris/effects that need custom orientation at spawn time (e.g. impact sparks aligned with surface normals, oriented engine trails, surface-decals). Per project_recomp_function_map.md and existing spawnOrientedNpc docs, this is the most commonly-used NPC handler in the engine (54+ usages just through spawnOrientedNpc).
+explosionEffectNpcHandler = 0x8007413C; // NPC slot handler per project_npc_handler_protocol.md. 3 spawn-sites from func_80074600 (an explosion-trigger function). Action 1 (spawn): stamps type id 0x201 at slot+0x40, copies position vec3 from msg+0x0/+0x4/+0x8, copies asset name strings (unaligned 4-byte words) at msg+0x4→slot+0x5C and msg+0x8→slot+0x60, stores velocity floats at slot+0x4C/+0x50/+0x54, calls composeRandomRotationMatrix(slot+0x18, ..., 0x32) for tumbling orientation, then orthonormalizeFrame on slot+0xC. Crucially, the Action 1 path then internally calls spawnDebris1Npc + spawnOrientedNpc + spawnNpcOfType (multiple) + rand_recomp + play3DSoundEvent — the full destruction-effect-burst signature from project_spline_based_architecture.md. So this handler IS a self-sustaining "explosion controller" NPC: a single spawn creates the controller plus all its debris/spray/oriented-decal children, and the controller persists to manage the explosion lifecycle.
+cutsceneActorNpcHandler = 0x80044724; // NPC slot handler per project_npc_handler_protocol.md. 2 spawn-sites, primary caller setupCutsceneLevel. Action 1 (spawn): rs_malloc(0x118=280 bytes) for a cinematic-actor context, stores at slot+0x4. Initializes TWO parallel sub-blocks in the 280-byte ctx: (1) first block at ctx+0x4C..+0xB0 with callback fn ptr at ctx+0x58 (a 0x80040000-range function), inner-pointer at ctx+0xAC = ctx+0x4C (self-ref), zeroes accumulators at +0x5C/+0x60/+0x64/+0x6C/+0x70/+0x74, calls clearStructPair2C30 (clears a paired sub-struct). (2) second block at ctx+0xB4..+0xD0 with callback fn ptr at ctx+0xB4 (a 0x80050000-range function), zeroes accumulators at +0xB8/+0xBC/+0xC0/+0xC8/+0xCC/+0xD0, calls clearStructPair2C30 again. Also clears ctx+0x0..+0x14 (early vec4-like fields). Calls func_8006B3F0 + func_8006B458 (other init helpers). The dual-callback structure suggests a scripted cinematic actor with separate transform-channel and behavior-channel state machines — likely the per-actor cinematic playback NPC instantiated for each Cutscene actor.
+randomlyScaledEffectNpcHandler = 0x80060690; // NPC slot handler per project_npc_handler_protocol.md. 2 spawn-sites (via func_80061268 caller wrapper, used by 6+ callers in funcs_13/36/37). Action 1 (spawn): two rand_recomp calls — first stamps random halfword at slot+0x10, second ORs random bits (0x1C00 mask, 3 bits) into the same halfword giving 8 random sub-states. Reads scale float f6 = msg+0x8, computes f0 = (rand_byte/const_at_0x8003B304 + const_at_0x8003B308) * f6 → stores at slot+0x20 AND slot+0x24 (current scale + max scale). Reads vec3 from MEM[msg+0x0] → slot+0x30/+0x34/+0x38 (position). Calls popNpcSlotFromTail to claim. The random-bit init + random scale + per-instance position pattern is characteristic of bursty particle/effect children spawned in groups — likely smoke puffs, sparks, or small debris with per-instance scale variation. Sibling wrapper `spawnNpcType0xAFromTemplate` (already named at 0x800612A4) takes a caller-supplied scale float; this handler is invoked from both that and `spawnRandomScaleEffectDefault`.
+spawnRandomScaleEffectDefault = 0x80061268; // 6+ callers (across funcs_13/36/37). Sister of spawnNpcType0xAFromTemplate (0x800612A4). Args: (a0=position vec3 ptr). Stores a0 at sp+0x10, fixed-constant float MEM[0x8003B3F8] at sp+0x18 (the default scale param), then calls spawnNpcOfType(handler=randomlyScaledEffectNpcHandler, descriptor=sp+0x10, type=1, subtype=0xA). The "default-scale" wrapper — for callers that don't need to tune the scale individually.
+randomlyScaledColoredEffectNpcHandler = 0x80060900; // Sister of randomlyScaledEffectNpcHandler (0x80060690), identical dispatch shape per project_npc_handler_protocol.md. 2 spawn-sites via func_800612E0 caller wrapper. Action 1: same rand_recomp + OR 0x1C00 mask pattern as the sibling, but also stamps a per-pixel RGBA = (0xFF, 0xFF, 0xFF, 0xFF) at slot+0x2C/+0x2D/+0x2E/+0x2F — initial color is white opaque, presumably modulated over the effect's lifetime. Stamps type id 0x300 at slot+0x2C (vs 0x100 in the sister). The "colored variant" of the random-scale particle handler — used for effects that need their tint to fade or pulse over time (e.g. spark trails, glow halos, alpha-faded smoke).
+cinematicSplineWalkerNpcHandler = 0x8005BCC4; // NPC slot handler per project_npc_handler_protocol.md. 1 spawn-site from cutsceneActorNpcHandler (i.e., spawned BY cutscene actors as a sub-NPC). Action 1 allocates rs_malloc(0xF14=3860 bytes) — the largest NPC context observed, much bigger than craft NPCs (484 bytes). Reads game-state bytes at MEM[0x80130B39] (scene-state) and MEM[0x80130B40] (cutscene-active flag, checks for value 0x13). Body uses heavy spline-walker math primitives (sqrt + normalize_vector + initVec4TripletFromArgs + composeRotationMatrixSlot0 + composeRotationMatrixSlot2) — same pattern as the spline-following NPC update functions per project_spline_based_architecture.md. The 3860-byte context + cinematic-actor spawn lineage + spline math => this is a heavy cinematic NPC that follows a pre-defined path through a cutscene (scripted craft flybys, scripted enemy movements).
+craftMountedAnimationNpcHandler = 0x800ECC28; // NPC slot handler per project_npc_handler_protocol.md. Action 1 (spawn): stores msg at slot+0x4, reads msg+0x10/+0x14/+0x18 (vec3 position) → slot's child struct +0x8/+0xC/+0x10, clears flags at child+0x48/+0x4C/+0x4D. Looks up parent NPC's mesh-part data via MEM[a2+0xA4] (mesh part ref), then halfword index at MEM[a2+0xA8]+0xA6 — uses that to index into the active-craft spatial grid at MEM[0x801375D8]+0x34 (the same grid documented in `updateActiveGridCellState`) to fetch an animation entry. Reads animation pose float from MEM[entry+0x10] to slot+0x10. The grid-driven animation lookup suggests this is an **animated sub-effect mounted to an active player/enemy craft** — e.g., a per-craft particle/effect that plays through the same animation system as the craft's mesh parts (engine flame, hit flash, etc.).
+datItemActorNpcHandler = 0x800ECE10; // Sister of craftMountedAnimationNpcHandler in funcs_40.c. NPC slot handler per project_npc_handler_protocol.md but with extended action set (1/2/3/7 instead of standard 1/2/3/4). Action 1 (spawn): reads vec3 from msg+0x10/+0x14/+0x18 → stores at slot+0x4/+0x8/+0xC (position), zero-initializes velocity vec3 at slot+0x10/+0x14/+0x18 and another vec3 at slot+0x28/+0x2C/+0x30 (angular velocity / scale-derivative), zeroes slot+0x34/+0x38. Calls popNpcSlotFromTail. Action 2 (destroy): stamps 0xFFFF at slot+0x6 (mark inactive), then iterates entries comparing slot+0x30 vs slot+0x6C, and on each iteration calls **parseDatItemCommon** — the canonical DAT item parser. The use of parseDatItemCommon on cleanup is diagnostic: this NPC owns a DAT-item-defined entity (level-placed spawn point, trigger, breakable prop, etc.). 320-byte stack frame indicates substantial tick work in Action 3.
+twoPointPositionedNpcHandler = 0x8007E504; // NPC slot handler per project_npc_handler_protocol.md, no enumerable spawnNpcOfType callers (vtable-reached). Action 1: walkMeshdef0List(D_8003D7E0) for a fixed mesh asset → stores at slot+0x30. Then reads TWO source pointers (msg+0x0 and msg+0x4) representing two parent NPC positions, and writes the per-axis sum (parent1.x+parent2.x, parent1.y+parent2.y, parent1.z+parent2.z) into slot+0x0/+0x4/+0x8. Initializes a 6-float block at slot+0xC..+0x20 with constants (probably an identity-ish transform from the +0x14/+0x1C reads of 0.0/constant). Computes a scaled parameter (halfword at parent1+0x70 multiplied by two constants at 0x8003D7EC/0x8003D7F0) and writes to slot+0x34. Pattern of "two source positions + fixed mesh asset" is characteristic of bridging/connecting visuals between two NPCs (e.g., tow-cable segments, weapon links, animated tether visuals).
+multiEventTemplateNpcHandler = 0x800700A8; // NPC slot handler with extended 12-action dispatch (vs standard 4 — actions 1..12 in range, fallthrough for 5-10). 2 spawn-sites from func_80072870. Action 1 rs_malloc(0x2E0=736 bytes) + getNpcContextField8 + getNpcContextByIndex for parent lookup. Heavier event-set than basic NPCs — likely a scripted entity (weapon, projectile, or sub-game-state) that responds to many events.
+heavyRandomBurstNpcHandler = 0x80075720; // NPC slot handler per project_npc_handler_protocol.md. 2 spawn-sites from func_8007764C. Action 1 uses popNpcSlotFromTail + getNpcContextField8 (parent NPC) + 6+ rand_recomp calls — heavily randomized state. Likely a particle-burst NPC with many randomized fields (direction, scale, lifetime, color etc.) initialized at spawn.
+randomBurstNpcHandlerVariant = 0x800403EC; // NPC slot handler per project_npc_handler_protocol.md. 2 spawn-sites from func_8004191C. Action 1: rs_malloc + popNpcSlotFromTail + getNpcContextField8 + many rand_recomp calls (5+). Variant of the heavy-random-burst pattern used in funcs_9 context. Likely an enemy-spawn or debris-burst handler.
+audioCueDispatcherNpcHandler = 0x8005C874; // NPC slot handler per project_npc_handler_protocol.md. 1 spawn-site from dispatchCueByCategory (already-named cue-dispatch function). Action 1: rs_malloc + popNpcSlotFromTail + spawnNpcOfType (spawns a child NPC) + 4× getNpcContextByIndex (looks up 4 parent NPCs?) + play3DSoundEvent. This handler creates a sub-effect tied to multiple parent NPCs with audio — the cue-dispatcher's primary NPC for orchestrated multi-source audio cues.
+minimalRandomNpcHandler = 0x80060D8C; // Small NPC slot handler in funcs_14 (near randomlyScaledEffectNpcHandler family at 0x80060690). Action 1: just rand_recomp + popNpcSlotFromTail. Minimalist random-state initialization, probably a counter or single-randomized-flag particle.
+stubNpcHandler = 0x8006C4FC; // Tiny NPC slot handler in funcs_16 (near splineWalkerCraftNpcHandler at 0x8006C3A0). Action 1: just popNpcSlotFromTail (no malloc, no rand). Sister of the spline-walker — likely a pure pass-through registration handler used as a "marker NPC" or for actions that don't need state.
+randomParticleWithParentNpcHandler = 0x80074D44; // NPC slot handler per project_npc_handler_protocol.md. 1 spawn-site from func_80077570. Action 1: rs_malloc + multiple rand_recomp (4+) + popNpcSlotFromTail + getNpcContextField8 (parent NPC lookup). Pattern of allocate-context + heavy-randomization + parent-anchor matches a randomized child-particle/effect spawned from an existing NPC.
+attachedAudioVisualEmitterNpcHandler = 0x800800C0; // NPC slot handler per project_npc_handler_protocol.md. 1 spawn-site from func_8007D1BC. Action 1: walkMeshdef0List (fixed mesh) + 2× popNpcSlotFromTail + 2× getNpcContextField8 (two parent NPCs) + 2× play3DSoundEvent + rand_recomp. Spawns a fixed-mesh visual with TWO 3D sound events tied to two parent NPC contexts — a dual-channel audio-visual emitter (e.g., explosion that plays distinct sounds at two source points).
+heavyAttachedAudioEmitterNpcHandler = 0x8007BC18; // Sister of attachedAudioVisualEmitterNpcHandler. Action 1: rs_malloc + walkMeshdef0List + 2× popNpcSlotFromTail + 2× getNpcContextField8 + play3DSoundEvent + rand_recomp. Adds the rs_malloc step compared to 0x800800C0 — allocates a persistent context, suggesting a longer-lived attached emitter (vs the lighter-weight version above).
+setMissionLevelInitByte = 0x80017B48; // 2-instruction byte setter: writes a0 to MEM_B[0x8012A898], returns 1. 4 callers across mission/level init contexts (cutsceneActorNpcHandler, initMission, loadLevelAssets, setupCutsceneLevel) — a one-byte "init state" / "level loaded" flag set during scene transitions.
+checkAndReturnByteFlagAsU8 = 0x8005940C; // Thin wrapper: stores a0 at sp+0x10, calls func_8001DC34, returns its result masked to byte (& 0xFF). 5 callers including heavyAttachedAudioEmitterNpcHandler + 4 NPC update funcs (npcAtAtUpdate, npcAtPtUpdate, npcAtStUpdate, npcShieldUpdate). Likely a getter wrapper that checks some boolean flag from a struct via func_8001DC34.
+distanceAndDopplerNpcHelper = 0x80073E4C; // 8 callers (npcShuttleUpdate, npcProbeDriod, npcShieldGeneratorUpdate, npcTieVariantUpdate, npcPowerGeneratorHandleDestruction, playerAtStUpdate, tryPlaySpatialSoundWithGates, extrapolateNpcPositionForCurrentMode). Reads NPC position from a0+0, fetches global at MEM[0x80138D1C] (per-active-craft state), adds +0x28 offset (an active-craft entry), reads f2 from entry+0x24. 0xD0 stack frame indicates substantial per-NPC math — likely distance computation + audio doppler / spatial sound prep. The presence of tryPlaySpatialSoundWithGates as a caller anchors it to the spatial-audio family.
+setFrameLevelStateBytes = 0x80017A90; // 3-byte triplet setter at MEM_B[0x8012A86C/+0x8012A86D/+0x8012A86E] = (a0, a1, a2). Returns 1. 4 callers in frame-rendering top-level loops (loadLevelAssets, runIdleFramesAndLoadSaveData, runInMissionFrame, slotEffectHandlerDispatch). Sister of setMissionLevelInitByte — sets 3 consecutive state bytes for per-frame render state. Adjacent setters at 0x80017AB0/0x80017AC0/0x80017AD0 write single bytes at +0x8012A870/+0x8012A871/+0x8012A872.
+delegateToLevelStageTick = 0x800C7D60; // Thin wrapper around func_800EF770. 6 callers, all level handlers: lv1_playPairedDialogueA, lv2_checkComplexObjectives, lv5_startMissionAndBriefing, lvd_checkComplexObjectives, lve_checkComplexObjectives, lvk_checkComplexObjectives. Sister of playObjectiveVoiceLine* wrappers but for a stage-tick delegate (func_800EF770 still unnamed).
+walkDatTreeAndCollectSubtypes = 0x80072AF8; // 8 callers (parseDatItemSubtypes1To5 + 7 NPC update funcs). Recursive DAT tree-walker: reads byte at node+0x0 — if 0xFF (terminator) skip; if bit 0x80 set (branch node), iterates 4 children of stride 0x38 each. For each child with non-zero byte+0x6, appends the byte to a global growing buffer at MEM_B[0x8010A898] (counter) + MEM_W[0x8010A89C] (head). Flattens DAT subtype identifiers from a tree structure into a global list — likely used for subtype-keyed dispatch lookup during NPC and DAT-item parsing.
+spawnRandomScaleColoredEffectFromCaller = 0x8006133C; // 4 callers. Wrapper around spawnNpcOfType: stores 4 caller args (a0/a1/a2/a3) at sp+0x10/+0x18/+0x1C/+0x14 (position + extra params), then calls spawnNpcOfType(handler=randomlyScaledColoredEffectNpcHandler, descriptor=sp+0x10, type=1, subtype=0xA). Sister of spawnRandomScaleEffectDefault but supplies caller-controlled args for the colored variant.
+spawnRandomScaleColoredEffectAltVariant = 0x800612E0; // Sister wrapper of spawnRandomScaleColoredEffectFromCaller. Calls spawnNpcOfType with handler=randomlyScaledColoredEffectNpcHandler (0x80060900). Different argument-storage layout from the others — likely a caller-controlled-scale variant of the colored-effect spawn.
+spawnMinimalRandomNpc = 0x80061380; // Thin wrapper calling spawnNpcOfType(handler=minimalRandomNpcHandler at 0x80060D8C, ...). Sister spawn wrapper near the random-scale family in funcs_14.
+spawnStubMarkerNpc = 0x8006C738; // Thin wrapper calling spawnNpcOfType(handler=stubNpcHandler at 0x8006C4FC, ...). 1 caller; spawns a stateless "marker" NPC near the spline-walker family in funcs_16.
+spawnRandomParticleWithParent = 0x80077570; // Thin wrapper (38 instrs) calling spawnNpcOfType(handler=randomParticleWithParentNpcHandler at 0x80074D44, ...). 1 spawn site.
+spawnRandomBurstNpcVariantWrapper = 0x80041CBC; // Tiny wrapper (14 instrs) calling spawnNpcOfType(handler=randomBurstNpcHandlerVariant at 0x800403EC, ...). Probably the sole caller wrapping the funcs_9 random-burst handler.
+transformVec3ToNpcLocalWithScale = 0x8001DC34; // 12 callers (large fan-in math helper). Args: (a0=npc, a1=optional mat ptr (use a0+0x2C as default), a2=vec3 to transform, a3=f22 scale, sp+0x60=optional output ptr). Calls transformVec3ByMat34(matrix=a1 or npc+0x2C, vec3=a2, output=sp+0x10) to transform a vec3 by an NPC's matrix. If output ptr non-null, writes the transformed X to *output. If f22 != 0.0, additionally calls rotateVec3ByMat3x3 with constant matrix at MEM[0x8003784C] and applies scale-extension math. Universal "transform point to NPC local frame with optional scaling" — used heavily across NPC update funcs.
+walkDatTreeAndScaleLeafByFloat = 0x80072BE0; // 9 callers (cutsceneDispatchSlotsByFlag + 7 NPC update funcs). Recursive DAT tree-walker: same structure as walkDatTreeAndCollectSubtypes (bit 0x80 = branch, 4 children at 56-byte stride), but the leaf action scales a halfword by a caller-supplied float (f20). Reads halfword at sub-entry, multiplies by float arg, accumulates. This is a "weighted DAT subtype scan" — sister of walkDatTreeAndCollectSubtypes that produces scaled accumulator values instead of byte appends.
+walkDatTreeAndVisitChildren = 0x80071928; // 9 callers (cutsceneDispatchSlotsByFlag + 7 NPC update funcs). Recursive DAT tree-walker, sister of walkDatTreeAndScaleLeafByFloat and walkDatTreeAndCollectSubtypes. Standard 56-byte child stride at +0x8, branch-node test at bit 0x80 of node+0x0, child-count at node+0x4. The leaf action varies — likely the generic visitor that other tree walkers specialize.
+dispatchDatSubtypeByRandomIndex = 0x80071308; // 8 callers (NPC updates + parseDatItemSubtypes1To5). Starts with rand_recomp, stamps 0xFF at output, reads parent+0x10 dat-item-ref, masks 0x00FFFFFF and checks bit 0x1 to gate per-subtype dispatch. Loops calling subtype helpers like func_80071064 with rotating random indices. The "rand-then-subtype" pattern matches the spline-subtype variant of DAT-item randomization.
+spawnMultiEventNpcWrapper = 0x80072870; // 1 caller of multiEventTemplateNpcHandler. Stack frame 0x58 with f20 scale, byte at sp+0x6F (extra param). Likely the spawn-wrapper for the 12-action handler — sets up complex msg from multiple caller args.
+getAndSetByteAtLevelStateTable = 0x800C7648; // 4 callers (lv5_startMissionAndBriefing, lvb_checkComplexObjectives, lvb_initializeObjectTracking, playVoice_0x65). Tiny getter-setter: reads byte at MEM_B[0x801399F8 + a0] (level-state byte table at 0x80140000-0x6608), writes a1 back to same location, returns old value. Atomic byte swap on a level-state table.
+mostlyMusyxFlagGatedHelper = 0x80098E84; // Reads gMusyXActiveFlag (MEM_BU[0x800A0F50]) — same gate as tickMusyXIfActive. 4 callers across MusyX-adjacent code. Sub-helper that early-returns when MusyX isn't initialized; on success does its main work on caller-supplied s0=a0.
+gameStateByteGatedNpcHelper = 0x800727C0; // 4 callers (NPC + Shuttle update funcs). Reads game-state byte MEM_BU[0x80130B63] (per docs, a flags byte for input/state). Stack frame 0x40 with float arg f20=a3. Likely a gated NPC update helper that uses the game state to enable/disable its work.
+findFreeNpcSlotByKey = 0x80040188; // 4 callers across NPC slot management funcs. Initializes two sentinels at s0=s3=0xFFFF, then walks a slot-related table comparing against key in a1 (& 0xFFFF). Standard "find by key" pattern in the gNpcSlotList family. Stack frame 0x28.
+spawnHeavyMechSubEffect = 0x80079BC8; // Thin wrapper around spawnNpcOfType, handler arg = heavyMechSubEffectNpcHandler. Takes (a0=descriptor_out, a1=template, a2=arg2) — stores a2 at descriptor+0x4, copies template+0x16 halfword into descriptor+0x0, reads template+0x19 (subtype), increments by 1, calls spawnNpcOfType with type=2, subtype = byte+1. 4 callers (npcAtAtUpdate + npcPowerGeneratorUpdate + npcWordDevastatorUpdate + playerAtStUpdate) — all "heavy mech" NPC contexts that need to spawn a sub-effect (leg debris, exhaust, weapon discharge).
+heavyMechSubEffectNpcHandler = 0x80079280; // NPC slot handler per project_npc_handler_protocol.md. Extended dispatch (a1==1/2/3/4/0xE — unusual 0xE). 240-byte stack frame (substantial tick work). Reads slot's parent at s2 = MEM[s7+0x4]. Used by 4 heavy mech NPC contexts (AT-AT/AT-PT/World Devastator/Power Generator) for spawning sub-effects (leg dust, exhaust, weapon discharge). Action 3 (tick) does heavy per-frame work suggesting visual update + position tracking against the mech parent.
+applyPlayerVehicleStateUpdate = 0x8004CD00; // 10 callers in funcs_11.c (per-player-vehicle update cluster). Takes (a0=player_vehicle_slot). Reads owner_idx at slot+0xC, looks up parent_entry = gPlayerVehicleSlots[owner_idx] (324-byte stride at 0x80138D18 per `initPlayerVehicleStateTables` doc). Reads parent_entry+0x4 (linked data block ptr), reads halfword type at *ptr+0x4 — early-exits if type==3. Then checks bit 0x20 of slot+0x0 flags; if set, reads slot+0x4 (type); if type==3, exits. Else does kinematic update on slot+0x18 (negated, scaled by double-precision constant at 0x80038D60) — likely a velocity/momentum integration step against the owner's frame.
+trackResourceListWithMappingTables = 0x800538B0; // 5 callers in funcs_11/32/33. Initializes 16 halfwords at MEM[0x80137AB0] and 16 halfwords at MEM[0x80137AD0] to 0xFFFF (two parallel sentinels). Then iterates an array at MEM[a0+0x20]+0xC (count), reading packed-bitfield entries with shift-masks (0xFC0>>4, 0xFC00>>16, 0x3F<<2). Used to track resource/command-list usage and build per-resource indexing.
+tickWrappingTimerAccumulatorList = 0x80054650; // 3 callers in funcs_11/32/33. Iterates an array at MEM[0x80137C84] of count MEM[0x80137C80], stride 0x4 per entry. For each entry with bit 0x4000 of halfword+0x2 set, reads entry+0x4/+0x8 as ints, converts to doubles, advances a timer by f12 input and wraps when > threshold f22. Per-entry timer accumulator update with wrap-around.
+buildPositionAndCallTransformHelper = 0x80065A60; // 6 callers. Args: (a0, a1, a2, a3, sp+0xC0=f20). Reads several float constants from 0x8003C260 area (constants for orientation matrix construction). Multiplies f12=f20*const, adds another constant, calls func_80018F98 (math/transform helper at sp+0x10 + various pointer args). The 6-caller fan-in + math-heavy + transform-helper pattern matches a "build oriented transform from caller args and dispatch to math layer" primitive.
 packMtxRowFloatToFixed = 0x80018E60; // (f4=x,f6=y,f8=z,f10=scale) — multiplies by scale, cvt.w.s, packs into 64-bit s16-int + s16-frac halves at $t7+0x20 and $t7+0x0 (N64 Mtx row layout); advances $t7+=8
 func_800403EC = 0x800403EC; // defined:true
 isSaveStateNotPending = 0x8006F388; // returns 1 if gSaveDataBody[+0xA2] != 0x3A (the save-pending marker set by setUnlockBitAndPersist); used by runIdleFramesAndLoadSaveData to gate idle progression
@@ -1495,7 +1984,7 @@ fake_func_800027B8 = 0x800027B8; // defined:true
 processPolledControllerData = 0x800027C0; // called by siServiceThread after osContGetReadData; iterates 4 slots at 0x80110520 (per-slot active flag +0x6B, u16-ptr +0x70, f32 timer +0x80, flags +0x6C) — likely rumble timing/pattern advance
 
 fake_func_8000337C = 0x8000337C; // defined:true
-func_80003380      = 0x80003380; // defined:true
+func_80003380      = 0x80003380; // defined:true - 3-instr setter: MEM_W[0x80037630]=1, returns 1. Paired with func_80003390 (writes 0). Called once in boot after initServiceRegistry+initDmaSlots. No observable readers in recompiled C; D_80037630 semantics unknown (likely polled by HLE/RSP side).
 
 fake_func_80003424 = 0x80003424; // defined:true
 
@@ -1552,7 +2041,7 @@ fake_func_8003E55C = 0x8003E55C; // defined:true
 fake_func_80040304 = 0x80040304; // defined:true
 
 fake_func_80041EEC = 0x80041EEC; // defined:true
-func_80041EF0      = 0x80041EF0; // defined:true
+allocAndInitDoublyLinkedNodePool12 = 0x80041EF0; // (a0=n) rs_malloc(n*12), stores ptr at gDoublyLinkedNodePool12 (0x80136FCC), then for i=0..n-1 writes entry[i]={h:prev=i-1, h:next=i+1, w:val0 at +8}. Stride-12 doubly-linked free pool indexed by halfword. 4 readers in funcs_10 (DAT level-asset cluster) at 0x80045778/0x800466E8/0x8004674C/0x80047524.
 
 fake_func_800457CC = 0x800457CC; // defined:true
 func_800457D0      = 0x800457D0; // defined:true
@@ -1630,7 +2119,7 @@ fake_func_80079CD8 = 0x80079CD8; // defined:true
 // real function is setNewAndPreviousButtonsPressed
 
 fake_func_8007A0E8 = 0x8007A0E8; // defined:true
-func_8007A0F0      = 0x8007A0F0; // defined:true
+sampleRgbBoxFilter2x2AtSubpixel = 0x8007A0F0; // (a0=out_3hw, a1=img_base, a2=row_stride_factor, a3=y_intf, sp+0x10=x_intf) — samples 4 adjacent RGB pixels at (intY,intX), (intY+1,intX), (intY,intX+1), (intY+1,intX+1); sums 3 channels into a0 then divides each by 4 with rounding (sum+2)>>2. Pure 2x2 box-filter average for sub-pixel RGB sampling.
 
 fake_func_8007A86C = 0x8007A86C; // defined:true
 func_8007A870      = 0x8007A870; // defined:true
@@ -1690,7 +2179,7 @@ gCutsceneEntries      = 0x800B1900; // ptr to cuts_13D8_active_count entries of 
 gCurrentCutsceneFile  = 0x800B1904; // ptr to currently loaded cuts_file_constant
 gCurrentLoadedOverlay = 0x800375B0; // type:u32 size:0x4 - currently-loaded overlay id (0=in-mission/1=menus/2=cinematic per docs/unsorted_thoughts)
 D_80037620            = 0x80037620; // type:u32 size:0x4
-D_80037630            = 0x80037630; // type:s32 size:0x4
+D_80037630            = 0x80037630; // type:s32 size:0x4 - write-only flag; set 1 by func_80003380 in boot init (post-service-registry/DMA), cleared 0 by func_80003390. No readers in recompiled .c — probably polled by HLE/RSP side.
 gspTask               = 0x800377C8; // type:OSTask size:0x40
 D_80037860            = 0x80037860; // type:u32 size:0x1000
 D_800388E0            = 0x800388E0; // type:u32 size:0x200
@@ -1942,12 +2431,14 @@ gMissionState = 0x80130B10; // size:0x28 - per-mission state struct (D_80130B10_
 gGameSettings = 0x80130B40; // size:0x30 - game settings struct (per docs/unsorted_thoughts/unsorted_thoughts.md D_80130B40_type)
 missionStats = 0x80130B78; // size:0x10
 gActiveCheatFlags = 0x80130B58; // type:u32 — bit flags for activated cheat codes (see docs/cheat_codes/cheat_codes.md table)
+gNabooStarfighterCheatHash = 0x80130B68; // type:u32 — CRC32 of 2nd Naboo Starfighter cheat code (per docs/unsorted_thoughts/notes.txt). Used as decryption key for koelsch HMT.
 gNpcSlotList    = 0x80130BB0; // size:0x04 - ptr to 0x800 x 8B NPC slot list (D_80130BB0_type)
 gNpcSlotListTail = 0x80130BB4; // type:u16 - tail index into gNpcSlotList
 gNpcContextArray = 0x80130BB8; // size:0x04 - ptr to 0xC0 x 0x3C NPC contexts (D_80130BB8_type with update_func at +0x00)
 gNpcContextArrayPtrs = 0x80130BBC; // size:0x04 - ptr to 0xC0 NPC context pointers
 gNpcNextOpenSlot = 0x80130BC8; // size:0x04 - next open slot in gNpcContextArray
 hmpFile      = 0x80136FC4; // type:u32
+gDoublyLinkedNodePool12 = 0x80136FCC; // type:u32 size:0x4 - ptr to stride-12 doubly-linked node pool (entry: {h:prev, h:next, w:val0 at +8}) allocated by allocAndInitDoublyLinkedNodePool12 (0x80041EF0); 4 readers in funcs_10 DAT cluster.
 gPlayers     = 0x80137DB8; // size:0x2A0
 
 gObjectiveCounts   = 0x80138060; // type:u32
