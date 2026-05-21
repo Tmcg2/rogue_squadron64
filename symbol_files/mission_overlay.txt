@@ -199,14 +199,17 @@ npcTieVariantUpdate = 0x800DB11C; // segment:mission_overlay
 
 npcRadarDishUpdate = 0x800DC6F0; // segment:mission_overlay
 
+npcGroundTransportPlayFriendlyFireWarn = 0x800DE4EC; // segment:mission_overlay - called twice from npcGroundTransportUpdate. Plays voiceId 0x217 = "Check your fire!" — the friendly-fire warning when Skywalker hits the transport.
 npcGroundTransportUpdate = 0x800DE80C; // segment:mission_overlay
 
+handleRayShieldedNpcDestroy = 0x800E4070; // segment:mission_overlay - table-registered NPC handler. Plays voiceId 0x15B = "It must be ray-shielded.  Concentrate on the train." then calls destroyNpcSlotByIndex — fires when player damages a ray-shielded train-mission NPC and the engine routes them to give up + warn.
 npcTrainCarUpdate = 0x800E2818; // segment:mission_overlay
 
 npcWaterCraftUpdate = 0x800E614C; // segment:mission_overlay
 
 npcGroundTroopUpdate = 0x800E7860; // segment:mission_overlay
 
+npcAtPtPlaySkywalkerErrorCallout = 0x800EA470; // segment:mission_overlay - called 3× from npcAtPtUpdate. Plays voiceId 0xC4 = "Skywalker!  What are you doing?!!" — the AT-PT-context callout when the player triggers an error condition.
 npcAtPtUpdate = 0x800EA5E0; // segment:mission_overlay
 
 npcPowerUpUpdate = 0x800EB990; // segment:mission_overlay

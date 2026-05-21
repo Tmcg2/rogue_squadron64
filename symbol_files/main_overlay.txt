@@ -468,71 +468,71 @@ setChannelKeyOffsetAt6E              = 0x80089F0C; // (channel, programPtr) — 
 binarySearchWithComparator           = 0x80085C0C; // (a0=keyArgForCmp, a1=tableBase, a2=count, a3=entryStride, [sp+0x48]=cmpFuncPtr) -> entryPtr | 0. Generic binary search that calls the caller-provided comparator function (via LOOKUP_FUNC) at each midpoint. Returns the matching entry pointer (table + idx*stride) on hit, 0 on miss. Used with cmpU16ByValue and compareHalfwordAtOffset4 (already named) as sorted-table lookups for MusyX subsystem data (likely sample indices or program offsets). Returns 0 when a2 (count) is 0.
 
 // playObjectiveVoiceLine1 wrappers — each is a thin (23-instr) wrapper that calls playObjectiveVoiceLine1 with one hardcoded voice ID. Naming encodes that unique voice ID. Function-pointer-registered as objective hooks; no direct callers in .c output.
-playVoice_0x07                       = 0x80103508; // wrapper: playObjectiveVoiceLine1(0x7)
-playVoice_0x0A                       = 0x80103994; // wrapper: playObjectiveVoiceLine1(0xA)
-playVoice_0x0B                       = 0x80103F4C; // wrapper: playObjectiveVoiceLine1(0xB)
-playVoice_0x65                       = 0x801040F0; // wrapper: playObjectiveVoiceLine1(0x65)
-playVoice_0x150                      = 0x8010447C; // wrapper: playObjectiveVoiceLine1(0x150)
-playVoice_0x296                      = 0x80104498; // wrapper: playObjectiveVoiceLine1(0x296)
-playVoice_0x107                      = 0x80104EC8; // wrapper: playObjectiveVoiceLine1(0x107)
-playVoice_0xCC                       = 0x80104EE4; // wrapper: playObjectiveVoiceLine1(0xCC)
-playVoice_0xE4                       = 0x80104F00; // wrapper: playObjectiveVoiceLine1(0xE4)
-playVoice_0x11F                      = 0x80105E28; // wrapper: playObjectiveVoiceLine1(0x11F)
-playVoice_0x217                      = 0x80105E44; // wrapper: playObjectiveVoiceLine1(0x217)
-playVoice_0xAA                       = 0x80105E60; // wrapper: playObjectiveVoiceLine1(0xAA) — first of two wrappers playing this voice
-playVoice_0xB6                       = 0x80105E7C; // wrapper: playObjectiveVoiceLine1(0xB6)
-playVoice_0xC4                       = 0x80105E98; // wrapper: playObjectiveVoiceLine1(0xC4) — first of two wrappers playing this voice
+sayThanksRogueGroupImClear_v0x7                       = 0x80103508; // wrapper: playObjectiveVoiceLine1(0x7)
+sayDownLetsKeepUpGood_v0xA                       = 0x80103994; // wrapper: playObjectiveVoiceLine1(0xA)
+sayRogueSquadronWheresCover_v0xB                       = 0x80103F4C; // wrapper: playObjectiveVoiceLine1(0xB)
+sayBaseAlertedSecurityCompromisedAbort_v0x65                       = 0x801040F0; // wrapper: playObjectiveVoiceLine1(0x65)
+sayGettingLittleCloseScanners_v0x150                      = 0x8010447C; // wrapper: playObjectiveVoiceLine1(0x150)
+saySirWeveFoundSomeAdvanced_v0x296                      = 0x80104498; // wrapper: playObjectiveVoiceLine1(0x296)
+sayLockSFoilsAttackPosition_v0x107                      = 0x80104EC8; // wrapper: playObjectiveVoiceLine1(0x107)
+sayWatchEnemyFighters_v0xCC                       = 0x80104EE4; // wrapper: playObjectiveVoiceLine1(0xCC)
+sayLukeGoingMakeHovertrainEscape_v0xE4                       = 0x80104F00; // wrapper: playObjectiveVoiceLine1(0xE4)
+sayStickObjectives_v0x11F                      = 0x80105E28; // wrapper: playObjectiveVoiceLine1(0x11F)
+sayCheckFire_v0x217                      = 0x80105E44; // wrapper: playObjectiveVoiceLine1(0x217)
+sayCheckFire_v0xAA                       = 0x80105E60; // wrapper: playObjectiveVoiceLine1(0xAA) — first of two wrappers playing this voice
+sayCantHandleStarfighterBackBase_v0xB6                       = 0x80105E7C; // wrapper: playObjectiveVoiceLine1(0xB6)
+saySkywalkerWhatDoing_v0xC4                       = 0x80105E98; // wrapper: playObjectiveVoiceLine1(0xC4) — first of two wrappers playing this voice
 playVoice_0xAA_v2                    = 0x80105EB4; // wrapper: playObjectiveVoiceLine1(0xAA) — second wrapper playing same voice
 playVoice_0xC4_v2                    = 0x80106050; // wrapper: playObjectiveVoiceLine1(0xC4) — second wrapper playing same voice
-playVoice_0x21E                      = 0x80105ED0; // wrapper: playObjectiveVoiceLine1(0x21E) — first of two
-playVoice_0x21D                      = 0x80105EF8; // wrapper: playObjectiveVoiceLine1(0x21D) — first of two
-playVoice_0xE5                       = 0x80105F20; // wrapper: playObjectiveVoiceLine1(0xE5)
-playVoice_0xB1                       = 0x80105F70; // wrapper: playObjectiveVoiceLine1(0xB1)
-playVoice_0x21C                      = 0x80105FC0; // wrapper: playObjectiveVoiceLine1(0x21C)
-playVoice_0x259                      = 0x80105FDC; // wrapper: playObjectiveVoiceLine1(0x259)
-playVoice_0xEC                       = 0x80105FF8; // wrapper: playObjectiveVoiceLine1(0xEC)
-playVoice_0x167                      = 0x80106034; // wrapper: playObjectiveVoiceLine1(0x167)
-playVoice_0xEA                       = 0x8010606C; // wrapper: playObjectiveVoiceLine1(0xEA)
-playVoice_0x171                      = 0x80107338; // wrapper: playObjectiveVoiceLine1(0x171)
-playVoice_0x2F2                      = 0x80107354; // wrapper: playObjectiveVoiceLine1(0x2F2)
-playVoice_0x1FC                      = 0x80108388; // wrapper: playObjectiveVoiceLine1(0x1FC)
-playVoice_0x1EB                      = 0x801083B0; // wrapper: playObjectiveVoiceLine1(0x1EB)
-playVoice_0x230                      = 0x801083D8; // wrapper: playObjectiveVoiceLine1(0x230)
-playVoice_0x48                       = 0x8010842C; // wrapper: playObjectiveVoiceLine1(0x48)
-playVoice_0x26B                      = 0x80108488; // wrapper: playObjectiveVoiceLine1(0x26B)
+sayExcellentWork_v0x21E                      = 0x80105ED0; // wrapper: playObjectiveVoiceLine1(0x21E) — first of two
+sayGoodJob_v0x21D                      = 0x80105EF8; // wrapper: playObjectiveVoiceLine1(0x21D) — first of two
+sayNiceJobSkywalkerImBeginning_v0xE5                       = 0x80105F20; // wrapper: playObjectiveVoiceLine1(0xE5)
+sayExcellentWork_v0xB1                       = 0x80105F70; // wrapper: playObjectiveVoiceLine1(0xB1)
+sayGoodShooting_v0x21C                      = 0x80105FC0; // wrapper: playObjectiveVoiceLine1(0x21C)
+sayGoodWork_v0x259                      = 0x80105FDC; // wrapper: playObjectiveVoiceLine1(0x259)
+sayCheckFireSkywalkerCivilians_v0xEC                       = 0x80105FF8; // wrapper: playObjectiveVoiceLine1(0xEC)
+sayBlueOnesCivilianLetsCheck_v0x167                      = 0x80106034; // wrapper: playObjectiveVoiceLine1(0x167)
+sayRemindsBespinSquadronScoutedOnce_v0xEA                       = 0x8010606C; // wrapper: playObjectiveVoiceLine1(0xEA)
+sayOkayThatsKnowWhatLook_v0x171                      = 0x80107338; // wrapper: playObjectiveVoiceLine1(0x171)
+saySirWeveFoundSomeSeeker_v0x2F2                      = 0x80107354; // wrapper: playObjectiveVoiceLine1(0x2F2)
+sayWhoaHim_v0x1FC                      = 0x80108388; // wrapper: playObjectiveVoiceLine1(0x1FC)
+sayMoreFightersInboundSevenDecimal_v0x1EB                      = 0x801083B0; // wrapper: playObjectiveVoiceLine1(0x1EB)
+sayAnotherVictoryRogueSquadron_v0x230                      = 0x801083D8; // wrapper: playObjectiveVoiceLine1(0x230)
+saySirDevastatorsGettingCloseCity_v0x48                       = 0x8010842C; // wrapper: playObjectiveVoiceLine1(0x48)
+saySomeonesCheatingOutThereGonna_v0x26B                      = 0x80108488; // wrapper: playObjectiveVoiceLine1(0x26B)
 
 // playObjectiveVoiceLine2 wrappers — thin wrappers calling Line2 variant; r5 (second arg) is either 0 or a float scale (1.0f, 0.5f, 2.0f).
 // Voice ID in r4 is the semantic identity. Spans lv1-lv9 across funcs_43-48.
-playVoice2_0x21C                     = 0x80101B34; // wrapper: playObjectiveVoiceLine2(0x21C, 1.0f)
-playVoice2_0x04D                     = 0x80101B54; // wrapper: playObjectiveVoiceLine2(0x4D, 0.5f)
-playVoice2_0x1F8                     = 0x80101B74; // wrapper: playObjectiveVoiceLine2(0x1F8, 0.299f)
-playVoice2_0xA4                      = 0x801026CC; // wrapper: playObjectiveVoiceLine2(0xA4, 0)
-playVoice2_0x233                     = 0x801030F0; // wrapper: playObjectiveVoiceLine2(0x233, 0)
-playVoice2_0x13C                     = 0x80103110; // wrapper: playObjectiveVoiceLine2(0x13C, 0)
-playVoice2_0x2F3                     = 0x80103424; // wrapper: playObjectiveVoiceLine2(0x2F3, 0)
-playVoice2_0x29F                     = 0x80103444; // wrapper: playObjectiveVoiceLine2(0x29F, 0)
-playVoice2_0x126                     = 0x80103464; // wrapper: playObjectiveVoiceLine2(0x126, 0)
-playVoice2_0x034                     = 0x80103A50; // wrapper: playObjectiveVoiceLine2(0x34, 1.0f)
-playVoice2_0x028                     = 0x80103A70; // wrapper: playObjectiveVoiceLine2(0x28, 0.75f)
-playVoice2_0x032                     = 0x80103BF0; // wrapper: playObjectiveVoiceLine2(0x32, 2.0f)
-playVoice2_0x0FE                     = 0x80103C10; // wrapper: playObjectiveVoiceLine2(0xFE, 1.0f)
-playVoice2_0x00B                     = 0x80103F68; // wrapper: playObjectiveVoiceLine2(0xB, 1.0f)
-playVoice2_0x15D                     = 0x80103F88; // wrapper: playObjectiveVoiceLine2(0x15D, 1.0f)
-playVoice2_0x163                     = 0x801040B0; // wrapper: playObjectiveVoiceLine2(0x163, 1.0f)
-playVoice2_0x017                     = 0x801055E0; // wrapper: playObjectiveVoiceLine2(0x17, 0)
-playVoice2_0x299                     = 0x80105AC0; // wrapper: playObjectiveVoiceLine2(0x299, 0)
-playVoice2_0x293                     = 0x80108448; // wrapper: playObjectiveVoiceLine2(0x293, 0)
-playVoice2_0x22C                     = 0x80101B98; // wrapper: playObjectiveVoiceLine2(0x22C, 0.5f)
-playVoice2_0x027                     = 0x80103A90; // wrapper: playObjectiveVoiceLine2(0x27, 1.0f)
-playVoice2_0x0AF                     = 0x80103FA8; // wrapper: playObjectiveVoiceLine2(0xAF, 1.0f)
-playVoice2_0x2A4                     = 0x801040D0; // wrapper: playObjectiveVoiceLine2(0x2A4, 1.0f)
-playVoice2_0x0EE                     = 0x80106014; // wrapper: playObjectiveVoiceLine2(0xEE, 1.5f)
-playVoice2_0x159                     = 0x801060E0; // wrapper: playObjectiveVoiceLine2(0x159, 0)
-playVoice2_0x2F2                     = 0x80106B78; // wrapper: playObjectiveVoiceLine2(0x2F2, 2.0f)
-playVoice2_0x296                     = 0x801071C8; // wrapper: playObjectiveVoiceLine2(0x296, 0)
-playVoice2_0x0BA                     = 0x80108468; // wrapper: playObjectiveVoiceLine2(0xBA, 0)
-playVoice2_0x22E                     = 0x80108DF0; // wrapper: playObjectiveVoiceLine2(0x22E, 8.0f)
-playVoice2_0x219                     = 0x80108E48; // wrapper: playObjectiveVoiceLine2(0x219, 8.0f)
+say2GoodShooting_v0x21C                     = 0x80101B34; // wrapper: playObjectiveVoiceLine2(0x21C, 1.0f)
+say2CommanderRieekanImperativeStayWith_v0x4D                     = 0x80101B54; // wrapper: playObjectiveVoiceLine2(0x4D, 0.5f)
+say2WatchEnemyFighters_v0x1F8                     = 0x80101B74; // wrapper: playObjectiveVoiceLine2(0x1F8, 0.299f)
+say2PickingUpMultipleSignalsTies_v0xA4                      = 0x801026CC; // wrapper: playObjectiveVoiceLine2(0xA4, 0)
+say2ThatsTechCenterCrixMadine_v0x233                     = 0x801030F0; // wrapper: playObjectiveVoiceLine2(0x233, 0)
+say2TheyreAttackingCity_v0x13C                     = 0x80103110; // wrapper: playObjectiveVoiceLine2(0x13C, 0)
+say2SirWeveFoundSomeAdvanced_v0x2F3                     = 0x80103424; // wrapper: playObjectiveVoiceLine2(0x2F3, 0)
+say2WeveSpottedImperialWalkerApproach_v0x29F                     = 0x80103444; // wrapper: playObjectiveVoiceLine2(0x29F, 0)
+say2UseHarpoonsTowCables_v0x126                     = 0x80103464; // wrapper: playObjectiveVoiceLine2(0x126, 0)
+say2GoldSquadronsDestroyedGuessImperials_v0x34                     = 0x80103A50; // wrapper: playObjectiveVoiceLine2(0x34, 1.0f)
+say2GoodWork_v0x28                     = 0x80103A70; // wrapper: playObjectiveVoiceLine2(0x28, 0.75f)
+say2GoodJobCapturedSomeImperial_v0x32                     = 0x80103BF0; // wrapper: playObjectiveVoiceLine2(0x32, 2.0f)
+say2AccelerateAttackSpeed_v0xFE                     = 0x80103C10; // wrapper: playObjectiveVoiceLine2(0xFE, 1.0f)
+say2RogueSquadronWheresCover_v0xB_f1p0                     = 0x80103F68; // wrapper: playObjectiveVoiceLine2(0xB, 1.0f)
+say2IsntGonnaWork_v0x15D                     = 0x80103F88; // wrapper: playObjectiveVoiceLine2(0x15D, 1.0f)
+say2FoundSomeAdvancedShieldTechnology_v0x163                     = 0x801040B0; // wrapper: playObjectiveVoiceLine2(0x163, 1.0f)
+say2LastGroupScannedHereCome_v0x17                     = 0x801055E0; // wrapper: playObjectiveVoiceLine2(0x17, 0)
+say2SirWeveFoundSomeSeeker_v0x299                     = 0x80105AC0; // wrapper: playObjectiveVoiceLine2(0x299, 0)
+say2WeaponsMalfunction_v0x293                     = 0x80108448; // wrapper: playObjectiveVoiceLine2(0x293, 0)
+say2ConvoysGonnaLastMuchLonger_v0x22C                     = 0x80101B98; // wrapper: playObjectiveVoiceLine2(0x22C, 0.5f)
+say2NiceShot_v0x27                     = 0x80103A90; // wrapper: playObjectiveVoiceLine2(0x27, 1.0f)
+say2GoodShooting_v0xAF                     = 0x80103FA8; // wrapper: playObjectiveVoiceLine2(0xAF, 1.0f)
+say2StayLowAvoidMissileFire_v0x2A4                     = 0x801040D0; // wrapper: playObjectiveVoiceLine2(0x2A4, 1.0f)
+say2TheresLotImperialActivityUp_v0xEE                     = 0x80106014; // wrapper: playObjectiveVoiceLine2(0xEE, 1.5f)
+say2HeresSomethingAdvancedLasers_v0x159                     = 0x801060E0; // wrapper: playObjectiveVoiceLine2(0x159, 0)
+say2SirWeveFoundSomeSeeker_v0x2F2                     = 0x80106B78; // wrapper: playObjectiveVoiceLine2(0x2F2, 2.0f)
+say2SirWeveFoundSomeAdvanced_v0x296                     = 0x801071C8; // wrapper: playObjectiveVoiceLine2(0x296, 0)
+say2InboundFightersTenThirteen_v0xBA                     = 0x80108468; // wrapper: playObjectiveVoiceLine2(0xBA, 0)
+say2JustLostRogueNine_v0x22E                     = 0x80108DF0; // wrapper: playObjectiveVoiceLine2(0x22E, 8.0f)
+say2FireProtonTorpedoes_v0x219                     = 0x80108E48; // wrapper: playObjectiveVoiceLine2(0x219, 8.0f)
 
 // setObjectiveBoolean wrappers — thin wrappers around setObjectiveBoolean(bool_id, value). All set value=1 (TRUE).
 setObjBoolTrue_0x14                  = 0x80105770; // wrapper: setObjectiveBoolean(0x14, 1)
@@ -1051,6 +1051,18 @@ cinematicSlotDispatcher              = 0x800A76B8; // iterates over slot table (
 // Confirmed via guPerspective call inside the function body.
 setupCameraMatrices                  = 0x80016C44; // takes camera/viewport struct, computes aspect ratio, calls guPerspective → guScale → guMtxCatL (result at MEM_W(0x8011DC5C)). Also calls emitFrameRdpInitDl right after the matrix setup to emit the per-frame RDP-state DL prologue.
 emitFrameRdpInitDl                   = 0x80008D20; // 2374-line inline DL-builder for the per-frame RDP setup sequence — emits SETOTHERMODE_L (0xB9), SETOTHERMODE_H (0xBA), SET_COLOR_IMAGE (0xFF), and many more GBI bytes directly via MEM_W writes into the active DL buffer (cursor at MEM_W[0x8011DC58]). Reads the active draw fb from MEM_W[0x8011A84C] (written by buildAndRegisterDefaultMaterial) and embeds it into the SET_COLOR_IMAGE bytes. Only callee is findAndUnlinkSmallestEntry (DL buffer expansion). Sole caller: setupCameraMatrices — runs once per camera/viewport setup. This is THE function that bakes the "current draw fb" into the recompile's DL stream, so any attribution/logo fb-routing question goes through here.
+
+// Scene-graph traversal subsystem (named 2026-05-20). Entered from
+// setupCameraMatrices, this is the Performer-style scene-graph walker that
+// matches Prior 2 in project_engine_architectural_priors.md (sibling at
+// offset 0x0, child at offset 0xC). Identified during the matpool-corruption
+// freeze investigation — after the matpool fix unblocked the cinematic, a
+// second freeze surfaced inside submitSceneNodeRender's heap free-list walk
+// (funcs_4.c:3130 — same class of bug as the matpool one, different heap).
+traverseSceneGraphRecursive          = 0x80015548; // recursive scene-graph walker. Reads node->sibling at +0x0, node->child at +0xC; calls processSceneNode per-node, then recurses on child + iterates to sibling. Single external caller: setupCameraMatrices (line 22653 of funcs_4.c).
+processSceneNode                     = 0x80014FA0; // per-node body of traverseSceneGraphRecursive. Tests node->flags at +0xC for bit 0x4 (early-out) and 0x8 (full path); reads node->object at +0x8, compares object->frameStamp at +0x30 against a global at MEM_W(0x80127894) for frame-already-processed check, registers node into a render-queue table at 0x80116400 (entries: ptr/scratch/owner triples) indexed by counter at 0x80127894. Dispatches between 3 render-state branches that each call submitSceneNodeRender (2 of 3 sites within this function).
+submitSceneNodeRender                = 0x80010014; // ~2700-line per-node render dispatcher. Stamps frame counter (from MEM_W(0x80127894)) onto node->+0x30, then if node->flags & 0x8 is set, registers pointers to the node's sub-fields (+0x3C/+0x40/+0x44/+0x4C/+0x54/+0x58) in renderer scratch globals at 0x801163FC, 0x801277DC, 0x801274C4, 0x801274AC, 0x801274BC, 0x801274B8. Allocates a render entry via findAndUnlinkSmallestEntry, then splices it into the freelist head at MEM_W(0x801163B0) — the freelist walk-to-tail loop at funcs_4.c:3130 is where the second freeze (after matpool fix) currently hangs when that freelist gets a cycle.
+
 resetGameSettingsAndMissionStats     = 0x8006E53C; // called by runIdleFramesAndLoadSaveData before save load — zeroes gGameSettings(0x30), D_80130B10(0x28), missionStats(0x10)
 
 // HUD + asset helpers (cross-referenced with sister-repo docs)
@@ -1174,8 +1186,8 @@ compareHalfwordAtOffset4_v2          = 0x80085F54; // qsort comparator: identica
 compareHalfwordAtOffset4_v3          = 0x80086114; // qsort comparator: identical body to compareHalfwordAtOffset4. Compiler-duplicated for sort routine at 0x80086124 (reads MEM[0x8013AF08]).
 loadAssetIntoNewSlot = 0x800547C0; // (a0=assetGroup, a1=assetName) -> slot_idx | 0xFFFF. Resolves name via findTextureByName, runs func_80022F48 to fill a stack descriptor, walks the 16-byte slot table at MEM[0x80137C84]/count MEM[0x80137C80] for a free slot (halfword+0x6 bit 0x8000 set = free), reserves it, rs_malloc's buffer sized via get_asset_size_extra, DMAs the asset into it via findAssetAcrossSegments + setupAssetDma + teardownAssetDma, computes slot+0x4 = segment count. Called by hangarInitialize / initWaterSprayParticles / load_dat_file_assets / npcTrainCarUpdate.
 findLargestFreeHeapChunk = 0x80001A48; // walks two heap free-lists (heads at MEM[0x8010FF18] and MEM[0x8010FF00]); chunk header halfword+0x0 has bit 0x1=free, bit 0x8=end-marker, +0x4=chunk size, +0x10=next-chunk header. Tracks max size seen, returns it. Called by spawn-context functions (spawnDebris1Npc / spawnOrientedNpc / npcWaterSprayUpdate / gameStateByteGatedNpcHelper) to check if there's enough free heap before allocating. Sits directly before rs_malloc.
-playVoice2_0xB                      = 0x80101AD8; // wrapper: playObjectiveVoiceLine2(0xB, 0). Single dialogue line in lv1 cluster.
-playVoice2_0x139                    = 0x801026EC; // wrapper: playObjectiveVoiceLine2(0x139, 0). Six compiler-emitted duplicates exist at 0x20 stride for six callsites.
+say2RogueSquadronWheresCover_v0xB_f0                      = 0x80101AD8; // wrapper: playObjectiveVoiceLine2(0xB, 0). Single dialogue line in lv1 cluster.
+say2OkayRoguesLetsKeepCrew_v0x139                    = 0x801026EC; // wrapper: playObjectiveVoiceLine2(0x139, 0). Six compiler-emitted duplicates exist at 0x20 stride for six callsites.
 playVoice2_0x139_v2                 = 0x8010270C; // duplicate of playVoice2_0x139.
 playVoice2_0x139_v3                 = 0x8010272C; // duplicate of playVoice2_0x139.
 playVoice2_0x139_v4                 = 0x8010274C; // duplicate of playVoice2_0x139.
@@ -1728,6 +1740,7 @@ getAssetNameForNpcType               = 0x800AE98C; // 2 callers: (npc_type_id u8
 // 0x800A5B60. Mallocs a 0x38-byte context, memsets to 0, then load_asset's
 // the named backdrop file. Caller-supplied name (a0) selects which backdrop.
 loadBackdropAsset                    = 0x800ADF74; // 5 callers: (name str, ...) → loads "backdrop/<name>"
+hangarTickCameraOrbit                = 0x800ADB70; // per-frame hangar camera-orbit lerp (~98 float ops). Reads gHangarCurrentBayCraft → indexes gHangarBayDescriptorArrayPtr (stride 0x278), pulls target float from entry+0x8->+0x14, caches at gHangarCameraOrbitTargetCache. Accumulates gHangarCameraOrbitAccum += (delta / const_at_800A56DC) per frame for the continuous glide toward the current bay. Called from the hangar tick func_800AAD9C.
 
 // Scene init / per-level asset loader: zmemcpy's defaults (0x50 bytes from
 // 0x80037560 = gBootConfig area), loads "game_TXT" via findManifestEntryByName,
@@ -2402,6 +2415,9 @@ gNabooStarfighterAvail   = 0x800CD6CF; // type:u8 - Naboo Starfighter availabili
 gAvailableCraftBitsForLevel = 0x800CD6D0; // type:u32 - bitmask of craft available for currently-selected level per docs/unsorted_thoughts
 gHangarCurrentBayCraft   = 0x800CD6E4; // type:u8 - = gHangarBayToCraftIdx[gHangarCurrentBay] per docs/unsorted_thoughts
 gHangarCurrentBay        = 0x800CD6E8; // type:u8 - currently-looked-at hangar bay index per docs/unsorted_thoughts
+gHangarCameraOrbitAccum  = 0x800CD6F4; // type:f32 - hangar camera orbit angle accumulator. Each frame func_800ADB70 (hangarTickCameraOrbit) adds (gHangarCameraOrbitDelta / const_at_800A56DC) to this value, producing the continuous-glide camera angle toward the current bay's target.
+gHangarCameraOrbitTargetCache = 0x800CD710; // type:f32 - cached target-angle (or target-position) float for the current bay. Read from gHangarBayDescriptorArrayPtr[gHangarCurrentBayCraft].field_8->field_14 each tick.
+gHangarBayDescriptorArrayPtr = 0x800CDA5C; // type:struct* - pointer to per-bay descriptor array. Stride is 0x278 (632) bytes per bay. Each entry's +0x8 points to a sub-struct whose +0x14 is the target float used by the orbit interpolator (see hangarTickCameraOrbit at 0x800ADB70).
 gMissionObjectiveTextIds = 0x80109D2C; // type:u16 - array of mission-objective text IDs (4 per level, 0-padded if fewer) per docs/hud_stuff
 gSecondaryWeaponStringSlots = 0x800CD540; // size:0xC0 - 4 entries × 0x30B strings; current visible slot selected by gCurrentSecondaryWeaponStringIdx
 dLevelByDemoId         = 0x800CD404; // type:u8 size:0x6 - level enum to play per demoId (per docs/unsorted_thoughts)
