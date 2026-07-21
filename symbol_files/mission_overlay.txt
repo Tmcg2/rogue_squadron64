@@ -2,116 +2,116 @@
 /////////////////////////////////// Strings ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_800A5820 = 0x800A5820; // type:asciz segment:mission_overlay
-D_800A5828 = 0x800A5828; // type:asciz segment:mission_overlay
-D_800A5830 = 0x800A5830; // type:asciz segment:mission_overlay
-D_800A5838 = 0x800A5838; // type:asciz segment:mission_overlay
-D_800A5840 = 0x800A5840; // type:asciz segment:mission_overlay
-D_800A5848 = 0x800A5848; // type:asciz segment:mission_overlay
-D_800A5990 = 0x800A5990; // type:asciz segment:mission_overlay
-D_800A5998 = 0x800A5998; // type:asciz segment:mission_overlay
-D_800A59A0 = 0x800A59A0; // type:asciz segment:mission_overlay
-D_800A5B20 = 0x800A5B20; // type:asciz segment:mission_overlay
-D_800A5C20 = 0x800A5C20; // type:asciz segment:mission_overlay
-D_800A5C28 = 0x800A5C28; // type:asciz segment:mission_overlay
-D_800A5E00 = 0x800A5E00; // type:asciz segment:mission_overlay
-D_800A5E04 = 0x800A5E04; // type:asciz segment:mission_overlay
-D_800A5FE0 = 0x800A5FE0; // type:asciz segment:mission_overlay
-D_800A5FE8 = 0x800A5FE8; // type:asciz segment:mission_overlay
-D_800A60D0 = 0x800A60D0; // type:asciz segment:mission_overlay
-D_800A60D8 = 0x800A60D8; // type:asciz segment:mission_overlay
-D_800A61E0 = 0x800A61E0; // type:asciz segment:mission_overlay
-D_800A61E8 = 0x800A61E8; // type:asciz segment:mission_overlay
-D_800A61F0 = 0x800A61F0; // type:asciz segment:mission_overlay
-D_800A61F8 = 0x800A61F8; // type:asciz segment:mission_overlay
-D_800A6200 = 0x800A6200; // type:asciz segment:mission_overlay
-D_800A6208 = 0x800A6208; // type:asciz segment:mission_overlay
-D_800A6250 = 0x800A6250; // type:asciz segment:mission_overlay
-D_800A6260 = 0x800A6260; // type:asciz segment:mission_overlay
-D_800A626C = 0x800A626C; // type:asciz segment:mission_overlay
-D_800A627C = 0x800A627C; // type:asciz segment:mission_overlay
-D_800A628C = 0x800A628C; // type:asciz segment:mission_overlay
-D_800A6298 = 0x800A6298; // type:asciz segment:mission_overlay
-D_800A62A4 = 0x800A62A4; // type:asciz segment:mission_overlay
-D_800A62B0 = 0x800A62B0; // type:asciz segment:mission_overlay
-D_800A62BC = 0x800A62BC; // type:asciz segment:mission_overlay
-D_800A62C8 = 0x800A62C8; // type:asciz segment:mission_overlay
-D_800A62D0 = 0x800A62D0; // type:asciz segment:mission_overlay
-D_800A62D8 = 0x800A62D8; // type:asciz segment:mission_overlay
-D_800A62E0 = 0x800A62E0; // type:asciz segment:mission_overlay
-D_800A6420 = 0x800A6420; // type:asciz segment:mission_overlay
-D_800A6880 = 0x800A6880; // type:asciz segment:mission_overlay
-D_800A688C = 0x800A688C; // type:asciz segment:mission_overlay
-D_800A6894 = 0x800A6894; // type:asciz segment:mission_overlay
-D_800A689C = 0x800A689C; // type:asciz segment:mission_overlay
-D_800A68A4 = 0x800A68A4; // type:asciz segment:mission_overlay
-D_800A68AC = 0x800A68AC; // type:asciz segment:mission_overlay
-D_800A68B4 = 0x800A68B4; // type:asciz segment:mission_overlay
-D_800A68BC = 0x800A68BC; // type:asciz segment:mission_overlay
-D_800A68C4 = 0x800A68C4; // type:asciz segment:mission_overlay
-D_800A68CC = 0x800A68CC; // type:asciz segment:mission_overlay
-D_800A68D4 = 0x800A68D4; // type:asciz segment:mission_overlay
-D_800A68DC = 0x800A68DC; // type:asciz segment:mission_overlay
-D_800A68E4 = 0x800A68E4; // type:asciz segment:mission_overlay
-D_800A68EC = 0x800A68EC; // type:asciz segment:mission_overlay
-D_800A68F4 = 0x800A68F4; // type:asciz segment:mission_overlay
-D_800A68FC = 0x800A68FC; // type:asciz segment:mission_overlay
-D_800A6904 = 0x800A6904; // type:asciz segment:mission_overlay
-D_800A6D10 = 0x800A6D10; // type:asciz segment:mission_overlay
-D_800A6D18 = 0x800A6D18; // type:asciz segment:mission_overlay
-D_800A6D20 = 0x800A6D20; // type:asciz segment:mission_overlay
-D_800A6D28 = 0x800A6D28; // type:asciz segment:mission_overlay
-D_800A6D30 = 0x800A6D30; // type:asciz segment:mission_overlay
-D_800A6D38 = 0x800A6D38; // type:asciz segment:mission_overlay
-D_800A6D40 = 0x800A6D40; // type:asciz segment:mission_overlay
-D_800A6D48 = 0x800A6D48; // type:asciz segment:mission_overlay
-D_800A7DE0 = 0x800A7DE0; // type:asciz segment:mission_overlay
-D_800A7DEC = 0x800A7DEC; // type:asciz segment:mission_overlay
-D_800A7DF8 = 0x800A7DF8; // type:asciz segment:mission_overlay
-D_800A7E00 = 0x800A7E00; // type:asciz segment:mission_overlay
-D_800A7E0C = 0x800A7E0C; // type:asciz segment:mission_overlay
-D_800A7F60 = 0x800A7F60; // type:asciz segment:mission_overlay
-D_800A7F68 = 0x800A7F68; // type:asciz segment:mission_overlay
-D_800A7F74 = 0x800A7F74; // type:asciz segment:mission_overlay
-D_800A7F80 = 0x800A7F80; // type:asciz segment:mission_overlay
-D_800A7F88 = 0x800A7F88; // type:asciz segment:mission_overlay
-D_800A7F94 = 0x800A7F94; // type:asciz segment:mission_overlay
-D_800A8290 = 0x800A8290; // type:asciz segment:mission_overlay
-D_800A8298 = 0x800A8298; // type:asciz segment:mission_overlay
-D_800A82A0 = 0x800A82A0; // type:asciz segment:mission_overlay
-D_800A82AC = 0x800A82AC; // type:asciz segment:mission_overlay
-D_800A82B8 = 0x800A82B8; // type:asciz segment:mission_overlay
-D_800A8FE4 = 0x800A8FE4; // type:asciz segment:mission_overlay
-D_800A8FEC = 0x800A8FEC; // type:asciz segment:mission_overlay
-D_800A8FF0 = 0x800A8FF0; // type:asciz segment:mission_overlay
-D_800A8FFC = 0x800A8FFC; // type:asciz segment:mission_overlay
-D_800A9004 = 0x800A9004; // type:asciz segment:mission_overlay
-D_800A9010 = 0x800A9010; // type:asciz segment:mission_overlay
-D_800A9018 = 0x800A9018; // type:asciz segment:mission_overlay
-D_800A9020 = 0x800A9020; // type:asciz segment:mission_overlay
-D_800A9028 = 0x800A9028; // type:asciz segment:mission_overlay
-D_800A90B0 = 0x800A90B0; // type:asciz segment:mission_overlay
-D_800A90C0 = 0x800A90C0; // type:asciz segment:mission_overlay
-D_800A90D0 = 0x800A90D0; // type:asciz segment:mission_overlay
-D_800A90DC = 0x800A90DC; // type:asciz segment:mission_overlay
-D_800A90E8 = 0x800A90E8; // type:asciz segment:mission_overlay
-D_800A90F4 = 0x800A90F4; // type:asciz segment:mission_overlay
-D_800A9100 = 0x800A9100; // type:asciz segment:mission_overlay
-D_800A910C = 0x800A910C; // type:asciz segment:mission_overlay
-D_800A9118 = 0x800A9118; // type:asciz segment:mission_overlay
-D_800A9124 = 0x800A9124; // type:asciz segment:mission_overlay
-D_800A9430 = 0x800A9430; // type:asciz segment:mission_overlay
-D_800A9434 = 0x800A9434; // type:asciz segment:mission_overlay
-D_800A9438 = 0x800A9438; // type:asciz segment:mission_overlay
-D_800A943C = 0x800A943C; // type:asciz segment:mission_overlay
-D_800A9440 = 0x800A9440; // type:asciz segment:mission_overlay
-D_800A9590 = 0x800A9590; // type:asciz size:0x15 segment:mission_overlay
-D_800A9614 = 0x800A9614; // type:asciz size:0xA  segment:mission_overlay
-D_800A9714 = 0x800A9714; // type:asciz size:0x10 segment:mission_overlay
-D_800A9850 = 0x800A9850; // type:asciz size:0xB  segment:mission_overlay
-D_800A9A5C = 0x800A9A5C; // type:asciz size:0x17 segment:mission_overlay
-D_800A9B48 = 0x800A9B48; // type:asciz size:0x10 segment:mission_overlay
-D_800A9B60 = 0x800A9B60; // type:asciz size:0x18 segment:mission_overlay
+D_mission_overlay_800A5820 = 0x800A5820; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5828 = 0x800A5828; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5830 = 0x800A5830; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5838 = 0x800A5838; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5840 = 0x800A5840; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5848 = 0x800A5848; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5990 = 0x800A5990; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5998 = 0x800A5998; // type:asciz segment:mission_overlay
+D_mission_overlay_800A59A0 = 0x800A59A0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5B20 = 0x800A5B20; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5C20 = 0x800A5C20; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5C28 = 0x800A5C28; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5E00 = 0x800A5E00; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5E04 = 0x800A5E04; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5FE0 = 0x800A5FE0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A5FE8 = 0x800A5FE8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A60D0 = 0x800A60D0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A60D8 = 0x800A60D8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A61E0 = 0x800A61E0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A61E8 = 0x800A61E8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A61F0 = 0x800A61F0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A61F8 = 0x800A61F8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6200 = 0x800A6200; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6208 = 0x800A6208; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6250 = 0x800A6250; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6260 = 0x800A6260; // type:asciz segment:mission_overlay
+D_mission_overlay_800A626C = 0x800A626C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A627C = 0x800A627C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A628C = 0x800A628C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6298 = 0x800A6298; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62A4 = 0x800A62A4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62B0 = 0x800A62B0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62BC = 0x800A62BC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62C8 = 0x800A62C8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62D0 = 0x800A62D0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62D8 = 0x800A62D8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A62E0 = 0x800A62E0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6420 = 0x800A6420; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6880 = 0x800A6880; // type:asciz segment:mission_overlay
+D_mission_overlay_800A688C = 0x800A688C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6894 = 0x800A6894; // type:asciz segment:mission_overlay
+D_mission_overlay_800A689C = 0x800A689C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68A4 = 0x800A68A4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68AC = 0x800A68AC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68B4 = 0x800A68B4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68BC = 0x800A68BC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68C4 = 0x800A68C4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68CC = 0x800A68CC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68D4 = 0x800A68D4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68DC = 0x800A68DC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68E4 = 0x800A68E4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68EC = 0x800A68EC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68F4 = 0x800A68F4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A68FC = 0x800A68FC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6904 = 0x800A6904; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D10 = 0x800A6D10; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D18 = 0x800A6D18; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D20 = 0x800A6D20; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D28 = 0x800A6D28; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D30 = 0x800A6D30; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D38 = 0x800A6D38; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D40 = 0x800A6D40; // type:asciz segment:mission_overlay
+D_mission_overlay_800A6D48 = 0x800A6D48; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7DE0 = 0x800A7DE0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7DEC = 0x800A7DEC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7DF8 = 0x800A7DF8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7E00 = 0x800A7E00; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7E0C = 0x800A7E0C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F60 = 0x800A7F60; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F68 = 0x800A7F68; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F74 = 0x800A7F74; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F80 = 0x800A7F80; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F88 = 0x800A7F88; // type:asciz segment:mission_overlay
+D_mission_overlay_800A7F94 = 0x800A7F94; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8290 = 0x800A8290; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8298 = 0x800A8298; // type:asciz segment:mission_overlay
+D_mission_overlay_800A82A0 = 0x800A82A0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A82AC = 0x800A82AC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A82B8 = 0x800A82B8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8FE4 = 0x800A8FE4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8FEC = 0x800A8FEC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8FF0 = 0x800A8FF0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A8FFC = 0x800A8FFC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9004 = 0x800A9004; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9010 = 0x800A9010; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9018 = 0x800A9018; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9020 = 0x800A9020; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9028 = 0x800A9028; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90B0 = 0x800A90B0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90C0 = 0x800A90C0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90D0 = 0x800A90D0; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90DC = 0x800A90DC; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90E8 = 0x800A90E8; // type:asciz segment:mission_overlay
+D_mission_overlay_800A90F4 = 0x800A90F4; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9100 = 0x800A9100; // type:asciz segment:mission_overlay
+D_mission_overlay_800A910C = 0x800A910C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9118 = 0x800A9118; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9124 = 0x800A9124; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9430 = 0x800A9430; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9434 = 0x800A9434; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9438 = 0x800A9438; // type:asciz segment:mission_overlay
+D_mission_overlay_800A943C = 0x800A943C; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9440 = 0x800A9440; // type:asciz segment:mission_overlay
+D_mission_overlay_800A9590 = 0x800A9590; // type:asciz size:0x15 segment:mission_overlay
+D_mission_overlay_800A9614 = 0x800A9614; // type:asciz size:0xA  segment:mission_overlay
+D_mission_overlay_800A9714 = 0x800A9714; // type:asciz size:0x10 segment:mission_overlay
+D_mission_overlay_800A9850 = 0x800A9850; // type:asciz size:0xB  segment:mission_overlay
+D_mission_overlay_800A9A5C = 0x800A9A5C; // type:asciz size:0x17 segment:mission_overlay
+D_mission_overlay_800A9B48 = 0x800A9B48; // type:asciz size:0x10 segment:mission_overlay
+D_mission_overlay_800A9B60 = 0x800A9B60; // type:asciz size:0x18 segment:mission_overlay
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Functions ///////////////////////////////////
@@ -159,7 +159,7 @@ placeRadarDots  = 0x800C51E0; // segment:mission_overlay
 getCurrentLevel = 0x800C7504; // segment:mission_overlay
 
 initializeObjectiveTracking = 0x800C72B0; // segment:mission_overlay
-func_800C72E8               = 0x800C72E8; // segment:mission_overlay
+func_mission_overlay_800C72E8               = 0x800C72E8; // segment:mission_overlay
 calculateFriendliesSaved    = 0x800C7320; // segment:mission_overlay
 checkComplexObjectives      = 0x800C7358; // segment:mission_overlay
 
@@ -337,16 +337,16 @@ lvj_checkComplexObjectives   = 0x80109638; // segment:mission_overlay
 
 // Fake Function Fixing
 fake_func_800AA6CC = 0x800AA6CC; // segment:mission_overlay
-func_800AA6D0      = 0x800AA6D0; // segment:mission_overlay
+func_mission_overlay_800AA6D0      = 0x800AA6D0; // segment:mission_overlay
 
 fake_func_800AAADC = 0x800AAADC; // segment:mission_overlay
 // real function is playerSnowSpeederInit
 
 fake_func_800AD378 = 0x800AD378; // segment:mission_overlay
-func_800AD380      = 0x800AD380; // segment:mission_overlay
+func_mission_overlay_800AD380      = 0x800AD380; // segment:mission_overlay
 
 fake_func_800AE3E4 = 0x800AE3E4; // segment:mission_overlay
-func_800AE3F0      = 0x800AE3F0; // segment:mission_overlay
+func_mission_overlay_800AE3F0      = 0x800AE3F0; // segment:mission_overlay
 
 fake_func_800B42BC = 0x800B42BC; // segment:mission_overlay
 // real function is playerXwingInit
@@ -367,82 +367,82 @@ fake_func_800BCC38 = 0x800BCC38; // segment:mission_overlay
 // real function is playerT16Init
 
 fake_func_800BEBFC = 0x800BEBFC; // segment:mission_overlay
-func_800BEC00      = 0x800BEC00; // segment:mission_overlay
+func_mission_overlay_800BEC00      = 0x800BEC00; // segment:mission_overlay
 
 fake_func_800BF498 = 0x800BF498; // segment:mission_overlay
-func_800BF4A0      = 0x800BF4A0; // segment:mission_overlay
+func_mission_overlay_800BF4A0      = 0x800BF4A0; // segment:mission_overlay
 
 fake_func_800BF784 = 0x800BF784; // segment:mission_overlay
-func_800BF790      = 0x800BF790; // segment:mission_overlay
+func_mission_overlay_800BF790      = 0x800BF790; // segment:mission_overlay
 
 fake_func_800C41AC = 0x800C41AC; // segment:mission_overlay
-func_800C41B0      = 0x800C41B0; // segment:mission_overlay
+func_mission_overlay_800C41B0      = 0x800C41B0; // segment:mission_overlay
 
 fake_func_800C64A4 = 0x800C64A4; // segment:mission_overlay
-func_800C64B0      = 0x800C64B0; // segment:mission_overlay
+func_mission_overlay_800C64B0      = 0x800C64B0; // segment:mission_overlay
 
 fake_func_800C7DB4 = 0x800C7DB4; // segment:mission_overlay
-func_800C7DC0      = 0x800C7DC0; // segment:mission_overlay
+func_mission_overlay_800C7DC0      = 0x800C7DC0; // segment:mission_overlay
 
 fake_func_800CA26C = 0x800CA26C; // segment:mission_overlay
-func_800CA270      = 0x800CA270; // segment:mission_overlay
+func_mission_overlay_800CA270      = 0x800CA270; // segment:mission_overlay
 
 fake_func_800CEF1C = 0x800CEF1C; // segment:mission_overlay
-func_800CEF20      = 0x800CEF20; // segment:mission_overlay
+func_mission_overlay_800CEF20      = 0x800CEF20; // segment:mission_overlay
 
 fake_func_800D2C98 = 0x800D2C98; // segment:mission_overlay
-func_800D2CA0      = 0x800D2CA0; // segment:mission_overlay
+func_mission_overlay_800D2CA0      = 0x800D2CA0; // segment:mission_overlay
 
 fake_func_800D4EC4 = 0x800D4EC4; // segment:mission_overlay
-func_800D4ED0      = 0x800D4ED0; // segment:mission_overlay
+func_mission_overlay_800D4ED0      = 0x800D4ED0; // segment:mission_overlay
 
 fake_func_800DD2C4 = 0x800DD2C4; // segment:mission_overlay
-func_800DD2D0      = 0x800DD2D0; // segment:mission_overlay
+func_mission_overlay_800DD2D0      = 0x800DD2D0; // segment:mission_overlay
 
 fake_func_800DFB8C = 0x800DFB8C; // segment:mission_overlay
-func_800DFB90      = 0x800DFB90; // segment:mission_overlay
+func_mission_overlay_800DFB90      = 0x800DFB90; // segment:mission_overlay
 
 fake_func_800E406C = 0x800E406C; // segment:mission_overlay
-func_800E4070      = 0x800E4070; // segment:mission_overlay
+func_mission_overlay_800E4070      = 0x800E4070; // segment:mission_overlay
 
 fake_func_800E447C = 0x800E447C; // segment:mission_overlay
-func_800E4480      = 0x800E4480; // segment:mission_overlay
+func_mission_overlay_800E4480      = 0x800E4480; // segment:mission_overlay
 
 fake_func_800E71C8 = 0x800E71C8; // segment:mission_overlay
-func_800E71D0      = 0x800E71D0; // segment:mission_overlay
+func_mission_overlay_800E71D0      = 0x800E71D0; // segment:mission_overlay
 
 fake_func_800E8A34 = 0x800E8A34; // segment:mission_overlay
-func_800E8A40      = 0x800E8A40; // segment:mission_overlay
+func_mission_overlay_800E8A40      = 0x800E8A40; // segment:mission_overlay
 
 fake_func_800E9AD8 = 0x800E9AD8; // segment:mission_overlay
-func_800E9AE0      = 0x800E9AE0; // segment:mission_overlay
+func_mission_overlay_800E9AE0      = 0x800E9AE0; // segment:mission_overlay
 
 fake_func_800EC10C = 0x800EC10C; // segment:mission_overlay
-func_800EC110      = 0x800EC110; // segment:mission_overlay
+func_mission_overlay_800EC110      = 0x800EC110; // segment:mission_overlay
 
 fake_func_800EC6EC = 0x800EC6EC; // segment:mission_overlay
-func_800EC6F0      = 0x800EC6F0; // segment:mission_overlay
+func_mission_overlay_800EC6F0      = 0x800EC6F0; // segment:mission_overlay
 
 fake_func_800ECE04 = 0x800ECE04; // segment:mission_overlay
-func_800ECE10      = 0x800ECE10; // segment:mission_overlay
+func_mission_overlay_800ECE10      = 0x800ECE10; // segment:mission_overlay
 
 fake_func_800ED148 = 0x800ED148; // segment:mission_overlay
-func_800ED150      = 0x800ED150; // segment:mission_overlay
+func_mission_overlay_800ED150      = 0x800ED150; // segment:mission_overlay
 
 fake_func_800EFD74 = 0x800EFD74; // segment:mission_overlay
-func_800EFD80      = 0x800EFD80; // segment:mission_overlay
+func_mission_overlay_800EFD80      = 0x800EFD80; // segment:mission_overlay
 
 fake_func_800EFDDC = 0x800EFDDC; // segment:mission_overlay
-func_800EFDE0      = 0x800EFDE0; // segment:mission_overlay
+func_mission_overlay_800EFDE0      = 0x800EFDE0; // segment:mission_overlay
 
 fake_func_800FA248 = 0x800FA248; // segment:mission_overlay
-func_800FA250      = 0x800FA250; // segment:mission_overlay
+func_mission_overlay_800FA250      = 0x800FA250; // segment:mission_overlay
 
 fake_func_800FBE14 = 0x800FBE14; // segment:mission_overlay
-func_800FBE20      = 0x800FBE20; // segment:mission_overlay
+func_mission_overlay_800FBE20      = 0x800FBE20; // segment:mission_overlay
 
 fake_func_800FEF04 = 0x800FEF04; // segment:mission_overlay
-func_800FEF10      = 0x800FEF10; // segment:mission_overlay
+func_mission_overlay_800FEF10      = 0x800FEF10; // segment:mission_overlay
 
 fake_func_80101CCC = 0x80101CCC; // segment:mission_overlay
 // real function is lv2_initializeObjectTracking
@@ -490,93 +490,93 @@ fake_func_80109618 = 0x80109618; // segment:mission_overlay
 ////////////////////////////////// Variables ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-D_800A51D8 = 0x800A51D8; // type:f32 size:0x4  segment:mission_overlay
-D_800A51E0 = 0x800A51E0; // type:f64 size:0x8  segment:mission_overlay
-D_800A53D4 = 0x800A53D4; // type:f32 size:0x4  segment:mission_overlay
-D_800A5810 = 0x800A5810; // type:f32 size:0x4  segment:mission_overlay
-D_800A5988 = 0x800A5988; // type:f32 size:0x4  segment:mission_overlay
-D_800A5B14 = 0x800A5B14; // type:f32 size:0x4  segment:mission_overlay
-D_800A5C14 = 0x800A5C14; // type:f32 size:0x4  segment:mission_overlay
-D_800A5ED4 = 0x800A5ED4; // type:f32 size:0x4  segment:mission_overlay
-D_800A5FD4 = 0x800A5FD4; // type:f32 size:0x4  segment:mission_overlay
-D_800A60C8 = 0x800A60C8; // type:f32 size:0x4  segment:mission_overlay
-D_800A61D8 = 0x800A61D8; // type:f32 size:0x4  segment:mission_overlay
-D_800A6230 = 0x800A6230; // type:f32 size:0x4  segment:mission_overlay
-D_800A6244 = 0x800A6244; // type:f32 size:0x4  segment:mission_overlay
-D_800A6724 = 0x800A6724; // type:f32 size:0x4  segment:mission_overlay
-D_800A6870 = 0x800A6870; // type:f32 size:0x4  segment:mission_overlay
-D_800A6958 = 0x800A6958; // type:f32 size:0x4  segment:mission_overlay
-D_800A6968 = 0x800A6968; // type:f32 size:0x4  segment:mission_overlay
-D_800A6B70 = 0x800A6B70; // type:f32 size:0x4  segment:mission_overlay
-D_800A73B8 = 0x800A73B8; // type:f32 size:0x4  segment:mission_overlay
-D_800A75E4 = 0x800A75E4; // type:f32 size:0x4  segment:mission_overlay
-D_800A7680 = 0x800A7680; // type:f32 size:0x4  segment:mission_overlay
-D_800A7B00 = 0x800A7B00; // type:f32 size:0x4  segment:mission_overlay
-D_800A7D00 = 0x800A7D00; // type:f32 size:0x4  segment:mission_overlay
-D_800A7DD0 = 0x800A7DD0; // type:f32 size:0x4  segment:mission_overlay
-D_800A8284 = 0x800A8284; // type:f32 size:0x4  segment:mission_overlay
-D_800A86C8 = 0x800A86C8; // type:f32 size:0x4  segment:mission_overlay
-D_800A8884 = 0x800A8884; // type:f32 size:0x4  segment:mission_overlay
-D_800A8920 = 0x800A8920; // type:f32 size:0x4  segment:mission_overlay
-D_800A8960 = 0x800A8960; // type:f32 size:0x4  segment:mission_overlay
-D_800A8F64 = 0x800A8F64; // type:f32 size:0x4  segment:mission_overlay
-D_800A90A4 = 0x800A90A4; // type:f32 size:0x4  segment:mission_overlay
-D_800A94C4 = 0x800A94C4; // type:f32 size:0x4  segment:mission_overlay
-D_800A9548 = 0x800A9548; // type:f32 size:0x4  segment:mission_overlay
-D_800A9584 = 0x800A9584; // type:f32 size:0x4  segment:mission_overlay
-D_800A96B8 = 0x800A96B8; // type:f32 size:0x4  segment:mission_overlay
-D_800A9754 = 0x800A9754; // type:f32 size:0x4  segment:mission_overlay
-D_800A9778 = 0x800A9778; // type:f32 size:0x4  segment:mission_overlay
-D_800A97C8 = 0x800A97C8; // type:f32 size:0x4  segment:mission_overlay
-D_800A9828 = 0x800A9828; // type:f32 size:0x4  segment:mission_overlay
-D_800A9860 = 0x800A9860; // type:f32 size:0x4  segment:mission_overlay
-D_800A9968 = 0x800A9968; // type:f32 size:0x4  segment:mission_overlay
-D_800A9994 = 0x800A9994; // type:f32 size:0x4  segment:mission_overlay
-D_800A99E4 = 0x800A99E4; // type:f32 size:0x4  segment:mission_overlay
-D_800A9A38 = 0x800A9A38; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A51D8 = 0x800A51D8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A51E0 = 0x800A51E0; // type:f64 size:0x8  segment:mission_overlay
+D_mission_overlay_800A53D4 = 0x800A53D4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5810 = 0x800A5810; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5988 = 0x800A5988; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5B14 = 0x800A5B14; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5C14 = 0x800A5C14; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5ED4 = 0x800A5ED4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A5FD4 = 0x800A5FD4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A60C8 = 0x800A60C8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A61D8 = 0x800A61D8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6230 = 0x800A6230; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6244 = 0x800A6244; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6724 = 0x800A6724; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6870 = 0x800A6870; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6958 = 0x800A6958; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6968 = 0x800A6968; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A6B70 = 0x800A6B70; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A73B8 = 0x800A73B8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A75E4 = 0x800A75E4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A7680 = 0x800A7680; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A7B00 = 0x800A7B00; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A7D00 = 0x800A7D00; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A7DD0 = 0x800A7DD0; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A8284 = 0x800A8284; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A86C8 = 0x800A86C8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A8884 = 0x800A8884; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A8920 = 0x800A8920; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A8960 = 0x800A8960; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A8F64 = 0x800A8F64; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A90A4 = 0x800A90A4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A94C4 = 0x800A94C4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9548 = 0x800A9548; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9584 = 0x800A9584; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A96B8 = 0x800A96B8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9754 = 0x800A9754; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9778 = 0x800A9778; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A97C8 = 0x800A97C8; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9828 = 0x800A9828; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9860 = 0x800A9860; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9968 = 0x800A9968; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9994 = 0x800A9994; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A99E4 = 0x800A99E4; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_800A9A38 = 0x800A9A38; // type:f32 size:0x4  segment:mission_overlay
 
-D_80109654 = 0x80109654; // type:f32 size:0x18 segment:mission_overlay
-D_80109670 = 0x80109670; // type:f32 size:0xC  segment:mission_overlay
-D_80109680 = 0x80109680; // type:f32 size:0x18 segment:mission_overlay
-D_80109698 = 0x80109698; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109654 = 0x80109654; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109670 = 0x80109670; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_80109680 = 0x80109680; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109698 = 0x80109698; // type:f32 size:0x18 segment:mission_overlay
 
-D_80109710 = 0x80109710; // type:u16 size:0x1A segment:mission_overlay
-D_80109730 = 0x80109730; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_80109710 = 0x80109710; // type:u16 size:0x1A segment:mission_overlay
+D_mission_overlay_80109730 = 0x80109730; // type:f32 size:0xC  segment:mission_overlay
 
 // type_size:0x10 count:0x08
-D_8010973C = 0x8010973C; // type:u32 size:0x80 segment:mission_overlay
-D_801097C4 = 0x801097C4; // type:f32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010973C = 0x8010973C; // type:u32 size:0x80 segment:mission_overlay
+D_mission_overlay_801097C4 = 0x801097C4; // type:f32 size:0x30 segment:mission_overlay
 // type_size:0x10 count:0x06
-D_8010980C = 0x8010980C; // type:u32 size:0x60 segment:mission_overlay
+D_mission_overlay_8010980C = 0x8010980C; // type:u32 size:0x60 segment:mission_overlay
 // type_size:0x10 count:0x02
-D_801098BC = 0x801098BC; // type:u32 size:0x20 segment:mission_overlay
-D_80109908 = 0x80109908; // type:f32 size:0x0C segment:mission_overlay
+D_mission_overlay_801098BC = 0x801098BC; // type:u32 size:0x20 segment:mission_overlay
+D_mission_overlay_80109908 = 0x80109908; // type:f32 size:0x0C segment:mission_overlay
 // type_size:0x10 count:0x04
-D_8010992C = 0x8010992C; // type:u32 size:0x40 segment:mission_overlay
+D_mission_overlay_8010992C = 0x8010992C; // type:u32 size:0x40 segment:mission_overlay
 
-D_80109974 = 0x80109974; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109974 = 0x80109974; // type:f32 size:0x18 segment:mission_overlay
 
-D_801099A0 = 0x801099A0; // type:f32 size:0xC segment:mission_overlay
-D_801099B0 = 0x801099B0; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_801099A0 = 0x801099A0; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_801099B0 = 0x801099B0; // type:f32 size:0xC segment:mission_overlay
 
-D_801099C4 = 0x801099C4; // type:f32 size:0x30 segment:mission_overlay
+D_mission_overlay_801099C4 = 0x801099C4; // type:f32 size:0x30 segment:mission_overlay
 
 // type_size:0x10 count:0x04
-D_80109A00 = 0x80109A00; // type:u32 size:0x40 segment:mission_overlay
+D_mission_overlay_80109A00 = 0x80109A00; // type:u32 size:0x40 segment:mission_overlay
 
-D_80109A48 = 0x80109A48; // type:f32 size:0xC segment:mission_overlay
-D_80109A60 = 0x80109A60; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_80109A48 = 0x80109A48; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_80109A60 = 0x80109A60; // type:f32 size:0xC segment:mission_overlay
 // type_size:0x10 count:0x04
-D_80109A6C = 0x80109A6C; // type:u32 size:0x40 segment:mission_overlay
-D_80109AB4 = 0x80109AB4; // type:f32 size:0x18 segment:mission_overlay
-D_80109AD0 = 0x80109AD0; //          size:0x10 segment:mission_overlay
+D_mission_overlay_80109A6C = 0x80109A6C; // type:u32 size:0x40 segment:mission_overlay
+D_mission_overlay_80109AB4 = 0x80109AB4; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109AD0 = 0x80109AD0; //          size:0x10 segment:mission_overlay
 
 demoStep = 0x80109AE0; // type:u32 segment:mission_overlay
 
-D_80109AE4 = 0x80109AE4; // type:char* size:0x18  segment:mission_overlay
+D_mission_overlay_80109AE4 = 0x80109AE4; // type:char* size:0x18  segment:mission_overlay
 // type_size:0x18 count:0x12
-D_80109B00 = 0x80109B00; //            size:0x1B0 segment:mission_overlay
-D_80109CB0 = 0x80109CB0; // type:char* size:0x24  segment:mission_overlay
+D_mission_overlay_80109B00 = 0x80109B00; //            size:0x1B0 segment:mission_overlay
+D_mission_overlay_80109CB0 = 0x80109CB0; // type:char* size:0x24  segment:mission_overlay
 
 secondaryWeaponRingColors   = 0x80109CE4; // type:u32 size:0xC  segment:mission_overlay
 secondaryWeaponSymbolColors = 0x80109CF0; // type:u32 size:0xC  segment:mission_overlay
@@ -591,95 +591,95 @@ pauseMenuGameSettings      = 0x80109E24; // type:u32 size:0x44 segment:mission_o
 pauseMenuAudioSettings     = 0x80109E68; // type:u32 size:0x84 segment:mission_overlay
 pauseMenuAbortLevel        = 0x80109EEC; // type:u32 size:0x38 segment:mission_overlay
 
-D_80109F24 = 0x80109F24; // type:u32 size:0x58 segment:mission_overlay
+D_mission_overlay_80109F24 = 0x80109F24; // type:u32 size:0x58 segment:mission_overlay
 
-D_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
+D_mission_overlay_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
 
-D_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
-D_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
-D_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
-D_8010A090 = 0x8010A090; // type:f32           segment:mission_overlay
-D_8010A120 = 0x8010A120; // type:f32 size:0x24 segment:mission_overlay
+D_mission_overlay_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A090 = 0x8010A090; // type:f32           segment:mission_overlay
+D_mission_overlay_8010A120 = 0x8010A120; // type:f32 size:0x24 segment:mission_overlay
 // 9 Vec3fs
-D_8010A144 = 0x8010A144; // type:f32 size:0x6C segment:mission_overlay
-D_8010A204 = 0x8010A204; // type:f32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A144 = 0x8010A144; // type:f32 size:0x6C segment:mission_overlay
+D_mission_overlay_8010A204 = 0x8010A204; // type:f32 size:0x30 segment:mission_overlay
 
-D_8010A234 = 0x8010A234; // type:u32 size:0x38 segment:mission_overlay
-D_8010A26C = 0x8010A26C; // type:u32 size:0x38 segment:mission_overlay
-D_8010A2A4 = 0x8010A2A4; // type:u32 size:0x38 segment:mission_overlay
-D_8010A2DC = 0x8010A2DC; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A234 = 0x8010A234; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A26C = 0x8010A26C; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A2A4 = 0x8010A2A4; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A2DC = 0x8010A2DC; // type:u32 size:0x38 segment:mission_overlay
 
-D_8010A314 = 0x8010A314; // type:u32 size:0x30 segment:mission_overlay
-D_8010A344 = 0x8010A344; // type:u32 size:0x30 segment:mission_overlay
-D_8010A374 = 0x8010A374; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A314 = 0x8010A314; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A344 = 0x8010A344; // type:u32 size:0x30 segment:mission_overlay
+D_mission_overlay_8010A374 = 0x8010A374; // type:u32 size:0x30 segment:mission_overlay
 
-D_8010A3A4 = 0x8010A3A4; // type:u32 size:0x38 segment:mission_overlay
-D_8010A3DC = 0x8010A3DC; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A3A4 = 0x8010A3A4; // type:u32 size:0x38 segment:mission_overlay
+D_mission_overlay_8010A3DC = 0x8010A3DC; // type:u32 size:0x38 segment:mission_overlay
 
-D_8010A420 = 0x8010A420; // size:0x24 segment:mission_overlay
+D_mission_overlay_8010A420 = 0x8010A420; // size:0x24 segment:mission_overlay
 
-D_8010A450 = 0x8010A450; // size:0x150 segment:mission_overlay
-D_8010A5AC = 0x8010A5AC; // type:f32 size:0xC  segment:mission_overlay
-D_8010A5CC = 0x8010A5CC; // type:f32 size:0x2C segment:mission_overlay
-D_8010A600 = 0x8010A600; // type:f32 size:0x4  segment:mission_overlay
+D_mission_overlay_8010A450 = 0x8010A450; // size:0x150 segment:mission_overlay
+D_mission_overlay_8010A5AC = 0x8010A5AC; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010A5CC = 0x8010A5CC; // type:f32 size:0x2C segment:mission_overlay
+D_mission_overlay_8010A600 = 0x8010A600; // type:f32 size:0x4  segment:mission_overlay
 
-D_8010A624 = 0x8010A624; // type:f32 size:0xC  segment:mission_overlay
-D_8010A680 = 0x8010A680; // type:f32 size:0xC  segment:mission_overlay
-D_8010A698 = 0x8010A698; // type:f32 size:0xC  segment:mission_overlay
-D_8010A6DC = 0x8010A6DC; // size:0x168
-D_8010A874 = 0x8010A874; // type:f32 size:0x8  segment:mission_overlay
+D_mission_overlay_8010A624 = 0x8010A624; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010A680 = 0x8010A680; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010A698 = 0x8010A698; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010A6DC = 0x8010A6DC; // size:0x168
+D_mission_overlay_8010A874 = 0x8010A874; // type:f32 size:0x8  segment:mission_overlay
 
-D_8010A880 = 0x8010A880; // type:f32 size:0x4 segment:mission_overlay
+D_mission_overlay_8010A880 = 0x8010A880; // type:f32 size:0x4 segment:mission_overlay
 
-D_8010A938 = 0x8010A938; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010A938 = 0x8010A938; // type:f32 size:0xC  segment:mission_overlay
 
-D_8010AA04 = 0x8010AA04; // type:u32 size:0x50 segment:mission_overlay
-D_8010AA54 = 0x8010AA54; // type:u32 size:0x50 segment:mission_overlay
-D_8010AAA4 = 0x8010AAA4; // type:u32 size:0x50 segment:mission_overlay
+D_mission_overlay_8010AA04 = 0x8010AA04; // type:u32 size:0x50 segment:mission_overlay
+D_mission_overlay_8010AA54 = 0x8010AA54; // type:u32 size:0x50 segment:mission_overlay
+D_mission_overlay_8010AAA4 = 0x8010AAA4; // type:u32 size:0x50 segment:mission_overlay
 
-D_8010A89C = 0x8010A89C; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010A89C = 0x8010A89C; // type:f32 size:0xC segment:mission_overlay
 
-D_8010A8B0 = 0x8010A8B0; // type:f32 segment:mission_overlay
-D_8010A930 = 0x8010A930; // type:f32 segment:mission_overlay
+D_mission_overlay_8010A8B0 = 0x8010A8B0; // type:f32 segment:mission_overlay
+D_mission_overlay_8010A930 = 0x8010A930; // type:f32 segment:mission_overlay
 
-D_8010A950 = 0x8010A950; // type:f32 size:0xC segment:mission_overlay
-D_8010A9F4 = 0x8010A9F4; // type:f32          segment:mission_overlay
+D_mission_overlay_8010A950 = 0x8010A950; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010A9F4 = 0x8010A9F4; // type:f32          segment:mission_overlay
 
-D_8010AB00 = 0x8010AB00; // type:f32 segment:mission_overlay
+D_mission_overlay_8010AB00 = 0x8010AB00; // type:f32 segment:mission_overlay
 
-D_8010AC90 = 0x8010AC90; // type:u32 size:0x90 segment:mission_overlay
-D_8010AD20 = 0x8010AD20; // type:u32 size:0x90 segment:mission_overlay
-D_8010ADB0 = 0x8010ADB0; // type:u32 size:0x90 segment:mission_overlay
-D_8010AE40 = 0x8010AE40; // type:u32 size:0x90 segment:mission_overlay
-D_8010AED0 = 0x8010AED0; // type:u32 size:0x90 segment:mission_overlay
+D_mission_overlay_8010AC90 = 0x8010AC90; // type:u32 size:0x90 segment:mission_overlay
+D_mission_overlay_8010AD20 = 0x8010AD20; // type:u32 size:0x90 segment:mission_overlay
+D_mission_overlay_8010ADB0 = 0x8010ADB0; // type:u32 size:0x90 segment:mission_overlay
+D_mission_overlay_8010AE40 = 0x8010AE40; // type:u32 size:0x90 segment:mission_overlay
+D_mission_overlay_8010AED0 = 0x8010AED0; // type:u32 size:0x90 segment:mission_overlay
 
-D_8010AF60 = 0x8010AF60; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010AF60 = 0x8010AF60; // type:f32 size:0xC segment:mission_overlay
 
-D_8010AFF0 = 0x8010AFF0; // type:u32 size:0x60 segment:mission_overlay
-D_8010B050 = 0x8010B050; // type:u32 size:0x60 segment:mission_overlay
-D_8010B0BC = 0x8010B0BC; // type:f32 size:0xC  segment:mission_overlay
-D_8010B0D0 = 0x8010B0D0; //          size:0x8C segment:mission_overlay
+D_mission_overlay_8010AFF0 = 0x8010AFF0; // type:u32 size:0x60 segment:mission_overlay
+D_mission_overlay_8010B050 = 0x8010B050; // type:u32 size:0x60 segment:mission_overlay
+D_mission_overlay_8010B0BC = 0x8010B0BC; // type:f32 size:0xC  segment:mission_overlay
+D_mission_overlay_8010B0D0 = 0x8010B0D0; //          size:0x8C segment:mission_overlay
 
-D_8010B160 = 0x8010B160; // type:f32 size:0xC segment:mission_overlay
-D_8010B178 = 0x8010B178; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010B160 = 0x8010B160; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010B178 = 0x8010B178; // type:f32 size:0xC segment:mission_overlay
 
-D_8010B304 = 0x8010B304; // type:u16 size:0x10 segment:mission_overlay
+D_mission_overlay_8010B304 = 0x8010B304; // type:u16 size:0x10 segment:mission_overlay
 
 playerCraftHobObjectNames  = 0x8010B3A0; // size:0x24 segment:mission_overlay
 playerCraftUpdateFunctions = 0x8010B3C4; // size:0x24 segment:mission_overlay
 
-D_8010B4C0 = 0x8010B4C0; // type:f32 size:0xC segment:mission_overlay
-D_8010B4CC = 0x8010B4CC; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010B4C0 = 0x8010B4C0; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010B4CC = 0x8010B4CC; // type:f32 size:0xC segment:mission_overlay
 
-D_8010B4F0 = 0x8010B4F0; // size:0x14 segment:mission_overlay
+D_mission_overlay_8010B4F0 = 0x8010B4F0; // size:0x14 segment:mission_overlay
 
-D_8010B678 = 0x8010B678; // type:f32 size:0xC segment:mission_overlay
+D_mission_overlay_8010B678 = 0x8010B678; // type:f32 size:0xC segment:mission_overlay
 
-D_8010B6A0 = 0x8010B6A0; // type:u32 size:0x4 segment:mission_overlay
-D_8010B6A4 = 0x8010B6A4; // type:u32 size:0x4 segment:mission_overlay
-D_8010B6A8 = 0x8010B6A8; // type:u32 size:0x4 segment:mission_overlay
+D_mission_overlay_8010B6A0 = 0x8010B6A0; // type:u32 size:0x4 segment:mission_overlay
+D_mission_overlay_8010B6A4 = 0x8010B6A4; // type:u32 size:0x4 segment:mission_overlay
+D_mission_overlay_8010B6A8 = 0x8010B6A8; // type:u32 size:0x4 segment:mission_overlay
 
-D_8010B6B0 = 0x8010B6B0; // type:u32 size:0x4 segment:mission_overlay
+D_mission_overlay_8010B6B0 = 0x8010B6B0; // type:u32 size:0x4 segment:mission_overlay
 
 demoInputs = 0x8010BCA0; // type:u32 size:0x4 segment:mission_overlay
 

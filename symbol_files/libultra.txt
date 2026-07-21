@@ -253,18 +253,18 @@ viEventQueue         = 0x80130AA0; // type:OSMesgQueue size:0x18
 CartRomHandle = 0x8012F730; // type:OSPiHandle size:0x74
 
 // cosf
-P    = 0x8003A0D0; // type:u64 size:40 allow_duplicated:True
-rpi  = 0x8003A0F8; // type:u64 allow_duplicated:True
-pihi = 0x8003A100; // type:u64 allow_duplicated:True
-pilo = 0x8003A108; // type:u64 allow_duplicated:True
-zero = 0x8003A110; // type:f32 allow_duplicated:True
+cosfP    = 0x8003A0D0; // type:u64 size:40 allow_duplicated:True
+cosfrpi  = 0x8003A0F8; // type:u64 allow_duplicated:True
+cosfpihi = 0x8003A100; // type:u64 allow_duplicated:True
+cosfpilo = 0x8003A108; // type:u64 allow_duplicated:True
+cosfzero = 0x8003A110; // type:f32 allow_duplicated:True
 
 // sinf
-P    = 0x8003A230; // type:u64 size:40 allow_duplicated:True
-rpi  = 0x8003A258; // type:u64 allow_duplicated:True
-pihi = 0x8003A260; // type:u64 allow_duplicated:True
-pilo = 0x8003A268; // type:u64 allow_duplicated:True
-zero = 0x8003A270; // type:f32 allow_duplicated:True
+sinfP    = 0x8003A230; // type:u64 size:40 allow_duplicated:True
+sinfrpi  = 0x8003A258; // type:u64 allow_duplicated:True
+sinfpihi = 0x8003A260; // type:u64 allow_duplicated:True
+sinfpilo = 0x8003A268; // type:u64 allow_duplicated:True
+sinfzero = 0x8003A270; // type:f32 allow_duplicated:True
 
 __libm_qnan_f = 0x8003A170; // type:f32
 

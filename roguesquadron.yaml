@@ -27,6 +27,7 @@ options:
   asm_jtbl_label_macro: jlabel
   asm_data_macro: dlabel
 
+  ld_legacy_generation: True
   # section_order: [".text", ".data", ".rodata", ".bss"]
   # auto_all_sections: [".data", ".rodata", ".bss"]
 
@@ -40,6 +41,8 @@ options:
     - symbol_files/ignored_symbols.txt
   reloc_addrs_path:
     - reloc_addrs.txt
+
+  symbol_name_format: "$SEG_$VRAM"
 
   # undefined_funcs_auto_path: undefined_funcs_auto.txt
   # undefined_syms_auto_path: undefined_syms_auto.txt
@@ -92,9 +95,9 @@ segments:
       - [0x01410, rodata,  "main/01410"]
       - [0x01590, rodata,  "main/01590"]
       - [0x01600, rodata,  "main/01600"]
-      - [0x01670, .rodata, "zlib/inflate"]
-      - [0x016B0, .rodata, "zlib/infblock"]
-      - [0x016E0, .rodata, "zlib/infcodes"]
+      - [0x01670, rodata,  "zlib/inflate"]
+      - [0x016B0, rodata,  "zlib/infblock"]
+      - [0x016E0, rodata,  "zlib/infcodes"]
       - [0x01720, asm,     "main/01720"]
       - [0x033C0, asm,     "main/033C0"]
       - [0x03F80, asm,     "main/03F80"]
@@ -124,136 +127,135 @@ segments:
       # I'm not actually 100% what to call this.
       # There's definitely more than one set of ucodes in this binary (probably non/FIFO) but I don't know how to split them up
       - [0x25610, textbin, "main/gspF3DEXMainText"]
-      - [0x275B0, c,       "zlib/adler32"]
-      - [0x277A0, c,       "zlib/inflate"]
-      - [0x281F0, c,       "zlib/infblock"]
-      - [0x29120, c,       "zlib/infcodes"]
-      - [0x29960, c,       "zlib/inffast"]
-      - [0x29CE0, c,       "zlib/inftrees"]
-      - [0x2A720, c,       "zlib/infutil"]
-      - [0x2A8D0, c,       "zlib/zutil"]
+      - [0x275B0, asm,     "zlib/adler32"]
+      - [0x277A0, asm,     "zlib/inflate"]
+      - [0x281F0, asm,     "zlib/infblock"]
+      - [0x29120, asm,     "zlib/infcodes"]
+      - [0x29960, asm,     "zlib/inffast"]
+      - [0x29CE0, asm,     "zlib/inftrees"]
+      - [0x2A720, asm,     "zlib/infutil"]
+      - [0x2A8D0, asm,     "zlib/zutil"]
       # Based on some stuff in the Ai functions, we're on a libultra version < J
-      - [0x2A920, c,       "libultra/io/aisetfreq"]
-      - [0x2AA80, c,       "libultra/io/aisetnextbuf"]
-      - [0x2AB30, c,       "libultra/io/ai"]
+      - [0x2A920, asm,     "libultra/io/aisetfreq"]
+      - [0x2AA80, asm,     "libultra/io/aisetnextbuf"]
+      - [0x2AB30, asm,     "libultra/io/ai"]
       - [0x2AB60, hasm,    "libultra/libc/bcmp"]
       - [0x2AC80, hasm,    "libultra/libc/bzero"]
-      - [0x2AD20, c,       "libultra/io/conteeplongread"]
-      - [0x2ADB0, c,       "libultra/io/conteeplongwrite"]
-      - [0x2AEA0, c,       "libultra/io/conteepprobe"]
-      - [0x2AF40, c,       "libultra/io/conteepread"]
-      - [0x2B260, c,       "libultra/io/conteepwrite"]
-      - [0x2B780, c,       "libultra/io/contquery"]
-      - [0x2B830, c,       "libultra/io/contreaddata"]
-      - [0x2BA50, c,       "libultra/io/controller"]
-      - [0x2BD90, c,       "libultra/gu/cosf"]
-      - [0x2BF00, c,       "libultra/os/createmesgqueue"]
-      - [0x2BF30, c,       "libultra/os/createthread"]
+      - [0x2AD20, asm,     "libultra/io/conteeplongread"]
+      - [0x2ADB0, asm,     "libultra/io/conteeplongwrite"]
+      - [0x2AEA0, asm,     "libultra/io/conteepprobe"]
+      - [0x2AF40, asm,     "libultra/io/conteepread"]
+      - [0x2B260, asm,     "libultra/io/conteepwrite"]
+      - [0x2B780, asm,     "libultra/io/contquery"]
+      - [0x2B830, asm,     "libultra/io/contreaddata"]
+      - [0x2BA50, asm,     "libultra/io/controller"]
+      - [0x2BD90, asm,     "libultra/gu/cosf"]
+      - [0x2BF00, asm,     "libultra/os/createmesgqueue"]
+      - [0x2BF30, asm,     "libultra/os/createthread"]
       # Based on code in this function, libultra was compiled with `__GNUC__` undefined
       # So, it was compiled with some IDO version
       # If the ultralib repository is to be believed, it would have to be 5.3
-      - [0x2C080, c,       "libultra/os/destroythread"]
-      - [0x2C190, c,       "libultra/io/dpctr"]
-      - [0x2C1E0, c,       "libultra/io/dpsetstat"]
+      - [0x2C080, asm,     "libultra/os/destroythread"]
+      - [0x2C190, asm,     "libultra/io/dpctr"]
+      - [0x2C1E0, asm,     "libultra/io/dpsetstat"]
       - [0x2C1F0, hasm,    "libultra/os/exceptasm"]
-      - [0x2CB00, c,       "libultra/os/gettime"]
+      - [0x2CB00, asm,     "libultra/os/gettime"]
       - [0x2CB90, hasm,    "libultra/os/getcount"]
-      - [0x2CBA0, c,       "libultra/os/initialize"]
+      - [0x2CBA0, asm,     "libultra/os/initialize"]
       - [0x2CE30, hasm,    "libultra/os/getsr"]
       - [0x2CE40, hasm,    "libultra/os/interrupt"]
       - [0x2CE80, hasm,    "libultra/os/invaldcache"]
       - [0x2CF30, hasm,    "libultra/os/invalicache"]
-      - [0x2CFB0, c,       "libultra/os/jammesg"]
-      - [0x2D100, c,       "libultra/io/leointerrupt"]
-      - [0x2D980, c,       "libultra/io/epirawdma"]
-      - [0x2DBB0, c,       "libultra/io/leodiskinit"]
-      - [0x2DCB0, c,       "libultra/libc/ll"]
+      - [0x2CFB0, asm,     "libultra/os/jammesg"]
+      - [0x2D100, asm,     "libultra/io/leointerrupt"]
+      - [0x2D980, asm,     "libultra/io/epirawdma"]
+      - [0x2DBB0, asm,     "libultra/io/leodiskinit"]
+      - [0x2DCB0, asm,     "libultra/libc/ll"]
       - [0x2DF70, hasm,    "libultra/os/maptlbrdb"]
-      - [0x2DFD0, c,       "libultra/io/motor"]
-      - [0x2E770, c,       "libultra/io/contramread"]
-      - [0x2EAD0, c,       "libultra/io/contramwrite"]
-      - [0x2EE30, c,       "libultra/io/crc"]
+      - [0x2DFD0, asm,     "libultra/io/motor"]
+      - [0x2E770, asm,     "libultra/io/contramread"]
+      - [0x2EAD0, asm,     "libultra/io/contramwrite"]
+      - [0x2EE30, asm,     "libultra/io/crc"]
       # Code in this file suggests we're a libultra version < K
-      - [0x2EFB0, c,       "libultra/gu/mtxcatl"]
-      - [0x2F070, pad] # Very large set of nops, not sure why this would be here at all
-      - [0x2F110, c,       "libultra/gu/mtxcatf"]
-      - [0x2F280, c,       "libultra/gu/mtxutil"]
-      - [0x2F550, c,       "libultra/gu/perspective"]
-      - [0x2F7E0, c,       "libultra/io/pfsallocatefile"]
-      - [0x2FF90, c,       "libultra/io/contpfs"]
-      - [0x30CF0, c,       "libultra/io/pfsdeletefile"]
-      - [0x31310, c,       "libultra/io/pfsfreeblocks"]
-      - [0x31460, c,       "libultra/io/pfsgetstatus"]
+      - [0x2EFB0, asm,     "libultra/gu/mtxcatl"]
+      - [0x2F070, asm,     "libultra/gu/mtxcatf"]
+      - [0x2F280, asm,     "libultra/gu/mtxutil"]
+      - [0x2F550, asm,     "libultra/gu/perspective"]
+      - [0x2F7E0, asm,     "libultra/io/pfsallocatefile"]
+      - [0x2FF90, asm,     "libultra/io/contpfs"]
+      - [0x30CF0, asm,     "libultra/io/pfsdeletefile"]
+      - [0x31310, asm,     "libultra/io/pfsfreeblocks"]
+      - [0x31460, asm,     "libultra/io/pfsgetstatus"]
       # Missing code in this file suggests we're using a libultra version < J
-      - [0x316A0, c,       "libultra/io/pfsinitpak"]
-      - [0x31940, c,       "libultra/io/pfschecker"]
-      - [0x323A0, c,       "libultra/io/pfsisplug"]
-      - [0x326E0, c,       "libultra/io/pfsreadwritefile"]
-      - [0x32C00, c,       "libultra/io/pfsrepairid"]
-      - [0x32E60, c,       "libultra/io/pfssearchfile"]
-      - [0x33020, c,       "libultra/io/pidma"]
-      - [0x33130, c,       "libultra/io/pigetcmdq"]
-      - [0x33160, c,       "libultra/io/pimgr"]
-      - [0x332F0, c,       "libultra/io/cartrominit"]
-      - [0x333F0, c,       "libultra/io/devmgr"]
-      - [0x33880, c,       "libultra/io/epirawread"]
-      - [0x33A20, c,       "libultra/io/epirawwrite"]
-      - [0x33BB0, c,       "libultra/os/getthreadpri"]
-      - [0x33BD0, c,       "libultra/io/piacs"]
-      - [0x33C90, c,       "libultra/io/pirawdma"]
-      - [0x33D70, c,       "libultra/io/pirawread"]
-      - [0x33DD0, c,       "libultra/os/recvmesg"]
-      - [0x33F10, c,       "libultra/os/resetglobalintmask"]
-      - [0x33F70, c,       "libultra/gu/scale"]
-      - [0x34010, c,       "libultra/os/sendmesg"]
-      - [0x34160, c,       "libultra/os/seteventmesg"]
+      - [0x316A0, asm,     "libultra/io/pfsinitpak"]
+      - [0x31940, asm,     "libultra/io/pfschecker"]
+      - [0x323A0, asm,     "libultra/io/pfsisplug"]
+      - [0x326E0, asm,     "libultra/io/pfsreadwritefile"]
+      - [0x32C00, asm,     "libultra/io/pfsrepairid"]
+      - [0x32E60, asm,     "libultra/io/pfssearchfile"]
+      - [0x33020, asm,     "libultra/io/pidma"]
+      - [0x33130, asm,     "libultra/io/pigetcmdq"]
+      - [0x33160, asm,     "libultra/io/pimgr"]
+      - [0x332F0, asm,     "libultra/io/cartrominit"]
+      - [0x333F0, asm,     "libultra/io/devmgr"]
+      - [0x33880, asm,     "libultra/io/epirawread"]
+      - [0x33A20, asm,     "libultra/io/epirawwrite"]
+      - [0x33BB0, asm,     "libultra/os/getthreadpri"]
+      - [0x33BD0, asm,     "libultra/io/piacs"]
+      - [0x33C90, asm,     "libultra/io/pirawdma"]
+      - [0x33D70, asm,     "libultra/io/pirawread"]
+      - [0x33DD0, asm,     "libultra/os/recvmesg"]
+      - [0x33F10, asm,     "libultra/os/resetglobalintmask"]
+      - [0x33F70, asm,     "libultra/gu/scale"]
+      - [0x34010, asm,     "libultra/os/sendmesg"]
+      - [0x34160, asm,     "libultra/os/seteventmesg"]
       - [0x341D0, hasm,    "libultra/os/setfpccsr"]
-      - [0x341E0, c,       "libultra/os/setglobalintmask"]
+      - [0x341E0, asm,     "libultra/os/setglobalintmask"]
       - [0x34230, hasm,    "libultra/os/setintmask"]
       - [0x342D0, hasm,    "libultra/os/setsr"]
-      - [0x342E0, c,       "libultra/os/setthreadpri"]
-      - [0x343C0, c,       "libultra/os/settimer"]
-      - [0x344A0, c,       "libultra/io/siacs"]
-      - [0x34560, c,       "libultra/gu/sinf"]
-      - [0x34720, c,       "libultra/io/sirawdma"]
-      - [0x347D0, c,       "libultra/io/si"]
-      - [0x34800, c,       "libultra/io/sirawread"]
-      - [0x34850, c,       "libultra/io/sirawwrite"]
-      - [0x348A0, c,       "libultra/libc/sprintf"]
-      - [0x34920, c,       "libultra/io/sptask"]
+      - [0x342E0, asm,     "libultra/os/setthreadpri"]
+      - [0x343C0, asm,     "libultra/os/settimer"]
+      - [0x344A0, asm,     "libultra/io/siacs"]
+      - [0x34560, asm,     "libultra/gu/sinf"]
+      - [0x34720, asm,     "libultra/io/sirawdma"]
+      - [0x347D0, asm,     "libultra/io/si"]
+      - [0x34800, asm,     "libultra/io/sirawread"]
+      - [0x34850, asm,     "libultra/io/sirawwrite"]
+      - [0x348A0, asm,     "libultra/libc/sprintf"]
+      - [0x34920, asm,     "libultra/io/sptask"]
       - [0x34C10, hasm,    "libultra/libc/bcopy"]
-      - [0x34F20, c,       "libultra/io/sp"]
-      - [0x34F50, c,       "libultra/io/sprawdma"]
-      - [0x34FE0, c,       "libultra/io/spsetpc"]
-      - [0x35020, c,       "libultra/io/spsetstat"]
-      - [0x35030, c,       "libultra/io/sptaskyield"]
-      - [0x35050, c,       "libultra/io/sptaskyielded"]
-      - [0x350D0, c,       "libultra/io/spgetstat"]
-      - [0x350E0, c,       "libultra/os/startthread"]
-      - [0x35230, c,       "libultra/os/stopthread"]
-      - [0x352F0, c,       "libultra/libc/string"]
-      - [0x35390, c,       "libultra/os/thread"]
-      - [0x353D0, c,       "libultra/os/timerintr"]
+      - [0x34F20, asm,     "libultra/io/sp"]
+      - [0x34F50, asm,     "libultra/io/sprawdma"]
+      - [0x34FE0, asm,     "libultra/io/spsetpc"]
+      - [0x35020, asm,     "libultra/io/spsetstat"]
+      - [0x35030, asm,     "libultra/io/sptaskyield"]
+      - [0x35050, asm,     "libultra/io/sptaskyielded"]
+      - [0x350D0, asm,     "libultra/io/spgetstat"]
+      - [0x350E0, asm,     "libultra/os/startthread"]
+      - [0x35230, asm,     "libultra/os/stopthread"]
+      - [0x352F0, asm,     "libultra/libc/string"]
+      - [0x35390, asm,     "libultra/os/thread"]
+      - [0x353D0, asm,     "libultra/os/timerintr"]
       - [0x357D0, hasm,    "libultra/os/setcompare"]
-      - [0x357E0, c,       "libultra/io/viblack"]
-      - [0x35850, c,       "libultra/io/vi"]
-      - [0x35990, c,       "libultra/io/vigetfield"]
-      - [0x359B0, c,       "libultra/io/vimgr"]
-      - [0x35D10, c,       "libultra/io/vigetcurrcontext"]
-      - [0x35D20, c,       "libultra/os/virtualtophysical"]
+      - [0x357E0, asm,     "libultra/io/viblack"]
+      - [0x35850, asm,     "libultra/io/vi"]
+      - [0x35990, asm,     "libultra/io/vigetfield"]
+      - [0x359B0, asm,     "libultra/io/vimgr"]
+      - [0x35D10, asm,     "libultra/io/vigetcurrcontext"]
+      - [0x35D20, asm,     "libultra/os/virtualtophysical"]
       - [0x35DA0, hasm,    "libultra/os/probetlb"]
-      - [0x35E60, c,       "libultra/io/visetevent"]
-      - [0x35ED0, c,       "libultra/io/visetmode"]
-      - [0x35F40, c,       "libultra/io/visetspecial"]
-      - [0x36100, c,       "libultra/io/viswapbuf"]
-      - [0x36150, c,       "libultra/io/viswapcontext"]
+      - [0x35E60, asm,     "libultra/io/visetevent"]
+      - [0x35ED0, asm,     "libultra/io/visetmode"]
+      - [0x35F40, asm,     "libultra/io/visetspecial"]
+      - [0x36100, asm,     "libultra/io/viswapbuf"]
+      - [0x36150, asm,     "libultra/io/viswapcontext"]
       - [0x364B0, hasm,    "libultra/os/writebackdcache"]
       - [0x36530, hasm,    "libultra/os/writebackdcacheall"]
-      - [0x36560, c,       "libultra/libc/xprintf"]
-      - [0x37220, c,       "libultra/libc/xldtob"]
-      - [0x37CE0, c,       "libultra/libc/ldiv"]
-      - [0x37E70, c,       "libultra/libc/xlitob"]
-      - [0x38110, c,       "libultra/os/yieldthread"]
+      - [0x36560, asm,     "libultra/libc/xprintf"]
+      - [0x37220, asm,     "libultra/libc/xldtob"]
+      - [0x37CE0, asm,     "libultra/libc/ldiv"]
+      - [0x37E70, asm,     "libultra/libc/xlitob"]
+      - [0x38110, asm,     "libultra/os/yieldthread"]
       - [0x38160, data,    "main/38160"]
       - [0x381B0, data,    "main/381B0"]
       - [0x381C0, data,    "main/381C0"]
@@ -266,44 +268,44 @@ segments:
       - [0x394E0, data,    "main/394E0"]
       - [0x398F0, data,    "main/398F0"]
       - [0x39900, databin, "main/gspF3DEXMainData"]
-      - [0x39A00,  data,   "zlib/infblock"]
+      - [0x39A00, data,    "zlib/infblock"]
       # I'm a little confused by something here...
       # In the actual zlib source, this should start with cplens, but here there's an errant word
       # just before cplens. Its currently treated as a string but frankly it could be just about anything
-      - [0x39A50,  data,   "zlib/inftrees"]
-      - [0x39C40,  data,   "zlib/infutil"]
+      - [0x39A50, data,    "zlib/inftrees"]
+      - [0x39C40, data,    "zlib/infutil"]
       # This is speculative, I can't figure out what this data is meant to be
       # Based on its location I believe that it has to belong to zutil but I don't see
       # anything in zlib's zutil file that resembles this data...
-      - [0x39C90,  data,   "zlib/zutil"]
-      - [0x39CC0, .data,   "libultra/io/aisetnextbuf"]
-      - [0x39CD0, .data,   "libultra/io/controller"]
-      - [0x39CE0, .data,   "libultra/os/exceptasm"]
-      - [0x39D00, .data,   "libultra/os/initialize"]
-      - [0x39D20, .data,   "libultra/io/motor"]
-      - [0x39D30, .data,   "libultra/io/pimgr"]
-      - [0x39D60, .data,   "libultra/io/piacs"]
-      - [0x39D70, .data,   "libultra/io/siacs"]
-      - [0x39D80, .data,   "libultra/os/thread"]
-      - [0x39DA0, .data,   "libultra/os/timerintr"]
-      - [0x39DB0, .data,   "libultra/io/vi"]
-      - [0x39E20, .data,   "libultra/io/vimgr"]
-      - [0x39E40, .data,   "libultra/vimodes/vimodempallan1"]
-      - [0x39E90, .data,   "libultra/vimodes/vimodentsclan1"]
-      - [0x39EE0, .data,   "libultra/vimodes/vimodepallan1"]
+      - [0x39C90, data,   "zlib/zutil"]
+      - [0x39CC0, data,   "libultra/io/aisetnextbuf"]
+      - [0x39CD0, data,   "libultra/io/controller"]
+      - [0x39CE0, data,   "libultra/os/exceptasm"]
+      - [0x39D00, data,   "libultra/os/initialize"]
+      - [0x39D20, data,   "libultra/io/motor"]
+      - [0x39D30, data,   "libultra/io/pimgr"]
+      - [0x39D60, data,   "libultra/io/piacs"]
+      - [0x39D70, data,   "libultra/io/siacs"]
+      - [0x39D80, data,   "libultra/os/thread"]
+      - [0x39DA0, data,   "libultra/os/timerintr"]
+      - [0x39DB0, data,   "libultra/io/vi"]
+      - [0x39E20, data,   "libultra/io/vimgr"]
+      - [0x39E40, data,   "libultra/vimodes/vimodempallan1"]
+      - [0x39E90, data,   "libultra/vimodes/vimodentsclan1"]
+      - [0x39EE0, data,   "libultra/vimodes/vimodepallan1"]
       # Based on missing entries from this table we're using a libultra version < J
-      - [0x39F30, .data,   "libultra/io/vitbl"]
-      - [0x3AC50, .data,   "libultra/libc/xprintf"]
-      - [0x3ACA0, .data,   "libultra/libc/xlitob"]
-      - [0x3ACD0, .rodata, "libultra/gu/cosf"]
-      - [0x3AD20, .rodata, "libultra/os/exceptasm"]
-      - [0x3AD70, .rodata, "libultra/gu/libm_vals"]
-      - [0x3AD80, .rodata, "libultra/gu/perspective"]
-      - [0x3AD90, .rodata, "libultra/io/devmgr"]
-      - [0x3ADB0, .rodata, "libultra/os/setintmask"]
-      - [0x3AE30, .rodata, "libultra/gu/sinf"]
-      - [0x3AE80, .rodata, "libultra/libc/xprintf"]
-      - [0x3AF80, .rodata, "libultra/libc/xldtob"]
+      - [0x39F30, data,   "libultra/io/vitbl"]
+      - [0x3AC50, data,   "libultra/libc/xprintf"]
+      - [0x3ACA0, data,   "libultra/libc/xlitob"]
+      - [0x3ACD0, rodata, "libultra/gu/cosf"]
+      - [0x3AD20, rodata, "libultra/os/exceptasm"]
+      - [0x3AD70, rodata, "libultra/gu/libm_vals"]
+      - [0x3AD80, rodata, "libultra/gu/perspective"]
+      - [0x3AD90, rodata, "libultra/io/devmgr"]
+      - [0x3ADB0, rodata, "libultra/os/setintmask"]
+      - [0x3AE30, rodata, "libultra/gu/sinf"]
+      - [0x3AE80, rodata, "libultra/libc/xprintf"]
+      - [0x3AF80, rodata, "libultra/libc/xldtob"]
       - [0x3AFE0, rodata,  "main/3AFE0"]
       - [0x3B0D0, rodata,  "main/3B0D0"]
       - [0x3B210, rodata,  "main/3B210"]
@@ -649,30 +651,30 @@ segments:
     start: 0x144340
 
   - name: main_bss
-    type: code
+    type: bss
     bss_size: 0x47490
     vram: 0x8010D200
     subsegments:
-      - {type:  bss, vram: 0x8010D200, name: "main/8010D200"              }
-      - {type:  bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
-      - {type:  bss, vram: 0x801128E0, name: "main/801128E0"              }
-      - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
-      - {type: .bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
-      - {type: .bss, vram: 0x8012D010, name: "libultra/io/controller"     }
-      - {type: .bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }
-      - {type: .bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver"} # Contains __osThreadSave, only used in exceptasm.s
-      - {type: .bss, vram: 0x8012D260, name: "libultra/io/leointerrupt"   }
-      - {type: .bss, vram: 0x8012E260, name: "libultra/io/leodiskinit"    }
-      - {type: .bss, vram: 0x8012E2E0, name: "libultra/io/motor"          }
-      - {type: .bss, vram: 0x8012E520, name: "libultra/io/pfsisplug"      }
-      - {type: .bss, vram: 0x8012E560, name: "libultra/io/pimgr"          }
-      - {type: .bss, vram: 0x8012F730, name: "libultra/io/cartrominit"    }
-      - {type: .bss, vram: 0x8012F7B0, name: "libultra/io/piacs"          }
-      - {type: .bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg"   }
-      - {type: .bss, vram: 0x8012F850, name: "libultra/io/siacs"          }
-      - {type: .bss, vram: 0x8012F870, name: "libultra/io/sptask"         }
-      - {type: .bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
-      - {type: .bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
-      - {type:  bss, vram: 0x80130B10, name: "main/80130B10"              }
+      - {type: bss, vram: 0x8010D200, name: "main/8010D200"              }
+      - {type: bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
+      - {type: bss, vram: 0x801128E0, name: "main/801128E0"              }
+      - {type: bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
+      - {type: bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
+      - {type: bss, vram: 0x8012D010, name: "libultra/io/controller"     }
+      - {type: bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }
+      - {type: bss, vram: 0x8012D0B0, name: "libultra/debug/kdebugserver"} # Contains __osThreadSave, only used in exceptasm.s
+      - {type: bss, vram: 0x8012D260, name: "libultra/io/leointerrupt"   }
+      - {type: bss, vram: 0x8012E260, name: "libultra/io/leodiskinit"    }
+      - {type: bss, vram: 0x8012E2E0, name: "libultra/io/motor"          }
+      - {type: bss, vram: 0x8012E520, name: "libultra/io/pfsisplug"      }
+      - {type: bss, vram: 0x8012E560, name: "libultra/io/pimgr"          }
+      - {type: bss, vram: 0x8012F730, name: "libultra/io/cartrominit"    }
+      - {type: bss, vram: 0x8012F7B0, name: "libultra/io/piacs"          }
+      - {type: bss, vram: 0x8012F7D0, name: "libultra/os/seteventmesg"   }
+      - {type: bss, vram: 0x8012F850, name: "libultra/io/siacs"          }
+      - {type: bss, vram: 0x8012F870, name: "libultra/io/sptask"         }
+      - {type: bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
+      - {type: bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
+      - {type: bss, vram: 0x80130B10, name: "main/80130B10"              }
 
   - [0x1000000]
