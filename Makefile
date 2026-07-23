@@ -1,12 +1,22 @@
 WIBO := ~/compilers/wibo-x86_64
 
+# LDSCRIPT := provisional.ld
+LDSCRIPT := roguesquadron.ld
+
 CROSS := mips-linux-gnu-
 AS := $(CROSS)as
+MODERNASN := python3 ./tools/modern-asn64.py  $(AS)
 LD := $(CROSS)ld
+CPP := $(CROSS)cpp
 OBJCOPY := $(CROSS)objcopy
+
+CPPFLAGS := -E -lang-c -undef -D__GNUC__=2 -Dmips -D__mips__ -D__mips -Dn64 -D__n64__ -D__n64 -D_PSYQ -D__EXTENSIONS__ -D_MIPSEB -D__CHAR_UNSIGNED__ -I ./include/ -DINCLUDE_ASM_USE_MACRO_INC
+CFLAGS := -quiet -O2 -G0 -mips2
+ASFLAGS := -march=vr4300 -mabi=32 -mgp32 -mfp32 -mips3 -G0 -O2 -I./include
 
 N64COMPILERPATH := ~/compilers/gccsn2.7.2sn0001
 N64CC := $(N64COMPILERPATH)/cc1n64.exe
+N64AS := $(N64COMPILERPATH)/asn64.exe
 
 IDOCOMPILERPATH := ~/compilers/ido5.3
 IDOCC := $(IDOCOMPILERPATH)/cc
@@ -21,22 +31,25 @@ $(shell mkdir -p $(foreach dir,$(ASM_DIRS) assets,build/$(dir)))
 
 SYMBOL_FILES := undefined_funcs_auto.txt undefined_syms_auto.txt symbol_files/cinematic_overlay.txt symbol_files/libultra.txt symbol_files/main_overlay.txt symbol_files/menu_overlay.txt symbol_files/mission_overlay.txt symbol_files/zlib.txt
 
-build/%o: %.c
-	$(N64CC) $< -o $@
+build/%.o: %.c
+	mkdir -p $(@D)
+	$(CPP) $(CPPFLAGS) $< -o build/$<.i
+	$(N64CC) $(CFLAGS) build/$<.i -o build/$<.s
+	$(MODERNASN) $(ASFLAGS) build/$<.s -o $@
 
 build/%.o: %.s
-	$(AS) -I ./include -march=vr4300 -mabi=32 -mgp32 -mfp32 -mips3 -G0 -o $@ $<
+	$(AS) $(ASFLAGS) -o $@ $<
 
 build/%.o: %.bin
 	$(LD) -r -b binary -o $@ $<
 
-.PHONY: clean
-
-tyler.elf: $(O_FILES) roguesquadron.ld
-	$(LD) -EB -T ./roguesquadron.ld -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
+tyler.elf: $(O_FILES)
+	$(LD) -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
 
 tyler.z64: tyler.elf
 	$(OBJCOPY) $< $@ -O binary
+
+.PHONY: clean
 
 clean:
 	rm -rf build/*
