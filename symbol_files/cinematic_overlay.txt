@@ -58,7 +58,7 @@ destroyAllNpcsInSlotChain           = 0x800AF08C; // segment:cinematic_overlay
 
 
 // Fake Function Fixing
-fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay
+fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay type:u32
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Variables ///////////////////////////////////

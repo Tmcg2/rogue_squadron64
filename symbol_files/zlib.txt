@@ -90,22 +90,22 @@ zcfree  = 0x80029CF4; // defined:true
 
 // Fake Function Fixing
 
-fake_func_8002851C = 0x8002851C; // defined:true
+fake_func_8002851C = 0x8002851C; // defined:true type:u32
 // Real function is inflate_codes_new
 
-fake_func_80028D58 = 0x80028D58; // defined:true
+fake_func_80028D58 = 0x80028D58; // defined:true type:u32
 // Real function is inflate_fast
 
-fake_func_80026B98 = 0x80026B98; // defined:true
+fake_func_80026B98 = 0x80026B98; // defined:true type:u32
 // Real function is inflateReset
 
-fake_func_800290D8 = 0x800290D8; // defined:true
+fake_func_800290D8 = 0x800290D8; // defined:true type:u32
 // Real function is huft_build
 
-fake_func_80029B14 = 0x80029B14; // defined:true
+fake_func_80029B14 = 0x80029B14; // defined:true type:u32
 // Real function is inflate_flush
 
-fake_func_80029D14 = 0x80029D14; // defined:true
+fake_func_80029D14 = 0x80029D14; // defined:true type:u32
 // Real function is osAiSetFrequency
 
 ////////////////////////////////////////////////////////////////////////////////

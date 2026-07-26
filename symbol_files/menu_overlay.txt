@@ -225,25 +225,25 @@ calculateShotAccuracy       = 0x800CC374; // segment:menu_overlay
 func_menu_overlay_800B3824 = 0x800B3824; // segment:menu_overlay
 
 // Fake Function Fixing
-fake_func_800AEC54 = 0x800AEC54; // segment:menu_overlay
+fake_func_800AEC54 = 0x800AEC54; // segment:menu_overlay type:u32
 func_menu_overlay_800AEC60      = 0x800AEC60; // segment:menu_overlay
 
-fake_func_800B2628 = 0x800B2628; // segment:menu_overlay
+fake_func_800B2628 = 0x800B2628; // segment:menu_overlay type:u32
 func_menu_overlay_800B2630      = 0x800B2630; // segment:menu_overlay
 
-fake_func_800B47C4 = 0x800B47C4; // segment:menu_overlay
+fake_func_800B47C4 = 0x800B47C4; // segment:menu_overlay type:u32
 func_menu_overlay_800B47D0      = 0x800B47D0; // segment:menu_overlay
 
-fake_func_800C5898 = 0x800C5898; // segment:menu_overlay
+fake_func_800C5898 = 0x800C5898; // segment:menu_overlay type:u32
 func_menu_overlay_800C58A0      = 0x800C58A0; // segment:menu_overlay
 
-fake_func_800C6968 = 0x800C6968; // segment:menu_overlay
+fake_func_800C6968 = 0x800C6968; // segment:menu_overlay type:u32
 // Real function loadJfifAsset
 
-fake_func_800CC038 = 0x800CC038; // segment:menu_overlay
+fake_func_800CC038 = 0x800CC038; // segment:menu_overlay type:u32
 // Real function loadMedalInfo
 
-fake_func_800CC3D4 = 0x800CC3D4; // segment:menu_overlay
+fake_func_800CC3D4 = 0x800CC3D4; // segment:menu_overlay type:u32
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// Variables ///////////////////////////////////
