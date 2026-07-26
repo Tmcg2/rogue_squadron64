@@ -4,39 +4,39 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800A9270);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5130);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5140);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEDread);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A514C);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5150);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuECalamari);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A515C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEBacta);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5168);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEVolcano);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5174);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEChandrila);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5184);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEResearch);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5190);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuETaloraan);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A519C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEKessel);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51A8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEKile);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51B0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuECon);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51B8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEJade);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51C0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEKasan);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51CC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuECorellia);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51D8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEChorax);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51E4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuEBarkesh);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A51F0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", strMenuETatooine);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarInitialize);
 
@@ -60,9 +60,9 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", bridgeSecondaryWeaponText
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarGenerateSecondaryWeaponString);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AE74C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", gracefulMenuShutdown);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AE7B0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", extractTextBeforeFmtChar);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AE814);
 
@@ -70,10 +70,10 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarLoadShadows);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AEAC0);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AEAF0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", initCraftSelectVectors);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AEB48);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarSetSecondaryWeaponDisplay);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AEBD8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarUpdateSecWeaponIfChanged);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", fake_func_800AEC54);

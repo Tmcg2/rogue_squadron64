@@ -1,36 +1,36 @@
 #include "common.h"
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5DD0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBKasan);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5DD8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBJanson);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5DE4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBZev);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5DEC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBHobbie);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5DF8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBDack);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E00);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBWedge);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E08);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E28);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTopTr2);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E60);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSTARWARSROGUESQUADRON);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E7C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuExpansionPakEnhanced);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E94);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5E98);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPresentedInMOsysSurround);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5EB8);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5EE8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuUsedUnderAuthorizationN);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5F04);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5F48);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuUsedUnderAuthorization);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5F64);
 
@@ -40,199 +40,199 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5FB8);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5FD4);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5FD8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuCREDITS);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5FE0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuGlwa);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A5FF8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSANDCRAWLERSHORTCUT);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6010);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBEGGARSCANYONRACE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6028);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMISSIONSUCCESSFUL);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A603C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuANEWTHREAT2);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A604C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuANEWTHREAT1);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A605C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuROGUEJINGLE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A606C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPRISONERSAVEDJINGLE);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6084);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6098);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuALLCLEARJINGLE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A60AC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTHELOSTLIFEJINGLE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A60C4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuGAMEOVERJINGLE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A60D8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTrl);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A60EC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBLASTIT);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A60F8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSNOWBATTLEREMIX);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A610C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTHETRENCHRUN);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A611C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuFIGHTFORTHEGALAXY);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6134);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuROGUETHEMEREPRISE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A614C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTHEWORLDDEVASTATOR);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6164);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuIMPERIALMARCH);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6174);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSAVETHEBACTA);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6184);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuVOLCANOBATTLE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6194);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuKoelsch);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A61A8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSNOWSPEEDERTHEME);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A61BC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTHEFUTURESEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A61D0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTATOOINEMORNINGSEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A61E8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuC3L2);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A61F8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuC2L3);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6210);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuUPCOMINGSEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6220);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSTANDINGBYSEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6234);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTALORAANSKYSEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6248);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMISSIONAHEADSEQ);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A625C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuCITYINTHECLOUDS);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6270);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSUSPENSE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A627C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuOvOvFalcon);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A628C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuOvOvSpdr);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A629C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuASSAULTRUN);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62A8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuHITRUN);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62B4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuWALKERFACTORY);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62C4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuKASANMOORTHEME);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62D8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuClust);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62E4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSHADOWSOVERJADEMOON);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A62FC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuINTOTHETRAP2);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A630C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuINTOTHETRAP1);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A631C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSAVETHECITY);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A632C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuCRIXMADINE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6338);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuUPANDAWAY);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6344);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuWHEREISTHESHIP);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6358);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBARKHESHCARGODELIVERY);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6370);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTIEFIGHTERATTACK);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6384);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSILENCE);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A638C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuLUKESKYWALKER);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A639C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPROBEDROIDS);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A63AC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTATOOINEWASTELANDS);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A63C0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMAYTHEFORCEBEWITHYOU);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A63DC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuCkpN1);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A63E8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTHEBRIEFINGROOM);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A63FC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuGnrcStuffRLogoRef);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A640C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuLOGOS);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6414);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRLogoRef);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6420);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTieFighter);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A642C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffTiefighter);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6444);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuVTccHi);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6450);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuGnrcStuffCloudcar);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6464);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpShuttle);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6470);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffShuttle);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6484);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A648C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsYwing);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A649C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuProbeDroid);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A64A8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffPrbdroid);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A64BC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTieInter);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A64C8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffTieinter);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A64DC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuAssaultBoat);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A64EC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffAssboat);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6500);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6508);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsXwing);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6518);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTieD);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6520);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffTieD);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6530);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRaptor);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6538);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffRaptor);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A654C);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6554);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsAwing);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6564);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRebTransport);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6574);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRebStuffRTransp);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6588);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A658C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsT16);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A659C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRCombat);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65A8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuRebStuffRCombat);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65BC);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65C4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsFalcon);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65D8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuWaveskimmer);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65E4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuImpStuffWskimmer);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A65F8);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6600);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsVwing);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6610);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSnowspeeder);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A661C);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsSnowspeeder);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B47D0);
 
@@ -532,13 +532,13 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C0460);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C05A0);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FCC);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMedalSh);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FD8);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTyComplete);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FE4);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTyFailed);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FF0);
+INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuTyOver);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FF8);
 
