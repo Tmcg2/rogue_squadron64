@@ -1,5 +1,16 @@
 #include "common.h"
 
+#include "menu_overlay/1197D0.h"
+
+/* Data Variables, uncomment when Data matching is possible
+u8  D_menu_overlay_800CC850 = 0;
+s32 D_menu_overlay_800CC85C = 0;
+*/
+
+// Interim `extern` definitions for Data variables. Remove these when Data matching is possible.
+extern u8  D_menu_overlay_800CC850;
+extern s32 D_menu_overlay_800CC85C;
+
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C20);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C2C);
@@ -48,7 +59,9 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3AFC);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3C70);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3CC0);
+void func_menu_overlay_800B3CC0(void) {
+    D_menu_overlay_800CC850--;
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3CD4);
 
@@ -74,7 +87,9 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4168);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4224);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4264);
+s32 func_menu_overlay_800B4264(void) {
+    return D_menu_overlay_800CC85C != 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4274);
 

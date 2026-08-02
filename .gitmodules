@@ -1,6 +1,6 @@
 [submodule "tools/asm-processor"]
 	path = tools/asm-processor
 	url = git@github.com:simonlindholm/asm-processor.git
-[submodule "tools/ultralib"]
-	path = tools/ultralib
+[submodule "ultralib"]
+	path = ultralib
 	url = git@github.com:decompals/ultralib.git

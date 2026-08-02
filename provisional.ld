@@ -778,6 +778,7 @@ SECTIONS
     main_VRAM_END = .;
 
     mission_overlay_ROM_START = __romPos;
+    mission_overlay_BASEROM_START = mission_overlay_ROM_START + 0xB0000000;
     mission_overlay_VRAM = ADDR(.mission_overlay);
     .mission_overlay 0x800A5130 : AT(mission_overlay_ROM_START) SUBALIGN(16)
     {
@@ -1079,10 +1080,12 @@ SECTIONS
     __romPos += SIZEOF(.mission_overlay);
     __romPos = ALIGN(__romPos, 16);
     . = ALIGN(., 16);
+    mission_overlay_ROM_SIZE = SIZEOF(.mission_overlay);
     mission_overlay_ROM_END = __romPos;
     mission_overlay_VRAM_END = .;
 
     menu_overlay_ROM_START = __romPos;
+    menu_overlay_BASEROM_START = menu_overlay_ROM_START + 0xB0000000;
     menu_overlay_VRAM = ADDR(.menu_overlay);
     .menu_overlay 0x800A5130 : AT(menu_overlay_ROM_START) SUBALIGN(16)
     {
@@ -1146,6 +1149,7 @@ SECTIONS
     __romPos += SIZEOF(.menu_overlay);
     __romPos = ALIGN(__romPos, 16);
     . = ALIGN(., 16);
+    menu_overlay_ROM_SIZE = SIZEOF(.menu_overlay);
     menu_overlay_ROM_END = __romPos;
     menu_overlay_VRAM_END = .;
 
@@ -1164,6 +1168,7 @@ SECTIONS
     _1346C0_VRAM_END = .;
 
     cinematic_overlay_ROM_START = __romPos;
+    cinematic_overlay_BASEROM_START = cinematic_overlay_ROM_START + 0xB0000000;
     cinematic_overlay_VRAM = ADDR(.cinematic_overlay);
     .cinematic_overlay 0x800A5130 : AT(cinematic_overlay_ROM_START) SUBALIGN(16)
     {
@@ -1199,6 +1204,7 @@ SECTIONS
     __romPos = ALIGN(__romPos, 16);
     . = ALIGN(., 16);
     cinematic_overlay_ROM_END = __romPos;
+    cinematic_overlay_ROM_SIZE = SIZEOF(.cinematic_overlay);
     cinematic_overlay_VRAM_END = .;
 
     _142D90_ROM_START = __romPos;

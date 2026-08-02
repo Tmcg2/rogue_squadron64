@@ -1,8 +1,13 @@
+.vscode/**
 asm/**
 assets/**
 build/**
 data_blob/**
+expected/**
 m2c_output/**
+nonmatchings/**
 output_pngs/**
+__pycache__/**
+tools/gcc*
+tools/ido*
 venv/**
-.vscode/**

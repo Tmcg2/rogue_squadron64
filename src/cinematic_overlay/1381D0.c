@@ -1,4 +1,17 @@
-#include "common.h"
+#include "include_asm.h"
+
+#include "common_types.h"
+#include "cinematic_overlay/1381D0.h"
+#include "main/42AF0.h"
+#include "main/66FB0.h"
+
+/* BSS Variables, uncomment when BSS matching is possible
+
+Vec3f *D_cinematic_overlay_800B1A08;
+*/
+
+// Interim `extern` definitions for BSS variables. Remove these when BSS matching is possible.
+extern Vec3f *D_cinematic_overlay_800B1A08;
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800A5D80);
 
@@ -62,11 +75,32 @@ INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800AE878);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", shouldShowCutsceneForLevelStage);
+u8 shouldShowCutsceneForLevelStage(u8 arg0, u8 arg1) {
+    u8 ret;
+
+    ret = (arg1 == 0);
+    if (arg1 == 1) {
+        ret = 1;
+    }
+    if (arg0 >= 0x10U) {
+        ret = 0;
+    }
+    if (arg0 == 3) {
+        if (arg1 == 2) {
+            ret = 1;
+        }
+    }
+    if ((arg0 == 0x13) && ((arg1 & 0xFF) == 2)) {
+        ret = 1;
+    }
+    return ret;
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800AE98C);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800AEA18);
+Vec3f *func_cinematic_overlay_800AEA18(void) {
+    return D_cinematic_overlay_800B1A08;
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cuts_0058_bubble_sort);
 
@@ -97,9 +131,19 @@ INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800AF164);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicShutdownAudioAndAssets);
+void cinematicShutdownAudioAndAssets(void) {
+    finalizeCurrentSpeechBuffer();
+    teardownAnimatedMapGridLayer(); 
+}
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", bytesDiffer);
+s32 bytesDiffer(u8 *arg0, u8 *arg1, u32 arg2) {
+    u16 var_a3;
+
+    for (var_a3 = 0; var_a3 < arg2; ++var_a3) {
+        if (arg0[var_a3] != arg1[var_a3]) return 1;
+    }
+    return 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", func_cinematic_overlay_800AF2C8);
 

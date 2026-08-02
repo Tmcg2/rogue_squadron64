@@ -12,47 +12,60 @@ OBJCOPY := $(CROSS)objcopy
 
 MODERNASN := $(PYTHON) $(TOOLSDIR)/modern-asn64.py $(AS)
 
-CPPFLAGS := -E -lang-c -undef -D__GNUC__=2 -Dmips -D__mips__ -D__mips -Dn64 -D__n64__ -D__n64 -D_PSYQ -D__EXTENSIONS__ -D_MIPSEB -D__CHAR_UNSIGNED__ -I ./include/ -DINCLUDE_ASM_USE_MACRO_INC
-CFLAGS := -quiet -O2 -G0 -mips2
-ASFLAGS := -march=vr4300 -mabi=32 -mgp32 -mfp32 -mips3 -G0 -O2 -I./include
+INCLUDE_DIRS := -I ./include/ -I ./ultralib/include/
+DEFINES      := -DINCLUDE_ASM_USE_MACRO_INC -D_LANGUAGE_C
+CPPFLAGS     := -E -lang-c
+CFLAGS       := -quiet -O2 -G0 -mips3
+ASFLAGS      := -EB -mabi=32 -mfp32 -mgp32 -mtune=vr4300 -march=vr4300 -mips3 -G0 -I./include
 
-N64COMPILERPATH := ~/compilers/gccsn2.7.2sn0001
+N64COMPILERPATH := $(TOOLSDIR)/gcc2.8.1sn/
 N64CC           := $(N64COMPILERPATH)/cc1n64.exe
-N64AS           := $(N64COMPILERPATH)/asn64.exe
 
-IDOCOMPILERPATH := ~/compilers/ido5.3
+IDOCOMPILERPATH := $(TOOLSDIR)/ido5.3
 IDOCC           := $(IDOCOMPILERPATH)/cc
 
+C_DIRS    := $(shell find src -type d)
+C_FILES   := $(foreach dir,$(C_DIRS),$(wildcard $(dir)/*.c))
 ASM_DIRS  := $(shell find asm -type d -not -path "asm/nonmatchings*")
-S_FILES   := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
+ASM_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
 BIN_FILES := $(shell find assets -type f -name "*.bin" -not -path "assets/main*")
-C_FILES   := $(shell find src -type f -name "*.c")
-O_FILES   := $(S_FILES:%.s=build/%.o) $(BIN_FILES:%.bin=build/%.o) $(C_FILES:%.c=build/%.o)
+O_FILES   := $(ASM_FILES:%.s=build/%.o) $(BIN_FILES:%.bin=build/%.o) $(C_FILES:%.c=build/%.o)
 
-$(shell mkdir -p $(foreach dir,$(ASM_DIRS) assets,build/$(dir)))
+BUILD_DIRS := $(C_DIRS:%=build/%) $(ASM_DIRS:%=build/%)
 
 SYMBOL_FILES := undefined_funcs_auto.txt undefined_syms_auto.txt symbol_files/cinematic_overlay.txt symbol_files/libultra.txt symbol_files/main_overlay.txt symbol_files/menu_overlay.txt symbol_files/mission_overlay.txt symbol_files/zlib.txt
 
 .PHONY: clean
 
-tyler.z64: tyler.elf
+build/tyler.z64: build/tyler.elf
 	$(OBJCOPY) $< $@ -O binary
 
-tyler.elf: $(O_FILES)
-	$(LD) -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
+build/tyler.elf: $(O_FILES) $(LDSCRIPT)
+	$(LD) -Map=$@.map -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
 
-build/%.o: %.c
-	mkdir -p $(@D)
-	$(CPP) $(CPPFLAGS) $< -o build/$<.i
+$(BUILD_DIRS):
+	mkdir -p $@
+
+$(N64CC):
+	mkdir -p "$(@D)"
+	wget "https://github.com/marijnvdwerf/sn64/releases/download/1%2C0%2C0%2C2/cc1n64.exe" -P "$(@D)"
+	chmod +x "$@"
+
+$(IDOCC):
+	mkdir -p "$(@D)"
+	wget "https://github.com/decompals/ido-static-recomp/releases/download/v1.2/ido-5.3-recomp-linux.tar.gz" -P "$(@D)"
+	tar xzf "$(@D)/ido-5.3-recomp-linux.tar.gz" -C "$(@D)"
+
+build/%.o: %.c | $(BUILD_DIRS) $(N64CC)
+	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o build/$<.i
 	$(N64CC) $(CFLAGS) build/$<.i -o build/$<.s
 	$(MODERNASN) $(ASFLAGS) build/$<.s -o $@
 
-build/%.o: %.s
+build/%.o: %.s | $(BUILD_DIRS)
 	$(AS) $(ASFLAGS) -o $@ $<
 
 build/%.o: %.bin
 	$(LD) -r -b binary -o $@ $<
 
 clean:
-	rm -rf build/*
-	rm tyler.elf
+	rm -rf $(BUILD_DIRS)
