@@ -40,7 +40,6 @@ s32 getLevelHardwiredDifficulty(u8 levelId) {
     return 0;
 }
 
-#if 0
 u8 getSecondaryWeaponForLevelAndCraft(u8 levelId, u8 craftId, u8 arg2) {
     s32 secondaryWeaponType;
 
@@ -86,9 +85,6 @@ u8 getSecondaryWeaponForLevelAndCraft(u8 levelId, u8 craftId, u8 arg2) {
     }
     return secondaryWeaponType;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", getSecondaryWeaponForLevelAndCraft);
-#endif
 
 s32 hasKasanMoorDefected(u8 levelId) {
     return levelId < JADEMOON_LEVEL ? 4 : 5;
