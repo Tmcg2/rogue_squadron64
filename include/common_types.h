@@ -30,6 +30,8 @@ enum PlayerCraft {
     /* 0x8 */ KOELSCH_CRAFT,
 };
 
+#define CRAFT_FLAG(craftId) (1 << (craftId))
+
 enum Level {
     /* 0x00 */ MOSEISLEY_LEVEL,
     /* 0x01 */ BARKHESH_LEVEL,
@@ -80,6 +82,32 @@ enum SecondaryWeaponLevel {
     /* 0x0 */ NORMAL_LEVEL,
     /* 0x1 */ ADVANCED_LEVEL,
     /* 0x2 */ SEEKER_LEVEL,
+};
+
+enum MEDAL_TYPE {
+    /* 0x00 */ NO_MEDAL,
+    /* 0x01 */ BRONZE,
+    /* 0x02 */ SILVER,
+    /* 0x03 */ GOLD,
+};
+
+enum PLAYER_RANK {
+    /* 0x00 */ TRAINEE,
+    /* 0x01 */ CADET,
+    /* 0x02 */ ENSIGN,
+    /* 0x03 */ OFFICER,
+    /* 0x04 */ LIEUTENANT,
+    /* 0x05 */ FLIGHT_LEADER,
+    /* 0x06 */ CAPTAIN,
+    /* 0x07 */ SQUAD_LEADER,
+    /* 0x08 */ GOLD_LEADER,
+    /* 0x09 */ MAJOR,
+    /* 0x0A */ COMMANDER,
+    /* 0x0B */ COLONEL,
+    /* 0x0C */ GENERAL,
+    /* 0x0D */ LINE_ADMIRAL,
+    /* 0x0E */ FLEET_ADMIRAL,
+    /* 0x0F */ SUPREME_ALLIED_COMMANDER,
 };
 
 //////////////////////////////////////////////////////////////
@@ -176,5 +204,31 @@ struct overlay_dma {
     /* 0x64 */ u32 bss_addr;
     /* 0x68 */ u32 bss_size;
 }; // size = 0x6C
+
+struct asset_medal_info {
+    /* 0x00 */ f32 completion_time;
+    /* 0x04 */ u16 enemies_destroyed;
+    /* 0x06 */ u16 accuracy;
+    /* 0x08 */ u16 friendlies_saved;
+    /* 0x0A */ u16 bonus_collected;
+}; // size = 0x0C;
+
+struct game_medal_info {
+    /* 0x00 */ u32 completion_time;
+    /* 0x04 */ u16 enemies_destroyed;
+    /* 0x06 */ u8  accuracy;
+    /* 0x07 */ u8  friendlies_saved;
+    /* 0x08 */ u8  bonus_collected;
+    // 3 bytes of padding
+}; // size = 0x0C;
+
+struct mission_stats {
+    /* 0x00 */ u32 completion_time;
+    /* 0x04 */ u32 shots_fired;
+    /* 0x08 */ u32 shots_landed;
+    /* 0x0C */ u16 enemies_destroyed;
+    /* 0x0E */ u8  friendlies_saved;
+    /* 0x0F */ u8  bonus_collected;
+}; // size = 0x10;
 
 #endif

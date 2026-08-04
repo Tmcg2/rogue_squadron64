@@ -1141,7 +1141,7 @@ SECTIONS
         build/asm/data/menu_overlay/12CA40.bss.o(.bss);
         build/src/menu_overlay/jfif_handling.o(.bss);
         build/asm/data/menu_overlay/intro_crawl_handling.bss.o(.bss);
-        build/asm/data/menu_overlay/1331E0.bss.o(.bss);
+        build/src/menu_overlay/1331E0.o(.bss);
         . = ALIGN(., 16);
         menu_overlay_BSS_END = .;
         menu_overlay_BSS_SIZE = ABSOLUTE(menu_overlay_BSS_END - menu_overlay_BSS_START);

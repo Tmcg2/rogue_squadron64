@@ -8,7 +8,8 @@ This is something of a dumping ground for extern definitions of variables that a
 Hopefully it doesn't become a variable landfill.
 */
 
-extern struct GameSettings gGameSettings;
-extern struct MissionState gMissionState;
+extern enum   PlayerCraft dDefaultCraftForLevel[NUM_LEVELS];
+extern struct MissionState gMissionState; // 0x80130B10
+extern struct GameSettings gGameSettings; // 0x80130B40
 
 #endif
