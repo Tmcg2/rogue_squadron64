@@ -330,7 +330,7 @@ segments:
       - [0x3D500, rodata,  "main/3D500"]
       - [0x3D560, rodata,  "main/3D560"]
       - [0x3D5D0, rodata,  "main/3D5D0"]
-      - [0x3D6F0, rodata,  "main/3D6F0"]
+      - [0x3D6F0, .rodata,  "main/6E500"]
       - [0x3D770, rodata,  "main/3D770"]
       - [0x3DAF0, rodata,  "main/3DAF0"]
       - [0x3E100, rodata,  "main/3E100"]
@@ -367,7 +367,7 @@ segments:
       - [0x6A6F0, asm,     "main/6A6F0"]
       - [0x6B8B0, asm,     "main/6B8B0"]
       - [0x6C310, asm,     "main/6C310"]
-      - [0x6E500, asm,     "main/6E500"]
+      - [0x6E500, c,     "main/6E500"]
       - [0x700B0, asm,     "main/700B0"]
       - [0x738F0, asm,     "main/738F0"]
       - [0x79E80, asm,     "main/79E80"]
@@ -403,7 +403,7 @@ segments:
       - [0xA08D0, rodata,  "main/A08D0"]
       - [0xA0BE0, rodata,  "main/A0BE0"]
       - [0xA11D0, rodata,  "main/A11D0"]
-      - [0xA1660, rodata,  "main/A1660"]
+      - [0xA1660, .data,  "main/6E500"]
       - [0xA1690, rodata,  "main/A1690"]
       - [0xA1970, rodata,  "main/A1970"]
       - [0xA1980, rodata,  "main/A1980"]
@@ -665,7 +665,7 @@ segments:
       - {type: bss, vram: 0x800CE700, name: "menu_overlay/11B970"}
       - {type: bss, vram: 0x800CFF50, name: "menu_overlay/12CA40"}
       - {type: bss, vram: 0x800CFFB0, name: "menu_overlay/intro_crawl_handling"}
-      - {type: bss, vram: 0x800D03D0, name: "menu_overlay/1331E0"}
+      - {type: .bss, vram: 0x800D03D0, name: "menu_overlay/1331E0"}
 
   # This segment has 5 non-zero words in it
   # That I can tell nothing in this segment is ever referenced

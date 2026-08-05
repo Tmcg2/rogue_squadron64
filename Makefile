@@ -41,7 +41,7 @@ build/tyler.z64: build/tyler.elf
 	$(OBJCOPY) $< $@ -O binary
 
 build/tyler.elf: $(O_FILES) $(LDSCRIPT)
-	$(LD) -Map=$@.map -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
+	$(LD) -Map=$@.map -EB -G0 -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
 
 $(BUILD_DIRS):
 	mkdir -p $@
