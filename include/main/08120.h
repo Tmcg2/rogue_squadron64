@@ -3,6 +3,7 @@
 
 #include "PR/ultratypes.h"
 
-s32 rs_strcmp(char*, char*);
+void rs_memset(u8*, u8, u32);
+s32  rs_strcmp(char*, char*);
 
 #endif
