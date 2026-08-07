@@ -247,6 +247,13 @@ struct D_8013A5C0_type {
     /* 0xAC */ u8  unkAC;
 }; // size 0xB0
 
+struct rgba {
+    u8 r; /* 0x0 */
+    u8 g; /* 0x1 */
+    u8 b; /* 0x2 */
+    u8 a; /* 0x3 */
+}; // size = 0x4
+
 struct overlay_dma {
     /* 0x00 */ void *src_addrs[8];
     /* 0x20 */ void *dest_addrs[8];
