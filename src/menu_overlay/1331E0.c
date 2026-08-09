@@ -1,5 +1,5 @@
 #include "common.h"
-
+#include "levels.h"
 #include "main/64EA0.h"
 #include "menu_overlay/1331E0.h"
 
@@ -15,7 +15,7 @@ u8 getMissionMedal(u8 levelId, struct mission_stats *stats) {
     s32 blah;
     struct asset_medal_info *temp_v1_2;
 
-    if (levelId == BEGGARS_CANYON_LEVEL) return stats->friendlies_saved; 
+    if (levelId == LEVEL_BEGGARS_CANYON) return stats->friendlies_saved; 
 
     for (blah = GOLD; blah > NO_MEDAL; blah--) {
         var_v0 = blah;

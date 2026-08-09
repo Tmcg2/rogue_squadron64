@@ -973,7 +973,7 @@ SECTIONS
         build/asm/data/mission_overlay/0F09E0.bss.o(.bss);
         build/asm/data/mission_overlay/0F3E90.bss.o(.bss);
         build/asm/data/mission_overlay/0FAE50.bss.o(.bss);
-        build/asm/data/mission_overlay/0FCA20.bss.o(.bss);
+        build/src/mission_overlay/0FCA20.o(.bss);
         build/src/mission_overlay/0FFB10.o(.bss);
         build/asm/data/mission_overlay/100A00.bss.o(.bss);
         build/src/mission_overlay/level_objective_handling/lv_0.o(.bss);

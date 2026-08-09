@@ -1,5 +1,10 @@
 #include "common.h"
 
+#include "secondary_weapons.h"
+#include "mission_overlay/0FCA20.h"
+
+static struct hud_struct D_mission_overlay_8010CA30[2];
+
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0FCA20", D_mission_overlay_800A90B0);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0FCA20", D_mission_overlay_800A90C0);
@@ -40,13 +45,29 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800F
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FED40);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FEE28);
+void resetSecondaryWeaponCount(void) {
+    u8 var_a0;
+
+    for (var_a0 = 0; var_a0 < 2; var_a0++) {
+        D_mission_overlay_8010CA30[var_a0].secondaryWeaponCount = D_mission_overlay_8010CA30[var_a0].secondaryWeaponReset;
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FEE74);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FEECC);
+s32 func_mission_overlay_800FEECC(void) {
+    s32 var_a0;
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", getHudSecondaryWeponCount);
+    var_a0 = 0;
+    if (D_mission_overlay_8010CA30[0].secondaryWeapon == SECONDARY_WEAPON_BOMBS) {
+        var_a0 = D_mission_overlay_8010CA30[0].secondaryWeaponState > 0U;
+    }
+    return var_a0;
+}
+
+u8 getHudSecondaryWeponCount(void) {
+    return D_mission_overlay_8010CA30[0].secondaryWeaponCount;
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", fake_func_800FEF04);
 

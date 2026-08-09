@@ -6,5 +6,6 @@
 void loadOverlay(s32);
 s32  returnZeroStub(void);
 void *rs_malloc(u32, u16);
+void rs_free(void*);
 
 #endif

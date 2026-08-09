@@ -1,7 +1,9 @@
 #include "common.h"
 #include "common_types.h"
 #include "common_variables.h"
-
+#include "crafts.h"
+#include "levels.h"
+#include "secondary_weapons.h"
 #include "menu_overlay/12CA40.h"
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C58A0);
@@ -32,39 +34,39 @@ s32 getAvailablePlayerCraftFlagsConsiderUnlocks(enum Level levelId) {
     s32 availableCraftFlags;
 
     availableCraftFlags = CRAFT_FLAG(dDefaultCraftForLevel[levelId]);
-    if ((gMissionState.maxUnlockedLevel >= JADEMOON_LEVEL) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
-        availableCraftFlags |= CRAFT_FLAG(AWING_CRAFT);
+    if ((gMissionState.maxUnlockedLevel >= LEVEL_JADEMOON) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_AWING);
     }
-    if ((gMissionState.maxUnlockedLevel >= TALORAAN_LEVEL) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
-        availableCraftFlags |= CRAFT_FLAG(VWING_CRAFT);
+    if ((gMissionState.maxUnlockedLevel >= LEVEL_TALORAAN) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_VWING);
     }
-    if ((gMissionState.maxUnlockedLevel >= CALAMARI_LEVEL) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
-        availableCraftFlags |= CRAFT_FLAG(XWING_CRAFT);
+    if ((gMissionState.maxUnlockedLevel >= LEVEL_CALAMARI) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_XWING);
     }
     if (gGameSettings.unlockAndSettingsFlags[0] & 0x80000) {
         availableCraftFlags |= 0x7F;
     }
     if ((gGameSettings.cheatCodeFlags[0] & 4) || (gGameSettings.unlockAndSettingsFlags[0] & 0x20000)) {
-        availableCraftFlags |= CRAFT_FLAG(FALCON_CRAFT);
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_FALCON);
     }
     if ((gGameSettings.cheatCodeFlags[0] & 8) || (gGameSettings.unlockAndSettingsFlags[0] & 0x40000)) {
-        availableCraftFlags |= CRAFT_FLAG(TIEINTER_CRAFT);
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_TIEINTER);
     }
-    if (levelId == TALORAAN_LEVEL) {
-        availableCraftFlags &= ~CRAFT_FLAG(VWING_CRAFT);
-        availableCraftFlags &= ~CRAFT_FLAG(SNOWSPEEDER_CRAFT);
+    if (levelId == LEVEL_TALORAAN) {
+        availableCraftFlags &= ~CRAFT_FLAG(CRAFT_VWING);
+        availableCraftFlags &= ~CRAFT_FLAG(CRAFT_SNOWSPEEDER);
     }
-    if (levelId == TRENCH_RUN_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(XWING_CRAFT);
+    if (levelId == LEVEL_TRENCH_RUN) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_XWING);
     }
-    if (levelId == KESSEL_RESCUE_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(XWING_CRAFT) | CRAFT_FLAG(YWING_CRAFT);
+    if (levelId == LEVEL_KESSEL_RESCUE) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_XWING) | CRAFT_FLAG(CRAFT_YWING);
     }
-    if ((levelId == CORELLIA_LEVEL) || (levelId == CONST_YARD_LEVEL) || (levelId == FEST_LEVEL) || (levelId == HOTH_LEVEL)) {
-        availableCraftFlags &= CRAFT_FLAG(SNOWSPEEDER_CRAFT);
+    if ((levelId == LEVEL_CORELLIA) || (levelId == LEVEL_CONST_YARD) || (levelId == LEVEL_FEST) || (levelId == LEVEL_HOTH)) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_SNOWSPEEDER);
     }
-    if (levelId == BEGGARS_CANYON_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(T16_CRAFT);
+    if (levelId == LEVEL_BEGGARS_CANYON) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_T16);
     }
     return availableCraftFlags;
 }
@@ -74,32 +76,32 @@ s32 getAvailablePlayerCraftFlagsIgnoreUnlocks(enum Level levelId) {
 
     availableCraftFlags = CRAFT_FLAG(dDefaultCraftForLevel[levelId]);
     if (availableCraftFlags & 0xD) {
-        availableCraftFlags |= CRAFT_FLAG(XWING_CRAFT) | CRAFT_FLAG(AWING_CRAFT) | CRAFT_FLAG(VWING_CRAFT);
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_XWING) | CRAFT_FLAG(CRAFT_AWING) | CRAFT_FLAG(CRAFT_VWING);
     }
     if (gGameSettings.unlockAndSettingsFlags[0] & 0x80000) {
         availableCraftFlags |= 0x7F;
     }
     if ((gGameSettings.cheatCodeFlags[0] & 4) || (gGameSettings.unlockAndSettingsFlags[0] & 0x20000)) {
-        availableCraftFlags |= CRAFT_FLAG(FALCON_CRAFT);
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_FALCON);
     }
     if ((gGameSettings.cheatCodeFlags[0] & 8) || (gGameSettings.unlockAndSettingsFlags[0] & 0x40000)) {
-        availableCraftFlags |= CRAFT_FLAG(TIEINTER_CRAFT);
+        availableCraftFlags |= CRAFT_FLAG(CRAFT_TIEINTER);
     }
-    if (levelId == TALORAAN_LEVEL) {
-        availableCraftFlags &= ~CRAFT_FLAG(VWING_CRAFT);
-        availableCraftFlags &= ~CRAFT_FLAG(SNOWSPEEDER_CRAFT);
+    if (levelId == LEVEL_TALORAAN) {
+        availableCraftFlags &= ~CRAFT_FLAG(CRAFT_VWING);
+        availableCraftFlags &= ~CRAFT_FLAG(CRAFT_SNOWSPEEDER);
     }
-    if (levelId == TRENCH_RUN_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(XWING_CRAFT);
+    if (levelId == LEVEL_TRENCH_RUN) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_XWING);
     }
-    if (levelId == KESSEL_RESCUE_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(XWING_CRAFT) | CRAFT_FLAG(YWING_CRAFT);
+    if (levelId == LEVEL_KESSEL_RESCUE) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_XWING) | CRAFT_FLAG(CRAFT_YWING);
     }
-    if ((levelId == CORELLIA_LEVEL) || (levelId == CONST_YARD_LEVEL) || (levelId == FEST_LEVEL) || (levelId == HOTH_LEVEL)) {
-        availableCraftFlags &= CRAFT_FLAG(SNOWSPEEDER_CRAFT);
+    if ((levelId == LEVEL_CORELLIA) || (levelId == LEVEL_CONST_YARD) || (levelId == LEVEL_FEST) || (levelId == LEVEL_HOTH)) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_SNOWSPEEDER);
     }
-    if (levelId == BEGGARS_CANYON_LEVEL) {
-        availableCraftFlags &= CRAFT_FLAG(T16_CRAFT);
+    if (levelId == LEVEL_BEGGARS_CANYON) {
+        availableCraftFlags &= CRAFT_FLAG(CRAFT_T16);
     }
     return availableCraftFlags;
 }
@@ -121,7 +123,7 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     normalAllSilver = 1;
     normalAllGold   = 1;
     // Check the medals for all "normal" levels
-    for (var_a1 = 0; var_a1 < BEGGARS_CANYON_LEVEL; var_a1++) {
+    for (var_a1 = 0; var_a1 < LEVEL_BEGGARS_CANYON; var_a1++) {
         temp_v1 = medalsPerLevel[var_a1];
         if (temp_v1 < GOLD) {
             normalAllGold = 0;
@@ -156,7 +158,7 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     unlockableAllSilver = 1;
     unlockableAllGold   = 1;
     // Check the medals for all unlockable levels
-    for (var_a1 = BEGGARS_CANYON_LEVEL; var_a1 < NUM_LEVELS; var_a1++) {
+    for (var_a1 = LEVEL_BEGGARS_CANYON; var_a1 < NUM_LEVELS; var_a1++) {
         temp_v1 = medalsPerLevel[var_a1];
         if (temp_v1 < GOLD) {
             unlockableAllGold = 0;
@@ -188,67 +190,67 @@ s32 getLevelHardwiredDifficulty(u8 levelId) {
 u8 getSecondaryWeaponForLevelAndCraft(u8 levelId, u8 craftId, u8 arg2) {
     s32 secondaryWeaponType;
 
-    secondaryWeaponType = NONE;
+    secondaryWeaponType = SECONDARY_WEAPON_NONE;
     switch (craftId) {
-    case XWING_CRAFT:
-        secondaryWeaponType = PROTON_TORPEDOS;
+    case CRAFT_XWING:
+        secondaryWeaponType = SECONDARY_WEAPON_PROTON_TORPEDOS;
         break;
-    case YWING_CRAFT:
-        secondaryWeaponType = BOMBS;
+    case CRAFT_YWING:
+        secondaryWeaponType = SECONDARY_WEAPON_BOMBS;
         break;
-    case AWING_CRAFT:
-        secondaryWeaponType = MISSLES;
+    case CRAFT_AWING:
+        secondaryWeaponType = SECONDARY_WEAPON_MISSLES;
         break;
-    case VWING_CRAFT:
-        secondaryWeaponType = CLUSTER_MISSILES;
+    case CRAFT_VWING:
+        secondaryWeaponType = SECONDARY_WEAPON_CLUSTER_MISSILES;
         break;
-    case SNOWSPEEDER_CRAFT:
-        secondaryWeaponType = TOW_CABLE;
+    case CRAFT_SNOWSPEEDER:
+        secondaryWeaponType = SECONDARY_WEAPON_TOW_CABLE;
         break;
-    case TIEINTER_CRAFT:
-    case T16_CRAFT:
-        secondaryWeaponType = NONE;
+    case CRAFT_TIEINTER:
+    case CRAFT_T16:
+        secondaryWeaponType = SECONDARY_WEAPON_NONE;
         break;
-    case FALCON_CRAFT:
-    case KOELSCH_CRAFT:
-        secondaryWeaponType = SEEKER_TORPEDOS;
+    case CRAFT_FALCON:
+    case CRAFT_KOELSCH:
+        secondaryWeaponType = SECONDARY_WEAPON_SEEKER_TORPEDOS;
         break;
     }
-    if (levelId == KESSEL_RESCUE_LEVEL) {
-        if (craftId == XWING_CRAFT) {
-            secondaryWeaponType = ION_CANNON;
+    if (levelId == LEVEL_KESSEL_RESCUE) {
+        if (craftId == CRAFT_XWING) {
+            secondaryWeaponType = SECONDARY_WEAPON_ION_CANNON;
         }
     }
-    if ((secondaryWeaponType == MISSLES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x800)) {
-        secondaryWeaponType = SEEKER_MISSILES;
+    if ((secondaryWeaponType == SECONDARY_WEAPON_MISSLES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x800)) {
+        secondaryWeaponType = SECONDARY_WEAPON_SEEKER_MISSILES;
     }
-    if ((secondaryWeaponType == PROTON_TORPEDOS) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x2000)) {
-        secondaryWeaponType = SEEKER_TORPEDOS;
+    if ((secondaryWeaponType == SECONDARY_WEAPON_PROTON_TORPEDOS) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x2000)) {
+        secondaryWeaponType = SECONDARY_WEAPON_SEEKER_TORPEDOS;
     }
-    if ((secondaryWeaponType == CLUSTER_MISSILES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x4000)) {
-        secondaryWeaponType = SEEKER_CLUSTER_MISSILES;
+    if ((secondaryWeaponType == SECONDARY_WEAPON_CLUSTER_MISSILES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x4000)) {
+        secondaryWeaponType = SECONDARY_WEAPON_SEEKER_CLUSTER_MISSILES;
     }
     return secondaryWeaponType;
 }
 
 s32 hasKasanMoorDefected(u8 levelId) {
-    return levelId < JADEMOON_LEVEL ? 4 : 5;
+    return levelId < LEVEL_JADEMOON ? 4 : 5;
 }
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C6854);
 
 u8 getLevelIntroCrawlId(u8 levelId) {
     switch (levelId) {
-        case MOSEISLEY_LEVEL:
+        case LEVEL_MOSEISLEY:
             return 0;
             break;
-        case JADEMOON_LEVEL:
+        case LEVEL_JADEMOON:
             return 1;
             break;
-        case TALORAAN_LEVEL:
+        case LEVEL_TALORAAN:
             return 2;
             break;
-        case CALAMARI_LEVEL:
+        case LEVEL_CALAMARI:
             return 3;
             break;
         default:

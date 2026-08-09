@@ -18,72 +18,6 @@ typedef f32 Vec3f[3];
 // ENUMS
 //////////////////////////////////////////////////////////////
 
-enum PlayerCraft {
-    /* 0x0 */ XWING_CRAFT,
-    /* 0x1 */ YWING_CRAFT,
-    /* 0x2 */ AWING_CRAFT,
-    /* 0x3 */ VWING_CRAFT,
-    /* 0x4 */ SNOWSPEEDER_CRAFT,
-    /* 0x5 */ FALCON_CRAFT,
-    /* 0x6 */ TIEINTER_CRAFT,
-    /* 0x7 */ T16_CRAFT,
-    /* 0x8 */ KOELSCH_CRAFT,
-};
-
-#define CRAFT_FLAG(craftId) (1 << (craftId))
-
-enum Level {
-    /* 0x00 */ MOSEISLEY_LEVEL,
-    /* 0x01 */ BARKHESH_LEVEL,
-    /* 0x02 */ NONNAH_LEVEL,
-    /* 0x03 */ CORELLIA_LEVEL,
-    /* 0x04 */ GERRARDV_LEVEL,
-    /* 0x05 */ JADEMOON_LEVEL,
-    /* 0x06 */ CONST_YARD_LEVEL,
-    /* 0x07 */ KILEII_LEVEL,
-    /* 0x08 */ KESSEL_RESCUE_LEVEL,
-    /* 0x09 */ KESSEL_PRISON_LEVEL,
-    /* 0x0A */ TALORAAN_LEVEL,
-    /* 0x0B */ FEST_LEVEL,
-    /* 0x0C */ CHANDRILA_LEVEL,
-    /* 0x0D */ SULLUST_LEVEL,
-    /* 0x0E */ THYFERRA_LEVEL,
-    /* 0x0F */ CALAMARI_LEVEL,
-    /* 0x10 */ BEGGARS_CANYON_LEVEL,
-    /* 0x11 */ TRENCH_RUN_LEVEL,
-    /* 0x12 */ HOTH_LEVEL,
-    /* 0x13 */ NUM_LEVELS,
-    /* 0x13 */ LOGO_LEVEL = 0x13,
-    /* 0x14 */ ATST_LEVEL,
-};
-
-enum SecondaryWeapon {
-    /* 0x00 */ UNUSED, // not sure what's up with this...
-    /* 0x01 */ ION_CANNON,
-    /* 0x02 */ MISSLES,
-    /* 0x03 */ SEEKER_MISSILES,
-    /* 0x04 */ BOMBS,
-    /* 0x05 */ PROTON_TORPEDOS,
-    /* 0x06 */ TOW_CABLE,
-    /* 0x07 */ CLUSTER_MISSILES,
-    /* 0x08 */ SEEKER_TORPEDOS,
-    /* 0x09 */ SEEKER_CLUSTER_MISSILES,
-    /* 0xFF */ NONE = 0xFF,
-};
-
-enum SecondaryWeaponType {
-    /* 0x0 */ MISSLE_TYPE,
-    /* 0x1 */ CLUSTER_MISSLE_TYPE,
-    /* 0x2 */ TORPEDO_TYPE,
-    /* 0x3 */ BOMB_TYPE,
-};
-
-enum SecondaryWeaponLevel {
-    /* 0x0 */ NORMAL_LEVEL,
-    /* 0x1 */ ADVANCED_LEVEL,
-    /* 0x2 */ SEEKER_LEVEL,
-};
-
 enum MEDAL_TYPE {
     /* 0x00 */ NO_MEDAL,
     /* 0x01 */ BRONZE,
@@ -288,5 +222,37 @@ struct mission_stats {
     /* 0x0E */ u8  friendlies_saved;
     /* 0x0F */ u8  bonus_collected;
 }; // size = 0x10;
+
+struct manifest_entry {
+    /* 0x00 */ u32 data_offset;
+    /* 0x04 */ u32 decompressed_size;
+    /* 0x08 */ u32 compressed_size; // 0xFFFFFFFF (or -1 if signed) indicates that the entry is not compressed
+    /*
+    bit 7: is directory (0x80)
+    bits 1-6: never set, checked in several places though
+    bit 0: set a lot (but not alwasy). Purpose unknown
+    */
+    /* 0x0C */ u8 flags;
+    /* 0x0D */ u8 unk0D;
+    /*
+    This is a number multiplied by 0x20 (<< 5)
+    It is the size in bytes that the directory takes up in the manifest
+    So, (directory content entries + 1(the directory entry itself)) * 0x20
+    For non-directory entries, this number should be zero 
+    */
+    /* 0x0E */ u16 directory_size;
+    /* 0x10 */ u8 name[16];
+}; // size 0x20
+
+struct D_80110A80_entry {
+    u8 unk00[0x20];                  /* 0x00 */
+    u8 unk20[0x20];                  /* 0x00 */
+    struct manifest_entry *manifest; /* 0x40 */
+    u8 *data;                        /* 0x44 pointer to the data block that the manifest refers to. Is a ROM pointer as well, weirdly */
+    u32 entry_count;                 /* 0x48 number of entries in the manifest/number of files in the data block (same thing really) */
+    u16 unk4C;                       /* 0x4C */
+    u8  one;                         /* 0x4E */
+    // u8 compiler_padding?; /* 0x4F */
+}; // size 0x50
 
 #endif

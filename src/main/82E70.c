@@ -77,8 +77,8 @@ s32 applyCheatCodeFromInput(u8 *arg0, u8 arg1, s8 *arg2) {
     var_s2 = 0;
     crc32LUT = make_crc32_lut();
     temp_a0 = rs_crc32(crc32LUT, arg0, 8U);
-    if (CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[0], HALIFAX_BIT)) {
-        UNSET_CHEAT_FLAG(gGameSettings.cheatCodeFlags[0], HALIFAX_BIT);
+    if (CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[0], CHEAT_BIT_HALIFAX)) {
+        UNSET_CHEAT_FLAG(gGameSettings.cheatCodeFlags[0], CHEAT_BIT_HALIFAX);
         gGameSettings.unk28 = load_naboo_starfighter(temp_a0);
         return 0;
     }
@@ -99,8 +99,8 @@ s32 applyCheatCodeFromInput(u8 *arg0, u8 arg1, s8 *arg2) {
         }
         var_s2 = 1;
         var_s4 = CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[(var_s0 & 0xFF) / 32], var_s0 % 32);
-        if (CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[(var_s0 & 0xFF) / 32], var_s0 % 32) && ((var_s0 & 0xFF) >= ICHHELD_BIT) && ((var_s0 & 0xFF) <= FLYDODGE_BIT)) {
-            for (var_a1 = ICHHELD_BIT; (var_a1 & 0xFF) <= FLYDODGE_BIT; var_a1++) {
+        if (CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[(var_s0 & 0xFF) / 32], var_s0 % 32) && ((var_s0 & 0xFF) >= CHEAT_BIT_ICHHELD) && ((var_s0 & 0xFF) <= CHEAT_BIT_FLYDODGE)) {
+            for (var_a1 = CHEAT_BIT_ICHHELD; (var_a1 & 0xFF) <= CHEAT_BIT_FLYDODGE; var_a1++) {
                 UNSET_CHEAT_FLAG(gGameSettings.cheatCodeFlags[(var_a1 & 0xFF) / 32], var_a1 % 32);
             }
             SET_CHEAT_FLAG(gGameSettings.cheatCodeFlags[(var_s0 & 0xFF) / 32], var_s0 % 32);

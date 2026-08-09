@@ -1,6 +1,7 @@
 #include "common.h"
 #include "common_variables.h"
 
+#include "crafts.h"
 #include "main/6B8B0.h"
 
 struct D_main_800A05D0_type D_main_800A05D0[] = {
@@ -352,44 +353,44 @@ INCLUDE_ASM("asm/nonmatchings/main/6B8B0", applyLevelScreenAndCameraSettings);
 
 s32 isCraftAvailableByIdx(s32 craftId) {
     switch (craftId) {
-    case XWING_CRAFT:
+    case CRAFT_XWING:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(XWING_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_XWING);
         }
         return 0;
-    case YWING_CRAFT:
+    case CRAFT_YWING:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(YWING_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_YWING);
         }
         return 1;
-    case AWING_CRAFT:
+    case CRAFT_AWING:
         if (gGameSettings.unk23 == 0) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(AWING_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_AWING);
         }
         return 1;
-    case FALCON_CRAFT:
+    case CRAFT_FALCON:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(FALCON_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_FALCON);
         }
         return 1;
-    case TIEINTER_CRAFT:
+    case CRAFT_TIEINTER:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(TIEINTER_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_TIEINTER);
         }
         return 0;
-    case T16_CRAFT:
+    case CRAFT_T16:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(T16_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_T16);
         }
         return 0;
-    case VWING_CRAFT:
+    case CRAFT_VWING:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(VWING_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_VWING);
         }
         return 0;
-    case SNOWSPEEDER_CRAFT:
+    case CRAFT_SNOWSPEEDER:
         if ((gGameSettings.unk23 == 0) && (D_main_bss_80130B39 == 0)) {
-            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(SNOWSPEEDER_CRAFT);
+            return D_main_800A05D0[gGameSettings.currentLevel].craftAvailabiltyFlags & CRAFT_FLAG(CRAFT_SNOWSPEEDER);
         }
         return 0;
     default:
@@ -403,9 +404,9 @@ INCLUDE_ASM("asm/nonmatchings/main/6B8B0", getBootConfigField14);
 
 s32 getLevelCutsceneActorCallbackPrimary(void) {
     if ((gGameSettings.unlockAndSettingsFlags[1] & 1) &&
-        ((gGameSettings.currentLevel == SULLUST_LEVEL) ||
-         (gGameSettings.currentLevel == CONST_YARD_LEVEL) ||
-         (gGameSettings.currentLevel == KILEII_LEVEL)
+        ((gGameSettings.currentLevel == LEVEL_SULLUST) ||
+         (gGameSettings.currentLevel == LEVEL_CONST_YARD) ||
+         (gGameSettings.currentLevel == LEVEL_KILEII)
         )
     ) {
         return 0;
@@ -415,8 +416,8 @@ s32 getLevelCutsceneActorCallbackPrimary(void) {
 
 s32 getLevelCutsceneActorCallbackSecondary(void) {
     if ((gGameSettings.unlockAndSettingsFlags[1] & 1) &&
-        ((gGameSettings.currentLevel == SULLUST_LEVEL) ||
-         (gGameSettings.currentLevel == CONST_YARD_LEVEL)
+        ((gGameSettings.currentLevel == LEVEL_SULLUST) ||
+         (gGameSettings.currentLevel == LEVEL_CONST_YARD)
         )
     ) {
         return 0;
@@ -440,13 +441,13 @@ INCLUDE_ASM("asm/nonmatchings/main/6B8B0", getLevelConfigHalfword);
 
 s32 getLevelExpansionMemoryBudget(void) {
     if (gGameSettings.unk23 != 0) return 0x800;
-    if (gGameSettings.currentLevel == CORELLIA_LEVEL) {
+    if (gGameSettings.currentLevel == LEVEL_CORELLIA) {
         return 0x190;
-    } else if (gGameSettings.currentLevel == KILEII_LEVEL) {
+    } else if (gGameSettings.currentLevel == LEVEL_KILEII) {
         return 0x271;
-    } else if (gGameSettings.currentLevel == JADEMOON_LEVEL) {
+    } else if (gGameSettings.currentLevel == LEVEL_JADEMOON) {
         return 0x258;
-    } else if (gGameSettings.currentLevel == THYFERRA_LEVEL) {
+    } else if (gGameSettings.currentLevel == LEVEL_THYFERRA) {
         return 0x258;
     } else {
         return 0x1F4;
@@ -457,15 +458,15 @@ s32 getLevelTimeLimit(void) {
     if (gGameSettings.unk23 != 0) return 0x7D0;
 
     switch (gGameSettings.currentLevel) {
-        case GERRARDV_LEVEL:
-        case KESSEL_PRISON_LEVEL:
-        case SULLUST_LEVEL:
+        case LEVEL_GERRARDV:
+        case LEVEL_KESSEL_PRISON:
+        case LEVEL_SULLUST:
             return 0x190;
-        case KILEII_LEVEL:
+        case LEVEL_KILEII:
             return 0x1F4;
-        case THYFERRA_LEVEL:
+        case LEVEL_THYFERRA:
             return 0x258;
-        case TRENCH_RUN_LEVEL:
+        case LEVEL_TRENCH_RUN:
             return 0x3E8;
         default:
             return 0x12C;

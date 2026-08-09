@@ -228,6 +228,7 @@ initializeObjectiveHandles = 0x800FA134; // segment:mission_overlay
 addBooleanCountHandle      = 0x800FA15C; // segment:mission_overlay
 addTimerHandle             = 0x800FA1DC; // segment:mission_overlay
 
+resetSecondaryWeaponCount = 0x800FEE28; // segment:mission_overlay
 getHudSecondaryWeponCount = 0x800FEEF4; // segment:mission_overlay
 
 lv0_initializeObjectTracking = 0x80101090; // segment:mission_overlay
@@ -686,6 +687,9 @@ demoInputs = 0x8010BCA0; // type:u32 size:0x4 segment:mission_overlay
 simpleCheckHandles = 0x8010C6E0; // type:u32 size:0x300 segment:mission_overlay
 
 gObjectiveTimers = 0x8010C9F8; // type:f32 size:0x20 segment:mission_overlay
+
+// type_size:0x278 count:0x2
+D_mission_overlay_8010CA30 = 0x8010CA30; // type:u32 size:0x4F0
 
 gCurrentLevel = 0x80130B70; // type:u32 size:0x4
 

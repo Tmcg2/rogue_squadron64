@@ -1,9 +1,11 @@
 #include "common.h"
-
-#include "main/08120.h"
 #include "main/6E500.h"
 #include "common_types.h"
 #include "common_variables.h"
+#include "secondary_weapons.h"
+#include "crafts.h"
+#include "levels.h"
+#include "main/08120.h"
 
 /*BSS definitions, for when BSS mathcing is possible
 u8 D_main_bss_8013A5B0;
@@ -185,10 +187,10 @@ void syncMissionUnlockBitsToSettings(void) {
 }
 
 void unlockMissleUpgradeOnLevelCompletion(u8 levelId) {
-    if (levelId == GERRARDV_LEVEL) {
+    if (levelId == LEVEL_GERRARDV) {
         gGameSettings.unlockAndSettingsFlags[0] |= 0x1000;
     }
-    if (levelId == KESSEL_PRISON_LEVEL) {
+    if (levelId == LEVEL_KESSEL_PRISON) {
         gGameSettings.unlockAndSettingsFlags[0] |= 0x400;
     }
 }
@@ -293,30 +295,30 @@ s32 getSecondaryWeaponCount(u8 craftId, u8 arg1) {
 
     count = 0;
     switch (craftId) {
-    case XWING_CRAFT:
+    case CRAFT_XWING:
         count = 6;
-        if (arg1 == ION_CANNON) {
+        if (arg1 == SECONDARY_WEAPON_ION_CANNON) {
             count = 0xFF;
         }
         break;
-    case YWING_CRAFT:
+    case CRAFT_YWING:
         count = 0x14;
         break;
-    case VWING_CRAFT:
-    case SNOWSPEEDER_CRAFT:
+    case CRAFT_VWING:
+    case CRAFT_SNOWSPEEDER:
         count = 6;
         break;
-    case FALCON_CRAFT:
+    case CRAFT_FALCON:
         count = 0xF;
         break;
-    case AWING_CRAFT:
-    case TIEINTER_CRAFT:
+    case CRAFT_AWING:
+    case CRAFT_TIEINTER:
         count = 8;
         break;
-    case T16_CRAFT:
+    case CRAFT_T16:
         count = 0xFF;
         break;
-    case KOELSCH_CRAFT:
+    case CRAFT_KOELSCH:
         count = 0xA;
         break;
     }

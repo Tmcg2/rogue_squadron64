@@ -2,11 +2,15 @@
 #define COMMON_VARIABLES_H
 
 #include "common_types.h"
+#include "levels.h"
 
 /*
 This is something of a dumping ground for extern definitions of variables that are used in a variety of files.
 Hopefully it doesn't become a variable landfill.
 */
+
+// Fake variable D_80110AA0 <- 0x20
+extern struct D_80110A80_entry gManifestTable[4];
 
 extern enum   PlayerCraft dDefaultCraftForLevel[NUM_LEVELS];
 extern struct MissionState gMissionState; // 0x80130B10
