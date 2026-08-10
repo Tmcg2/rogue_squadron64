@@ -2,6 +2,7 @@
 #define MAIN_3F160_H
 
 #include "PR/ultratypes.h"
+#include "common_types.h"
 
 struct D_80130BB8_type;
 
@@ -28,16 +29,23 @@ struct D_80130BB0_type {
     u16 prev_idx;                  /* 0x06 */
 }; // size = 0x8
 
+void initNpcSlotList(void);
 s32  allocateNpcSlot(struct D_80130BB8_type*);
-s32  popNpcSlotFromTail(u16, struct D_80130BB8_type*);
+u16  popNpcSlotFromTail(u16, struct D_80130BB8_type*);
 void unregisterAndFreeNpcSlot(u16, struct D_80130BB8_type*);
 s32  slotDispatcherIter(u16, s32, void*);
 void slotDispatcherInner(struct D_80130BB8_type*);
 void reinsertNpcIntoSortedFreeList(struct D_80130BB8_type*);
 void destroyNpcSlotByIndex(u16);
+void destroyNpcSlotChain(u16);
+void freeNpcSlotArray(void);
+void allocNpcContextArrays(void);
 u16  spawnNpcWithSubtype(npc_update, void*, u32, u8);
 u16  spawnNpcOfType(npc_update, void*arg1, u32, u8);
+struct D_80130BB8_type *getNpcContextByIndex(u16);
+u16  findFreeNpcSlotByKey(struct D_80130BB8_type*, u16);
 u16  getNextSlotNpcTypeId(u16);
 u16  getNpcNextSlotIndex(u16);
+void destroyTransientNpcSlots(void);
 
 #endif

@@ -3,16 +3,33 @@
 #include "main/01720.h"
 #include "main/3F160.h"
 
-// Interim BSS definitions
-extern struct D_80130BB0_type *gNpcSlotList;
-extern u16 gNpcSlotListTail;
-extern struct D_80130BB8_type *gNpcContextArray;
-extern struct D_80130BB8_type **gNpcContextArrayPtrs;
-extern u32 D_main_bss_80130BC0;
-extern u32 D_main_bss_80130BC4;
-extern s32 gNpcNextOpenSlot;
+struct D_80130BB0_type *gNpcSlotList;
+u16 gNpcSlotListTail;
+u16 pad; // necessary for matching, for some reason. Without this pointers beneath it end up misaligned which makes no sense to me
+struct D_80130BB8_type *gNpcContextArray;
+struct D_80130BB8_type **gNpcContextArrayPtrs;
+void *D_main_bss_80130BC0;
+void *D_main_bss_80130BC4;
+s32   gNpcNextOpenSlot;
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", initNpcSlotList);
+void initNpcSlotList(void) {
+    s32 var_a1;
+
+    gNpcSlotList = rs_malloc(sizeof(struct D_80130BB0_type) * 0x800, 0U);
+    for (var_a1 = 0; var_a1 < 0x800; var_a1++) {
+        gNpcSlotList[var_a1].unk00 = NULL;
+        gNpcSlotList[var_a1].prev_idx = var_a1 - 1 ;
+        gNpcSlotList[var_a1].next_idx = var_a1 + 1;
+    }
+    gNpcSlotListTail = 2;
+    gNpcSlotList[0].prev_idx = 0xFFFF;
+    gNpcSlotList[0].next_idx = 1;
+    gNpcSlotList[1].prev_idx = 0;
+    gNpcSlotList[1].next_idx = 0xFFFF;
+    gNpcSlotList[1].prev_idx = 0xFFFF;
+    gNpcSlotList[2].prev_idx = 0xFFFF;
+    gNpcSlotList[0x7FF].next_idx = 0xFFFF;
+}
 
 s32 allocateNpcSlot(struct D_80130BB8_type *arg0) {
     u16 tail;
@@ -34,7 +51,50 @@ s32 allocateNpcSlot(struct D_80130BB8_type *arg0) {
     return tail;
 }
 
+#if 0
+u16 popNpcSlotFromTail(u16 arg0, struct D_80130BB8_type *arg1) {
+    u16 tail;
+    u16 var_v1;
+    u8 var_t2;
+    s32 blah;
+
+    struct D_80130BB8_type *new_var;
+
+    var_t2 = 0;
+    if (arg1 != NULL) {
+        if (arg1->unk1B >= 0x10) return 0xFFFF;
+        if (arg1) {
+            var_t2 = arg1->unk19;
+        } else {
+            var_t2 = 0;
+        }
+    }
+    tail = gNpcSlotListTail;
+    if (tail == 0xFFFF) return 0xFFFF;
+    gNpcSlotListTail = gNpcSlotList[tail].next_idx;
+    if (gNpcSlotListTail != 0xFFFF) {
+        gNpcSlotList[gNpcSlotListTail].prev_idx = 0xFFFF;
+    }
+    for (var_v1 = arg0; var_v1 != 0xFFFF; var_v1 = gNpcSlotList[var_v1].next_idx) {
+        if (gNpcSlotList[var_v1].unk00 == NULL) continue;
+        if (var_t2 >= gNpcSlotList[var_v1].unk00->unk19) break;
+        arg0 = var_v1;
+    }
+    gNpcSlotList[tail].next_idx = gNpcSlotList[arg0].next_idx;
+    if (gNpcSlotList[tail].next_idx != 0xFFFF) {
+        gNpcSlotList[gNpcSlotList[tail].next_idx].prev_idx = tail;
+    }
+    gNpcSlotList[tail].prev_idx = arg0;
+    gNpcSlotList[arg0].next_idx = tail;
+    gNpcSlotList[tail].unk00 = arg1;
+    if (arg1 != NULL) {
+        arg1->unk1C[arg1->unk1B++] = tail;
+    }
+    return tail;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/3F160", popNpcSlotFromTail);
+#endif
 
 void unregisterAndFreeNpcSlot(u16 arg0, struct D_80130BB8_type *arg1) {
     s32 var_a0;
@@ -139,7 +199,30 @@ INCLUDE_ASM("asm/nonmatchings/main/3F160", revalidateNpcSlotIterator);
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", relinkNpcSlotToNewParentGroup);
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", destroyNpcSlotChain);
+void destroyNpcSlotChain(u16 arg0) {
+    u16 var_a0;
+
+    while (arg0 != 0xFFFF) {
+        var_a0 = gNpcSlotList[arg0].next_idx;
+        if (gNpcSlotList[arg0].unk00 != NULL) {
+            unregisterAndFreeNpcSlot(arg0, gNpcSlotList[arg0].unk00);
+        } else {
+            if (var_a0 != 0xFFFF) {
+                gNpcSlotList[gNpcSlotList[arg0].next_idx].prev_idx = gNpcSlotList[arg0].prev_idx;
+            }
+            if (gNpcSlotList[arg0].prev_idx != 0xFFFF) {
+                gNpcSlotList[gNpcSlotList[arg0].prev_idx].next_idx = gNpcSlotList[arg0].next_idx;
+            }
+            gNpcSlotList[arg0].next_idx = gNpcSlotListTail;
+            if (gNpcSlotListTail != 0xFFFF) {
+                gNpcSlotList[gNpcSlotListTail].prev_idx = arg0;
+            }
+            gNpcSlotListTail = arg0;
+            gNpcSlotList[arg0].prev_idx = 0xFFFF;
+        }
+        arg0 = var_a0;
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", spawnChildNpcWithTransform);
 
@@ -149,13 +232,30 @@ INCLUDE_ASM("asm/nonmatchings/main/3F160", spawnInheritedNpcVariantB);
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", spawnInheritedNpcVariantC);
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", freeNpcSlotArray);
+void freeNpcSlotArray(void) {
+    rs_free(gNpcSlotList);
+    gNpcSlotList = NULL;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", findActiveNpcInSlotChain);
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", findFirstActiveNpcChildInChain);
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", allocNpcContextArrays);
+void allocNpcContextArrays(void) {
+    s32 var_a2;
+    struct D_80130BB8_type **temp_v0;
+    struct D_80130BB8_type **var_a1;
+    struct D_80130BB8_type *var_a0;
+
+    gNpcContextArray     = rs_malloc(sizeof(struct D_80130BB8_type)  * 0xC0, 0U);
+    gNpcContextArrayPtrs = rs_malloc(sizeof(struct D_80130BB8_type*) * 0xC0, 0U);
+    for (var_a2 = 0xBF; var_a2 >= 0; var_a2--) {
+        gNpcContextArrayPtrs[var_a2] = &gNpcContextArray[var_a2];
+    }
+    gNpcNextOpenSlot = 0xBF;
+    D_main_bss_80130BC4 = 0;
+    D_main_bss_80130BC0 = 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", destroyNpcContextArrays);
 
@@ -189,7 +289,6 @@ u16 spawnNpcWithSubtype(npc_update arg0, void *arg1, u32 arg2, u8 arg3) {
     return temp_s0->unk16;
 }
 
-#if 1
 u16 spawnNpcOfType(npc_update arg0, void *arg1, u32 arg2, u8 arg3) {
     u16 var_a1;
     struct D_80130BB8_type *temp_s0;
@@ -219,15 +318,27 @@ u16 spawnNpcOfType(npc_update arg0, void *arg1, u32 arg2, u8 arg3) {
     slotDispatcherIter(temp_s0->unk16, 1, arg1);
     return temp_s0->unk16;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/3F160", spawnNpcOfType);
-#endif
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", getNpcContextByIndex);
+struct D_80130BB8_type *getNpcContextByIndex(u16 arg0) {
+    return gNpcSlotList[arg0].unk00;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", getNpcContextField8);
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", findFreeNpcSlotByKey);
+u16 findFreeNpcSlotByKey(struct D_80130BB8_type *arg0, u16 arg1) {
+    u16 var_s0;
+
+    var_s0 = 0xFFFF;
+    if (arg1 != 0xFFFF) {
+        if (gNpcSlotList[arg1].unk00 != NULL) {
+            var_s0 = allocateNpcSlot(NULL);
+            if (var_s0 != 0xFFFF) {
+                popNpcSlotFromTail(var_s0, gNpcSlotList[arg1].unk00);
+            }
+        }
+    }
+    return var_s0;
+}
 
 u16 getNextSlotNpcTypeId(u16 arg0) {
     if ((arg0 == 0xFFFF) || (gNpcSlotList[arg0].next_idx == 0xFFFF)) {
@@ -247,6 +358,15 @@ u16 getNpcNextSlotIndex(u16 arg0) {
     return ret;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", destroyTransientNpcSlots);
+void destroyTransientNpcSlots(void) {
+    u16 var_a1;
+
+    for (var_a1 = gNpcSlotList[1].prev_idx; var_a1 != 0xFFFF; var_a1 = gNpcSlotList[var_a1].prev_idx) {
+        if ((gNpcSlotList[var_a1].unk00 != NULL) && (gNpcSlotList[var_a1].unk00->unk1A == 0)) {
+            destroyNpcSlotByIndex(var_a1);
+            break;
+        }
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", fake_func_80040304);

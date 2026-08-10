@@ -1170,7 +1170,29 @@ SECTIONS
     {
         FILL(0x00000000);
         main_bss_BSS_START = .;
-        build/asm/data/main_bss.bss.o(.bss);
+        build/asm/data/main/8010D200.bss.o(.bss);
+        build/asm/data/main/801128D0.bss.o(.bss);
+        build/asm/data/main/801128E0.bss.o(.bss);
+        build/asm/data/zlib/inftrees.bss.o(.bss);
+        build/asm/data/libultra/io/conteepread.bss.o(.bss);
+        build/asm/data/libultra/io/controller.bss.o(.bss);
+        build/asm/data/libultra/os/initialize.bss.o(.bss);
+        build/asm/data/libultra/debug/kdebugserver.bss.o(.bss);
+        build/asm/data/libultra/io/leointerrupt.bss.o(.bss);
+        build/asm/data/libultra/io/leodiskinit.bss.o(.bss);
+        build/asm/data/libultra/io/motor.bss.o(.bss);
+        build/asm/data/libultra/io/pfsisplug.bss.o(.bss);
+        build/asm/data/libultra/io/pimgr.bss.o(.bss);
+        build/asm/data/libultra/io/cartrominit.bss.o(.bss);
+        build/asm/data/libultra/io/piacs.bss.o(.bss);
+        build/asm/data/libultra/os/seteventmesg.bss.o(.bss);
+        build/asm/data/libultra/io/siacs.bss.o(.bss);
+        build/asm/data/libultra/io/sptask.bss.o(.bss);
+        build/asm/data/libultra/os/timerintr.bss.o(.bss);
+        build/asm/data/libultra/io/vimgr.bss.o(.bss);
+        build/asm/data/main/80130B10.bss.o(.bss);
+        build/src/main/3F160.o(.bss);
+        build/asm/data/main/80130BD0.bss.o(.bss);
         main_bss_BSS_END = .;
         main_bss_BSS_SIZE = ABSOLUTE(main_bss_BSS_END - main_bss_BSS_START);
     }

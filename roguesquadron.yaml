@@ -610,7 +610,7 @@ segments:
       - {type: bss, vram: 0x8010C470, name: "mission_overlay/0F09E0"}
       - {type: bss, vram: 0x8010C480, name: "mission_overlay/0F3E90"}
       - {type: bss, vram: 0x8010C9E0, name: "mission_overlay/0FAE50"}
-      - {type: bss, vram: 0x8010CA30, name: "mission_overlay/0FCA20"}
+      - {type: .bss, vram: 0x8010CA30, name: "mission_overlay/0FCA20"}
       - {type: bss, vram: 0x8010CF20, name: "mission_overlay/100A00"}
       - {type: bss, vram: 0x8010D040, name: "mission_overlay/level_objective_handling/lv_1"}
       - {type: bss, vram: 0x8010D050, name: "mission_overlay/level_objective_handling/lv_3"}
@@ -722,5 +722,7 @@ segments:
       - {type: bss, vram: 0x8012F8B0, name: "libultra/os/timerintr"      }
       - {type: bss, vram: 0x8012F8F0, name: "libultra/io/vimgr"          }
       - {type: bss, vram: 0x80130B10, name: "main/80130B10"              }
+      - {type: .bss, vram: 0x80130BB0, name: "main/3F160"                }
+      - {type: bss, vram: 0x80130BD0, name: "main/80130BD0"              }
 
   - [0x1000000]
