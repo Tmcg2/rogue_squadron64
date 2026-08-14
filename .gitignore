@@ -8,6 +8,5 @@ m2c_output/**
 nonmatchings/**
 output_pngs/**
 __pycache__/**
-tools/gcc*
-tools/ido*
+tools/compilers*
 venv/**

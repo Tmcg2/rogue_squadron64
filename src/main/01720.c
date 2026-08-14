@@ -1,11 +1,11 @@
 #include "common.h"
-#include "common_types.h"
 
 #include "menu_overlay/linker_variables.h"
 #include "mission_overlay/linker_variables.h"
 #include "cinematic_overlay/linker_variables.h"
 #include "main/01720.h"
 #include "main/03F80.h"
+#include "main/08120.h"
 
 /* Data Variables, uncomment when Data matching is possible
 s32 gCurrentLoadedOverlay = -1;

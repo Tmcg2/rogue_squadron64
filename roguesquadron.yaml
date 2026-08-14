@@ -92,8 +92,8 @@ segments:
       - [0x01120, rodata,  "main/01120"]
       - [0x013D0, rodata,  "main/013D0"]
       - [0x013F0, rodata,  "main/013F0"]
-      - [0x01410, rodata,  "main/01410"]
-      - [0x01590, rodata,  "main/01590"]
+      - [0x01410, .rodata,  "main/1D000"]
+      - [0x01590, .rodata,  "main/1EE30"]
       - [0x01600, rodata,  "main/01600"]
       - [0x01670, .rodata,  "zlib/inflate"]
       - [0x016B0, .rodata,  "zlib/infblock"]
@@ -120,7 +120,8 @@ segments:
       # - [0x192E0, data,    "main/192E0"]
       # - [0x19314, hasm,    "main/19314"]
       - [0x1A410, asm,     "main/1A410"]
-      - [0x1D000, asm,     "main/1D000"]
+      - [0x1D000, c,     "main/1D000"]
+      - [0x1EE30, c,     "main/1EE30"]
       - [0x24570, asm,     "main/24570"]
       - [0x24D30, asm,     "main/24D30"]
       - [0x25480, asm,     "main/25480"]
@@ -335,7 +336,7 @@ segments:
       - [0x3E100, rodata,  "main/3E100"]
       - [0x3E230, rodata,  "main/3E230"]
       - [0x3EA70, rodata,  "main/3EA70"]
-      - [0x3EAF0, rodata,  "main/3EAF0"]
+      - [0x3EAF0, .rodata,  "main/9A850"]
       - [0x3EB00, rodata,  "main/3EB00"]
       - [0x3EB20, c,     "main/3EB20"]
       - [0x3EBA0, c,     "main/3EBA0"]
@@ -376,15 +377,15 @@ segments:
       - [0x7CEA0, c,     "main/7CEA0"]
       - [0x82E70, c,     "main/82E70"]
       - [0x831D0, textbin, "main/rspbootText"]
-      - [0x832A0, asm,     "main/832A0"]
-      - [0x94A80, asm,     "main/94A80"]
-      - [0x94F50, asm,     "main/94F50"]
-      - [0x97D20, asm,     "main/97D20"]
-      - [0x98960, asm,     "main/98960"]
-      - [0x9A850, asm,     "main/9A850"]
+      - [0x832A0, asm,     "main/832A0"] # This might all be handwritten, but it's also plausible that I failed to find all the file splits in here
+      - [0x94A80, c,     "main/94A80"]
+      - [0x94F50, c,     "main/94F50"]
+      - [0x97D20, c,     "main/97D20"]
+      - [0x98960, c,     "main/98960"]
+      - [0x9A850, c,     "main/9A850"]
       - [0x9ABE0, textbin, "main/aspMainText"]
-      - [0x9BB60, asm,     "main/9BB60"]
-      - [0x9CED0, asm,     "main/9CED0"]
+      - [0x9BB60, c,     "main/9BB60"]
+      - [0x9CED0, c,     "main/9CED0"]
       # This file has some bullshit going on
       # 0x9E4BC and 0x9E578 are referenced as if they're branch targets, but in reality they are data
       # They're being used as branch targets purely as a way to shove the program counter into $ra
@@ -702,8 +703,13 @@ segments:
     vram: 0x8010D200
     subsegments:
       - {type: bss, vram: 0x8010D200, name: "main/8010D200"              }
+      - {type: .bss, vram: 0x8010FF20, name: "main/03310"                }
+      - {type: .bss, vram: 0x8010FF30, name: "main/033C0"                }
+      - {type: bss, vram: 0x801107A0, name: "main/801107A0"              }
       - {type: bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
       - {type: bss, vram: 0x801128E0, name: "main/801128E0"              }
+      - {type: .bss, vram: 0x80128EF0, name: "main/1EE30"                }
+      - {type: bss, vram: 0x80128F10, name: "main/80128F10"              }
       - {type: bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
       - {type: bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
       - {type: bss, vram: 0x8012D010, name: "libultra/io/controller"     }
@@ -724,5 +730,6 @@ segments:
       - {type: bss, vram: 0x80130B10, name: "main/80130B10"              }
       - {type: .bss, vram: 0x80130BB0, name: "main/3F160"                }
       - {type: bss, vram: 0x80130BD0, name: "main/80130BD0"              }
+      - {type: bss, vram: 0x80153420, name: "main/80153420"              } # 9BB60
 
   - [0x1000000]

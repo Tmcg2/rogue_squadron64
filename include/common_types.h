@@ -13,7 +13,8 @@ Hopefully it doesn't become too much of a type landfill.
 //////////////////////////////////////////////////////////////
 
 typedef f32 Vec3f[3];
-typedef f32 Mat3x4[4][3];
+typedef f32 Vec4f[4];
+typedef f32 Mat4x3[4][3];
 
 //////////////////////////////////////////////////////////////
 // ENUMS
@@ -188,15 +189,6 @@ struct rgba {
     u8 b; /* 0x2 */
     u8 a; /* 0x3 */
 }; // size = 0x4
-
-struct overlay_dma {
-    /* 0x00 */ void *src_addrs[8];
-    /* 0x20 */ void *dest_addrs[8];
-    /* 0x40 */ u32 dma_size[8];
-    /* 0x60 */ u32 transaction_count;
-    /* 0x64 */ u32 bss_addr;
-    /* 0x68 */ u32 bss_size;
-}; // size = 0x6C
 
 struct asset_medal_info {
     /* 0x00 */ f32 completion_time;
