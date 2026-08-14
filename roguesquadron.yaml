@@ -706,7 +706,7 @@ segments:
       - {type: .bss, vram: 0x8010FF20, name: "main/03310"                }
       - {type: .bss, vram: 0x8010FF30, name: "main/033C0"                }
       - {type: bss, vram: 0x801107A0, name: "main/801107A0"              }
-      - {type: bss, vram: 0x801128D0, name: "main/801128D0"              } # tied to main/07800.s
+      - {type: .bss, vram: 0x801128D0, name: "main/07800"                }
       - {type: bss, vram: 0x801128E0, name: "main/801128E0"              }
       - {type: .bss, vram: 0x80128EF0, name: "main/1EE30"                }
       - {type: bss, vram: 0x80128F10, name: "main/80128F10"              }

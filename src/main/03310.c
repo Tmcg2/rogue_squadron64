@@ -17,6 +17,7 @@ f32 getViModePeriod(void) {
     return var_fv0;
 }
 
+// DO NOT DELETE ME I'M REQUIRED FOR MATCHING
 const u32 rodata_padding[] = {
     0x800032D4,
     0x800032F8,
