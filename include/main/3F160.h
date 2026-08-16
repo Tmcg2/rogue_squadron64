@@ -43,6 +43,7 @@ void allocNpcContextArrays(void);
 u16  spawnNpcWithSubtype(npc_update, void*, u32, u8);
 u16  spawnNpcOfType(npc_update, void*arg1, u32, u8);
 struct D_80130BB8_type *getNpcContextByIndex(u16);
+void *getNpcContextField8(u16);
 u16  findFreeNpcSlotByKey(struct D_80130BB8_type*, u16);
 u16  getNextSlotNpcTypeId(u16);
 u16  getNpcNextSlotIndex(u16);

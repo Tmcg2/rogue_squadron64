@@ -323,7 +323,13 @@ struct D_80130BB8_type *getNpcContextByIndex(u16 arg0) {
     return gNpcSlotList[arg0].unk00;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", getNpcContextField8);
+void *getNpcContextField8(u16 arg0) {
+    if (gNpcSlotList[arg0].unk00 != NULL) {
+        return gNpcSlotList[arg0].unk00->unk08;
+    } else {
+        return NULL;
+    }
+}
 
 u16 findFreeNpcSlotByKey(struct D_80130BB8_type *arg0, u16 arg1) {
     u16 var_s0;
