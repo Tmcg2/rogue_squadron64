@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "PR/ultratypes.h"
+#include "main/562A0.h"
 
 struct text_header {
     u16 language_count;      /* 0x00 */
