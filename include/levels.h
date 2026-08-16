@@ -26,4 +26,6 @@ enum Level {
     /* 0x14 */ LEVEL_ATST,
 };
 
+extern enum Level gCurrentLevel;
+
 #endif

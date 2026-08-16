@@ -4360,7 +4360,6 @@ computeVoicePanCoefficients = 0x8009C2D0;
 ////////////////////////////////////////////////////////////////////////////////
 
 D_main_80000454 = 0x80000454; // type:f32 size:0x4
-D_main_80000460 = 0x80000460; // type:f32 size:0x4
 D_main_80000550 = 0x80000550; // type:f32
 D_main_800005A0 = 0x800005A0; // type:f64
 D_main_800007DC = 0x800007DC; // type:f32
@@ -4730,6 +4729,9 @@ D_main_8013A670 = 0x8013A670; // size:0x224
 
 gPreviousButtonsPressed = 0x8013A950; // type:u32 size:0x10
 gNewButtonsPressed      = 0x8013A960; // type:u32 size:0x10
+
+// type_size:0x6 count:4
+D_main_bss_80130B88 = 0x80130B88; // type:OSContPad size:0x18
 
 // type_size:0x14 count:0x20
 

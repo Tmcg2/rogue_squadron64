@@ -2,7 +2,9 @@
 
 #include "PR/os.h"
 
+#include "main/03310.h"
 #include "main/033C0.h"
+#include "main/080E0.h"
 #include "main/08510.h"
 
 OSContPad    gControllerPads[4];

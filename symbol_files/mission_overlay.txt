@@ -683,6 +683,8 @@ D_mission_overlay_8010B6A8 = 0x8010B6A8; // type:u32 size:0x4 segment:mission_ov
 D_mission_overlay_8010B6B0 = 0x8010B6B0; // type:u32 size:0x4 segment:mission_overlay
 
 demoInputs = 0x8010BCA0; // type:u32 size:0x4 segment:mission_overlay
+// type_size:0x6 count:4
+D_mission_overlay_8010BFB0 = 0x8010BFB0; // type:OSContPad size:0x18 segment:mission_overlay
 
 simpleCheckHandles = 0x8010C6E0; // type:u32 size:0x300 segment:mission_overlay
 

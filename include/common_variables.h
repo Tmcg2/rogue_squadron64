@@ -2,6 +2,7 @@
 #define COMMON_VARIABLES_H
 
 #include "common_types.h"
+#include "crafts.h"
 #include "levels.h"
 
 /*
@@ -17,5 +18,7 @@ extern struct MissionState gMissionState; // 0x80130B10
 extern u8 D_main_bss_80130B39; // 0x80130B39
 extern struct GameSettings gGameSettings; // 0x80130B40
 extern struct D_8013A5C0_type gSaveDataBody; // 0x8013A5C0
+
+extern struct player_struct gPlayers[];
 
 #endif

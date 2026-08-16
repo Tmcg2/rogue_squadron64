@@ -3,6 +3,6 @@
 
 #include "PR/ultratypes.h"
 
-
+s32 floatToInt(f32);
 
 #endif

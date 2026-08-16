@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "common_variables.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/6C310", loadCraftShadowTextures);
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", applyCentripetalBankingToNpcCorners);
@@ -24,7 +26,9 @@ INCLUDE_ASM("asm/nonmatchings/main/6C310", getCraftRecordByIdx);
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", getPlayerCraftRecordByIdx);
 
-INCLUDE_ASM("asm/nonmatchings/main/6C310", getPlayerVehicleId);
+enum PlayerCraft getPlayerVehicleId(s32 playerId) {
+    return gPlayers[playerId].inner.vehicleId;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", getPlayerRecordTargetBuffer);
 

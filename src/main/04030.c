@@ -1,5 +1,6 @@
 #include "common.h"
-#include "PR/ultratypes.h"
+
+#include "main/04030.h"
 
 static u32 rngSeed = 0;
 
@@ -15,7 +16,7 @@ static u32 padding_junk[] = {
 //   after the .text section, I wonder if  this was some statically linked library?
 
 #if 0
-u32 rand(void) {
+s16 rand(void) {
     rngSeed *= 0xA8351D63;
     return (rngSeed >> 6) % 32768;
 }
@@ -23,10 +24,6 @@ u32 rand(void) {
 INCLUDE_ASM("asm/nonmatchings/main/04030", rand);
 #endif
 
-#if 0
 void setRngSeed(u32 seed) {
     rngSeed = seed;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/04030", setRngSeed);
-#endif

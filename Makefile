@@ -65,6 +65,7 @@ build/src/%.s: build/src/%.i | $(BUILD_DIRS) $(GCC281SN) $(GCC272SN0001)
 	$(N64CC) $(CFLAGS) $< -o $@
 
 build/src/main/03310.s: N64CC = $(GCC272SN0001)
+build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
 
