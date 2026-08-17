@@ -231,17 +231,6 @@ struct manifest_entry {
     /* 0x10 */ u8 name[16];
 }; // size 0x20
 
-struct D_80110A80_entry {
-    u8 unk00[0x20];                  /* 0x00 */
-    u8 unk20[0x20];                  /* 0x00 */
-    struct manifest_entry *manifest; /* 0x40 */
-    u8 *data;                        /* 0x44 pointer to the data block that the manifest refers to. Is a ROM pointer as well, weirdly */
-    u32 entry_count;                 /* 0x48 number of entries in the manifest/number of files in the data block (same thing really) */
-    u16 unk4C;                       /* 0x4C */
-    u8  one;                         /* 0x4E */
-    // u8 compiler_padding?; /* 0x4F */
-}; // size 0x50
-
 struct meshdef1 {
     struct meshdef1 *next_meshdef1_pointer; /* 0x00 */
     struct meshdef1 *prev_meshdef1_pointer; /* 0x04 */

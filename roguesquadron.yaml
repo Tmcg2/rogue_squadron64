@@ -708,7 +708,8 @@ segments:
       - {type: bss, vram: 0x8010D200, name: "main/8010D200"              }
       - {type: .bss, vram: 0x8010FF20, name: "main/03310"                }
       - {type: .bss, vram: 0x8010FF30, name: "main/033C0"                }
-      - {type: bss, vram: 0x801107A0, name: "main/801107A0"              }
+      - {type: .bss, vram: 0x801107A0, name: "main/04080"              } # 04080.c
+      - {type: bss, vram: 0x80111260, name: "main/80111260"              }
       - {type: .bss, vram: 0x801128D0, name: "main/07800"                }
       - {type: bss, vram: 0x801128E0, name: "main/801128E0"              }
       - {type: .bss, vram: 0x80128EF0, name: "main/1EE30"                }

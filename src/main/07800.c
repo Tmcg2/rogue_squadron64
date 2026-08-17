@@ -157,7 +157,7 @@ s32 setServiceWorkerPriority(OSId arg0, u8 arg1) {
     return 1;
 }
 
-s32 yieldThreadRet1(void) {
+s32 yieldThreadRet1(s32 unused) {
     osYieldThread();
     return 1;
 }

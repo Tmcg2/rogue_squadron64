@@ -1175,7 +1175,8 @@ SECTIONS
         build/asm/data/main/8010D200.bss.o(.bss);
         build/src/main/03310.o(.bss);
         build/src/main/033C0.o(.bss);
-        build/asm/data/main/801107A0.bss.o(.bss);
+        build/src/main/04080.o(.bss);
+        build/asm/data/main/80111260.bss.o(.bss);
         build/src/main/07800.o(.bss);
         build/asm/data/main/801128E0.bss.o(.bss);
         build/src/main/1EE30.o(.bss);

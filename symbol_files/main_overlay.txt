@@ -4360,6 +4360,7 @@ computeVoicePanCoefficients = 0x8009C2D0;
 ////////////////////////////////////////////////////////////////////////////////
 
 D_main_80000454 = 0x80000454; // type:f32 size:0x4
+D_main_80000460 = 0x80000460; // type:f32 size:0x4
 D_main_80000550 = 0x80000550; // type:f32
 D_main_800005A0 = 0x800005A0; // type:f64
 D_main_800007DC = 0x800007DC; // type:f32
@@ -4574,7 +4575,7 @@ dmaSlotTxThisStep    = 0x80110A50; // type:u32          size:0x20
 dmaSlotMutex         = 0x80110A70; // type:u8
 // type_size:0x50 count:0x04
 // - array of {manifest_entry*, entry_count} per segment; renamed from D_80110A80 (2026-05-11)
-gManifestTable                   = 0x80110A80; // size:0x140
+D_gManifestTable                   = 0x80110A80; // size:0x140
 // - 16-entry RGB radar palette (normal) per docs/hud_stuff
 gRadarPaletteNormal              = 0x80109FF8; // size:0x30
 // - 16-entry RGB radar palette (height-inverted) per docs/hud_stuff
@@ -4629,11 +4630,11 @@ dLevelByDemoId                   = 0x800CD404; // type:u8 size:0x6
 // type_size:0x18 count:0x10
 D_main_80110BC0           = 0x80110BC0; // size:0x180
 // type_size:0x74 count:0x08
-D_main_80110D60           = 0x80110D60; // size:0x3A0
+D_main_bss_80110D60       = 0x80110D60; // size:0x3A0
 // type_size:0x18 count:0x08
 // - DMA-related OSMesg buffer used by service-worker entries (per docs/dma_linked_list)
 gServiceWorkerMesgBuf     = 0x80111100; // size:0x140
-D_main_80111240           = 0x80111240; // size:0x04
+D_main_bss_80111240       = 0x80111240; // size:0x04
 dmaSlotMaxTxStepSize      = 0x80111254; // type:u32
 // - rs_malloc heap base (head node ptr); set by initRsMallocHeap
 gRsHeapBase               = 0x80111260;

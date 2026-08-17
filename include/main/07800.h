@@ -29,7 +29,7 @@ OSMesg recvServiceMessage(OSId);
 s32    postMessageToServiceWorker(OSId, OSMesg);
 s32    unregisterServiceWorker(OSId);
 s32    setServiceWorkerPriority(OSId, u8);
-s32    yieldThreadRet1(void);
+s32    yieldThreadRet1(s32);
 s32    stopServiceWorker(OSId);
 s32    restartServiceWorker(OSId);
 

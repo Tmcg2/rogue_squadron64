@@ -3,14 +3,160 @@
 
 #include "main/01720.h"
 #include "main/04080.h"
+#include "main/06170.h"
+#include "main/07800.h"
 #include "main/08120.h"
+#include "PR/os.h"
 #include "compiler/gcc/string.h"
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", submitDmaSlot);
+OSMesg      D_main_801107A0[8];
+OSMesgQueue D_main_801107C0;
+u32 bss_pad0_04080;
+OSIoMesg    D_main_801107E0[8];
+OSMesg      dmaSlotMesgBuffer[8];
+OSMesgQueue dmaSlotMesgQueue[8];
+OSMesg      gDmaSlotLockMesg;
+u32 bss_pad1_04080;
+u32 bss_pad2_04080;
+OSMesgQueue gDmaSlotLockQueue;
+s32         nextOpenDmaSlot;
+s32         dmaSlotsAvailable;
+u8         *dmaSlotDestAddr[8];
+s32         dmaSlotTotalTxSize[8];
+u8         *dmaSlotSrcAddr[8];
+s32         dmaSlotTxSoFar[8];
+s32         dmaSlotTxRemaning[8];
+s32         dmaSlotTxThisStep[8];
+volatile u8 dmaSlotMutex;
+u8 bss_pad3_04080;
+u8 bss_pad4_04080;
+u8 bss_pad5_04080;
+struct data_block_header_entry *D_main_bss_80110A74;
+u32 bss_pad6_04080;
+u32 bss_pad7_04080;
+struct D_80110A80_entry D_gManifestTable[4]; // The name of this variable is wonky because otherwise it gets placed in the BSS section incorrectly
+struct D_80110BC0_type  D_main_80110BC0[16];
+s32 D_main_bss_80110D40;
+u8 *D_main_bss_80110D44;
+s32 D_main_bss_80110D48;
+s32 D_main_bss_80110D4C;
+u8 *D_main_bss_80110D50;
+s32 D_main_bss_80110D54;
+u32 bss_pad8_04080;
+u32 bss_pad9_04080;
+struct D_80110D60_type D_main_bss_80110D60[8];
+union  D_80111100_type gServiceWorkerMesgBuf[8];
+u32 D_main_bss_80111240;
+s32 D_main_bss_80111244;
+s32 D_main_bss_80111248;
+s32 D_main_bss_8011124C;
+s32 D_main_bss_80111250;
+u32 dmaSlotMaxTxStepSize;
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", waitDmaSlotComplete);
+s32 submitDmaSlot(u8 *arg0, u8 *arg1, s32 arg2) {
+    s32 temp_s2;
+    s32 temp_v1;
+    s32 var_s1;
+    s32 var_v0;
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", pollDmaSlotStep);
+    osRecvMesg(&gDmaSlotLockQueue, NULL, 1);
+    temp_s2 = nextOpenDmaSlot;
+    temp_v1 = temp_s2 + 1;
+    var_v0 = temp_v1;
+    if (temp_v1 < 0) {
+        var_v0 = temp_s2 + 8;
+    }
+    nextOpenDmaSlot = temp_v1 - ((var_v0 >> 3) * 8);
+    dmaSlotDestAddr[temp_s2]    = arg1;
+    dmaSlotTotalTxSize[temp_s2] = arg2;
+    dmaSlotSrcAddr[temp_s2]     = arg0;
+    dmaSlotTxRemaning[temp_s2]  = arg2;
+    dmaSlotTxSoFar[temp_s2]     = 0;
+    if (dmaSlotMaxTxStepSize >= arg2) {
+        var_s1 = arg2;
+    } else {
+        var_s1 = dmaSlotMaxTxStepSize;
+    }
+    dmaSlotTxThisStep[temp_s2] = var_s1;
+    while (dispatchPendingPiDmaToWorker(0) == 1) {
+        yieldThreadRet1(D_main_bss_80110D54);
+    }
+    dmaSlotMutex = 0;
+    osWritebackDCache(arg1, var_s1);
+    osPiStartDma(&D_main_801107E0[temp_s2], 0, 0, arg0, arg1, var_s1, &dmaSlotMesgQueue[temp_s2]);
+    dmaSlotMutex = 1;
+    dmaSlotsAvailable -= 1;
+    osSendMesg(&gDmaSlotLockQueue, (void *)1, 1);
+    return temp_s2;
+}
+
+void waitDmaSlotComplete(s32 arg0) {
+    s32 var_s0;
+    u8 *temp_s1;
+    u8 *temp_s2;
+
+    do {
+        osRecvMesg(&dmaSlotMesgQueue[arg0], NULL, 1);
+        osYieldThread();
+        osInvalDCache(&dmaSlotDestAddr[arg0][dmaSlotTxSoFar[arg0]], dmaSlotTxThisStep[arg0]);
+        dmaSlotTxRemaning[arg0] -= dmaSlotTxThisStep[arg0];
+        dmaSlotTxSoFar[arg0] += dmaSlotTxThisStep[arg0];
+        dmaSlotMutex = 0;
+        if (dmaSlotTxRemaning[arg0] == 0) break;
+        if (dmaSlotMaxTxStepSize >= dmaSlotTxRemaning[arg0]) {
+            var_s0 = dmaSlotTxRemaning[arg0];
+        } else {
+            var_s0 = dmaSlotMaxTxStepSize;
+        }
+        dmaSlotTxThisStep[arg0] = var_s0;
+        temp_s1 = &dmaSlotDestAddr[arg0][dmaSlotTxSoFar[arg0]];
+        temp_s2 = &dmaSlotSrcAddr[arg0][dmaSlotTxSoFar[arg0]];
+        while (dispatchPendingPiDmaToWorker(0) == 1) {
+            yieldThreadRet1(D_main_bss_80110D54);
+        }
+        osWritebackDCache(temp_s1, var_s0);
+        osPiStartDma(&D_main_801107E0[arg0], 0, 0, temp_s2, temp_s1, var_s0, &dmaSlotMesgQueue[arg0]);
+        dmaSlotMutex = 1;
+    } while(dmaSlotTxRemaning[arg0] != 0);
+    dmaSlotsAvailable += 1;
+    dispatchPendingPiDmaToWorker(1);
+}
+
+s32 pollDmaSlotStep(s32 arg0) {
+    u32 var_s0;
+    u8 *temp_s1_2;
+    u8 *temp_s2;
+
+    if (osRecvMesg(&dmaSlotMesgQueue[arg0], NULL, 1) != -1) {
+        osYieldThread();
+        osInvalDCache(&dmaSlotDestAddr[arg0][dmaSlotTxSoFar[arg0]], dmaSlotTxThisStep[arg0]);
+        dmaSlotTxRemaning[arg0] -= dmaSlotTxThisStep[arg0];
+        dmaSlotTxSoFar[arg0] += dmaSlotTxThisStep[arg0];
+        dmaSlotMutex = 0;
+        if (dmaSlotTxRemaning[arg0] != 0) {
+            if (dmaSlotMaxTxStepSize >= dmaSlotTxRemaning[arg0]) {
+                var_s0 = dmaSlotTxRemaning[arg0];
+            } else {
+                var_s0 = dmaSlotMaxTxStepSize;
+            }
+            dmaSlotTxThisStep[arg0] = var_s0;
+            temp_s1_2 = &dmaSlotDestAddr[arg0][dmaSlotTxSoFar[arg0]];
+            temp_s2 = &dmaSlotSrcAddr[arg0][dmaSlotTxSoFar[arg0]];
+            while (dispatchPendingPiDmaToWorker(0) == 1) {
+                yieldThreadRet1(D_main_bss_80110D54);
+            }
+            osWritebackDCache(temp_s1_2, var_s0);
+            osPiStartDma(&D_main_801107E0[arg0], 0, 0, temp_s2, temp_s1_2, var_s0, &dmaSlotMesgQueue[arg0]);
+            dmaSlotMutex = 1;
+            return 0;
+        } else {
+            dmaSlotsAvailable += 1;
+            dispatchPendingPiDmaToWorker(1);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 #if 0
 struct manifest_entry *find_manifest_entry(s32 idx, u8 *entry_name) {
@@ -87,7 +233,38 @@ struct manifest_entry *find_manifest_entry(s32 idx, u8 *entry_name) {
 INCLUDE_ASM("asm/nonmatchings/main/04080", find_manifest_entry);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", pushEventToRingBuffer);
+s32 pushEventToRingBuffer(union D_80111100_type *arg0) {
+    s32 temp_a2;
+    s32 temp_v1;
+    s32 var_v0;
+
+    temp_a2 = D_main_bss_80111244;
+    temp_v1 = temp_a2 + 1;
+    var_v0 = temp_v1;
+    if (temp_v1 < 0) {
+        var_v0 = temp_a2 + 8;
+    }
+    D_main_bss_80111244 = temp_v1 - ((var_v0 >> 3) * 8);
+    D_main_bss_8011124C -= 1;
+    D_main_bss_80110D60[temp_a2].unk02 = 0;
+    D_main_bss_80110D60[temp_a2].unk04 = arg0;
+    D_main_bss_80110D60[temp_a2].unk01 = 1;
+    switch (arg0->flag_8000.unk01) {
+    case 0:
+        D_main_bss_80110D60[temp_a2].unk00 = 0;
+        break;
+    case 1:
+        D_main_bss_80110D60[temp_a2].unk00 = arg0->flag_8000.unk01;
+        break;
+    case 2:
+        D_main_bss_80110D60[temp_a2].unk00 = arg0->flag_8000.unk01;
+        D_main_bss_80110D60[temp_a2].unk08 = 0;
+        D_main_bss_80110D60[temp_a2].unk48[0] = 0;
+    default:
+        break;
+    }
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", subscribeEventHandler);
 
@@ -97,7 +274,51 @@ INCLUDE_ASM("asm/nonmatchings/main/04080", mainEventQueueWorker);
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", initDmaSlots);
 
+#if 0
+struct tyler {
+    u32 unk0;
+    u32 unk4;
+};
+
+s32 findManifestEntryByName(u8 *arg0) {
+    u32 temp_s0;
+    s32 temp_s2_2;
+    s32 var_s0;
+    s32 var_s4;
+    struct D_80110A80_entry *temp_s3;
+    struct D_80110A80_entry *var_a0;
+    struct manifest_entry *temp_v0;
+    u32 temp_s5;
+    struct tyler *temp_s2;
+
+    for (var_s0 = 0; var_s0 < D_main_bss_80110D40; var_s0++) {
+        if (rs_strcmp(D_main_bss_80110A74[var_s0].name, arg0) == 0) break;
+    }
+    temp_s5 = D_main_bss_80110A74[var_s0].data_offset;
+    for (var_s4 = 0; var_s4 < 4; var_s4++) {
+        if (gManifestTable[var_s4].one == 0) break;
+    }
+    temp_s2 = rs_malloc(8, 9U);
+    temp_s3 = &gManifestTable[var_s4];
+    if (D_main_bss_80110A74[var_s0].unk18 == 0) {
+        waitDmaSlotComplete(submitDmaSlot(&D_main_bss_80110D44[temp_s5], temp_s2, 8));
+        temp_s2_2 = temp_s2->unk0;
+        temp_s0 = temp_s2->unk4 & 0x7FFFFFFF;
+        rs_free(temp_s2);
+        temp_s3->manifest = rs_malloc(temp_s0, 9U);
+        temp_s3->one = 1;
+        temp_s3->unk00[0] = 0;
+        temp_s3->unk20[0] = 0;
+        temp_s3->entry_count = temp_s0 >> 5;
+        temp_s3->unk4C = 0;
+        temp_s3->data = &D_main_bss_80110D44[temp_s5];
+        waitDmaSlotComplete(submitDmaSlot(&temp_s3->data[temp_s2_2], temp_s3->manifest, temp_s0));
+    }
+    return var_s4;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/04080", findManifestEntryByName);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", freeManifestSegmentAssets);
 
@@ -124,9 +345,9 @@ s32 setManifestEntryName(s32 arg0, u8 *arg1) {
         return 0;
     }
     if (arg1 != NULL) {
-        rs_strcpy(gManifestTable[arg0].unk20, arg1);
+        rs_strcpy(D_gManifestTable[arg0].unk20, arg1);
     } else {
-        gManifestTable[arg0].unk20[0] = '\0';
+        D_gManifestTable[arg0].unk20[0] = '\0';
     }
     return 1;
 }
@@ -167,7 +388,9 @@ s32 zlibReturnZeroStub(void) {
     return 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", synchronousDmaTransfer);
+void synchronousDmaTransfer(u8 *arg0, u8 *arg1, s32 arg2) {
+    waitDmaSlotComplete(submitDmaSlot(arg0, arg1, arg2));
+}
 
 void *mallocWithFallbackStrategy(s32 arg0) {
     void *ret = rs_malloc(arg0, 4U);
@@ -206,10 +429,19 @@ s32 returnZeroStubZlib(void) {
     return 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", resolveAssetRamAddress);
+u8 *resolveAssetRamAddress(s32 arg0) {
+    return &D_gManifestTable[D_main_80110BC0[arg0].unk10].data[D_main_80110BC0[arg0].manfiest->data_offset];
+}
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", getDmaSlotMutex);
+u8 getDmaSlotMutex(void) {
+    return dmaSlotMutex;
+}
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", setDmaWorkerPriority);
+void setDmaWorkerPriority(s32 arg0) {
+    if (arg0 <= 0) {
+        arg0 = 0x20;
+    }
+    setServiceWorkerPriority(D_main_bss_80110D54, arg0);
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", fake_func_8000537C);
