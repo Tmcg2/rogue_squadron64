@@ -211,24 +211,24 @@ struct mission_stats {
 }; // size = 0x10;
 
 struct manifest_entry {
-    /* 0x00 */ u32 data_offset;
-    /* 0x04 */ u32 decompressed_size;
-    /* 0x08 */ u32 compressed_size; // 0xFFFFFFFF (or -1 if signed) indicates that the entry is not compressed
+    u32 data_offset;       /* 0x00 */
+    u32 decompressed_size; /* 0x04 */
+    u32 compressed_size;   /* 0x08 0xFFFFFFFF (or -1 if signed) indicates that the entry is not compressed */
     /*
     bit 7: is directory (0x80)
     bits 1-6: never set, checked in several places though
     bit 0: set a lot (but not alwasy). Purpose unknown
     */
-    /* 0x0C */ u8 flags;
-    /* 0x0D */ u8 unk0D;
+    u8 flags; /* 0x0C */
+    u8 unk0D; /* 0x0D */
     /*
     This is a number multiplied by 0x20 (<< 5)
     It is the size in bytes that the directory takes up in the manifest
     So, (directory content entries + 1(the directory entry itself)) * 0x20
     For non-directory entries, this number should be zero 
     */
-    /* 0x0E */ u16 directory_size;
-    /* 0x10 */ u8 name[16];
+    u16 directory_size; /* 0x0E */
+    u8 name[16];        /* 0x10 */
 }; // size 0x20
 
 struct meshdef1 {

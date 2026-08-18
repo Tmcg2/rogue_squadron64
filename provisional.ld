@@ -130,7 +130,6 @@ SECTIONS
         build/src/zlib/infblock.o(.rodata);
         build/src/zlib/infcodes.o(.rodata);
         build/src/zlib/inffast.o(.rodata);
-        build/src/zlib/inftrees.o(.rodata);
         build/src/zlib/infutil.o(.rodata);
         build/src/zlib/zutil.o(.rodata);
         build/asm/libultra/io/aisetfreq.o(.rodata);
@@ -309,7 +308,7 @@ SECTIONS
         build/asm/data/zlib/infblock.data.o(.data);
         build/src/zlib/infcodes.o(.data);
         build/src/zlib/inffast.o(.data);
-        build/asm/data/zlib/inftrees.data.o(.data);
+        build/src/zlib/inftrees.o(.data);
         build/asm/data/zlib/infutil.data.o(.data);
         build/asm/data/zlib/zutil.data.o(.data);
         build/asm/libultra/io/aisetfreq.o(.data);
@@ -1181,7 +1180,7 @@ SECTIONS
         build/asm/data/main/801128E0.bss.o(.bss);
         build/src/main/1EE30.o(.bss);
         build/asm/data/main/80128F10.bss.o(.bss);
-        build/asm/data/zlib/inftrees.bss.o(.bss);
+        build/src/zlib/inftrees.o(.bss);
         build/asm/data/libultra/io/conteepread.bss.o(.bss);
         build/asm/data/libultra/io/controller.bss.o(.bss);
         build/asm/data/libultra/os/initialize.bss.o(.bss);

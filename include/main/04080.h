@@ -47,7 +47,8 @@ union D_80111100_type {
         u16 unk16;                   /* 0x16 */
         void *source;                /* 0x18 */
         u32 offset;                  /* 0x1C */
-        u32 size;                    /* 0x20 */
+        u16 size;                    /* 0x20 */
+        u16 pad22;                   /* 0x22 */
         void *destination;           /* 0x24 */
     } flag_8000;
     struct {
@@ -61,7 +62,8 @@ union D_80111100_type {
         u32 unk14;                   /* 0x14 */
         void *source;                /* 0x18 */
         u32 offset;                  /* 0x1C */
-        u32 size;                    /* 0x20 */
+        u16 size;                    /* 0x20 */
+        u16 pad22;                   /* 0x22 */
         void *destination;           /* 0x24 */
     } flag_8001;
     struct {
@@ -75,7 +77,8 @@ union D_80111100_type {
         u32 unk14;                   /* 0x14 */
         void *source;                /* 0x18 */
         u32 offset;                  /* 0x1C */
-        u32 size;                    /* 0x20 */
+        u16 size;                    /* 0x20 */
+        u16 pad22;                   /* 0x22 */
         void *destination;           /* 0x24 */
     } flag_8002;
 }; // size = 0x28
@@ -97,6 +100,8 @@ void  waitDmaSlotComplete(s32);
 s32   pollDmaSlotStep(s32);
 struct manifest_entry *find_manifest_entry(s32, u8*, u32);
 s32   pushEventToRingBuffer(union D_80111100_type*);
+s32   subscribeEventHandler(s32*);
+s32   freeManifestSegmentAssets(s32);
 void  noopHandler_80004FC8(void);
 void  noopHandler_80004FD0(void);
 s32   setManifestEntryName(s32, u8*);

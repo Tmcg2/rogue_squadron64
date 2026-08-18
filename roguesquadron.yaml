@@ -273,7 +273,7 @@ segments:
       # I'm a little confused by something here...
       # In the actual zlib source, this should start with cplens, but here there's an errant word
       # just before cplens. Its currently treated as a string but frankly it could be just about anything
-      - [0x39A50, data,    "zlib/inftrees"]
+      - [0x39A50, .data,    "zlib/inftrees"]
       - [0x39C40, data,    "zlib/infutil"]
       # This is speculative, I can't figure out what this data is meant to be
       # Based on its location I believe that it has to belong to zutil but I don't see
@@ -714,7 +714,7 @@ segments:
       - {type: bss, vram: 0x801128E0, name: "main/801128E0"              }
       - {type: .bss, vram: 0x80128EF0, name: "main/1EE30"                }
       - {type: bss, vram: 0x80128F10, name: "main/80128F10"              }
-      - {type: bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
+      - {type: .bss, vram: 0x8012BF30, name: "zlib/inftrees"              }
       - {type: bss, vram: 0x8012CFD0, name: "libultra/io/conteepread"    }
       - {type: bss, vram: 0x8012D010, name: "libultra/io/controller"     }
       - {type: bss, vram: 0x8012D0A0, name: "libultra/os/initialize"     }

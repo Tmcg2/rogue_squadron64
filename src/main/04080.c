@@ -266,7 +266,26 @@ s32 pushEventToRingBuffer(union D_80111100_type *arg0) {
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", subscribeEventHandler);
+s32 subscribeEventHandler(s32 *arg0) {
+    s32 var_a2;
+    struct D_80110BC0_type *temp_a0;
+    struct D_80110BC0_type *var_v1;
+    struct D_80110D60_type *temp_v0;
+
+    for (var_a2 = 0; var_a2 < 0x10; var_a2++) {
+        if (D_main_80110BC0[var_a2].unk00 == 0) break;
+    }
+    if (D_main_80110BC0[var_a2].unk00 == 0) {
+        D_main_80110BC0[var_a2].unk00 = 1;
+        D_main_80110BC0[var_a2].manfiest = (struct manifest_entry *) D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.source;
+        D_main_80110BC0[var_a2].unk0C = D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.size;
+        D_main_80110BC0[var_a2].unk08 = 0;
+        D_main_80110BC0[var_a2].unk10 = D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.offset;
+        D_main_80110BC0[var_a2].unk14 = 0;
+        *arg0 = var_a2;
+    }
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", processAssetLoadStep);
 
@@ -320,13 +339,84 @@ s32 findManifestEntryByName(u8 *arg0) {
 INCLUDE_ASM("asm/nonmatchings/main/04080", findManifestEntryByName);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", freeManifestSegmentAssets);
+s32 freeManifestSegmentAssets(s32 arg0) {
+    u32 var_a1;
+    u32 var_s1;
+    struct D_80110A80_entry *var_s0;
+
+    if (arg0 == -1) {
+        for (var_s1 = 0; var_s1 < 4; var_s1++) {
+            if (D_gManifestTable[var_s1].one != 1) continue;
+
+            for (var_a1 = 0; var_a1 < 0x10; var_a1++) {
+                if ((D_main_80110BC0[var_a1].unk00 == 1) && (D_main_80110BC0[var_a1].unk10 == var_s1)) {
+                    D_main_80110BC0[var_a1].unk00 = 0;
+                }
+            }
+            rs_free(D_gManifestTable[var_s1].manifest);
+            D_gManifestTable[var_s1].one = 0;
+        }
+    } else {
+        var_s0 = &D_gManifestTable[arg0];
+        for (var_a1 = 0; var_a1 < 0x10; var_a1++) {
+            if ((D_main_80110BC0[var_a1].unk00 == 1) && (D_main_80110BC0[var_a1].unk10 == arg0)) {
+                D_main_80110BC0[var_a1].unk00 = 0;
+            }
+        }
+        rs_free(var_s0->manifest);
+        var_s0->one = 0;
+    }
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", findAssetAcrossSegments);
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", teardownAssetDma);
 
+#if 0
+s32 get_asset_size_extra(s32 arg0, u8 *arg1) {
+    s32 var_a0;
+    u32 var_s0;
+    s32 size;
+    struct D_80110A80_entry *var_s1;
+    struct manifest_entry *var_a1;
+    struct manifest_entry *var_v0;
+
+    if (arg0 == -1) {
+        for (var_s0 = 0; var_s0 < 4; var_s0++) {
+            if (D_gManifestTable[var_s0].one == 0) continue;
+
+            var_v0 = find_manifest_entry(var_s0, arg1, 0U);
+            if (var_v0 != NULL) {
+                arg0 = var_s0;
+                var_a1 = var_v0;
+                goto tyler;
+            }
+        }
+        var_a1 = NULL;
+    } else {
+        var_v0 = find_manifest_entry(arg0, arg1, 0U);
+        var_a1 = var_v0;
+    }
+tyler:
+    if (var_a1 != NULL) {
+        size = 0;
+    } else {
+        var_a0 = 0;
+        if ((D_gManifestTable[arg0].unk4C != 0) && (var_a1->compressed_size != -1U)) {
+            var_a0 = ((var_a1->flags & 0x44) == 0) << 6;
+        }
+        if ((var_a1->flags & 4) != 0) {
+            size = var_a1->compressed_size + var_a0;
+        } else {
+            size = var_a1->decompressed_size + var_a0;
+        }
+    }
+    return size;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/04080", get_asset_size_extra);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", setupAssetDma);
 
@@ -338,7 +428,13 @@ void noopHandler_80004FC8(void) {
 void noopHandler_80004FD0(void) {
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/04080", teardownAssetManifestService);
+s32 teardownAssetManifestService(void) {
+    unregisterServiceWorker(D_main_bss_80110D54);
+    if (D_main_bss_80110D50 != NULL) {
+        rs_free(D_main_bss_80110D50);
+    }
+    return 1;
+}
 
 s32 setManifestEntryName(s32 arg0, u8 *arg1) {
     if (arg0 == -1) {
@@ -359,9 +455,11 @@ s32 get_manifest_entry_type(u32 arg0, u8 *entry_name) {
 
     if (arg0 == -1U) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
-            if (gManifestTable[var_s0].one == 0) continue;
+            if (D_gManifestTable[var_s0].one == 0) continue;
             entry = find_manifest_entry(var_s0, entry_name, 1);
             if (entry != NULL) {
+                arg0 = var_s0;
+                goto why;
                 break;
             }
         }
@@ -369,6 +467,7 @@ s32 get_manifest_entry_type(u32 arg0, u8 *entry_name) {
     } else {
         entry = find_manifest_entry(arg0, entry_name, 1);
     }
+    why:
     if (entry == NULL) {
         return 0;
     }

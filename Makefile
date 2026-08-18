@@ -36,7 +36,6 @@ BUILD_DIRS := $(C_DIRS:%=build/%) $(ASM_DIRS:%=build/%)
 SYMBOL_FILES := undefined_funcs_auto.txt undefined_syms_auto.txt symbol_files/cinematic_overlay.txt symbol_files/libultra.txt symbol_files/main_overlay.txt symbol_files/menu_overlay.txt symbol_files/mission_overlay.txt symbol_files/zlib.txt
 
 .PHONY: clean
-.SECONDAY:
 
 build/tyler.z64: build/tyler.elf
 	$(OBJCOPY) $< $@ -O binary
@@ -68,6 +67,7 @@ build/src/main/03310.s: N64CC = $(GCC272SN0001)
 build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
+build/src/zlib/%.s: N64CC = $(GCC272SN0001)
 
 build/src/%.o: build/src/%.s | $(BUILD_DIRS)
 	$(MODERNASN) $(ASFLAGS) $< -o $@
