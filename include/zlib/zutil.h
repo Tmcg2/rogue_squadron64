@@ -3,6 +3,8 @@
 
 #include "PR/ultratypes.h"
 
+typedef u32 (*check_func)(u32 check, u8 *buf, u32 len);
+
 void *zcalloc(void*, u32, u32);
 void zcfree(void*, void*);
 

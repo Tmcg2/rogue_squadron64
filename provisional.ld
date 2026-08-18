@@ -305,7 +305,7 @@ SECTIONS
         build/asm/data/main/394E0.data.o(.data);
         build/asm/data/main/398F0.data.o(.data);
         build/asm/data/main/gspF3DEXMainData.o(.data);
-        build/asm/data/zlib/infblock.data.o(.data);
+        build/src/zlib/infblock.o(.data);
         build/src/zlib/infcodes.o(.data);
         build/src/zlib/inffast.o(.data);
         build/src/zlib/inftrees.o(.data);

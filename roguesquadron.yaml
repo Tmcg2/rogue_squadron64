@@ -269,7 +269,7 @@ segments:
       - [0x394E0, data,    "main/394E0"]
       - [0x398F0, data,    "main/398F0"]
       - [0x39900, databin, "main/gspF3DEXMainData"]
-      - [0x39A00, data,    "zlib/infblock"]
+      - [0x39A00, .data,    "zlib/infblock"]
       # I'm a little confused by something here...
       # In the actual zlib source, this should start with cplens, but here there's an errant word
       # just before cplens. Its currently treated as a string but frankly it could be just about anything

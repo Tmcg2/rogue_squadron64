@@ -4,5 +4,6 @@
 #include "common_types.h"
 
 void mat3x4Multiply(Mat4x3, f32, f32);
+void zmemcpy(u8*, u8*, u32);
 
 #endif
