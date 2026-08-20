@@ -274,7 +274,7 @@ segments:
       # In the actual zlib source, this should start with cplens, but here there's an errant word
       # just before cplens. Its currently treated as a string but frankly it could be just about anything
       - [0x39A50, .data,    "zlib/inftrees"]
-      - [0x39C40, data,    "zlib/infutil"]
+      - [0x39C40, .data,    "zlib/infutil"]
       # This is speculative, I can't figure out what this data is meant to be
       # Based on its location I believe that it has to belong to zutil but I don't see
       # anything in zlib's zutil file that resembles this data...
