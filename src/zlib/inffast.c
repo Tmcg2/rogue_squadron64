@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "zlib/inffast.h"
+#include "zlib/infutil.h"
 
 /* simplify the use of the inflate_huft type with some defines */
 #define base more.Base

@@ -310,7 +310,7 @@ SECTIONS
         build/src/zlib/inffast.o(.data);
         build/src/zlib/inftrees.o(.data);
         build/src/zlib/infutil.o(.data);
-        build/asm/data/zlib/zutil.data.o(.data);
+        build/src/zlib/zutil.o(.data);
         build/asm/libultra/io/aisetfreq.o(.data);
         build/asm/data/libultra/io/aisetnextbuf.data.o(.data);
         build/asm/libultra/io/ai.o(.data);

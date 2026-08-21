@@ -31,6 +31,12 @@ u32 fixed_bd;
 inflate_huft *fixed_tl;
 inflate_huft *fixed_td;
 
+/* simplify the use of the inflate_huft type with some defines */
+#define base more.Base
+#define next more.Next
+#define exop word.what.Exop
+#define bits word.what.Bits
+
 /* If BMAX needs to be larger than 16, then h and x[] should be uLong. */
 #define BMAX 15         /* maximum bit length of any code */
 #define N_MAX 288       /* maximum number of codes in any set */

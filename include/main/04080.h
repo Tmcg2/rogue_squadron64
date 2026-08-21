@@ -3,7 +3,7 @@
 
 #include "PR/ultratypes.h"
 
-#include "zlib/zlib_types.h"
+#include "zlib/zlib.h"
 
 struct data_block_header_entry {
     u8 name[16];     /* 0x00 */

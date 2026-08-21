@@ -68,6 +68,7 @@ build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: N64CC = $(GCC272SN0001)
+build/src/zlib/%.s: CFLAGS = -quiet -O3 -G0 -mips3
 
 build/src/%.o: build/src/%.s | $(BUILD_DIRS)
 	$(MODERNASN) $(ASFLAGS) $< -o $@

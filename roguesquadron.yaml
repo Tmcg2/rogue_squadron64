@@ -278,7 +278,7 @@ segments:
       # This is speculative, I can't figure out what this data is meant to be
       # Based on its location I believe that it has to belong to zutil but I don't see
       # anything in zlib's zutil file that resembles this data...
-      - [0x39C90, data,   "zlib/zutil"]
+      - [0x39C90, .data,   "zlib/zutil"]
       - [0x39CC0, data,   "libultra/io/aisetnextbuf"]
       - [0x39CD0, data,   "libultra/io/controller"]
       - [0x39CE0, data,   "libultra/os/exceptasm"]

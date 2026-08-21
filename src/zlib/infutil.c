@@ -1,8 +1,8 @@
 #include "common.h"
 
+#include "zlib/zlib.h"
 #include "zlib/infutil.h"
-#include "zlib/infutil.h"
-#include "zlib/zlib_types.h"
+#include "zlib/forward_declares.h"
 
 /* And'ing with mask[n] masks the lower n bits */
 u32 inflate_mask[17] = {

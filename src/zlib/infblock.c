@@ -1,8 +1,9 @@
 #include "common.h"
 
 #include "main/192E0.h"
-#include "zlib/infutil.h"
 #include "zlib/infblock.h"
+#include "zlib/infutil.h"
+#include "zlib/zutil.h"
 
 /* Table for deflate from PKZIP's appnote.txt. */
 u32 border[] = { /* Order of the bit length code lengths */
@@ -37,20 +38,7 @@ inflate_blocks_statef *inflate_blocks_new(z_stream *z, check_func c, u32 w) {
     s->end = s->window + w;
     s->checkfn = c;
     s->mode = TYPE;
-    ///////// This is an inlined version of `inflate_blocks_reset`
-    if (s->checkfn != Z_NULL) s->check = s->check;
-    if (s->mode == BTREE || s->mode == DTREE) ZFREE(z, s->sub.trees.blens);
-    if (s->mode == CODES) {
-        inflate_codes_free(s->sub.decode.codes, z);
-        inflate_trees_free(s->sub.decode.td, z);
-        inflate_trees_free(s->sub.decode.tl, z);
-    }
-    s->mode = TYPE;
-    s->bitk = 0;
-    s->bitb = 0;
-    s->read = s->write = s->window;
-    if (s->checkfn != Z_NULL) z->adler = s->check = (*s->checkfn)(0L, Z_NULL, 0);
-    /////////
+    inflate_blocks_reset(s, z, &s->check);
     return s;
 }
 
@@ -292,20 +280,7 @@ s32 inflate_blocks(inflate_blocks_statef *s, z_stream *z, s32 r) {
 }
 
 s32 inflate_blocks_free(inflate_blocks_statef *s, z_stream *z, u32 *c) {
-    ///////// This is an inlined version of `inflate_blocks_reset`
-    if (s->checkfn != Z_NULL) *c = s->check;
-    if (s->mode == BTREE || s->mode == DTREE) ZFREE(z, s->sub.trees.blens);
-    if (s->mode == CODES) {
-        inflate_codes_free(s->sub.decode.codes, z);
-        inflate_trees_free(s->sub.decode.td, z);
-        inflate_trees_free(s->sub.decode.tl, z);
-    }
-    s->mode = TYPE;
-    s->bitk = 0;
-    s->bitb = 0;
-    s->read = s->write = s->window;
-    if (s->checkfn != Z_NULL) z->adler = s->check = (*s->checkfn)(0L, Z_NULL, 0);
-    /////////
+    inflate_blocks_reset(s, z, c);
 
     ZFREE(z, s->window);
     ZFREE(z, s);
