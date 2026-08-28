@@ -215,52 +215,50 @@ with open(input_filename, mode="r") as input_file:
                     preprocessed.append("\tnop\n")
                     mfhilo_delay_count -= 1
                 # Manually expand div operations, since modern gnu assembler expands them slightly differently
-                operands = [s.strip() for s in tokens[1].split(",")]
-                if operands[0] != "$0":
-                    div_branch_label_1: str = f"BRANCH_LABEL_{generated_symbol_count}"
-                    div_branch_label_2: str = f"BRANCH_LABEL_{generated_symbol_count + 1}"
-                    generated_symbol_count += 2
-                    line = (
-                         "\t.set noat\n"
-                        f"\tdiv $0,{operands[1]},{operands[2]}\n"
-                        f"\tbnez {operands[2]},{div_branch_label_1}\n"
-                         "\tnop\n"
-                         "\tbreak 0x7\n"
-                        f"{div_branch_label_1}:\n"
-                         "\taddiu $1,$0,-1\n"
-                        f"\tbne {operands[2]},$1,{div_branch_label_2}\n"
-                         "\tlui $1,0x8000\n"
-                        f"\tbne {operands[1]},$1,{div_branch_label_2}\n"
-                         "\tnop\n"
-                         "\tbreak 0x6\n"
-                        f"{div_branch_label_2}:\n"
-                        f"\tmflo {operands[0]}\n"
-                         "\t.set at\n"
-                    )
-                    mfhilo_delay_count = 3 # Set to 3 so it becomes 2 after the decrement
-                    mfhilo_delay_location = len(preprocessed) + 1
+                tokens[1] = tokens[1].rstrip(",")
+                div_branch_label_1: str = f"BRANCH_LABEL_{generated_symbol_count}"
+                div_branch_label_2: str = f"BRANCH_LABEL_{generated_symbol_count + 1}"
+                generated_symbol_count += 2
+                line = (
+                        "\t.set noat\n"
+                    f"\tdiv $0,{tokens[1]},{tokens[2]}\n"
+                    f"\tbnez {tokens[2]},{div_branch_label_1}\n"
+                        "\tnop\n"
+                        "\tbreak 0x7\n"
+                    f"{div_branch_label_1}:\n"
+                        "\taddiu $1,$0,-1\n"
+                    f"\tbne {tokens[2]},$1,{div_branch_label_2}\n"
+                        "\tlui $1,0x8000\n"
+                    f"\tbne {tokens[1]},$1,{div_branch_label_2}\n"
+                        "\tnop\n"
+                        "\tbreak 0x6\n"
+                    f"{div_branch_label_2}:\n"
+                    f"\tmflo {tokens[1]}\n"
+                        "\t.set at\n"
+                )
+                mfhilo_delay_count = 3 # Set to 3 so it becomes 2 after the decrement
+                mfhilo_delay_location = len(preprocessed) + 1
             elif identifier in "divu":
                 # Insert nops if there was a mflo/mfhi recently right after it
                 while mfhilo_delay_count > 0:
                     preprocessed.append("\tnop\n")
                     mfhilo_delay_count -= 1
                 # Manually expand divu operations, since modern gnu assembler expands them slightly differently
-                operands = [s.strip() for s in tokens[1].split(",")]
-                if operands[0] != "$0":
-                    divu_branch_label: str = f"BRANCH_LABEL_{generated_symbol_count}"
-                    generated_symbol_count += 1
-                    line = (
-                         "\t.set noat\n"
-                        f"\tdivu $0,{operands[1]},{operands[2]}\n"
-                        f"\tbnez {operands[2]},{divu_branch_label}\n"
-                         "\tnop\n"
-                         "\tbreak 0x7\n"
-                        f"{divu_branch_label}:\n"
-                        f"\tmflo {operands[0]}\n"
-                         "\t.set at\n"
-                    )
-                    mfhilo_delay_count = 3 # Set to 3 so it becomes 2 after the decrement
-                    mfhilo_delay_location = len(preprocessed) + 1
+                tokens[1] = tokens[1].rstrip(",")
+                divu_branch_label: str = f"BRANCH_LABEL_{generated_symbol_count}"
+                generated_symbol_count += 1
+                line = (
+                        "\t.set noat\n"
+                    f"\tdivu $0,{tokens[1]},{tokens[2]}\n"
+                    f"\tbnez {tokens[2]},{divu_branch_label}\n"
+                        "\tnop\n"
+                        "\tbreak 0x7\n"
+                    f"{divu_branch_label}:\n"
+                    f"\tmflo {tokens[1]}\n"
+                        "\t.set at\n"
+                )
+                mfhilo_delay_count = 3 # Set to 3 so it becomes 2 after the decrement
+                mfhilo_delay_location = len(preprocessed) + 1
             elif identifier == "rem":
                 # Insert nops if there was a mflo/mfhi recently right after it
                 while mfhilo_delay_count > 0:

@@ -13,7 +13,7 @@
 #define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
 #define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
 #define DO16(buf)   DO8(buf,0); DO8(buf,8);
- 
+
 u32 adler32(u32 adler, u8* buf, u32 len) {
     u32 s1 = adler & 0xffff;
     u32 s2 = (adler >> 16) & 0xffff;
@@ -26,12 +26,12 @@ u32 adler32(u32 adler, u8* buf, u32 len) {
         len -= k;
         while (k >= 16) {
             DO16(buf);
-	    buf += 16;
+	        buf += 16;
             k -= 16;
         }
         if (k != 0) do {
             s1 += *buf++;
-	    s2 += s1;
+	        s2 += s1;
         } while (--k);
         s1 %= BASE;
         s2 %= BASE;

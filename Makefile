@@ -5,24 +5,31 @@ LDSCRIPT := roguesquadron.ld
 TOOLSDIR := ./tools
 
 CROSS   := mips-linux-gnu-
-AS      := $(CROSS)as
+# AS      := $(CROSS)as
 LD      := $(CROSS)ld
 CPP     := $(CROSS)cpp
 OBJCOPY := $(CROSS)objcopy
 
-MODERNASN := $(PYTHON) $(TOOLSDIR)/modern-asn64.py $(AS)
+MODERNASN := $(PYTHON) $(TOOLSDIR)/modern-asn64.py
+WIBO := $(TOOLSDIR)/wibo-x86_64
 
 INCLUDE_DIRS := -I ./include/ -I ./ultralib/include/
 DEFINES      := -DINCLUDE_ASM_USE_MACRO_INC -D_LANGUAGE_C
 CPPFLAGS     := -E -lang-c
 CFLAGS       := -quiet -O2 -G0 -mips3 -mhard-float
-ASFLAGS      := -EB -mabi=32 -mfp32 -mgp32 -mtune=vr4300 -march=vr4300 -mips3 -G0 -I./include
+ASFLAGS      := -arch=vr4300 -abi=32 -mips3 -G0 -I./include
 
 COMPILERSPATH := $(TOOLSDIR)/compilers
-GCC281SN      := $(COMPILERSPATH)/gcc281sn/cc1n64.exe
-GCC272SN0001  := $(COMPILERSPATH)/gcc272sn0001/cc1n64.exe
 
-N64CC           := $(GCC281SN)
+281SNCC    := $(COMPILERSPATH)/gcc281sn/cc1n64.exe
+281SNAS    := $(COMPILERSPATH)/gcc281sn/asn64.exe
+272SN001CC := $(COMPILERSPATH)/gcc272sn0001/cc1n64.exe
+272SN001AS := $(COMPILERSPATH)/gcc272sn0001/asn64.exe
+
+CC := $(281SNCC)
+AS := $(281SNAS)
+
+PSYQ := $(COMPILERSPATH)/psyq-obj-parser
 
 C_DIRS    := $(shell find src -type d)
 C_FILES   := $(foreach dir,$(C_DIRS),$(wildcard $(dir)/*.c))
@@ -46,35 +53,53 @@ build/tyler.elf: $(O_FILES) $(LDSCRIPT)
 $(BUILD_DIRS):
 	mkdir -p $@
 
-$(GCC281SN):
+$(281SNCC):
 	mkdir -p "$(@D)"
 	wget "https://github.com/marijnvdwerf/sn64/releases/download/1%2C0%2C0%2C2/cc1n64.exe" -P "$(@D)"
 	chmod +x "$@"
 
-$(GCC272SN0001):
+$(281SNAS):
+	mkdir -p "$(@D)"
+	wget "https://github.com/marijnvdwerf/sn64/releases/download/1%2C0%2C0%2C2/asn64.exe" -P "$(@D)"
+	chmod +x "$@"
+
+$(PSYQ):
+	mkdir -p "$(@D)"
+	wget "https://github.com/decompme/compilers/releases/download/compilers/psyq-obj-parser.tar.gz" -P "$(@D)"
+	tar xzf "$(@D)/psyq-obj-parser.tar.gz" -C "$(@D)"
+	chmod +x $@
+
+$(272SN001CC) $(272SN001AS) &:
 	mkdir -p "$(@D)"
 	wget "https://github.com/decompme/compilers/releases/download/compilers/n64_sn272_0001.tar.gz" -P "$(@D)"
 	tar xzf "$(@D)/n64_sn272_0001.tar.gz" -C "$(@D)"
+	chmod +x $@
+
+$(WIBO):
+	mkdir -p "$(@D)"
+	wget "https://github.com/decompals/wibo/releases/download/1.2.0/wibo-x86_64" -P "$(@D)"
 	chmod +x "$@"
 
-build/src/%.i: src/%.c | $(BUILD_DIRS)
-	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o $@
+build/src/%.o: src/%.c | $(281SNCC) $(281SNAS) $(272SN001CC) $(272SN001AS) $(PSYQ) $(WIBO) $(BUILD_DIRS)
+	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o $@.i
+	$(WIBO) $(CC) $(CFLAGS) $@.i -o $@.s
+	$(WIBO) $(AS) $(ASFLAGS) $@.s -o $@.obj
+	$(PSYQ) $@.obj -o $@ -b -n -s
 
-build/src/%.s: build/src/%.i | $(BUILD_DIRS) $(GCC281SN) $(GCC272SN0001)
-	$(N64CC) $(CFLAGS) $< -o $@
-
-build/src/main/03310.s: N64CC = $(GCC272SN0001)
-build/src/main/04030.s: N64CC = $(GCC272SN0001)
-build/src/main/1D000.s: N64CC = $(GCC272SN0001)
-build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
-build/src/zlib/%.s: N64CC = $(GCC272SN0001)
-build/src/zlib/%.s: CFLAGS = -quiet -O3 -G0 -mips3
-
-build/src/%.o: build/src/%.s | $(BUILD_DIRS)
-	$(MODERNASN) $(ASFLAGS) $< -o $@
+build/src/main/03310.o: CC = $(272SN001CC)
+build/src/main/03310.o: AS = $(272SN001AS)
+build/src/main/04030.o: CC = $(272SN001CC)
+build/src/main/04030.o: AS = $(272SN001AS)
+build/src/main/1D000.o: CC = $(272SN001CC)
+build/src/main/1D000.o: AS = $(272SN001AS)
+build/src/main/1EE30.o: CC = $(272SN001CC)
+build/src/main/1EE30.o: AS = $(272SN001AS)
+build/src/zlib/%.o: CC = $(272SN001CC)
+build/src/zlib/%.o: AS = $(272SN001AS)
+build/src/zlib/%.o: CFLAGS = -quiet -O3 -G0 -mips3
 
 build/%.o: %.s | $(BUILD_DIRS)
-	$(AS) $(ASFLAGS) -o $@ $<
+	$(MODERNASN) $(CROSS)as -DINCLUDE_ASM_USE_MACRO_INC -march=vr4300 -mabi=32 -mips3 -G0 -I./include -o $@ $<
 
 build/%.o: %.bin
 	$(LD) -r -b binary -o $@ $<

@@ -1175,6 +1175,9 @@ npcShuttleHandleDestruction        = 0x800D33CC;
 npcTieVariantHandleDestruction     = 0x800DAB98;
 // (1185L) Power generator destruction. Caller: npcPowerGeneratorUpdate. Called immediately after releaseMeshAsset.
 npcPowerGeneratorHandleDestruction = 0x8007636C;
+npcPowerGeneratorUpdate = 0x80077AF0;
+
+npcWorldDevastator = 0x8007EF1C;
 
 // Mission/level-end cleanup — calls calculateFriendliesSaved, resetSpeechSubsystem,
 // finalizeCurrentSpeechBuffer, freeAllHobFiles, freeTxtFile,
@@ -2660,7 +2663,6 @@ getControllerNewButtonsPressed       = 0x80079F50; // defined:true
 unsetControllerNewButtonsPressed     = 0x80079FD8; // defined:true
 getControllerStickXPercentage        = 0x8007A068; // defined:true
 getControllerStickYPercentage        = 0x8007A0A8; // defined:true
-npcWordDevastatorUpdate              = 0x8007EF1C; // defined:true
 npcShieldGeneratorUpdate             = 0x80081350; // defined:true
 rs_crc32                             = 0x800824F8; // defined:true
 make_crc32_lut                       = 0x80082544; // defined:true
@@ -4169,190 +4171,190 @@ advanceWrappingPhaseAccumulator        = 0x800C6660;
 
 // Fake Function Fixing
 
-fake_func_800027B8 = 0x800027B8; // defined:true type:u32
+fake_func_800027B8 = 0x800027B8; // defined:true
 // Called after osContGetReadData in func_80002E10
 // Probably something akin to `update_controller` from MK64
 // called by siServiceThread after osContGetReadData; iterates 4 slots at 0x80110520 (per-slot active flag +0x6B, u16-ptr +0x70, f32 timer +0x80, flags +0x6C) — likely rumble timing/pattern advance
 processPolledControllerData = 0x800027C0;
 
-fake_func_8000337C = 0x8000337C; // defined:true type:u32
+fake_func_8000337C = 0x8000337C; // defined:true
 setVideoReadyFlag  = 0x80003380;
 
-fake_func_80003424 = 0x80003424; // defined:true type:u32
+fake_func_80003424 = 0x80003424; // defined:true
 
 // Annoyingly the fake function here, when interpreted as real coode, contains a reference
 // to func_80007064 which isn't real. This causes a real function (func_8000703C) to get split in two
-fake_func_8000537C    = 0x8000537C; // defined:true type:u32
+fake_func_8000537C    = 0x8000537C; // defined:true
 // (base_ptr, size) — initializes rs_malloc heap: stores base at gRsHeapBase, creates head/tail free-list nodes, stores total_free at gRsHeapTotalFree, max_alloc at gRsHeapMaxAlloc
 initRsMallocHeap      = 0x80005380;
 // returns gRsHeapMaxAlloc - 0x23 (max usable bytes after subtracting per-allocation header), or 0 if heap not yet initialized
 getRsHeapMaxAllocSize = 0x800053F0;
 
-fake_func_80005568 = 0x80005568; // defined:true type:u32
+fake_func_80005568 = 0x80005568; // defined:true
 
-fake_func_8000595C = 0x8000595C; // defined:true type:u32
+fake_func_8000595C = 0x8000595C; // defined:true
 
-fake_func_80006BFC = 0x80006BFC; // defined:true type:u32
+fake_func_80006BFC = 0x80006BFC; // defined:true
 
-fake_func_8000737C = 0x8000737C; // defined:true type:u32
+fake_func_8000737C = 0x8000737C; // defined:true
 // (callback, intervalUnits) → creates mq+thread+osTimer for periodic callback. Stores callback at 0x801128E0, spawns periodicCallbackWorker (prio 0x14), osSetTimer with period = 46875*intervalUnits cycles
 installPeriodicCallback = 0x80007380;
 // worker thread for installPeriodicCallback: osRecvMesg(BLOCK) → osYieldThread → LOOKUP_FUNC(*0x801128E0) → loop
 periodicCallbackWorker  = 0x80007480;
 
-fake_func_800074D8 = 0x800074D8; // defined:true type:u32
+fake_func_800074D8 = 0x800074D8; // defined:true
 // GCC compiler helper __udivdi3-equivalent: 64-bit unsigned divide; combines (a0:a1) into dividend u64, (a2:a3) into divisor u64, ddivu, returns quotient in (v0:v1)
 u64DivU64          = 0x800074E0;
 
-fake_func_8000751C = 0x8000751C; // defined:true type:u32
+fake_func_8000751C = 0x8000751C; // defined:true
 // real function rs_strcasecmp
 
-fake_func_80007908 = 0x80007908; // defined:true type:u32
+fake_func_80007908 = 0x80007908; // defined:true
 // (callback_ptr) — finds first empty slot in 4-entry table at MEM[0x8011A8A4], writes callback ptr; returns 1 on success, 0 if all 4 slots full. Called from startSiPollingThread.
 registerSiCallback = 0x80007910;
 
-fake_func_800186D8 = 0x800186D8; // defined:true type:u32
+fake_func_800186D8 = 0x800186D8; // defined:true
 
-fake_func_80019808          = 0x80019808; // defined:true type:u32
+fake_func_80019808          = 0x80019808; // defined:true
 // osRecvMesg(mq=0x80138D10, NULL, BLOCK) — frame-sync mq, used by bufferArbiterProducerScanWait + timeSnapshotFiller
 awaitFrameSyncMesgBlock     = 0x80019810;
 // osSendMesg(mq=0x80138D10, NULL, NOBLOCK) — paired sender to awaitFrameSyncMesgBlock
 signalFrameSyncMesgNonblock = 0x8001983C;
 
-fake_func_80024878 = 0x80024878; // defined:true type:u32
+fake_func_80024878 = 0x80024878; // defined:true
 
-fake_func_8001C3FC       = 0x8001C3FC; // defined:true type:u32
+fake_func_8001C3FC       = 0x8001C3FC; // defined:true
 swizzleTextureRowsToTmem = 0x80024880;
 
-fake_func_80023968       = 0x80023968; // defined:true type:u32
+fake_func_80023968       = 0x80023968; // defined:true
 emitMaterialRenderModeDL = 0x80023970;
 
-fake_func_80024128    = 0x80024128; // defined:true type:u32
+fake_func_80024128    = 0x80024128; // defined:true
 flushDebugTextOverlay = 0x80024130;
 
-fake_func_80024A0C = 0x80024A0C; // defined:true type:u32
+fake_func_80024A0C = 0x80024A0C; // defined:true
 // No accompanying "real" function
 
-fake_func_8003DF98 = 0x8003DF98; // defined:true type:u32
+fake_func_8003DF98 = 0x8003DF98; // defined:true
 
-fake_func_8003E55C = 0x8003E55C; // defined:true type:u32
+fake_func_8003E55C = 0x8003E55C; // defined:true
 
-fake_func_80040304 = 0x80040304; // defined:true type:u32
+fake_func_80040304 = 0x80040304; // defined:true
 
-fake_func_80041EEC = 0x80041EEC; // defined:true type:u32
+fake_func_80041EEC = 0x80041EEC; // defined:true
 // (a0=n) rs_malloc(n*12), stores ptr at gDoublyLinkedNodePool12 (0x80136FCC), then for i=0..n-1 writes entry[i]={h:prev=i-1, h:next=i+1, w:val0 at +8}. Stride-12 doubly-linked free pool indexed by halfword. 4 readers in funcs_10 (DAT level-asset cluster) at 0x80045778/0x800466E8/0x8004674C/0x80047524.
 allocAndInitDoublyLinkedNodePool12 = 0x80041EF0;
 
-fake_func_800457CC         = 0x800457CC; // defined:true type:u32
+fake_func_800457CC         = 0x800457CC; // defined:true
 initGridLayerFromLevelData = 0x800457D0;
 
-fake_func_8004661C = 0x8004661C; // defined:true type:u32
+fake_func_8004661C = 0x8004661C; // defined:true
 
-fake_func_800496F4        = 0x800496F4; // defined:true type:u32
+fake_func_800496F4        = 0x800496F4; // defined:true
 flushPendingGridCellTiles = 0x80049700;
 
-fake_func_8004CCF8 = 0x8004CCF8; // defined:true type:u32
+fake_func_8004CCF8 = 0x8004CCF8; // defined:true
 
-fake_func_800538AC = 0x800538AC; // defined:true type:u32
+fake_func_800538AC = 0x800538AC; // defined:true
 
-fake_func_80054648 = 0x80054648; // defined:true type:u32
+fake_func_80054648 = 0x80054648; // defined:true
 
-fake_func_800555E8 = 0x800555E8; // defined:true type:u32
+fake_func_800555E8 = 0x800555E8; // defined:true
 // called from initMission: iterates gPlayers (0x80137DB8, stride 0x2A0); per-player calls clearVec4QuadStruct(player.inner), zeros player+0/+0x298/+0x29C, then sets player[0]+0 = 1. Loop only runs once (intended for multiplayer per docs/unsorted_thoughts).
 initPlayerStructs  = 0x800555F0;
 
-fake_func_80055698 = 0x80055698; // defined:true type:u32
+fake_func_80055698 = 0x80055698; // defined:true
 // real function is loadTxtFile
 
-fake_func_80055A2C = 0x80055A2C; // defined:true type:u32
+fake_func_80055A2C = 0x80055A2C; // defined:true
 
-fake_func_80056344 = 0x80056344; // defined:true type:u32
+fake_func_80056344 = 0x80056344; // defined:true
 
-fake_func_80059B4C = 0x80059B4C; // defined:true type:u32
+fake_func_80059B4C = 0x80059B4C; // defined:true
 
-fake_func_8005A11C = 0x8005A11C; // defined:true type:u32
+fake_func_8005A11C = 0x8005A11C; // defined:true
 
-fake_func_8005C61C             = 0x8005C61C; // defined:true type:u32
+fake_func_8005C61C             = 0x8005C61C; // defined:true
 checkTrackedNpcProximityForCue = 0x8005C620;
 
-fake_func_8005EE64           = 0x8005EE64; // defined:true type:u32
+fake_func_8005EE64           = 0x8005EE64; // defined:true
 steerOrientationTowardTarget = 0x8005EE70;
 
-fake_func_800613B8 = 0x800613B8; // defined:true type:u32
+fake_func_800613B8 = 0x800613B8; // defined:true
 loadCharTextureSet = 0x800613C0;
 
-fake_func_80064294 = 0x80064294; // defined:true type:u32
+fake_func_80064294 = 0x80064294; // defined:true
 
-fake_func_80064934 = 0x80064934; // defined:true type:u32
+fake_func_80064934 = 0x80064934; // defined:true
 // Accompanying real function is load_dat_file_assets
 
-fake_func_80065A5C = 0x80065A5C; // defined:true type:u32
+fake_func_80065A5C = 0x80065A5C; // defined:true
 
-fake_func_800663AC = 0x800663AC; // defined:true type:u32
+fake_func_800663AC = 0x800663AC; // defined:true
 
-fake_func_80069AEC               = 0x80069AEC; // defined:true type:u32
+fake_func_80069AEC               = 0x80069AEC; // defined:true
 collideSegmentAgainstObjectNodes = 0x80069AF0;
 
-fake_func_8006ACA4            = 0x8006ACA4; // defined:true type:u32
+fake_func_8006ACA4            = 0x8006ACA4; // defined:true
 transformObjectColliderCenter = 0x8006ACB0;
 
 // fake_func_8006AE48            = 0x8006AE48; // defined:true
 intersectSegmentWithObjectSphere = 0x8006AE58;
 
-fake_func_8006B704 = 0x8006B704; // defined:true type:u32
+fake_func_8006B704 = 0x8006B704; // defined:true
 
-fake_func_8006D8FC = 0x8006D8FC; // defined:true type:u32
+fake_func_8006D8FC = 0x8006D8FC; // defined:true
 
-fake_func_8006F4AC = 0x8006F4AC; // defined:true type:u32
+fake_func_8006F4AC = 0x8006F4AC; // defined:true
 
-fake_func_80072CE8      = 0x80072CE8; // defined:true type:u32
+fake_func_80072CE8      = 0x80072CE8; // defined:true
 // loads "gnrc_stuff/wtrspray" HMT/HOB via load_hmt_and_hob, inits 3 particle sub-structs at 0x8013A8C0/+0x30/+0x60 (per docs/unsorted notes referencing waterwhite_1/wtrspray strings)
 initWaterSprayParticles = 0x80072CF0;
 
-fake_func_80079278 = 0x80079278; // defined:true type:u32
+fake_func_80079278 = 0x80079278; // defined:true
 
-fake_func_80079CD8 = 0x80079CD8; // defined:true type:u32
+fake_func_80079CD8 = 0x80079CD8; // defined:true
 // real function is setNewAndPreviousButtonsPressed
 
-fake_func_8007A0E8              = 0x8007A0E8; // defined:true type:u32
+fake_func_8007A0E8              = 0x8007A0E8; // defined:true
 // (a0=out_3hw, a1=img_base, a2=row_stride_factor, a3=y_intf, sp+0x10=x_intf) — samples 4 adjacent RGB pixels at (intY,intX), (intY+1,intX), (intY,intX+1), (intY+1,intX+1); sums 3 channels into a0 then divides each by 4 with rounding (sum+2)>>2. Pure 2x2 box-filter average for sub-pixel RGB sampling.
 sampleRgbBoxFilter2x2AtSubpixel = 0x8007A0F0;
 
-fake_func_8007A86C          = 0x8007A86C; // defined:true type:u32
+fake_func_8007A86C          = 0x8007A86C; // defined:true
 allocateNpcMeshVertexBuffer = 0x8007A870;
 
-fake_func_8007C298                = 0x8007C298; // defined:true type:u32
+fake_func_8007C298                = 0x8007C298; // defined:true
 initNpcTexturedEffectFromTemplate = 0x8007C2A0;
 
-fake_func_80082268      = 0x80082268; // defined:true type:u32
+fake_func_80082268      = 0x80082268; // defined:true
 // (input_str, mode) — CRCs input via make_crc32_lut + rs_crc32(8), looks up in gCheatCodeCrc32Table at 0x800A0ED0, sets/clears bit (1 << matched_idx) in gActiveCheatFlags (0x80130B58). Special case: if "Naboo unlocked" bit pre-set, calls load_naboo_starfighter
 applyCheatCodeFromInput = 0x80082270;
 
-fake_func_800825C8 = 0x800825C8; // defined:true type:u32
+fake_func_800825C8 = 0x800825C8; // defined:true
 // No accompanying "real" function
 
-fake_func_80093E74 = 0x80093E74; // defined:true type:u32
+fake_func_80093E74 = 0x80093E74; // defined:true
 
-fake_func_80094348 = 0x80094348; // defined:true type:u32
+fake_func_80094348 = 0x80094348; // defined:true
 // claims a free MusyX song slot (table base 0x80149A00 stride 0xEF8, 8 slots), writes song handle->slot, inits per-track voice arrays to 0xFF from chanMap; arg5 = song/setup header. Callers: playSongByIdLockCtl/playSongById
 startSongSequence  = 0x80094350;
 
-fake_func_8009711C        = 0x8009711C; // defined:true type:u32
+fake_func_8009711C        = 0x8009711C; // defined:true
 resetSongSubsystemCounter = 0x80097120;
 
-fake_func_80097D58      = 0x80097D58; // defined:true type:u32
+fake_func_80097D58      = 0x80097D58; // defined:true
 clearStreamedVoiceFlags = 0x80097D60;
 
-fake_func_80099C4C          = 0x80099C4C; // defined:true type:u32
+fake_func_80099C4C          = 0x80099C4C; // defined:true
 transformVec3ByAffineMatrix = 0x80099C50;
 
-fake_func_80099FDC = 0x80099FDC; // defined:true type:u32
+fake_func_80099FDC = 0x80099FDC; // defined:true
 // No accompanying "real" function
 
-fake_func_8009D7CC     = 0x8009D7CC; // defined:true type:u32
+fake_func_8009D7CC     = 0x8009D7CC; // defined:true
 filterVoiceSampleBlock = 0x8009D7D0;
 
-fake_func_8009C2C8          = 0x8009C2C8; // defined:true type:u32
+fake_func_8009C2C8          = 0x8009C2C8; // defined:true
 computeVoicePanCoefficients = 0x8009C2D0;
 
 ////////////////////////////////////////////////////////////////////////////////
