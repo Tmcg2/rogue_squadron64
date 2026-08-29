@@ -1,5 +1,12 @@
 #include "common.h"
 
+#include "PR/ultratypes.h"
+
+#include "menu_overlay/12CA40.h"
+
+// Interim BSS externs
+extern u8 D_menu_overlay_800CD520[0x20];
+
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800A9270);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", D_menu_overlay_800A5130);
@@ -56,7 +63,9 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AE264);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", func_menu_overlay_800AE3EC);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/110410", bridgeSecondaryWeaponTextIds);
+const u16 bridgeSecondaryWeaponTextIds[] = {
+    0x0000, 0x004E, 0x0050, 0x0051, 0x0052, 0x0053, 0x004F, 0x0054, 0x0055, 0x0056
+};
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarGenerateSecondaryWeaponString);
 

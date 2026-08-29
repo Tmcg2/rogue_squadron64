@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "common_variables.h"
+#include "player.h"
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", loadCraftShadowTextures);
 

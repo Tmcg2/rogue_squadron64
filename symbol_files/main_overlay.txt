@@ -4674,10 +4674,6 @@ gMissionState              = 0x80130B10; // size:0x28
 // - game settings struct (per docs/unsorted_thoughts/unsorted_thoughts.md D_80130B40_type)
 gGameSettings              = 0x80130B40; // size:0x30
 missionStats               = 0x80130B78; // size:0x10
-// — bit flags for activated cheat codes (see docs/cheat_codes/cheat_codes.md table)
-gActiveCheatFlags          = 0x80130B58; // type:u32
-// — CRC32 of 2nd Naboo Starfighter cheat code (per docs/unsorted_thoughts/notes.txt). Used as decryption key for koelsch HMT.
-gNabooStarfighterCheatHash = 0x80130B68; // type:u32
 // - ptr to 0x800 x 8B NPC slot list (D_80130BB0_type)
 gNpcSlotList               = 0x80130BB0; // size:0x04
 // - tail index into gNpcSlotList

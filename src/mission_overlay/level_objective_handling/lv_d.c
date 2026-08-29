@@ -1,15 +1,61 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", lvd_initializeObjectTracking);
+#include "mission_overlay/0C7EB0.h"
+#include "mission_overlay/0C84A0.h"
+#include "mission_overlay/level_objective_handling/lv_d.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", lvd_80107290);
+s32 D_mission_overlay_8010D150;
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", lvd_calculateFriendliesSaved);
+const u8 lv_d_camera_01[] = {
+    "Camera_01"
+};
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", lvd_checkComplexObjectives);
+const u8 lv_d_musicrng_levelsettings[] = {
+    "MUSICRNG_LevelSettings"
+};
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", func_mission_overlay_80107338);
+s32 lvd_initializeObjectTracking(void) {
+    D_mission_overlay_8010D150 = 0;
+    func_mission_overlay_800C7CEC(7.5f);
+    addBooleanCountHandleWrapper(func_mission_overlay_80107338, 0, 0, 0x32, 1);
+    addBooleanCountHandleWrapper(func_mission_overlay_80107354, 0, 0, 0x64, 1);
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", func_mission_overlay_80107354);
+s32 lvd_80107290(void) {
+    return 0;
+}
 
-INCLUDE_RODATA("asm/nonmatchings/mission_overlay/level_objective_handling/lv_d", D_mission_overlay_800A9994);
+s32 lvd_calculateFriendliesSaved(void) {
+    return 0;
+}
+
+s32 lvd_checkComplexObjectives(void) {
+    if (getObjectiveCount(0x3C) > 0) {
+        func_mission_overlay_800C776C();
+    }
+    if ((getObjectiveCount(0x32) == 0xC) && (D_mission_overlay_8010D150 == 0)) {
+        D_mission_overlay_8010D150 = 1;
+        func_mission_overlay_800C7884(lv_d_camera_01);
+        activateObjectiveCompleteFlag(1);
+        playObjectiveVoiceLine2(0xF5U, 0.0f);
+        playObjectiveVoiceLine2(0x172U, 0.5f);
+        func_mission_overlay_800C7D60(lv_d_musicrng_levelsettings, 0);
+        func_mission_overlay_800C7D98(3);
+    }
+    return 0;
+}
+
+void func_mission_overlay_80107338(void) {
+    playObjectiveVoiceLine1(0x171U);
+}
+
+void func_mission_overlay_80107354(void) {
+    playObjectiveVoiceLine1(0x2F2U);
+}
+
+// DO NOT DELTE ME I AM REQUIRED FOR MATCHING
+const u32 rodata_pad_lv_d[] = {
+    0x4600020D,
+    0x44034000,
+};

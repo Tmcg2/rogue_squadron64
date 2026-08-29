@@ -1,9 +1,12 @@
 #include "common.h"
-#include "common_types.h"
 #include "common_variables.h"
+
 #include "crafts.h"
 #include "levels.h"
 #include "secondary_weapons.h"
+#include "game_settings.h"
+#include "mission_state.h"
+
 #include "menu_overlay/12CA40.h"
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C58A0);
@@ -43,13 +46,13 @@ s32 getAvailablePlayerCraftFlagsConsiderUnlocks(enum Level levelId) {
     if ((gMissionState.maxUnlockedLevel >= LEVEL_CALAMARI) && (levelId < gMissionState.maxUnlockedLevel) && (availableCraftFlags & 0xD)) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_XWING);
     }
-    if (gGameSettings.unlockAndSettingsFlags[0] & 0x80000) {
+    if (ALL_CRAFT_UNLOCKED) {
         availableCraftFlags |= 0x7F;
     }
-    if ((gGameSettings.cheatCodeFlags[0] & 4) || (gGameSettings.unlockAndSettingsFlags[0] & 0x20000)) {
+    if ((gGameSettings.cheatCodeFlags[0] & 4) || MELLINIUM_FALCON_UNLOCKED) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_FALCON);
     }
-    if ((gGameSettings.cheatCodeFlags[0] & 8) || (gGameSettings.unlockAndSettingsFlags[0] & 0x40000)) {
+    if ((gGameSettings.cheatCodeFlags[0] & 8) || TIE_INTERCEPTOR_UNLOCKED) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_TIEINTER);
     }
     if (levelId == LEVEL_TALORAAN) {
@@ -78,13 +81,13 @@ s32 getAvailablePlayerCraftFlagsIgnoreUnlocks(enum Level levelId) {
     if (availableCraftFlags & 0xD) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_XWING) | CRAFT_FLAG(CRAFT_AWING) | CRAFT_FLAG(CRAFT_VWING);
     }
-    if (gGameSettings.unlockAndSettingsFlags[0] & 0x80000) {
+    if (ALL_CRAFT_UNLOCKED) {
         availableCraftFlags |= 0x7F;
     }
-    if ((gGameSettings.cheatCodeFlags[0] & 4) || (gGameSettings.unlockAndSettingsFlags[0] & 0x20000)) {
+    if ((gGameSettings.cheatCodeFlags[0] & 4) || MELLINIUM_FALCON_UNLOCKED) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_FALCON);
     }
-    if ((gGameSettings.cheatCodeFlags[0] & 8) || (gGameSettings.unlockAndSettingsFlags[0] & 0x40000)) {
+    if ((gGameSettings.cheatCodeFlags[0] & 8) || TIE_INTERCEPTOR_UNLOCKED) {
         availableCraftFlags |= CRAFT_FLAG(CRAFT_TIEINTER);
     }
     if (levelId == LEVEL_TALORAAN) {
@@ -136,22 +139,22 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
         }
     }
     if (normalAllBronze == 1) {
-        if (!(gGameSettings.unlockAndSettingsFlags[0] & 0x100000)) {
+        if (!BEGGARS_CANYON_UNLOCKED) {
             anyLevelsUnlocked = 1;
         }
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x100000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_BEGGARS_CANYON);
     }
     if (normalAllSilver == 1) {
-        if (!(gGameSettings.unlockAndSettingsFlags[0] & 0x200000)) {
+        if (!DEATH_STAR_UNLOCKED) {
             anyLevelsUnlocked = 1;
         }
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x200000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_DEATH_STAR);
     }
     if (normalAllGold == 1) {
-        if (!(gGameSettings.unlockAndSettingsFlags[0] & 0x400000)) {
+        if (!HOTH_UNLOCKED) {
             anyLevelsUnlocked = 1;
         }
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x400000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_HOTH);
     }
     gMissionState.anyExtraLevelsUnlocked = anyLevelsUnlocked;
     unlockableAllBronze = 1;
@@ -171,13 +174,13 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
         }
     }
     if (unlockableAllBronze == 1) {
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x20000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_MELLINIUM_FALCON);
     }
     if (unlockableAllSilver == 1) {
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x40000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_TIE_INTERCEPTOR);
     }
     if (unlockableAllGold == 1) {
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x80000;
+        GAME_SETTING_SET(0, GAME_SETTINGS_ALL_CRAFT);
     }
 }
 
@@ -221,13 +224,13 @@ u8 getSecondaryWeaponForLevelAndCraft(u8 levelId, u8 craftId, u8 arg2) {
             secondaryWeaponType = SECONDARY_WEAPON_ION_CANNON;
         }
     }
-    if ((secondaryWeaponType == SECONDARY_WEAPON_MISSLES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x800)) {
+    if ((secondaryWeaponType == SECONDARY_WEAPON_MISSLES) && GAME_SETTING_IS_SET(arg2, GAME_SETTINGS_SEEKER_MISSILES)) {
         secondaryWeaponType = SECONDARY_WEAPON_SEEKER_MISSILES;
     }
-    if ((secondaryWeaponType == SECONDARY_WEAPON_PROTON_TORPEDOS) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x2000)) {
+    if ((secondaryWeaponType == SECONDARY_WEAPON_PROTON_TORPEDOS) && GAME_SETTING_IS_SET(arg2, GAME_SETTINGS_SEEKER_TORPEDOS)) {
         secondaryWeaponType = SECONDARY_WEAPON_SEEKER_TORPEDOS;
     }
-    if ((secondaryWeaponType == SECONDARY_WEAPON_CLUSTER_MISSILES) && (gGameSettings.unlockAndSettingsFlags[arg2] & 0x4000)) {
+    if ((secondaryWeaponType == SECONDARY_WEAPON_CLUSTER_MISSILES) && GAME_SETTING_IS_SET(arg2, GAME_SETTINGS_SEEKER_CLUSTER_MISSILES)) {
         secondaryWeaponType = SECONDARY_WEAPON_SEEKER_CLUSTER_MISSILES;
     }
     return secondaryWeaponType;

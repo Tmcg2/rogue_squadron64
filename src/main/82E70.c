@@ -1,7 +1,7 @@
 #include "common.h"
-#include "common_types.h"
-#include "common_variables.h"
+
 #include "cheat_codes.h"
+#include "game_settings.h"
 
 #include "main/01720.h"
 #include "main/6C310.h"
@@ -79,7 +79,7 @@ s32 applyCheatCodeFromInput(u8 *arg0, u8 arg1, s8 *arg2) {
     temp_a0 = rs_crc32(crc32LUT, arg0, 8U);
     if (CHEAT_IS_ACTIVE(gGameSettings.cheatCodeFlags[0], CHEAT_BIT_HALIFAX)) {
         UNSET_CHEAT_FLAG(gGameSettings.cheatCodeFlags[0], CHEAT_BIT_HALIFAX);
-        gGameSettings.unk28 = load_naboo_starfighter(temp_a0);
+        gGameSettings.nabooStarfighterCheatHash = load_naboo_starfighter(temp_a0);
         return 0;
     }
 

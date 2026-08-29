@@ -10,20 +10,26 @@ void initializeObjectiveTracking(void);
 void func_mission_overlay_800C72E8(void);
 void calculateFriendliesSaved(void);
 void checkComplexObjectives(void);
+s32  dealDamagetoDatItem(u8*, u32);
 enum Level getCurrentLevel(void);
 enum PlayerCraft func_mission_overlay_800C7524(void);
 u32  setObjectiveBoolean(s32, u8);
 void setObjectiveBooleans(u8*, s8);
-u8   getObjectiveBoolean(s32);
+s32  getObjectiveBoolean(s32);
 u32  setObjectiveCount(s32, u32);
 u32  increaseObjectiveCount(s32, s32);
-u32  getObjectiveCount(s32);
+s32  getObjectiveCount(s32);
+u8   func_mission_overlay_800C7648(s32, u8);
 void setObjectiveHiddenFlag(s32, s32);
 void activateObjectiveCompleteFlag(s32);
 f32  getObjectiveTimer(s32);
 f32  setObjectiveTimer(s32, f32);
+void func_mission_overlay_800C7738(void);
+void func_mission_overlay_800C776C(void);
+void setFriendliesSaved(s32);
 s16  func_mission_overlay_800C77D0(s32);
 u8   addBooleanCountHandleWrapper(void (*)(), s32, s32, s32, s32);
 u8   addTimerHandleWrapper(void (*)(), f32);
+void func_mission_overlay_800C7884(u8*);
 
 #endif

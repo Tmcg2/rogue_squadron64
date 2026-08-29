@@ -1,33 +1,129 @@
 #include "common.h"
 
-INCLUDE_RODATA("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", D_mission_overlay_800A9AB0);
+#include "mission_overlay/0C7EB0.h"
+#include "mission_overlay/0C84A0.h"
+#include "mission_overlay/level_objective_handling/lv_i.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", lvi_checkComplexObjectives);
+s32 D_mission_overlay_8010D1E0;
+s32 D_mission_overlay_8010D1E4;
+s32 D_mission_overlay_8010D1E8;
+s32 D_mission_overlay_8010D1EC;
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_801090CC);
+s32 lvi_checkComplexObjectives(void) {
+    s32 temp_v0;
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_801090F0);
+    if ((getDatItemHealth("reb_generator") < 0x41) && (D_mission_overlay_8010D1E4 == 0)) {
+        func_mission_overlay_800C7738();
+        D_mission_overlay_8010D1E4 = 1;
+        func_mission_overlay_800C7884("camera_fail");
+        playObjectiveVoiceLine2(0x11U, 0.0f);
+        playObjectiveVoiceLine2(6U, 0.0f);
+        addTimerHandleWrapper(func_mission_overlay_801090CC, 5.0f);
+    }
+    temp_v0 = getObjectiveBoolean(7);
+    if ((temp_v0 == 1) && (D_mission_overlay_8010D1E4 == 0)) {
+        func_mission_overlay_800C7738();
+        D_mission_overlay_8010D1E4 = temp_v0;
+        func_mission_overlay_800C7884("camera_fail");
+        playObjectiveVoiceLine2(0x11U, 0.0f);
+        playObjectiveVoiceLine2(6U, 0.0f);
+        addTimerHandleWrapper(func_mission_overlay_801090F0, 5.0f);
+    }
+    if ((getObjectiveCount(4) == 8) && (D_mission_overlay_8010D1EC == 0)) {
+        func_mission_overlay_800C776C();
+        func_mission_overlay_800C7884("camera_win_cut_1");
+        playObjectiveVoiceLine2(0x2BEU, 0.0f);
+        playObjectiveVoiceLine2(0x2BFU, 1.0f);
+        activateObjectiveCompleteFlag(3);
+        func_mission_overlay_800C7D98(7);
+        D_mission_overlay_8010D1EC = 1;
+    }
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", lvi_initializeObjectTracking);
+void func_mission_overlay_801090CC(void) {
+    dealDamagetoDatItem("reb_generator", 0x42U);
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", lvi_801091F8);
+void func_mission_overlay_801090F0(void) {
+    dealDamagetoDatItem("reb_generator", 0x321U);
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", lvi_calculateFriendliesSaved);
+s32 lvi_initializeObjectTracking(void) {
+    D_mission_overlay_8010D1E4 = 0;
+    D_mission_overlay_8010D1E8 = 0;
+    D_mission_overlay_8010D1EC = 0;
+    D_mission_overlay_8010D1E0 = 0;
+    addBooleanCountHandleWrapper(func_mission_overlay_80109208, 0, 0, 2, 3);
+    addBooleanCountHandleWrapper(func_mission_overlay_80109384, 0, 0, 3, 4);
+    addBooleanCountHandleWrapper(func_mission_overlay_801092E4, 0, 0, 3, 6);
+    addBooleanCountHandleWrapper(func_mission_overlay_801093DC, 6, 1, 0, 0);
+    addBooleanCountHandleWrapper(func_mission_overlay_801093B0, 0, 0, 4, 4);
+    playObjectiveVoiceLine2(0x2BCU, 0.0f);
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_80109208);
+s32 lvi_801091F8(void) {
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_8010922C);
+s32 lvi_calculateFriendliesSaved(void) {
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_801092E4);
+void func_mission_overlay_80109208(void) {
+    addTimerHandleWrapper(func_mission_overlay_8010922C, 3.0f);
+}
 
-INCLUDE_RODATA("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", D_mission_overlay_800A9B30);
+void func_mission_overlay_8010922C(void) {
+    func_mission_overlay_800C7884("Camera_on_ATAT");
+    playObjectiveVoiceLine2(0x126U, 1.5f);
+    playObjectiveVoiceLine2(0x127U, 0.0f);
+    playObjectiveVoiceLine2(0x137U, 2.0f);
+    activateObjectiveCompleteFlag(2);
+    func_mission_overlay_800C7AB0("wingman_speeder1", "wingman_to_big_battle");
+    func_mission_overlay_800C7AB0("wingman_speeder2", "wingman_to_big_battle");
+    D_mission_overlay_8010D1E8 = 1;
+    setObjectiveBoolean(0x78, 1U);
+    D_mission_overlay_8010D1E0 = 2;
+    func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 2);
+    func_mission_overlay_800C7D98(4);
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_80109324);
+void func_mission_overlay_801092E4(void) {
+    addTimerHandleWrapper(func_mission_overlay_80109324, 5.0f);
+    D_mission_overlay_8010D1E0 = 1;
+    func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 1);
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_80109384);
+const u8 lv_i_camera_on_rogue[24] = {
+    "Camera_on_Rogue\0\x8c\xc6\0 \x8c\xe7\0$"
+};
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_801093B0);
+void func_mission_overlay_80109324(void) {
+    func_mission_overlay_800C7884(lv_i_camera_on_rogue);
+    playObjectiveVoiceLine2(0x2BDU, 1.0f);
+    playObjectiveVoiceLine2(0x11AU, 0.0f);
+    playObjectiveVoiceLine2(0x11BU, 0.0f);
+    activateObjectiveCompleteFlag(1);
+    func_mission_overlay_800C7D98(3);
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", func_mission_overlay_801093DC);
+void func_mission_overlay_80109384(void) {
+    playObjectiveVoiceLine2(0x21CU, 0.5f);
+    playObjectiveVoiceLine2(0x13EU, 0.0f);
+}
+
+void func_mission_overlay_801093B0(void) {
+    playObjectiveVoiceLine2(0x230U, 0.5f);
+    playObjectiveVoiceLine2(0x13AU, 0.0f);
+}
+
+void func_mission_overlay_801093DC(void) {
+    if ((D_mission_overlay_8010D1E8 == 0) && (getObjectiveCount(3) == 6)) {
+        D_mission_overlay_8010D1E8 = 1;
+        playObjectiveVoiceLine2(0x226U, 0.0f);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_i", fake_func_80109428);

@@ -2,6 +2,9 @@
 #include "common_variables.h"
 
 #include "crafts.h"
+#include "levels.h"
+#include "game_settings.h"
+
 #include "main/6B8B0.h"
 
 struct D_main_800A05D0_type D_main_800A05D0[] = {

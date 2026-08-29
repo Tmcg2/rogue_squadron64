@@ -1,11 +1,14 @@
 #include "common.h"
-#include "main/6E500.h"
-#include "common_types.h"
-#include "common_variables.h"
+
 #include "secondary_weapons.h"
 #include "crafts.h"
 #include "levels.h"
+#include "game_settings.h"
+#include "mission_state.h"
+#include "save.h"
+
 #include "main/08120.h"
+#include "main/6E500.h"
 
 /*BSS definitions, for when BSS mathcing is possible
 u8 D_main_bss_8013A5B0;
@@ -164,10 +167,10 @@ void resetMixerVolumesAndFlags(void) {
     gGameSettings.musicVolume   = 0x7F;
     gGameSettings.soundFxVolume = 0x7F;
     gGameSettings.speechVolume  = 0x7F;
-    gGameSettings.unlockAndSettingsFlags[1] &= ~0x80;
-    gGameSettings.unlockAndSettingsFlags[1] &= ~4;
-    gGameSettings.unlockAndSettingsFlags[1] &= ~8;
-    gGameSettings.unlockAndSettingsFlags[1] |= 0x10;
+    GAME_SETTING_UNSET(1, GAME_SETTINGS_MONO_STEREO);
+    GAME_SETTING_UNSET(1, GAME_SETTINGS_MUTE_SFX);
+    GAME_SETTING_UNSET(1, GAME_SETTINGS_MUTE_SPEECH);
+    GAME_SETTING_SET(1, GAME_SETTINGS_DISABLE_SUBTITLES);
 }
 
 s32 isUnlockBitSet(u8 arg0) {
@@ -188,10 +191,10 @@ void syncMissionUnlockBitsToSettings(void) {
 
 void unlockMissleUpgradeOnLevelCompletion(u8 levelId) {
     if (levelId == LEVEL_GERRARDV) {
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x1000;
+        gGameSettings.unlockAndSettingsFlags[0] |= GAME_SETTING_MASK(GAME_SETTINGS_ADVANCED_TORPEDOS);
     }
     if (levelId == LEVEL_KESSEL_PRISON) {
-        gGameSettings.unlockAndSettingsFlags[0] |= 0x400;
+        gGameSettings.unlockAndSettingsFlags[0] |= GAME_SETTING_MASK(GAME_SETTINGS_ADVANCED_MISSILES);
     }
 }
 

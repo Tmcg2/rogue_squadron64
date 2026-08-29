@@ -1,9 +1,51 @@
 #ifndef LEVEL_9_H
 #define LEVEL_9_H
 
-s32 lv9_initializeObjectTracking(void);
-s32 lv9_80105B00(void);
-s32 lv9_calculateFriendliesSaved(void);
-s32 lv9_checkComplexObjectives(void);
+#include "PR/ultratypes.h"
+
+s32  lv9_initializeObjectTracking(void);
+s32  lv9_checkComplexObjectives(void);
+void func_mission_overlay_80105304(void);
+void func_mission_overlay_8010539C(void);
+void func_mission_overlay_801053C8(void);
+void func_mission_overlay_801053EC(void);
+void func_mission_overlay_80105464(void);
+void func_mission_overlay_8010549C(void);
+void func_mission_overlay_801054C0(void);
+void func_mission_overlay_8010552C(void);
+void func_mission_overlay_8010556C(void);
+void func_mission_overlay_801055AC(void);
+void func_mission_overlay_801055E0(void);
+void func_mission_overlay_80105600(void);
+void func_mission_overlay_80105634(void);
+void func_mission_overlay_80105660(void);
+void func_mission_overlay_8010568C(void);
+void func_mission_overlay_801056B0(void);
+void func_mission_overlay_801056E0(void);
+void func_mission_overlay_80105710(void);
+void func_mission_overlay_80105740(void);
+void func_mission_overlay_80105770(void);
+void func_mission_overlay_80105790(void);
+void func_mission_overlay_801057C0(void);
+void func_mission_overlay_801057F0(void);
+void func_mission_overlay_80105820(void);
+void func_mission_overlay_80105850(void);
+void func_mission_overlay_80105880(void);
+void func_mission_overlay_801058A0(void);
+void func_mission_overlay_801058D0(void);
+void func_mission_overlay_80105900(void);
+void func_mission_overlay_80105930(void);
+void func_mission_overlay_80105960(void);
+void func_mission_overlay_80105990(void);
+void func_mission_overlay_801059B0(void);
+void func_mission_overlay_801059E0(void);
+void func_mission_overlay_80105A10(void);
+void func_mission_overlay_80105A40(void);
+void func_mission_overlay_80105A70(void);
+void func_mission_overlay_80105AA0(void);
+void func_mission_overlay_80105AC0(void);
+void func_mission_overlay_80105AE0(void);
+s32  lv9_80105B00(void);
+s32  lv9_calculateFriendliesSaved(void);
 
 #endif

@@ -18,6 +18,8 @@
    at least ten.  The ten bytes are six bytes for the longest length/
    distance pair plus four bytes for overloading the bit buffer. */
 #if 0
+// This will not match when compiled locally if it isn't compiles with asn64.exe for SN GCC 2.7.2
+// But I cannot for the life of me get that assembler to play nice with the project on the whole.
 s32 inflate_fast(u32 bl, u32 bd, inflate_huft *tl, inflate_huft *td, inflate_blocks_statef *s, z_stream *z) {
     inflate_huft *t;      /* temporary pointer */
     u32 e;               /* extra bits or operation */

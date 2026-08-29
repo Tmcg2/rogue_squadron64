@@ -1,9 +1,21 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_j", lvj_initializeObjectTracking);
+#include "mission_overlay/0C7EB0.h"
+#include "mission_overlay/0C84A0.h"
+#include "mission_overlay/level_objective_handling/lv_j.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_j", lvj_80109628);
+s32 lvj_initializeObjectTracking(void) {
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_j", lvj_calculateFriendliesSaved);
+s32 lvj_80109628(void) {
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_j", lvj_checkComplexObjectives);
+s32 lvj_calculateFriendliesSaved(void) {
+    return 0;
+}
+
+s32 lvj_checkComplexObjectives(void) {
+    return 0;
+}

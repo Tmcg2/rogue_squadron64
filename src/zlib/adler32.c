@@ -3,7 +3,8 @@
 #include "PR/ultratypes.h"
 
 #if 0
-// This matches when compiling with GCC 2.7.2 SN 0001 on decompme, but doesn't match when compiled locally :(
+// This will not match when compiled locally if it isn't compiles with asn64.exe for SN GCC 2.7.2
+// But I cannot for the life of me get that assembler to play nice with the project on the whole.
 #define BASE 65521L /* largest prime smaller than 65536 */
 #define NMAX 5552
 /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */

@@ -595,9 +595,9 @@ segments:
       - [0x0010BFF0, data,   "mission_overlay/0FCA20"]
       - [0x0010C0E0, data,   "mission_overlay/0FFB10"]
       - [0x0010C110, data,   "mission_overlay/100A00"]
-      - [0x0010C290, data,   "mission_overlay/level_objective_handling/lv_0"]
-      - [0x0010C2B0, data,   "mission_overlay/level_objective_handling/lv_1"]
-      - [0x0010C2C0, data,   "mission_overlay/level_objective_handling/lv_2"]
+      - [0x0010C290, .data,   "mission_overlay/level_objective_handling/lv_0"]
+      - [0x0010C2B0, .data,   "mission_overlay/level_objective_handling/lv_1"]
+      - [0x0010C2C0, .data,   "mission_overlay/level_objective_handling/lv_2"]
       - {type: bss, vram: 0x8010B6D0, name: "mission_overlay/0AB6E0"}
       - {type: bss, vram: 0x8010B6E0, name: "mission_overlay/0ADF80"}
       - {type: bss, vram: 0x8010B740, name: "mission_overlay/0AEFF0"}
@@ -616,21 +616,21 @@ segments:
       - {type: bss, vram: 0x8010C9E0, name: "mission_overlay/0FAE50"}
       - {type: .bss, vram: 0x8010CA30, name: "mission_overlay/0FCA20"}
       - {type: bss, vram: 0x8010CF20, name: "mission_overlay/100A00"}
-      - {type: bss, vram: 0x8010D040, name: "mission_overlay/level_objective_handling/lv_1"}
-      - {type: bss, vram: 0x8010D050, name: "mission_overlay/level_objective_handling/lv_3"}
-      - {type: bss, vram: 0x8010D060, name: "mission_overlay/level_objective_handling/lv_4"}
-      - {type: bss, vram: 0x8010D080, name: "mission_overlay/level_objective_handling/lv_5"}
-      - {type: bss, vram: 0x8010D090, name: "mission_overlay/level_objective_handling/lv_7"}
-      - {type: bss, vram: 0x8010D0B0, name: "mission_overlay/level_objective_handling/lv_8"}
-      - {type: bss, vram: 0x8010D0D0, name: "mission_overlay/level_objective_handling/lv_9"}
-      - {type: bss, vram: 0x8010D0F0, name: "mission_overlay/level_objective_handling/lv_b"}
-      - {type: bss, vram: 0x8010D140, name: "mission_overlay/level_objective_handling/lv_c"}
-      - {type: bss, vram: 0x8010D150, name: "mission_overlay/level_objective_handling/lv_d"}
-      - {type: bss, vram: 0x8010D160, name: "mission_overlay/level_objective_handling/lv_e"}
-      - {type: bss, vram: 0x8010D1A0, name: "mission_overlay/level_objective_handling/lv_f"}
-      - {type: bss, vram: 0x8010D1C0, name: "mission_overlay/level_objective_handling/lv_g"}
-      - {type: bss, vram: 0x8010D1E0, name: "mission_overlay/level_objective_handling/lv_i"}
-      - {type: bss, vram: 0x8010D1F0, name: "mission_overlay/level_objective_handling/lv_k"}
+      - {type: .bss, vram: 0x8010D040, name: "mission_overlay/level_objective_handling/lv_1"}
+      - {type: .bss, vram: 0x8010D050, name: "mission_overlay/level_objective_handling/lv_3"}
+      - {type: .bss, vram: 0x8010D060, name: "mission_overlay/level_objective_handling/lv_4"}
+      - {type: .bss, vram: 0x8010D080, name: "mission_overlay/level_objective_handling/lv_5"}
+      - {type: .bss, vram: 0x8010D090, name: "mission_overlay/level_objective_handling/lv_7"}
+      - {type: .bss, vram: 0x8010D0B0, name: "mission_overlay/level_objective_handling/lv_8"}
+      - {type: .bss, vram: 0x8010D0D0, name: "mission_overlay/level_objective_handling/lv_9"}
+      - {type: .bss, vram: 0x8010D0F0, name: "mission_overlay/level_objective_handling/lv_b"}
+      - {type: .bss, vram: 0x8010D140, name: "mission_overlay/level_objective_handling/lv_c"}
+      - {type: .bss, vram: 0x8010D150, name: "mission_overlay/level_objective_handling/lv_d"}
+      - {type: .bss, vram: 0x8010D160, name: "mission_overlay/level_objective_handling/lv_e"}
+      - {type: .bss, vram: 0x8010D1A0, name: "mission_overlay/level_objective_handling/lv_f"}
+      - {type: .bss, vram: 0x8010D1C0, name: "mission_overlay/level_objective_handling/lv_g"}
+      - {type: .bss, vram: 0x8010D1E0, name: "mission_overlay/level_objective_handling/lv_i"}
+      - {type: .bss, vram: 0x8010D1F0, name: "mission_overlay/level_objective_handling/lv_k"}
 
   - name: menu_overlay
     type: code

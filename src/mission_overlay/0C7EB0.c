@@ -1,7 +1,8 @@
 #include "common.h"
-#include "common_variables.h"
 
-#include"level_objectives.h"
+#include "level_objectives.h"
+#include "mission_state.h"
+
 #include "main/04030.h"
 #include "main/6C310.h"
 #include "mission_overlay/0C7EB0.h"
@@ -164,7 +165,7 @@ void setObjectiveBooleans(u8 *arg0, s8 arg1) {
     }
 }
 
-u8 getObjectiveBoolean(s32 booleanIndex) {
+s32 getObjectiveBoolean(s32 booleanIndex) {
     if (booleanIndex != 0) {
         return gObjectiveBooleans[booleanIndex - 1];
     } else {
@@ -193,11 +194,11 @@ u32 increaseObjectiveCount(s32 arg0, s32 arg1) {
     }
 }
 
-u32 getObjectiveCount(s32 countIndex) {
+s32 getObjectiveCount(s32 countIndex) {
     if (countIndex != 0) {
         return gObjectiveCounts[countIndex - 1];
     } else {
-        return 0U;
+        return 0;
     }
 }
 

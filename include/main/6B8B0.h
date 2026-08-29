@@ -2,6 +2,7 @@
 #define MAIN_66FB0_H
 
 #include "PR/ultratypes.h"
+#include "common_types.h"
 
 void decrypt_ns_hmt(u8*, s32, u32);
 s32  isCraftAvailableByIdx(s32);

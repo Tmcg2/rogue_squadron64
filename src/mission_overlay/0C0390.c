@@ -1,8 +1,10 @@
 #include "common.h"
-#include "common_types.h"
-#include "common_variables.h"
 
+#include "game_settings.h"
+#include "mission_state.h"
+#include "player.h"
 #include "secondary_weapons.h"
+#include "hud.h"
 
 #include "mission_overlay/0C0390.h"
 
@@ -41,7 +43,7 @@ void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
     switch (gMissionState.secondaryWeapon) {
     case SECONDARY_WEAPON_MISSLES:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_MISSLE;
-        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> 0xA) & 1;
+        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> GAME_SETTINGS_ADVANCED_MISSILES) & 1;
         break;
     case SECONDARY_WEAPON_SEEKER_MISSILES:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_MISSLE;
@@ -49,7 +51,7 @@ void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
         break;
     case SECONDARY_WEAPON_CLUSTER_MISSILES:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_CLUSTER_MISSLE;
-        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> 0xE) & 1;
+        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> GAME_SETTINGS_SEEKER_CLUSTER_MISSILES) & 1;
         break;
     case SECONDARY_WEAPON_SEEKER_CLUSTER_MISSILES:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_CLUSTER_MISSLE;
@@ -57,8 +59,8 @@ void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
         break;
     case SECONDARY_WEAPON_PROTON_TORPEDOS:
         secondaryWeaponType = SECONDARY_WEAPON_TYPE_TORPEDO;
-        if (!(gGameSettings.unlockAndSettingsFlags[0] & 0x1000)) {
-            secondaryWeaponLevel = ((gGameSettings.unlockAndSettingsFlags[0] & 0x2000) != 0) * 2;
+        if (!ADVANCED_TORPEDOS_UNLOCKED) {
+            secondaryWeaponLevel = ((gGameSettings.unlockAndSettingsFlags[0] & GAME_SETTING_MASK(GAME_SETTINGS_SEEKER_TORPEDOS)) != 0) * 2;
         } else {
             secondaryWeaponLevel = SECONDARY_WEAPON_LEVEL_ADVANCED;
         }
@@ -69,7 +71,7 @@ void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
         break;
     case SECONDARY_WEAPON_BOMBS:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_BOMB;
-        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> 0xF) & 1;
+        secondaryWeaponLevel = (gGameSettings.unlockAndSettingsFlags[0] >> GAME_SETTINGS_ADVANCED_BOMBS) & 1;
         break;
     default:
         secondaryWeaponType  = SECONDARY_WEAPON_TYPE_MISSLE;
