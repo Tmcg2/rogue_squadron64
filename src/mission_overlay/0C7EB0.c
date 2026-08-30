@@ -2,6 +2,7 @@
 
 #include "level_objectives.h"
 #include "mission_state.h"
+#include "mission_stats.h"
 
 #include "main/04030.h"
 #include "main/6C310.h"
@@ -249,7 +250,15 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C77A0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", setFriendliesSaved);
+void setFriendliesSaved(s32 arg0) {
+    if (arg0 < 0) {
+        arg0 = 0;
+    }
+    if (arg0 >= 0x100) {
+        arg0 = 0xFF;
+    }
+    missionStats.friendlies_saved = arg0;
+}
 
 s16 func_mission_overlay_800C77D0(s32 arg0) {
     return (rand() % arg0);

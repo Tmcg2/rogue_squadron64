@@ -5,10 +5,12 @@
 #include "levels.h"
 #include "game_settings.h"
 #include "mission_state.h"
+#include "medals.h"
 #include "save.h"
 
 #include "main/08120.h"
 #include "main/6E500.h"
+#include "main/82E70.h"
 
 /*BSS definitions, for when BSS mathcing is possible
 u8 D_main_bss_8013A5B0;
@@ -54,7 +56,7 @@ void highScoreBubbleSort(u8 arg0) {
     medalCounts[1] = 0;
     medalCounts[0] = 0;
     for (var_s3 = 0; var_s3 < NUM_LEVELS; var_s3++) {
-        if (gMissionState.medalPerLevel[var_s3] == NO_MEDAL) continue;
+        if (gMissionState.medalPerLevel[var_s3] == MEDAL_NONE) continue;
         medalCounts[gMissionState.medalPerLevel[var_s3] - 1]++;
     }
     medals = (medalCounts[0] | (medalCounts[1] << 5) | (medalCounts[2] << 10));
@@ -99,7 +101,44 @@ void highScoreBubbleSort(u8 arg0) {
     }
 }
 
+#if 0
+// Mostly matches, but there's some really dumb register allocation nonsense going on
+void applyAccountUnlocksToSettings(void) {
+    u8 var_s0;
+    u8 var_s1;
+
+    gGameSettings.unlockAndSettingsFlags[1] = gSaveDataBody.unk00;
+    for (var_s0 = 0; var_s0 < 1; var_s0++) {
+        gGameSettings.unlockAndSettingsFlags[var_s0] = (gGameSettings.unlockAndSettingsFlags[var_s0] & ~0x8B) | (gSaveDataBody.unk04 & 0x8B);
+    }
+    gGameSettings.cheatCodeFlags[0] = 0;
+    gGameSettings.cheatCodeFlags[1] = 0;
+    gGameSettings.musicVolume = gSaveDataBody.musicVolume;
+    gGameSettings.soundFxVolume = gSaveDataBody.soundFxVolume;
+    gGameSettings.speechVolume = gSaveDataBody.speechVolume;
+    gGameSettings.controllerSetting = gSaveDataBody.controllerSetting;
+    gGameSettings.languageSelect = gSaveDataBody.unkA3[5];
+    for (var_s0 = 0; var_s0 < 0x1D; var_s0++) {
+        if ((gSaveDataBody.cheatCodeFlags[var_s0 / 32] & (1 << (var_s0 % 32))) && isCheatCodeIndexAllowed(var_s0)) {
+            gGameSettings.cheatCodeFlags[var_s0 / 32] = gGameSettings.cheatCodeFlags[var_s0 / 32] | (1 << (var_s0 % 32));
+        }
+    }
+    if (gGameSettings.unk23 == 0) {
+        gGameSettings.unlockAndSettingsFlags[1] &= ~1;
+        if (gSaveDataBody.unkA3[6] == 1) {
+            serializeSettingsToSaveAndPersist();
+        }
+    } else {
+        var_s0 = gSaveDataBody.unkA3[6];
+        if (var_s0 == 0) {
+            gGameSettings.unlockAndSettingsFlags[1] |= 1;
+            serializeSettingsToSaveAndPersist();
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/6E500", applyAccountUnlocksToSettings);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/6E500", serializeSettingsToSaveAndPersist);
 
@@ -176,7 +215,7 @@ void resetMixerVolumesAndFlags(void) {
 s32 isUnlockBitSet(u8 arg0) {
     u16 huh;
     huh = arg0;
-    huh = gSaveDataBody.unkA0[arg0 / 8] >> (huh % 8);
+    huh = gSaveDataBody.unkA3[arg0 / 8] >> (huh % 8);
     return huh & 1;
 }
 

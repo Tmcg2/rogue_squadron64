@@ -4,6 +4,7 @@
 #include "crafts.h"
 #include "levels.h"
 #include "secondary_weapons.h"
+#include "medals.h"
 #include "game_settings.h"
 #include "mission_state.h"
 
@@ -128,13 +129,13 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     // Check the medals for all "normal" levels
     for (var_a1 = 0; var_a1 < LEVEL_BEGGARS_CANYON; var_a1++) {
         temp_v1 = medalsPerLevel[var_a1];
-        if (temp_v1 < GOLD) {
+        if (temp_v1 < MEDAL_GOLD) {
             normalAllGold = 0;
         }
-        if (temp_v1 < SILVER) {
+        if (temp_v1 < MEDAL_SILVER) {
             normalAllSilver = 0;
         }
-        if (temp_v1 < BRONZE) {
+        if (temp_v1 < MEDAL_BRONZE) {
             normalAllBronze = 0;
         }
     }
@@ -163,13 +164,13 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     // Check the medals for all unlockable levels
     for (var_a1 = LEVEL_BEGGARS_CANYON; var_a1 < NUM_LEVELS; var_a1++) {
         temp_v1 = medalsPerLevel[var_a1];
-        if (temp_v1 < GOLD) {
+        if (temp_v1 < MEDAL_GOLD) {
             unlockableAllGold = 0;
         }
-        if (temp_v1 < SILVER) {
+        if (temp_v1 < MEDAL_SILVER) {
             unlockableAllSilver = 0;
         }
-        if (temp_v1 < BRONZE) {
+        if (temp_v1 < MEDAL_BRONZE) {
             unlockableAllBronze = 0;
         }
     }

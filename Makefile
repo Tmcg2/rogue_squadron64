@@ -15,7 +15,7 @@ MODERNASN := $(PYTHON) $(TOOLSDIR)/modern-asn64.py $(AS)
 INCLUDE_DIRS := -I ./include/ -I ./ultralib/include/
 DEFINES      := -DINCLUDE_ASM_USE_MACRO_INC -D_LANGUAGE_C
 CPPFLAGS     := -E -lang-c
-CFLAGS       := -quiet -O2 -G0 -mips3 -mhard-float
+CFLAGS       := -quiet -O2 -G0 -mips3 -mhard-float -ffast-math
 ASFLAGS      := -EB -mabi=32 -mfp32 -mgp32 -mtune=vr4300 -march=vr4300 -mips3 -G0 -I./include
 
 COMPILERSPATH := $(TOOLSDIR)/compilers
@@ -57,18 +57,18 @@ $(GCC272SN0001):
 	tar xzf "$(@D)/n64_sn272_0001.tar.gz" -C "$(@D)"
 	chmod +x "$@"
 
-build/src/%.i: src/%.c | $(BUILD_DIRS)
-	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o $@
-
-build/src/%.s: build/src/%.i | $(BUILD_DIRS) $(GCC281SN) $(GCC272SN0001)
-	$(N64CC) $(CFLAGS) $< -o $@
-
 build/src/main/03310.s: N64CC = $(GCC272SN0001)
 build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: CFLAGS = -quiet -O3 -G0 -mips3
+
+build/src/%.i: src/%.c | $(BUILD_DIRS)
+	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o $@
+
+build/src/%.s: build/src/%.i | $(BUILD_DIRS) $(GCC281SN) $(GCC272SN0001)
+	$(N64CC) $(CFLAGS) $< -o $@
 
 build/src/%.o: build/src/%.s | $(BUILD_DIRS)
 	$(MODERNASN) $(ASFLAGS) $< -o $@

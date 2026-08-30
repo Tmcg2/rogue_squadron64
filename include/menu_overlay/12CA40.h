@@ -2,7 +2,7 @@
 #define MENU_12CA40_H
 
 #include "PR/ultratypes.h"
-#include "common_types.h"
+#include "levels.h"
 
 s32  getAvailablePlayerCraftFlagsConsiderUnlocks(enum Level);
 s32  getAvailablePlayerCraftFlagsIgnoreUnlocks(enum Level);

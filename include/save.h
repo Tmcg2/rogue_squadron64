@@ -33,22 +33,22 @@ struct EliteRogueData {
 }; // size 0x8
 
 struct D_8013A5C0_type {
-    /* 0x00 */ u32 unk00; // struct D_80130B40_type.unk10
-    /* 0x04 */ u32 unk04; // struct D_80130B40_type.unk0C & 0x8B
-    /* 0x08 */ u32 cheatCodeFlags[2];
-    /* 0x10 */ u8  musicVolume;
-    /* 0x11 */ u8  soundFxVolume;
-    /* 0x12 */ u8  speechVolume;
-    /* 0x13 */ u8  controllerSetting;
-    /* 0x14 */ struct account_data accounts[3];
-    /* 0x50 */ u8 unk50; // has a value, unsure of purpose
-    /* 0x51 */ u8 unk51;
+    u32 unk00;                            /* 0x00 struct D_80130B40_type.unk10 */
+    u32 unk04;                            /* 0x04 struct D_80130B40_type.unk0C & 0x8B */
+    u32 cheatCodeFlags[2];                /* 0x08 */
+    u8  musicVolume;                      /* 0x10 */
+    u8  soundFxVolume;                    /* 0x11 */
+    u8  speechVolume;                     /* 0x12 */
+    u8  controllerSetting;                /* 0x13 */
+    struct account_data accounts[3];      /* 0x14 */
+    u8 unk50;                             /* 0x50 has a value, unsure of purpose */
+    u8 unk51;                             /* 0x51 */
     // This stuff is aligned super weirdly, so being a proper struct may not work, only time will tell
-    /* 0x52 */ struct EliteRogueData highscores[10];
-    /* 0xA2 */ u8  unkA2;
-    /* 0xA3 */ u8  unkA0[8];
-    /* 0xAB */ u8  languageSelect;
-    /* 0xAC */ u8  unkAC;
+    struct EliteRogueData highscores[10]; /* 0x52 */
+    u8  unkA2;                            /* 0xA2 */
+    u8  unkA3[8];                         /* 0xA3 */
+    u8  languageSelect;                   /* 0xAB */
+    u8  unkAC;                            /* 0xAC */
 }; // size 0xB0
 
 extern struct D_8013A5C0_type gSaveDataBody; // 0x8013A5C0

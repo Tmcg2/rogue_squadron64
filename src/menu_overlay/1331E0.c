@@ -1,5 +1,7 @@
 #include "common.h"
 #include "levels.h"
+#include "medals.h"
+#include "ranks.h"
 #include "main/64EA0.h"
 #include "menu_overlay/1331E0.h"
 
@@ -17,7 +19,7 @@ u8 getMissionMedal(u8 levelId, struct mission_stats *stats) {
 
     if (levelId == LEVEL_BEGGARS_CANYON) return stats->friendlies_saved; 
 
-    for (blah = GOLD; blah > NO_MEDAL; blah--) {
+    for (blah = MEDAL_GOLD; blah > MEDAL_NONE; blah--) {
         var_v0 = blah;
         temp_v1_2 = &medalInfo[levelId*3 + var_v0 - 1];
         D_menu_overlay_800D03D0.completion_time = temp_v1_2->completion_time * 60.0f;
@@ -42,7 +44,7 @@ u8 calculatePlayerRank(u8 *medalsPerLevel) {
     */
     var_a2 = 0;
     for (levelId = 0; levelId < NUM_LEVELS; levelId++) {
-        if (medalsPerLevel[levelId] != NO_MEDAL) {
+        if (medalsPerLevel[levelId] != MEDAL_NONE) {
             var_a2 += 1 << (medalsPerLevel[levelId] - 1);
         }
     }

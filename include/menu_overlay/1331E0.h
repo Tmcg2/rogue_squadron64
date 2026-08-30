@@ -2,7 +2,7 @@
 #define MENU_1331E0_H
 
 #include "PR/ultratypes.h"
-#include "common_types.h"
+#include "mission_stats.h"
 
 void loadMedalInfo(void);
 u8 getMissionMedal(u8 levelId, struct mission_stats *stats);

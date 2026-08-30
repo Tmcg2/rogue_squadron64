@@ -6,6 +6,8 @@
 
 void loadDefaultHighScores(void);
 void highScoreBubbleSort(u8);
+void applyAccountUnlocksToSettings(void);
+void serializeSettingsToSaveAndPersist(void);
 s32  getActiveAccountsBitmask(void);
 s32  getAccountUnk51(void);
 void initializeNumLives(void);

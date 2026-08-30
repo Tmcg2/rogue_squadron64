@@ -22,7 +22,13 @@ INCLUDE_ASM("asm/nonmatchings/main/6C310", spawnStubMarkerNpc);
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", load_naboo_starfighter);
 
+#if 0
+void *getCraftRecordByIdx(s32 arg0) {
+    return &gPlayers[arg0].inner.posX; // While this matches its obviously wrong, there's another struct inside player.inner (most likely)
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/6C310", getCraftRecordByIdx);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", getPlayerCraftRecordByIdx);
 
