@@ -1,5 +1,8 @@
 #include "common.h"
 
+#include "main/3F160.h"
+#include "main/40F10.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/40F10", allocAndInitParticlePool);
 
 INCLUDE_ASM("asm/nonmatchings/main/40F10", randomBurstNpcHandlerVariant);
@@ -16,7 +19,9 @@ INCLUDE_ASM("asm/nonmatchings/main/40F10", initNpcContextFromTransform);
 
 INCLUDE_ASM("asm/nonmatchings/main/40F10", spawnRandomBurstNpcVariantWrapper);
 
-INCLUDE_ASM("asm/nonmatchings/main/40F10", destroyNpcSlotByIndexU16);
+void destroyNpcSlotByIndexU16(s32 arg0) {
+    destroyNpcSlotByIndex(arg0);
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/40F10", attachChildNpcByIndex);
 
