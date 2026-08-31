@@ -574,10 +574,11 @@ SECTIONS
         build/asm/data/main/3BE30.rodata.o(.rodata);
         build/asm/data/main/3BF00.rodata.o(.rodata);
         build/asm/data/main/3C010.rodata.o(.rodata);
-        build/asm/data/main/3C430.rodata.o(.rodata);
+        build/src/main/65540.o(.rodata);
         build/src/main/66660.o(.rodata);
-        build/asm/data/main/3CEE0.rodata.o(.rodata);
-        build/asm/data/main/3D3D0.rodata.o(.rodata);
+        build/src/main/66FB0.o(.rodata);
+        build/src/main/67690.o(.rodata);
+        build/src/main/68990.o(.rodata);
         build/asm/data/main/3D4D0.rodata.o(.rodata);
         build/src/main/6B8B0.o(.rodata);
         build/asm/data/main/3D560.rodata.o(.rodata);
@@ -616,6 +617,7 @@ SECTIONS
         build/src/main/65540.o(.text);
         build/src/main/66660.o(.text);
         build/src/main/66FB0.o(.text);
+        build/src/main/67690.o(.text);
         build/src/main/68990.o(.text);
         build/src/main/6A6F0.o(.text);
         build/src/main/6B8B0.o(.text);
@@ -678,8 +680,8 @@ SECTIONS
         build/src/main/5D220.o(.data);
         build/asm/data/main/9F960.data.o(.data);
         build/asm/data/main/A0850.data.o(.data);
-        build/asm/data/main/A08D0.data.o(.data);
-        build/asm/data/main/A0BE0.data.o(.data);
+        build/src/main/66FB0.o(.data);
+        build/src/main/67690.o(.data);
         build/src/main/6B8B0.o(.data);
         build/asm/data/main/A15C0.data.o(.data);
         build/src/main/6E500.o(.data);

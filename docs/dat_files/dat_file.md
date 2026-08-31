@@ -65,10 +65,15 @@ It is the DAT file for level 0 (Attack on Mos Eisley) that I have partially anno
 The first 0x48 bytes of the file are the counts and offsets-to-offset-lists for each of the data types, with some padding in it.
 
 Offset 0x00 and 0x04 are Item 0 count and offset respecitively
+
 Offset 0x10 and 0x14 are Item 2 count and offset respecitively
+
 Offset 0x18 and 0x1C are Item 3 count and offset respecitively
+
 Offset 0x30 and 0x34 are Item 6 count and offset respecitively
+
 Offset 0x38 and 0x3C are Item 7 count and offset respecitively
+
 Offset 0x40 and 0x44 are Item Hash Map size and offset respecitively
 
 Offset lists are pretty much exactly what they sound like.
