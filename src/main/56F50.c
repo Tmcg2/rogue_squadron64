@@ -1,5 +1,14 @@
 #include "common.h"
 
+#include "main/56F50.h"
+
+f32 D_main_8009ECB0[] = {
+    19.5f,
+    32.0f,
+    100.0f,
+    200.0f,
+};
+
 INCLUDE_ASM("asm/nonmatchings/main/56F50", initNpcBookkeepingTables);
 
 INCLUDE_ASM("asm/nonmatchings/main/56F50", load_hmt_and_hob);
