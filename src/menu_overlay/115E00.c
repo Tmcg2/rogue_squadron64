@@ -1,6 +1,6 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800AEC60);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", initCraftSelectScreen);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A58BC);
 
@@ -32,9 +32,9 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A58F4);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A58F8);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800AF3C0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", tickCraftSelectScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800AF6AC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", handleCraftSelectInput);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A5994);
 
@@ -42,15 +42,15 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", bridgeOuterBlueLightPosit
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A59C4);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B0148);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", spawnOrientedEffectWithEasedSpin);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B0650);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", handleLevelSelectStartConfirm);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B07F4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", tickMenuTransitionState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B08F4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", runScriptedCraftCinematicEvent);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B1430);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", initMenuWidgetArray);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", strMenuXwing);
 
@@ -70,23 +70,23 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", strMenuT16);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", bridgeLoadShipBlueprints);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B180C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", layoutMenuTextRow);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A5BA4);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B19EC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", printLevelSelectWeaponText);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B1B58);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", startSlotLoopAnimWithVoiceSync);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B1D54);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", setupPlayerCraftDisplayAnim);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B1EF4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", applyPlayerSlotAnimChannelKeyframe);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B24C4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", drainAudioAndFinalizeSpeechBuffer);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B2520);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", tickTimedScreenFadeFloat);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", func_menu_overlay_800B2564);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", playExitSoundAndToggleScreenMeshes);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", fake_func_800B2628);
 

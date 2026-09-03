@@ -25,25 +25,25 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0FCA20", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0FCA20", D_mission_overlay_800A9124);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FBE20);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", configurePlayerSecondaryWeaponHud);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FC108);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", resetHudInstancesAndUnbindNpcs);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FC260);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", findNearestTargetableNpcInRange);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FC564);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", projectForwardTerrainImpactPoint);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FC720);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", tickHudInstanceTargetingAndSpawns);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FD31C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", updatePlayerHudFrame);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FE434);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", teardownHudInstancesAndUnbindNpcs);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FE500);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", dispatchHudInstanceWeaponEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FEC98);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", refreshPlayerSecondaryWeaponHud);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FED40);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", resetTransientPlayerStateFlags);
 
 void resetSecondaryWeaponCount(void) {
     u8 var_a0;
@@ -53,7 +53,7 @@ void resetSecondaryWeaponCount(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", func_mission_overlay_800FEE74);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", getActiveHudInstanceTargetPosition);
 
 s32 func_mission_overlay_800FEECC(void) {
     s32 var_a0;

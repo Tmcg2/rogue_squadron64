@@ -336,6 +336,744 @@ lvj_80109628                 = 0x80109628; // segment:mission_overlay
 lvj_calculateFriendliesSaved = 0x80109630; // segment:mission_overlay
 lvj_checkComplexObjectives   = 0x80109638; // segment:mission_overlay
 
+
+// 0x8007A068 + 0x8007A0A8 are named below as getControllerStickXPercentage / getControllerStickYPercentage (defined:true variants — same fn, kept one)
+// DMAs HMT/HOB for chosen craft (per notes.txt)
+choosePlayerCraftAssets         = 0x800FB6C0; // segment:mission_overlay
+// (state, mode u8 [0/1/else], altState, outFloatPtr) — ticks one of 3 (raw_timer i16, norm_float, advanced_flag u8) triplets. Mode 0 → state+0x15C/+0x158/+0x161. Mode 1 → state+0x188/+0x184/+0x18D. Else → altState+0x24/+0x20/+0x29. Reads the raw timer as i16, normalizes via division by float at MEM_W[0x800A89D4] (max-range constant), then calls sister func_800F1310 (~heavy actor-state updater that transforms position and resolves NPC slot via findActiveNpcInSlotChain). Writes the normalized value back to the matching float slot; sets the "advanced" byte flag to 1 if the value changed, else 0. When `outFloatPtr` (a3) is non-null, also publishes the new normalized value (or 0 if unchanged) there. 45 callers across funcs_36..40 — primary entry for ticking per-actor animation/interp channels.
+tickProgressChannel             = 0x800F1870; // segment:mission_overlay
+// (cueType u8) — 1-line wrapper that forwards a0 to initSoundCueRequest at 0x800EFCD4. 28 callers across game (gameplay events, weapon fire, UI clicks, etc). Companion wrappers at 0x800C7D60 → func_800EF770 (named-asset trigger) and 0x800C7D7C → func_800EF95C are sister entry points for different cue subsystems.
+triggerSoundCueByType           = 0x800C7D98; // segment:mission_overlay
+// (cueType u8 in [0..7]) — initializes the pending audio cue config struct at MEM_W[0x8010C200]: byte +0x8 = 0x7F (volume 127/127), halfword +0x4 = (cueType==3 ? 0x1D : 0x1E) priority, halfword +0x6 = MEM_HU[0x8010B304 + cueType*2] (the actual sound asset ID), halfword +0xA = 1 (request flag), halfwords +0x10..+0x12 = 0x64 (pan center), byte +0xF = 0, halfword +0xC..0xE bytes = 0. Also raises two pending-request flags: MEM_B[0x8010C262] = 1, MEM_B[0x8010C268] = 1. Early-out (no change) when cueType >= 8.
+initSoundCueRequest             = 0x800EFCD4; // segment:mission_overlay
+// (state, dispatchArg, dataPtr, sharedPtr, [f24], [f25], [sp+0x7B]=byte, [sp+0x7C]=...) — top-level "fire effect" entry, 54 callers across funcs_19/36..40. Reads state+0x14C float via getEffectIntensity (returned in f0). Submits a cue via dispatchCueByCategory with the asset's halfword ID from state+0x198, the f0 intensity, and the caller's float/byte aux params. If the caller's f22 float is strictly > 0.0, additionally calls slotDispatcherIter(returnedSlot, 0xA, &localTbl) to fire the slot-A effect chain. Used as the "play SFX + spawn visual" composite trigger.
+triggerCueWithSlotEffect        = 0x800F2FCC; // segment:mission_overlay
+// (state) -> f0 — 2-instr leaf getter: returns f0 = MEM_W[state+0x14C] (the per-asset effect intensity float). Companion to setEffectIntensity. Used by triggerCueWithSlotEffect to read intensity before submitting a cue.
+getEffectIntensity              = 0x800F2FB4; // segment:mission_overlay
+// (state, intensity f32) -> v0=1 — 2-instr leaf setter: writes MEM_W[state+0x14C] = a1 and returns 1 (always success). Companion to getEffectIntensity.
+setEffectIntensity              = 0x800F2FC0; // segment:mission_overlay
+// (state, positionPtr, scaleA f32, scaleB f32) — 22 callers, computes a world-space position anchored to an NPC. Reads state+0x130 (npc handle u16), resolves the active NPC via findActiveNpcInSlotChain + getNpcContextByIndex to get an NPC context (ctx). If ctx+0xC (mesh-part ref) is non-null, zmemcpy's a 0x30-byte transform from ctx+0x8 into local stack, then calls transformMeshPartIntoWorld(ctx+0xC, localTransform) to place the mesh part in world space. Otherwise uses state+0x8 as the base position. Calls func_800F2AC4(state, localTransform, scaleA, sp+0x40) — final transform helper — which writes 3 floats to sp+0x40..0x48 (final world position). Returns the deltas (sp+0x40 - positionPtr[0..8]) at sp+0x10..0x18 (and stores f0 at sp+0x50). Used by effect spawners to anchor visuals to an NPC's mesh part.
+resolveNpcAttachmentPos         = 0x800F0F94; // segment:mission_overlay
+// (actor, intensity f32) — 23 callers, type-keyed effect dispatcher on actor type byte at actor+0x112. Type 0 → no-op (early return). Type 1 → func_800F410C(actor, intensity). Type 2 → func_800F4E74. Type 3 → func_800F538C. Type 4 → func_800F8398. All handlers take (actor, intensity) as (a0, f0). Sister functions like func_800F9AB8 use the same +0x112 type byte for related per-type operations — actor+0x100..0x118 is the per-actor effect data block (+0x104..0x106 bytes, +0x108 word, +0x10C float intensity, +0x110 flags halfword, +0x112 type, +0x113..). Read state+0x110 flags via updateObjectFlags110.
+dispatchEffectByActorType       = 0x800F9A14; // segment:mission_overlay
+// (actor, angle1 f32, magnitude1 f32, angle2 f32, [sp+0x50]=magnitude2 f32) — 19 callers, initializes actor's motion/velocity parameter block at actor+0x114..+0x137 from 2 (angle, magnitude) pairs. Multiplies each angle by deg-to-rad scale at MEM_W[0x800A89EC] then passes to cosf_recomp. Multiplies each magnitude by scale at MEM_W[0x800A89F0]. Writes (cos1, mag1*scale, cos2, mag2*scale) into actor+0x114/+0x118/+0x11C/+0x120. Adds random ±8-step jitter (rand_recomp % 17) scaled by MEM_W[0x800A89F4] at actor+0x124. Resets state bytes: actor+0x135 = 1 (motion-active flag), +0x136 = 0, +0x137 = 0. Used by effect spawners to initialize particle/projectile motion from polar inputs.
+initActorMotionParams           = 0x800F2888; // segment:mission_overlay
+// (actor, srcXform, scale f32, mode, [sp+0x68]=outFloatPtr) — 11 callers, Euler integration wrapper around tickProgressChannel. zmemcpy's a 0x30-byte transform from a1 into local at sp+0x10. Reads velocity at local+0xC/+0x10/+0x14, integrates: local+0x0..+0x8 (position) += velocity × scale. Then forwards (actor, mode, local, outFloatPtr) to tickProgressChannel — when mode != 0/1, the function reads timer/norm/flag from this integrated local-state's +0x24/+0x20/+0x29 fields. Returns the tick result byte from tickProgressChannel.
+stepAndTickProgressChannel      = 0x800F2F10; // segment:mission_overlay
+// (actor, intensity f32, byte0 u8, byte1 u8, [sp+0x10]=byte2 u8, [sp+0x14]=param u32) -> v0 — 12 callers, type-guarded setter for the type-1 actor extended params block. Reads actor+0x112; if != 1, returns 0 immediately (type mismatch). On match (type == 1): writes intensity to actor+0x10C, byte0/1/2 to actor+0x104/+0x105/+0x106, param to actor+0x108. Returns 1 on success. Sister to dispatchEffectByActorType — operates on the same +0x112 type byte but is the WRITER for the type-1-specific +0x104..+0x10C block (vs. the dispatcher which is the type-keyed READER/INVOKER).
+setType1ActorParams             = 0x800F9AB8; // segment:mission_overlay
+// (actor, target f32, floor f32, duration f32, [sp+0x13]=channel u8) — 7 callers, type-1-guarded animation ramp updater. Returns immediately if actor+0x112 != 1. Selects between two parallel ramp channels at actor+0x48..+0x50 vs actor+0x50..+0x58 based on the channel byte (channel == 1 → actor+0x48 base, else → actor+0x50 base via a0 += 8). Per-channel layout (currentValue, delta, targetValue): writes scaled target, clamps to floor, recomputes delta. When delta > 0 also writes target to channel+0x10 and 1/duration to channel+0x14 (the inverse-duration speed). Otherwise rolls current = target and rescales actor+0x2C by MEM_W[actor+0x24]+0x24.
+updateType1AnimRamp             = 0x800F9B34; // segment:mission_overlay
+// (actor, intensity f32) — type-1 actor effect executor, dispatched from dispatchEffectByActorType when actor+0x112 == 1. ~600-instr handler (stack 0x1A8). Reads actor+0x198 (cue id) → getNpcContextField8 to get NPC ref. Reads actor+0xD8/+0xDC/+0xE0 (a base position triplet) and stages it on the stack. Reads s5+0x104 = actor+0x10C (type-1 intensity from setType1ActorParams) and gates further work on whether it's non-zero. The remainder is type-1 specific effect rendering / state update.
+executeActorType1Effect         = 0x800F410C; // segment:mission_overlay
+// (actor, intensity f32) — type-2 effect executor, dispatched from dispatchEffectByActorType. Stack 0x88. Same prologue as type-1 (reads actor+0x198 → getNpcContextField8 → NPC ctx in s3). Reads ctx+0x24 (likely a scale/distance ref) and ctx+0x0 (position). Diverges from type-1 with shorter / position-update-focused body. 1 caller (only invoked via the dispatcher).
+executeActorType2Effect         = 0x800F4E74; // segment:mission_overlay
+// (actor, intensity f32) — type-3 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as type-1/2.
+executeActorType3Effect         = 0x800F538C; // segment:mission_overlay
+// (actor, intensity f32) — type-4 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as the other Type{N} impls.
+executeActorType4Effect         = 0x800F8398; // segment:mission_overlay
+// (actor, a1 f32, a2 f32, a3 f32) — type-1-guarded setter. Returns 0 silently if actor+0x112 != 1. On match: writes (a1 × MEM_W[0x800A8F50]) to actor+0x68, (a2) to actor+0x84, (a3) to actor+0xD4. All offsets are relative to actor+0x8 base. Velocity-style 3-component setter for type-1 actors.
+setType1ActorVelocity           = 0x800F97B4; // segment:mission_overlay
+// (actor, value f32) — type-1-guarded swap of actor+0x40 float. If actor+0x112 != 1: returns 0. Else: reads old MEM_W[actor+0x40] into f0 (return), writes new value (a1) to actor+0x40, returns the old value.
+setType1ActorField40            = 0x800F97F4; // segment:mission_overlay
+// (actor, parent_ref u32, init_f f32, init_f2 f32) — converts an actor into a type-2 actor: sets actor+0x112 = 2, then reads actor+0x198 (cue id), looks up via getNpcContextField8 to get NPC context, copies its position (ctx+0xC/+0x10/+0x14) into actor+0x8/+0xC/+0x10. Zero-initializes a 0x25-byte block at actor+0x18..+0x3D (the type-2 extended state — float fields at +0x1C/+0x20/+0x24/+0x28/+0x2C all set to 0). Writes a3 (init_f2) → actor+0x14, a2 (init_f) → actor+0x18, actor+0x1C/+0x20/+0x24, a1 (parent_ref) → actor+0x38, zero bytes at actor+0x3C and +0x3D. Returns 1.
+initActorAsType2                = 0x800F981C; // segment:mission_overlay
+// (actor, a1 f32, a2 f32, a3 f32) — sister to setType1ActorVelocity for type 2. Returns 0 if actor+0x112 != 2. On match: writes the 3 floats into actor+0x8+0xZZ offsets (similar layout to type-1 variant; sister handler for type-2 actors).
+setType2ActorVelocity           = 0x800F98CC; // segment:mission_overlay
+// (actor) -> f0 — 3 callers, type-polymorphic getter returning the actor's "current value" float based on actor+0x112: type 1 → MEM_W[actor+0x50] (the type-1 ramp current from updateType1AnimRamp), type 4 → MEM_W[actor+0x28] (type-4 storage offset). Returns 0.0 for any other type. Used by external readers that don't care about which type-specific storage the actor uses.
+getActorCurrentValueByType      = 0x800F9BEC; // segment:mission_overlay
+// (actor, a1 f32, a2 f32, a3 f32, [sp+0x10]=p4 f32, [sp+0x14]=p5 f32) -> v0 — type-3-guarded setter. Returns 0 if actor+0x112 != 3. On match (a0+8 base): writes 0 to base+0x18, a1 → base+0x24 (actor+0x2C), a2 → base+0x28 (actor+0x30), a3 → base+0x1C (actor+0x24), p4 → base+0x20 (actor+0x28), p5 → base+0x2C (actor+0x34). Returns 1. The 5-float type-3 extended-state setter (block layout at actor+0x24..+0x34).
+setType3ActorParams             = 0x800F99C8; // segment:mission_overlay
+// (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 15 callers, comprehensive type-1 initializer. Sets actor+0x112 = 1, stores src ptr at actor+0x2C, copies src+0x1C → actor+0x8 (id field), src+0x20 → actor+0xC. Computes actor+0x10 = src+0x20 + src+0x1C * 12 (stride-12 array index). Zeroes the ramp channels at actor+0x4C/0x50/0x54/0x60 etc. Initializes ramp constants: actor+0x24 = MEM_W[0x800A8F2C] (1.0 float?), actor+0x48 = actor+0x50 = target (a2), actor+0x2C = target / src+0x24 (rate). Clamps actor+0x30 = duration × rate against MEM_W[0x800A8F2C]. If src+0x28 ptr is non-null, reads src+0x2C[0] → actor+0x40 (color/scale lookup); else uses default MEM_W[0x800A8F30]. Companion to initActorAsType2.
+initActorAsType1                = 0x800F947C; // segment:mission_overlay
+// (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 1 caller. Nearly-identical variant of initActorAsType1 (same field layout, same ramp/duration math) but after the base init, additionally calls getNpcContextField8(actor+0x198) to fetch NPC ctx, then func_800662A0(actor+0x8, src+0x10, npcCtx, actor+0xC, actor+0x30) to apply an NPC-anchored transform/position setup. Use the variant when the actor needs world-space positioning from the NPC anchor; use the bare initActorAsType1 when caller will handle positioning itself.
+initActorAsType1WithAnchor      = 0x800F9674; // segment:mission_overlay
+// (actor, parent_ref u32, init_f f32, init_f2 f32) — 1 caller, sister of initActorAsType2. Sets actor+0x112 = 3, reads actor+0x198 → getNpcContextField8 → NPC ctx, copies ctx+0xC/+0x10/+0x14 (NPC pos XYZ) into actor+0x8/+0xC/+0x10. Zeroes the 0x25-byte extended state at actor+0x18..+0x3D. Writes init_f2 → actor+0x14, init_f → actor+0x18, parent_ref → actor+0x38, zero bytes at +0x3C/+0x3D. Returns 1. Almost identical to initActorAsType2 except for the type byte value.
+initActorAsType3                = 0x800F9918; // segment:mission_overlay
+// (actor, assetName ptr u32, ...) — 4 callers. Sets actor+0x112 = 4, then if assetName+0x0 is non-null: looks up the named DAT item via getLevelDatItemByName, validates result, branches on the item's byte at +0x2 (== 6, == 7, etc.) into format-specific paths. Sets actor+0x58 (= s2 = actor+0x50+0x8) for further setup. The type-4 actor variant is asset-name-driven (different from types 1-3 which are NPC-anchored). Likely used for spawning level-defined effects/objects by name.
+initActorAsType4                = 0x800F5A30; // segment:mission_overlay
+// () — gates on MEM_BU[0x8010C9F0] (request counter, must be 0 = idle); calls isSpeechBusyOrQueued. If speech is busy/queued: writes MEM_B[0x80130B14] = 2 (response-mode 2), OR's MEM_W[0x8010C9E0] with 0x1 (request-pending bit), increments MEM_B[0x8010C9F0] (counter). Sister of requestSpeechResponseMode1 — same shape, different mode value.
+requestSpeechResponseMode2      = 0x800FBAE8; // segment:mission_overlay
+// () — sister of requestSpeechResponseMode2; identical shape except writes MEM_B[0x80130B14] = 1 (response-mode 1) instead of 2. Same idle-counter gate, same isSpeechBusyOrQueued check, same pending-bit and counter increments.
+requestSpeechResponseMode1      = 0x800FBB44; // segment:mission_overlay
+// (actor) — 2 callers, type-1-guarded short reset. Returns immediately if actor+0x112 != 1. Else writes MEM_W[actor+0xFC] = 0 and MEM_W[actor+0x100] = MEM_W[0x800A8F54] (constant float, likely default "rate" or "alpha"). Pairs with setType1ActorParams (which writes the broader +0x104..+0x10C block) but resets just the +0xFC/+0x100 pair.
+resetType1FxFields              = 0x800F9B0C; // segment:mission_overlay
+// (scene) — 9 callers, scene cleanup. If scene+0x1CC (NPC slot chain head u16) != 0xFFFF: loops calling getNextSlotNpcTypeId(slot) then destroyNpcSlotByIndex(slot) until type == 0xFFFF, then destroyNpcSlotChain(slot), then resets scene+0x1CC = 0xFFFF. If scene+0x24C (active byte) is non-zero: clears it and calls factor5RemoveListNode(scene+0x208) to unlink the scene from its parent list. Used by mission/objective scenes when shutting down (mission complete, fail, restart).
+destroySceneNpcsAndUnlink       = 0x800B4134; // segment:mission_overlay
+// (config, triggerSpec) — 9 callers, guarded 3D sound trigger. Multiple gates: global mute at MEM_BU[0x80138838], system mute at MEM_BU[0x80138926], per-player level flag at MEM_W[0x80130B40 + config+0xB8 * 4]+0xC bit 0x800000, per-player NPC flag at gPlayerSlotTable[playerIdx]+0x184 bits 0x78. When all gates pass AND triggerSpec+0x8 != 0: calls play3DSoundEvent with (sound=0, pos=config+0x4, alt=config+0x28, maxDist=24.0f, distScale=MEM_W[0x800A57BC], vol=0x7F, ?=0x1B, ?=0x5A). Used as the "play gated 3D effect sound" entry by various weapon/explosion/impact events.
+tryPlaySpatialSoundWithGates    = 0x800B3A10; // segment:mission_overlay
+// (scene) — if scene+0x1C0 (queue handle u32, sentinel -1 = empty) is not -1: calls func_80002BA8(handle) to cancel/release the handle and resets scene+0x1C0 = -1. Companion to enqueueFormatMessage which would have populated +0x1C0 with an active handle. Used when shutting down a scene that has a pending format-message request.
+cancelSceneQueueHandle          = 0x800B3F0C; // segment:mission_overlay
+// parses DAT file Type 7 (events)
+parseDatEventTriggers            = 0x800AA870; // segment:mission_overlay
+// rs_malloc's D_800CDA5C craft selection structs
+mallocCraftSelectionData     = 0x800A9364; // segment:mission_overlay
+// returns u32 of available ships per level
+getAvailableShipsForLevel    = 0x800C63C0; // segment:mission_overlay
+// NPC destruction handlers — share signature pattern: spawnDebris1Npc + spawnNpcType0xAFromTemplate
+// + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange + play3DSoundEvent.
+// Pattern matches across major destructible NPC types (AT-AT, water craft).
+// (1316 lines) AT-AT destruction: spawns debris/Type-0xA NPCs with random orientations + plays 3D sound. Exclusively called from npcAtAtUpdate.
+npcAtAtHandleDestruction       = 0x800CCC98; // segment:mission_overlay
+// (1174 lines) Water craft destruction handler: same spawn-debris + random + sound pattern as npcAtAtHandleDestruction. Exclusively called from npcWaterCraftUpdate.
+npcWaterCraftHandleDestruction = 0x800E5B38; // segment:mission_overlay
+// Additional NPC destruction handlers — same signature pattern (spawnDebris1Npc
+// + spawnNpcType0xAFromTemplate + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange),
+// each exclusively called from its parent NPC update after unregisterAndFreeNpcSlot.
+// (849L) AT-ST walker destruction. Caller: npcAtStUpdate.
+npcAtStHandleDestruction           = 0x800CF898; // segment:mission_overlay
+// (931L) Imperial Shuttle destruction. Caller: npcShuttleUpdate.
+npcShuttleHandleDestruction        = 0x800D33CC; // segment:mission_overlay
+// (1082L) TIE variant destruction. Caller: npcTieVariantUpdate. Called after unregisterAndFreeNpcSlot + popNpcSlotFromTail.
+npcTieVariantHandleDestruction     = 0x800DAB98; // segment:mission_overlay
+// Mission/level-end cleanup — calls calculateFriendliesSaved, resetSpeechSubsystem,
+// finalizeCurrentSpeechBuffer, freeAllHobFiles, freeTxtFile,
+// reset_and_free_model_animations, waitForAnyAudioSlot. Reads timer at
+// 0x80130BA4 and game-state constants. Called from mainGameLoop at mission end.
+// (234L) main-loop child
+endMissionCleanup = 0x800FB9E4; // segment:mission_overlay
+// AT-AT-specific leg-stride update. Called from npcAtAtUpdate ONCE per frame
+// when a float condition is met (after incrementing npc+0x6D step counter).
+// Calls lookupHmtTextureByName("0x800A6DCC", npc.assetData, ..., stride_buf)
+// to fetch the next stride keyframe, then computeWalkerLimbStrideTargets to
+// derive 3 vec3 outputs (likely left foot, right foot, body offset). Scales
+// each by global at *(0x800A6EC8).
+updateAtAtLegArticulation = 0x800CD558; // segment:mission_overlay
+// Main AT-AT body transform updater (1473 lines, 51 named calls including
+// buildRotationMatrixSlot0/1, mat34CrossRowsAndCopyPos, factor5RemoveListNode,
+// getObjectMeshTransformOrLocal, isPendingChildNpcActive). Called twice from
+// npcAtAtUpdate per frame on alternative branches — the heavy per-frame body
+// pose update applying orientation, mesh transforms, and child-segment
+// management. Args: (npc s1, f22=animation_scale_float).
+tickAtAtBodyTransform = 0x800CC2AC; // segment:mission_overlay
+// Per-frame round-robin sub-feature processor. Each call builds a 3-char
+// asset name "sf" + (npc[+0x6E] + '1') on the stack and looks it up via
+// lookupHmtTextureByName, then findActiveNpcInSlotChain on the result.
+// Counter byte at +0x6E advances frame-by-frame to cycle through child
+// segments (likely 4 AT-AT legs as "sf0" through "sf3", or similar
+// numbered sub-meshes). Single caller: npcAtAtUpdate.
+processAtAtSubFeatureSlot = 0x800CCB1C; // segment:mission_overlay
+
+// AT-AT footstep/weapon audio + state update. Reads NPC weapon fields
+// at +0x7C, +0x78; calls func_80082EA0 + func_80082CFC; triggers
+// play3DSoundEvent; updates NPC state fields at +0xE7 (byte), +0xF0/+0xF4
+// (floats, likely cooldown timer), +0x90 (byte). Called BEFORE the body
+// transform pass each AT-AT update — likely the footstep thud or weapon
+// fire sound trigger synchronized to the +0x6D phase counter.
+tickAtAtAudioAndWeaponState = 0x800CC9B8; // segment:mission_overlay
+// 4-pass minimax: finds index of corner element (top/bottom/left/right) over 8B-stride array; sets bounding rect in arg0 (see docs/hud_stuff/func_800BFEA0.c)
+findHudElementExtremes = 0x800BFEA0; // segment:mission_overlay
+// NPC slot handler (per project_npc_handler_protocol.md) sitting directly after runHangarMenuFromOverlay. Action 1 (spawn): rs_malloc(0x1E8), reads vec3 pos from a2, getPlayerVehicleId(), looks up mesh via walkMeshdef0List using vehicle-id table at 0x8010A0FC, clearVec4QuadStruct on slot+0x28, popNpcSlotFromTail with prev-slot-id from MEM[0x80139574], applyFlagsToMeshTreeOrList, stores singleton ptr at MEM[0x8010C090]. Displays the player's currently-selected craft in the hangar.
+hangarVehicleDisplayNpcHandler       = 0x800C68A0; // segment:mission_overlay
+// per-frame from every playerXxxUpdate: iterates 2 player slots in the 632-byte-stride table at 0x8010CA30; switches on state byte +0x0 (cases 1..8) to clear transient flags (+0x1, +0x210, +0x211 for states 3/8; just +0x1 for states 1/2/4/5; skip for 6/7). Then sets float at +0x24 to default speed (const at 0x800A4404) if getPlayerVehicleId(0) is non-zero OR func_800B585C(0) is non-zero; else 0.
+resetTransientPlayerStateFlags     = 0x800FED40; // segment:mission_overlay
+// (npc) — per-tick train car state machine: decrements byte +0xFC counter, when expired clears advance-flag at +0xFD and advances state from per-NPC table at npc+0x34. State table format selected by byte +0xB2: if 0 uses fields +0x134/+0x138, if non-zero uses +0xD4/+0xD8 offsets. Returns early if +0xFD already set or counter still > 0. Called by npcTrainCarUpdate.
+tickTrainCarStateMachine           = 0x800E1E1C; // segment:mission_overlay
+// HUD flag bits at MEM_W(0x8010CFE0). Each setter OR-s a bit into the flags.
+// Gated by zero check at 0x8010CA20 (probably the "HUD active" master toggle).
+// Bits found so far: 0x4, 0x8, 0x40. Each likely controls a specific HUD element
+// (player score, secondary weapon, debug info, etc).
+// 43 callers: if MEM_W(0x8010CA20) == 0: OR bit 0x4 into HUD flags at 0x8010CFE0 and call func_80067938 (effect dispatcher)
+setHudEnableBit4           = 0x800C7738; // segment:mission_overlay
+// 23 callers: same pattern, bit 0x8
+setHudEnableBit8           = 0x800C776C; // segment:mission_overlay
+// 44 callers: writes a0 to 0x8008EC10 and sets bit 0x40 in HUD flags at 0x8010CFE0 (no master-toggle gate — runs unconditionally)
+setHudFlagBit40AndStoreArg = 0x800C7884; // segment:mission_overlay
+// 30 callers: calls vec3Length(a0); if length >= constant_at_0x800A51D0, divides each component (x/y/z) by length (normalizes to unit). Otherwise unchanged. Used for direction/velocity clamping.
+clampVec3ToUnitIfLongerThan = 0x800AA350; // segment:mission_overlay
+// Setter/getter pair for an object's "detail level" or "quality" field at +0x19A.
+// The setter also updates flag bits (clears 0xC0, sets (3-level)<<6) and reads field +0x198.
+// 34 callers: (object_ptr, level u16) — stores level at +0x19A, fetches +0x198 → getNpcContextByIndex, updates flag bits in +0x14
+setObjectDetailLevel = 0x800F2830; // segment:mission_overlay
+// 14 callers: returns *(s16*)(a0 + 0x19A) — counterpart getter
+getObjectDetailLevel = 0x800F287C; // segment:mission_overlay
+// Object flag-bit pair (bit 0x10 of obj+0x14 = pending-update marker?).
+// Pattern mirrors setHudEnableBit4 (0x10 already named).
+// 27 callers: (object_ptr) — *(u16*)(obj+0x14) |= 0x10
+setObjectFlagBit4   = 0x800F2AA4; // segment:mission_overlay
+//  3 callers: (object_ptr) — *(u16*)(obj+0x14) &= ~0x10
+clearObjectFlagBit4 = 0x800F2AB4; // segment:mission_overlay
+// Defensive pending-child npc cleanup. Op on sub-struct obj+0x114:
+// if (p[0x20]==1 && p[0x1A]!=0xFFFF) { resolve via findActiveNpcInSlotChain
+// on p[0x1C]; if result is valid, unregisterAndFreeNpcSlot the npc at p[0x1E]
+// and clear p[0x1A]/p[0x1E] to 0xFFFF; clear p[0x20] to 0 }.
+// 17 callers: (object_ptr) — clears the per-object pending child npc slot on cleanup
+clearPendingChildNpc = 0x800F2A24; // segment:mission_overlay
+
+// Thin wrapper: reads obj->+0x130 (the obj's primary npc-index halfword) and
+// looks it up via findActiveNpcInSlotChain. Returns the NPC type id or 0xFFFF.
+// 10 callers: (object_ptr) — convenience accessor returning findActiveNpcInSlotChain(obj+0x130, NULL)
+getObjectNpcTypeId = 0x800F2A00; // segment:mission_overlay
+
+// Computes effective object detail level (range 0-3). Used to gate which LOD
+// mesh / draw-detail path to take. If the npc has a linked object (npc_ctx+0x10
+// non-null), returns that object's stored level (obj+0x19A). Otherwise derives
+// it from npc_ctx+0x15's top 2 bits: detail = (3 - (byte>>6)).
+//  2 callers: (slot_idx u16) — returns effective detail-level 0..3
+getNpcDetailLevelByIndex = 0x800F27F0; // segment:mission_overlay
+
+// Object spawn/init — the canonical "create and initialize" function. Calls
+// the lower-level allocator func_800EC110, then zeros and stamps the standard
+// object fields (+0x14 flags, +0x19A detail=3 default, +0x130 npc slot via
+// allocateNpcSlot, +0x1A8 self-ref to obj+0x1AC). If an optional extras struct
+// (a3) is provided, copies its +0x10/+0x14 words and runs the optional
+// callback (jalr a4). Returns 1 on success, 3 on alloc failure.
+// 21 callers: (out_ptr_storage, spawn_data, template, extras_struct_or_null, callback_or_null) — returns 1/3
+createAndInitObject = 0x800EC588; // segment:mission_overlay
+
+// Increments a per-stage "level-1 detail" object counter at 0x80130B84 when
+// the obj's stored detail-level (top 2 bits of obj+0x15) equals 0b10. Used
+// at the end of per-object update to tally objects rendered at mid-detail
+// for the current frame's perf/draw-budget tracking.
+// 21 callers: (object_ptr) — increments mid-detail object counter at 0x80130B84
+tallyMidDetailObject = 0x800F3260; // segment:mission_overlay
+
+// Reads "player_StartPosition" from the loaded level dat (`getLevelDatItemByName`)
+// and copies its position (3 floats at +0x10/+0x14/+0x18) and rotation (3 words
+// at +0x1C/+0x20/+0x24) into the caller's struct at offsets +0x4..+0x18. Used
+// during mission/level setup. Has an a1 pre-flag that short-circuits the load.
+// 23 callers: (out_struct, skip_flag) — fills out_struct with level-dat "player_StartPosition" entry
+loadPlayerStartPosition = 0x800AFE4C; // segment:mission_overlay
+
+// Dispatcher: routes to func_800F0DC4 with either obj+0x138 or obj+0x164 as
+// the sub-struct ptr, based on a flag arg. Used to apply same operation to
+// one of two embedded sub-objects.
+// 20 callers: (obj, f1, f2, flag) — call func_800F0DC4 with obj+0x138 or obj+0x164
+applyToObjectSubstructByFlag = 0x800F2D38; // segment:mission_overlay
+
+// Conditional float-set on the same obj+0x138 / obj+0x164 sub-struct family.
+// Only writes the float at sub_struct+0x10 if sub_struct[+0x18]!=0 AND
+// sub_struct[+0x2B]==0. The flag arg selects which sub-struct.
+// 14 callers: (obj, f_value, flag) — conditional setter on obj+0x138/+0x164 sub-struct
+setObjectSubstructF10IfReady = 0x800F2D74; // segment:mission_overlay
+
+// Object action dispatcher: gated by struct[+0x4]==1. Reads struct[+0x8] (sub-
+// ptr) and struct[+0x2] (slot index), builds an action argv on stack
+// {0xFFFF, 7, sub->[0], 0}, then calls slotDispatcherIter(slot_idx, action=5).
+// Returns 1 on dispatch, 0 if gated off.
+// 21 callers: (unused, action_struct) — invoke slot dispatcher action 5 when struct active
+dispatchSlotAction5IfActive = 0x800EFD80; // segment:mission_overlay
+
+// Batch 73 (2026-05-11): more object-substruct / NPC-pending-child accessors.
+
+// Status check for the obj+0x114 pending-child-npc sub-struct (same struct as
+// clearPendingChildNpc). Returns 1 only if all of: p[+0x21]!=0, p[+0x20]!=0,
+// none of p[+0x1A]/+0x1C/+0x1E are 0xFFFF, the chain-resolved npc exists,
+// and that npc's obj+0x14 has bit 0x10 set. Otherwise returns 0.
+// 27 callers: (obj_ptr) — true iff obj's queued child NPC slot is live and flagged active
+isPendingChildNpcActive = 0x800F06BC; // segment:mission_overlay
+
+// Initializes the obj+0x138/+0x164 anim sub-struct from many args. The flag
+// at sp+0x18 selects which sub-struct (0x164 if non-zero, else 0x138). Sets
+// 10+ fields: position floats at +0x0/+0x4, dest float at +0x8, timer/halfword
+// at +0x1C (with off-by-one fixup), counter words at +0x10/+0x18, flag byte
+// at +0x2B=1, plus several globals multiplied in.
+// 25 callers: (obj, f_pos_x, f_pos_y, f_timer, ...stack args, flag) — full init of obj anim sub-struct
+initObjectAnimSubstruct = 0x800F2B88; // segment:mission_overlay
+
+// Combined mesh-position getter: looks up the obj's chained NPC (via
+// findActiveNpcInSlotChain on obj+0x130) and its context. If the caller passes
+// a non-null out-buffer AND the npc has a mesh ptr (ctx+0xC != 0), copies
+// 48 bytes of npc data starting at ctx+0x8 into the buffer, then transforms
+// the mesh part into world space via transformMeshPartIntoWorld. Returns
+// either the populated out-buffer or the npc's direct local-space data ptr.
+// 17 callers: (obj, optional_out_buffer) — returns world-transformed mesh data or local ptr
+getObjectMeshTransformOrLocal = 0x800F2988; // segment:mission_overlay
+
+// 16-bit RMW flag update for object field +0x110. (set_mask, clear_mask)
+// args: new_val = (current | set) & ~clear; store back.
+// 18 callers: (obj, set_mask u16, clear_mask u16) — RMW of *(u16*)(obj+0x110)
+updateObjectFlags110 = 0x800F9AF4; // segment:mission_overlay
+// "return 0" stub. Used as default-fail/skip callback.
+// pure `return 0` stub
+returnZero_800F3258 = 0x800F3258; // segment:mission_overlay
+
+// Single-float setter at 0x8011A840. Left as default func_80017B78 — the
+// caller-side meaning of the float isn't identified yet, so a name like
+// `setGlobalFloat_8011A840` would only encode coordinates. Returns to the
+// no-address-encoded-name rule.
+
+// Trivial object-byte clearer: stores 0 to obj+0x112. Counterpart to many
+// other obj+0x112 (state-byte) accessors.
+// 2 callers: MEM_B(obj+0x112) = 0
+clearObjectField112 = 0x800F9474; // segment:mission_overlay
+// Destroys an object's owned NPC slot if the ownership flag is set.
+// Pairs with createAndInitObject (0x800EC588) which sets obj+0x1A4=1 and
+// stores the slot index at obj+0x198. Pure cleanup path called from various
+// per-object destroy paths.
+// 22 callers: (obj_ptr) — if obj+0x1A4!=0 → destroyNpcSlotByIndex(obj+0x198)
+destroyObjectOwnedNpcSlot = 0x800EC6C0; // segment:mission_overlay
+// Player-init common helper: called from every playerXxxInit (Awing, Falcon,
+// AtSt, NabooStarfighter, SnowSpeeder, ...). Resets 0x8011A6B0/B4, reads the
+// craft's flags at gPlayers[craft_idx]+0x184, then branches on bit 0x40:
+// when set (atmospheric/ground craft), stamps byte 1 at 0x8011A6B8 and uses
+// the slot-chain at player+0x1CC; otherwise sets player+0x1C8=2, clears
+// +0x184/+0x15C, and stamps 0xFFFF at +0x1CC.
+// 10 callers, all playerXxxInit — sets up flight-vs-ground state from craft flags
+initPlayerCraftMovementMode = 0x800B37C0; // segment:mission_overlay
+
+// Per-player update-step helper: indexes per-player slot at 0x8010CF20 +
+// idx*24, checks slot->+0x4->+0x0 byte (active flag). If active, calls
+// func_80100594, then rs_free(slot->+0x8) and rs_free(slot->+0xC).
+// Effectively a per-frame cleanup pass for the player's two aux buffers
+// when an "active" flag has been set since the previous frame. Called from
+// every playerXxxUpdate function.
+// 9 callers, all playerXxxUpdate — conditional aux-buffer free
+freePlayerAuxBuffersIfActive = 0x80100F40; // segment:mission_overlay
+// per-frame HUD struct updater (per docs/unsorted_thoughts: "very involved in [hud_struct] innerworkings"); called from 10+ playerXxxUpdate functions
+updatePlayerHudFrame     = 0x800FD31C; // segment:mission_overlay
+// Count trailing zero bits in a 16-bit value. When (a0 & 1) is set, returns 0.
+// Otherwise shifts right until the low bit is set, counting iterations.
+// Called from playerXxxInit to convert a craft-mask bit (e.g. 0x0008) to a
+// craft index (e.g. 3). Behavior on a0==0 is unsafe (infinite loop in a path
+// that assumes a high bit will eventually appear).
+// 5 callers, all playerXxxInit — bit-to-index converter
+countTrailingZeros16 = 0x800BF2F4; // segment:mission_overlay
+// Per-player HUD-struct setup for the current secondary weapon. Indexes
+// gHudStructArray (D_8010CA30) by player_idx, stamps secondaryWeapon/Count/
+// Reset/IsAdvanced + crosshair flag from cheat-code state, builds 10 texture
+// IDs via func_800554D8 in a loop, then copies hud_elements forward via a
+// rotate-then-overwrite pattern. Documented in docs/hud_stuff/func_800FBE20.c.
+// 3 callers: (player_idx, weapon, count, isAdvanced) — populates hud_struct slice
+configurePlayerSecondaryWeaponHud = 0x800FBE20; // segment:mission_overlay
+// state machine: switch on missionStats.secondaryWeapon (D_80130B10+0x2) ∈ {2..8} → check corresponding "advanced" bit (10/12/15) in gGameSettings.flags → call configurePlayerSecondaryWeaponHud(player_skip, secWeapon, secWeaponMax, is_advanced). Callers: playerAtStInit, playerAwingUpdate, playerFalconUpdate.
+refreshPlayerSecondaryWeaponHud   = 0x800FEC98; // segment:mission_overlay
+// Pause-screen init/update. On first call (when arg0->unk258==0 AND game
+// state D_8010CA20==5), builds the dim-quad mini-hob: 4 vertices at
+// ±0x100, single quad face, color (0,0,0,0). Plays UI sound effects via
+// func_800880D8/func_8008E0B0. Documented in docs/hud_stuff/func_800C1D3C.c.
+// 2 callers: (hud_ext_struct, transition_f32) — pause-screen dim quad setup + ongoing update
+initOrUpdatePauseScreenDim = 0x800C1D3C; // segment:mission_overlay
+
+// Pause-menu state machine. Dispatches on game state via 20-entry jump table
+// at 0x800A66A8 covering pause-menu phases (entry anim, hover, exit anim,
+// selection feedback). Operates on the hud_ext struct (func_800C0084_type).
+// Documented in docs/hud_stuff/func_800C298C.c.
+// 2 callers: (caller_ctx, hud_ext_struct) — 20-state pause menu dispatcher
+runPauseMenuStateMachine = 0x800C298C; // segment:mission_overlay
+// Called from teardown chain of all 10 player*Update funcs (after destroySceneNpcsAndUnlink + rs_free + releaseMeshAsset). (1) Releases 10 texture LUT entries via releaseTextureLutEntry from u16 array at 0x8010CA3A (matches notes.txt "8010CA3A is the start of a u16 array 10(?) elements big"). (2) Iterates 2 HUD-instance structs of 0x278 bytes starting at 0x8010CA30 (0x4F0 total = 2 * 0x278): for each, if byte+0x0==3||==8 AND byte+0x210!=0 → destroyNpcSlotChain(halfword@+0x212) to unbind bound NPCs; if byte+0x274!=0 → factor5RemoveListNode(instance+0x230) to detach from scene graph.
+teardownHudInstancesAndUnbindNpcs       = 0x800FE434; // segment:mission_overlay
+// 17 named callers (across AT-AT, AT-PT, AT-ST, GroundTransport, ProbeDroid, PowerGenerator, RadarDish, etc. update funcs). Thin 2-step destroyer: (1) clearPendingChildNpc(MEM_W[a0+0]) clears pending-spawn state on the child reference; (2) func_800EC388(a0) unlinks the node from one of two doubly-linked lists at MEM[0x8011C0D0]/[0x8011C0D4] (chosen by node-byte0 zero check) when (node_byte0 + extra_byte_at_a0+4) == 4, then unconditionally rs_free()'s the node. Always returns 1.
+clearPendingAndDestroyChildNpc          = 0x800EC684; // segment:mission_overlay
+// 12 callers, ALL `lvN_initializeObjectTracking` (for every level 0..b). One-instruction setter: MEM_W[0x8013973C] = f12. Each level passes its own per-level float during init. The paired byte at MEM_B[0x8013973A] is cleared by other writers (func_8005E950) that set both fields. Read by an object-init function around 0x800DA478 which stores the value into a stack slot at sp+0xC4 — i.e., per-object setup absorbs the level-wide scalar. Purpose of the scalar (probably a distance/scale/threshold factor) unknown without deeper trace; the setter signature is unambiguous.
+setLevelObjectTrackingScalar            = 0x800C7CEC; // segment:mission_overlay
+// Sole non-internal caller is clearPendingAndDestroyChildNpc. Takes (a0=node-pair-struct). Reads node = MEM_W[a0+0] and extra_byte = MEM_BU[a0+4]. If (node_byte0 + extra_byte) == 4: unlinks the node from one of two doubly-linked lists by patching the prev/next pointers at node+0x8 / node+0xC, head ptr selected from MEM[0x8011C0D0] (when node_byte0 != 0) or MEM[0x8011C0D4] (when node_byte0 == 0). Then unconditionally rs_free(node). The (kind+extra)==4 condition is some refcount/state gate for "safe to detach".
+unlinkAndFreeChildNpcNode               = 0x800EC388; // segment:mission_overlay
+// 9 callers, ALL player*Update — initializes a craft animation slot. (a0=craft_ptr, a1=slotIdx&0xFF, a2=animTemplate_ptr). Indexes into 24-byte-stride table at 0x8010CF20 (= 0x8011 - 0x30E0): entry = base + 24 * slotIdx. Writes entry+0x0=a0 (craft), entry+0x4=a2 (template). Reads count from MEM_BU[a2+0]; if zero, skip alloc. Otherwise rs_malloc(count*2) twice and stores at entry+0x8 and entry+0xC — paired anim parameter buffers. Then runs an inner loop walking the template entries.
+allocateCraftAnimationStateForSlot      = 0x801007C0; // segment:mission_overlay
+// 9 callers, ALL player*Update — paired with allocateCraftAnimationStateForSlot. (a0=slotIdx&0xFF). Calls func_80100594(slotIdx) for pre-step, indexes same table at 0x8010CF20, clears 4 state bytes at entry+0x10..0x13, writes paired animation-timing globals: MEM_W[0x8010D028] = constant float from 0x800A9548, MEM_W[0x8010D02C] = MEM_W[craft+0xE8] (animation speed?). Effectively resets a craft's animation playback state.
+resetCraftAnimationStateForSlot         = 0x80100FA8; // segment:mission_overlay
+// 18 callers across npc*Update (Actor type-1/2/3/4 family). (a0=actor, a1=byte_flag, a2=out_render_descriptor, a3=mode_byte, sp+0x40=arg). Gated on MEM_BU[actor+0x1A7] — the "render descriptor initialized" flag per project_actor_effect_struct.md. When set, skips (descriptor already prepared this frame). When clear: marks out+0x6=0xFFFF (invalidate), early-exits if (a1&0xFF)!=0, checks 4-byte flags at actor+0x1A4 with 0xFF00FF00 mask (also early-exits if any selected bit set), then when a3==1 fetches NPC context via getNpcContextField8(actor+0x198) and copies its vec3 to out+0x10/+0x14/+0x18. First-time prep of the render descriptor; the init flag is set elsewhere in the caller chain after success.
+initActorRenderDescriptorIfUninit       = 0x800F1E7C; // segment:mission_overlay
+// 17 callers across Actor type-1/2/3/4 family npc*Update functions. (a0=actor, ...). Sets s0=actor+0x114, gates on motion-active flag MEM_BU[actor+0x135] (memory: +0x135 = motion-active byte), then byte at actor+0x134, then validates three anchor halfwords at actor+0x12A/+0x12C/+0x12E vs 0xFFFF sentinel. Calls findActiveNpcInSlotChain(slotHandle=halfword@+0x12C, 0) to resolve the NPC anchor, then performs LOS validation. Sister of func_800F09A8 ("computes delta vector after LOS" per memory). Per project_actor_effect_struct.md: this is the "target/LOS validation against NPC anchor".
+validateActorTargetLOS                  = 0x800F07AC; // segment:mission_overlay
+// 13 callers, sister of validateActorTargetLOS. Identical prologue: s0=actor+0x114, gates on motion-active flag at actor+0x135, gates on byte at actor+0x134, validates anchor halfword at actor+0x130 (NPC slot handle per project_actor_effect_struct.md) vs 0xFFFF sentinel. Then computes the delta vector from anchor NPC's world position to actor's local frame (per memory: "computes delta vector after LOS"). Used by the same Actor family npc*Update funcs after validateActorTargetLOS confirms anchor validity.
+computeActorAnchorDeltaAfterLOS         = 0x800F09A8; // segment:mission_overlay
+// 11 callers in Actor cluster — perpendicular emit-direction generator with random rotation. Gated on actor+0x162 (per project_actor_effect_struct.md: "duration/count for perpendicular emit"). Args: (a0=actor, a1=src_vecs_struct, a2=flag_byte). (1) vec3Cross(sp+0x10, src+0x18, src+0xC) — perpendicular axis from two source vectors. (2) Uses count at +0x162 as angle-bound; two rand_recomp calls produce angles in [-1, 1] / count via constants at 0x800A9018/0x800A901C. (3) quatFromAxisAngle(perp_axis, angle1) and quatFromAxisAngle(src+0x18, angle2). (4) quatMultiply → combined rotation. (5) rotateVec3ByQuat(src+0xC) → write back rotated vector. Result is a randomly-rotated direction around the perpendicular axis, used for spawning debris/particles with directional spread.
+generatePerpEmitDirectionWithJitter     = 0x800F2DC8; // segment:mission_overlay
+// 4 callers in Actor type-1 family. (a0=actor, a1=mat_target). Type-guard: actor+0x112 must == 1 (Actor type 1 per project_actor_effect_struct.md). Zero-gate: float at actor+0xF0 must == 0.0 (proceed only when this gate value is zero — likely "needs frame-sync this tick"). When both pass: getNpcContextField8(MEM_HU[actor+0x198]) → NPC anchor context, then mat34CrossRowsAndCopyPos(sp+0x10, ctx, 1.0) and matrix-inverse work to write the anchor's local frame into the actor's transform matrix. Per memory note: "type-1 large body, reads actor+0xF0 zero-gate then getNpcContextField8". Updates a type-1 actor's transform to track its NPC anchor when the zero-gate condition triggers.
+syncType1ActorFrameToAnchorIfZeroGate   = 0x800F9C30; // segment:mission_overlay
+// NPC slot handler per project_npc_handler_protocol.md. 10 spawn-sites from playerSnowSpeederUpdate (snow speeder's audio attachments). Action 1: reads parent_slot_idx halfword from msg+0x0 → stores at slot+0x0, reads sound_template_idx halfword from msg+0x2 → stores at slot+0x4, computes 24-byte-stride table index at MEM[0x8010BB00 + template_idx*24] (= 0x8011 - 0x6500 base), stores template ptr at slot+0x4C. Calls getNpcContextField8 to fetch parent NPC ctx; if null, self-destructs. Else: validates parent gear/state, calls play3DSoundEvent with templated 3-byte audio params (vol/pan/pitch) from the template entry and parent NPC's audio anchor at parentCtx+0x24. Action 2: destroyNpcSlotChain. Action 3 (tick): re-emit / position-track sound to follow parent. The 24-byte template table at 0x8010BB00 holds per-effect-type 3D sound presets — the snow speeder spawns 10 distinct sound instances (engine, cockpit, lasers, tow cable, etc.) via this handler.
+attached3DSoundEmitterNpcHandler        = 0x800BF4A0; // segment:mission_overlay
+// NPC slot handler per project_npc_handler_protocol.md. Action 1 (spawn): stores msg at slot+0x4, reads msg+0x10/+0x14/+0x18 (vec3 position) → slot's child struct +0x8/+0xC/+0x10, clears flags at child+0x48/+0x4C/+0x4D. Looks up parent NPC's mesh-part data via MEM[a2+0xA4] (mesh part ref), then halfword index at MEM[a2+0xA8]+0xA6 — uses that to index into the active-craft spatial grid at MEM[0x801375D8]+0x34 (the same grid documented in `updateActiveGridCellState`) to fetch an animation entry. Reads animation pose float from MEM[entry+0x10] to slot+0x10. The grid-driven animation lookup suggests this is an **animated sub-effect mounted to an active player/enemy craft** — e.g., a per-craft particle/effect that plays through the same animation system as the craft's mesh parts (engine flame, hit flash, etc.).
+craftMountedAnimationNpcHandler         = 0x800ECC28; // segment:mission_overlay
+// Sister of craftMountedAnimationNpcHandler in funcs_40.c. NPC slot handler per project_npc_handler_protocol.md but with extended action set (1/2/3/7 instead of standard 1/2/3/4). Action 1 (spawn): reads vec3 from msg+0x10/+0x14/+0x18 → stores at slot+0x4/+0x8/+0xC (position), zero-initializes velocity vec3 at slot+0x10/+0x14/+0x18 and another vec3 at slot+0x28/+0x2C/+0x30 (angular velocity / scale-derivative), zeroes slot+0x34/+0x38. Calls popNpcSlotFromTail. Action 2 (destroy): stamps 0xFFFF at slot+0x6 (mark inactive), then iterates entries comparing slot+0x30 vs slot+0x6C, and on each iteration calls **parseDatItemCommon** — the canonical DAT item parser. The use of parseDatItemCommon on cleanup is diagnostic: this NPC owns a DAT-item-defined entity (level-placed spawn point, trigger, breakable prop, etc.). 320-byte stack frame indicates substantial tick work in Action 3.
+datItemActorNpcHandler                  = 0x800ECE10; // segment:mission_overlay
+// Thin wrapper around func_800EF770. 6 callers, all level handlers: lv1_playPairedDialogueA, lv2_checkComplexObjectives, lv5_startMissionAndBriefing, lvd_checkComplexObjectives, lve_checkComplexObjectives, lvk_checkComplexObjectives. Sister of playObjectiveVoiceLine* wrappers but for a stage-tick delegate (func_800EF770 still unnamed).
+delegateToLevelStageTick                = 0x800C7D60; // segment:mission_overlay
+// Mission-overlay spawn wrapper for the HUD NPC (handler=handleHUD at 0x800C0084). Counts non-zero level-completion-flag bytes for the current level (loop over 4-byte stride table at 0x80108D2C[level*4]), stores count at MEM_B[0x80130B17] (gMissionState+0x7), then spawnNpcOfType(handleHUD, 0, ..., lifetime=0x64). Stores the spawned NPC slot index at MEM_H[0x8010BFD0]. Actually defined in mission_overlay; listed here because the rename pipeline (build-redefine-map.py) only reads main_overlay.txt.
+spawnHudNpc                             = 0x800C3F70; // segment:mission_overlay
+// 4 callers (lv5_startMissionAndBriefing, lvb_checkComplexObjectives, lvb_initializeObjectTracking, playVoice_0x65). Tiny getter-setter: reads byte at MEM_B[0x801399F8 + a0] (level-state byte table at 0x80140000-0x6608), writes a1 back to same location, returns old value. Atomic byte swap on a level-state table.
+getAndSetByteAtLevelStateTable          = 0x800C7648; // segment:mission_overlay
+// fades an attachment's material alpha then plays a 3D sound at it
+playAttachmentMaterialFadeSound         = 0x800DD930; // segment:mission_overlay
+// builds rotation matrices, transforms two anchor vec3s, applies motion (gated on pending-child)
+transformCraftDualAnchorsAndApplyMotion = 0x800DDA70; // segment:mission_overlay
+// full enemy-craft lifecycle: spline T&L + 3D audio + debris/child spawns + objective counters + teardown
+tickEnemyCraftWithDestruction           = 0x800DDBF0; // segment:mission_overlay
+// clears a craft-subsystem global counter
+resetCraftSubsystemGlobal               = 0x800DFB78; // segment:mission_overlay
+// per-instance anim/detail setup (setNpcHealth + setObjectDetailLevel + initActorMotionParams)
+applyCraftAnimAndDetailParams           = 0x800DFB90; // segment:mission_overlay
+// attachment material cue + 3D sound (with setObjectSubstructF10IfReady prefix)
+playAttachmentMaterialSoundVariantA     = 0x800DFF54; // segment:mission_overlay
+// attachment material cue + 3D sound (sibling of variantA)
+playAttachmentMaterialSoundVariantB     = 0x800E00E4; // segment:mission_overlay
+// attachment cue + 3D sound via slot-dispatcher iteration
+playAttachmentCueWithSlotIter           = 0x800E026C; // segment:mission_overlay
+// two-texture attachment cue + 3D sound (a2 mode flag)
+playDualTextureAttachmentCue            = 0x800E03F8; // segment:mission_overlay
+// minimal single-texture attachment cue + 3D sound
+playAttachmentMaterialSoundSimple       = 0x800E0748; // segment:mission_overlay
+// build rotation matrices + transform two anchors + apply sub-effects
+transformCraftAnchorsAndApplySubFx      = 0x800E08F8; // segment:mission_overlay
+// canonical spline-walker orientation math + 3D audio + list-node removal
+tickCraftSplineOrientation              = 0x800E0CE4; // segment:mission_overlay
+// two-segment craft: tickCraftSplineOrientation then a second orientation pass
+tickCraftSplineOrientationDual          = 0x800E13AC; // segment:mission_overlay
+// assembles 3 oriented debris transforms (scale/quat/pos compose)
+buildDebrisTransformStack               = 0x800E1F5C; // segment:mission_overlay
+// incrementally rotates a frame toward a target axis (quat slerp-like)
+slerpFrameTowardTargetAxis              = 0x800E23FC; // segment:mission_overlay
+// walker-class unit: limb-stride T&L + spline + multi-phase debris + speech + teardown
+tickWalkerCraftWithLimbsAndDestruction  = 0x800E2674; // segment:mission_overlay
+// thin wrapper: playDualTextureAttachmentCue mode 0
+playDualTextureAttachmentCueMode0       = 0x800E4034; // segment:mission_overlay
+// thin wrapper: playDualTextureAttachmentCue mode 1
+playDualTextureAttachmentCueMode1       = 0x800E4050; // segment:mission_overlay
+// resets/inits a craft instance's per-row motion state
+resetCraftInstanceMotionState           = 0x800E4480; // segment:mission_overlay
+// two-texture attachment cue + 3D sound (sibling)
+playDualTextureAttachmentCueB           = 0x800E4674; // segment:mission_overlay
+// single-texture attachment cue + 3D sound (sibling)
+playAttachmentMaterialSoundSimpleB      = 0x800E4874; // segment:mission_overlay
+// two-texture attachment cue + 3D sound (sibling)
+playDualTextureAttachmentCueC           = 0x800E49B4; // segment:mission_overlay
+// build rotation matrices + transform anchors + apply sub-effects (sibling)
+transformCraftAnchorsApplySubFx2        = 0x800E4BB0; // segment:mission_overlay
+// two-pass spline-orientation, orientation-only (no audio)
+tickCraftSplineOrientationVariant       = 0x800E4DC0; // segment:mission_overlay
+// destructible structure: debris stack + oriented-NPC spawns + child-craft recursion + teardown
+tickStructureWithDestructionAndChildren = 0x800E56AC; // segment:mission_overlay
+// build rotation matrices + transform anchors + LOS check + apply sub-effects
+transformCraftAnchorsApplySubFx3        = 0x800E71D0; // segment:mission_overlay
+// multi-craft squadron: per-member spline paths + 3D audio + objective counters + teardown
+tickFighterSquadronWithSplinePaths      = 0x800E7390; // segment:mission_overlay
+// attachment cue + 3D sound without an HMT texture lookup
+playAttachmentCueNoTexture              = 0x800E8828; // segment:mission_overlay
+// per-instance anim/detail setup (sibling of applyCraftAnimAndDetailParams)
+applyCraftAnimDetailParamsB             = 0x800E8948; // segment:mission_overlay
+// multi-phase destruction state machine (jump-table on phase: debris/child spawns)
+runDestructionPhaseSequence             = 0x800E8A40; // segment:mission_overlay
+// craft from DAT template, per-frame tick, phased destruction, objective counters, teardown
+tickCraftWithPhasedDestruction          = 0x800E8EDC; // segment:mission_overlay
+// NPC spawn/init: copies HP from child template, sets health + detail level
+initNpcHealthAndDetailFromChild         = 0x800E9A84; // segment:mission_overlay
+// inits an object's anim substruct + detail level
+initObjectAnimAndDetail                 = 0x800E9B10; // segment:mission_overlay
+// selects a destruction sound by object state and plays it (3D)
+playStateGatedDestroySound              = 0x800E9BF4; // segment:mission_overlay
+// NPC spawn/init: setNpcHealth then motion/anim/detail, state byte +0xFA
+npcInitFromTemplate                  = 0x800D2B5C; // segment:mission_overlay
+// NPC init: setNpcHealth+initActorMotionParams+anim+detail
+npcInitWithMotionParams              = 0x800D2CA0; // segment:mission_overlay
+// per-frame visual/SFX channel: HMT tex + attach-pos + progress-channel + cue + 3D sound
+npcTickEffectChannelA                = 0x800D2EE0; // segment:mission_overlay
+// effect-channel tick variant (HMT tex + cue + 3D sound)
+npcTickEffectChannelB                = 0x800D307C; // segment:mission_overlay
+// effect-channel tick that also fans out via slotDispatcherIter
+npcTickEffectChannelWithSlotDispatch = 0x800D3240; // segment:mission_overlay
+// init a child NPC bound to a parent (wires parent-link fields)
+npcInitChildLinkedToParent           = 0x800D4ED0; // segment:mission_overlay
+// advance spin angle accumulators by dt*rate, wrap, build quat orientation
+advanceNpcSpinOrientation            = 0x800D5078; // segment:mission_overlay
+// large destructible/debris-spawning NPC Update (switch)
+npcDebrisFieldUpdate                 = 0x800D5208; // segment:mission_overlay
+// minimal NPC init (health/motion/anim/detail, no extra logic)
+npcInitSimpleModel                   = 0x800D5FE0; // segment:mission_overlay
+// shared effect-tick body (attach-pos + cue + slot-dispatch + 3D sound)
+npcTickEffectChannelShared           = 0x800D6134; // segment:mission_overlay
+// thin wrapper: npcTickEffectChannelShared mode 0
+npcTickEffectChannelSharedMode0      = 0x800D7818; // segment:mission_overlay
+// thin wrapper: npcTickEffectChannelShared mode 1
+npcTickEffectChannelSharedMode1      = 0x800D7834; // segment:mission_overlay
+// tank-droid aim/orientation solver (mat/quat math)
+npcTankDroidComputeAimMotion         = 0x800D634C; // segment:mission_overlay
+// wingman (re)init: memset, health, state byte, load HMT materials
+npcWingmanResetState                 = 0x800D7850; // segment:mission_overlay
+// wingman state-0 handler (getNpcWingmanStateData case 0)
+npcWingmanState0                     = 0x800D7CF8; // segment:mission_overlay
+// wingman state-1 handler
+npcWingmanState1                     = 0x800D7EC0; // segment:mission_overlay
+// wingman state handler (calls npcWingmanStateEffectShared)
+npcWingmanState2                     = 0x800D9F90; // segment:mission_overlay
+// wingman state handler
+npcWingmanState3                     = 0x800DA064; // segment:mission_overlay
+// wingman state handler
+npcWingmanState4                     = 0x800DA13C; // segment:mission_overlay
+// wingman state handler
+npcWingmanState5                     = 0x800DA234; // segment:mission_overlay
+// wingman state handler
+npcWingmanState6                     = 0x800DA368; // segment:mission_overlay
+// wingman state slot that no-ops/always-succeeds (returns 1)
+npcWingmanStateNoop                  = 0x800DA360; // segment:mission_overlay
+// wingman behavior/comms driver (mode switch, playSpeechClip)
+npcWingmanBehaviorByMode             = 0x800D80B4; // segment:mission_overlay
+// spawns burst/hit effects for the wingman
+npcWingmanSpawnBurstEffects          = 0x800D8988; // segment:mission_overlay
+// wingman steering/orientation (vec/quat)
+npcWingmanSteerToward                = 0x800D8CB8; // segment:mission_overlay
+// updates the wingman's positional engine-sound source
+npcWingmanUpdateEngineAudio          = 0x800D9234; // segment:mission_overlay
+// TIE-variant effect-tick (cue + slot-dispatch)
+npcTieVariantTickEffects             = 0x800DA440; // segment:mission_overlay
+// TIE-variant steering/turn solver
+npcTieVariantSteerToward             = 0x800DA7D8; // segment:mission_overlay
+// TIE-variant attachment effect tick (LOS + cue)
+npcTieVariantTickAttachmentEffect    = 0x800DA9B0; // segment:mission_overlay
+// radar-dish spawn/init
+npcRadarDishInit                     = 0x800DC228; // segment:mission_overlay
+// radar-dish aim/track solver
+npcRadarDishComputeAimMotion         = 0x800DC300; // segment:mission_overlay
+// NPC init: health/motion/detail only (no anim substruct)
+npcInitMinimalNoAnim                 = 0x800DD248; // segment:mission_overlay
+// NPC init incl. anim substruct
+npcInitFullModel                     = 0x800DD2D0; // segment:mission_overlay
+// per-NPC effect-channel tick (attach-pos + cue + HMT + 3D sound)
+npcTickEffectChannelC                = 0x800DD50C; // segment:mission_overlay
+// effect-channel tick (sibling)
+npcTickEffectChannelD                = 0x800DD64C; // segment:mission_overlay
+// effect-channel tick (sibling)
+npcTickEffectChannelE                = 0x800DD78C; // segment:mission_overlay
+// plots a vertical radar blip into the grid 0x80136DC0
+plotRadarBlipColumn                  = 0x800C41B0; // segment:mission_overlay
+// plots a horizontal radar blip into the grid
+plotRadarBlipRow                     = 0x800C435C; // segment:mission_overlay
+// sin/cos per-slot craft-select animation update
+updateCraftSelectAnimState           = 0x800C4D8C; // segment:mission_overlay
+// radar sweep/rotation renderer (trig over radar fields)
+renderRadarSweep                     = 0x800C5918; // segment:mission_overlay
+// top-level radar/minimap render (walks blip list, plots, sweep)
+renderRadarMinimap                   = 0x800C5F90; // segment:mission_overlay
+// searches a level-keyed table, returns parallel u16 value
+lookupCraftValueByLevelKey           = 0x800C62C4; // segment:mission_overlay
+// zeros a craft/menu selection counter global
+resetCraftSelectionCounter           = 0x800C6334; // segment:mission_overlay
+// destroys an NPC and spawns its debris/particles + speech
+spawnNpcDestructionDebris            = 0x800B0850; // segment:mission_overlay
+// builds a craft's spline orientation matrix + plays sound
+updateSplineCraftTransform           = 0x800B0A88; // segment:mission_overlay
+// pure transform/orientation builder from a quat
+computeOrientedTransformFromQuat     = 0x800B1024; // segment:mission_overlay
+// main player-craft/boss per-frame flight physics core
+updatePlayerCraftPhysics             = 0x800B1BE8; // segment:mission_overlay
+// ORs capability bits into the per-player craft record
+applyCraftCapabilityFlags            = 0x800B36FC; // segment:mission_overlay
+// schedules a timed scene format-message (cancels pending, timing table)
+scheduleSceneFormatMessageTimed      = 0x800B3E4C; // segment:mission_overlay
+// dedup'd voice-line dispatch (skips if same as last)
+playSpeechClipOncePerChange          = 0x800B3F50; // segment:mission_overlay
+// plays a voice line once per level (14-entry ring)
+playSpeechClipOncePerLevel           = 0x800B3FB4; // segment:mission_overlay
+// clears the per-level one-shot voice gate for one id
+resetSpeechOncePerLevelFlag          = 0x800B40A0; // segment:mission_overlay
+// copies a vec3 into a player slot's position field
+setPlayerSlotPositionVec3            = 0x800B40F0; // segment:mission_overlay
+// wrapper -> computeBootConfigScaledVec4
+spawnScaledBootVec4Effect            = 0x800D2C58; // segment:mission_overlay
+// shared per-state effect emitter for wingman state handlers
+npcWingmanStateEffectShared          = 0x800D7A6C; // segment:mission_overlay
+// mass-spawns randomized debris/effect NPCs
+computeAngleToTargetFromTransform            = 0x800A9B80; // segment:mission_overlay
+buildOrientationFromPosAndAngles             = 0x800A9E70; // segment:mission_overlay
+stepAngleTowardTarget                        = 0x800A9FCC; // segment:mission_overlay
+scaleVec3ByScalar                            = 0x800AA3B4; // segment:mission_overlay
+addScaledVec3ToVec3                          = 0x800AA3E0; // segment:mission_overlay
+buildRotationMatrixFromEulerAngles           = 0x800AA424; // segment:mission_overlay
+buildTransformMatrixFromEulerAngles          = 0x800AA570; // segment:mission_overlay
+composeEffectObjectTransformMatrix           = 0x800AADD4; // segment:mission_overlay
+tickEffectObjectMotionAndOrientation         = 0x800AC330; // segment:mission_overlay
+tickCinematicEffectObject                    = 0x800AC7B4; // segment:mission_overlay
+triggerPlayerVehicleSpecialSlotEffect        = 0x800AD320; // segment:mission_overlay
+computeTrackedObjectWorldAnchor              = 0x800AD380; // segment:mission_overlay
+updateCinematicCameraStateMachine            = 0x800AD418; // segment:mission_overlay
+submitCameraTrackedObjectToRender            = 0x800ADD5C; // segment:mission_overlay
+emitEffectParticlesAlongPath                 = 0x800ADF2C; // segment:mission_overlay
+loadEffectModelInstancePool                  = 0x800AE138; // segment:mission_overlay
+resetEffectSequenceState                     = 0x800AE20C; // segment:mission_overlay
+freeEffectModelInstancePool                  = 0x800AE218; // segment:mission_overlay
+getEffectModelPoolHandle                     = 0x800AE280; // segment:mission_overlay
+beginCameraViewTransition                    = 0x800AE290; // segment:mission_overlay
+requestCameraSnapToTrackedAnchor             = 0x800AE320; // segment:mission_overlay
+beginCameraTrackedTransition                 = 0x800AE358; // segment:mission_overlay
+advanceCameraTransitionOnCue                 = 0x800AE390; // segment:mission_overlay
+isCameraTransitionIdle                       = 0x800AE3BC; // segment:mission_overlay
+initPlayerCraftTrailBuffers                  = 0x800AE3F0; // segment:mission_overlay
+computeCraftSelectTurnFromInput              = 0x800AE5C4; // segment:mission_overlay
+populateCutsceneSubtitleTextIds              = 0x800AE830; // segment:mission_overlay
+playRandomCutsceneVoiceLine                  = 0x800AE960; // segment:mission_overlay
+integrateCraftVelocityAndCollide             = 0x800AECF8; // segment:mission_overlay
+playCutsceneObjectImpactSound                = 0x800AEF58; // segment:mission_overlay
+tickCutsceneObject                           = 0x800AF04C; // segment:mission_overlay
+findNearestSceneObjectToPoint                = 0x800AFCF4; // segment:mission_overlay
+spawnSceneDebrisAndEffectCluster             = 0x800B01E4; // segment:mission_overlay
+tickCinematicObjectStateMachine              = 0x800B13E0; // segment:mission_overlay
+decayWeaponCooldownTimer                     = 0x800B41BC; // segment:mission_overlay
+getWeaponChargeLevel                         = 0x800B41EC; // segment:mission_overlay
+advancePitchTowardTarget                     = 0x800B41FC; // segment:mission_overlay
+playWeaponFireSound                          = 0x800B4588; // segment:mission_overlay
+playXwingEngineSound                         = 0x800B4F54; // segment:mission_overlay
+isWeaponSlotReady                            = 0x800B585C; // segment:mission_overlay
+resetEngineTrailQuads                        = 0x800B5B4C; // segment:mission_overlay
+acquireLockOnTarget                          = 0x800B63C8; // segment:mission_overlay
+emitTexturedImpactEffect                     = 0x800B67A0; // segment:mission_overlay
+updateEngineThrustEffect                     = 0x800B6990; // segment:mission_overlay
+findLockOnTarget                             = 0x800B7590; // segment:mission_overlay
+tickCraftAbilityCooldown                     = 0x800B77D0; // segment:mission_overlay
+orientEffectToVelocity                       = 0x800B7A4C; // segment:mission_overlay
+spawnTexturedExplosionBurst                  = 0x800B7DFC; // segment:mission_overlay
+emitTexturedEffectCue                        = 0x800B88C8; // segment:mission_overlay
+updateVwingEngineEffect                      = 0x800B8C30; // segment:mission_overlay
+orientVwingSubmodelByQuat                    = 0x800B95E0; // segment:mission_overlay
+tickVwingEngineAudio                         = 0x800B9950; // segment:mission_overlay
+computeFalconFlightTransform                 = 0x800BA620; // segment:mission_overlay
+triggerFalconEngineEffect                    = 0x800BAA00; // segment:mission_overlay
+bindFalconSubmodelMaterials                  = 0x800BAB70; // segment:mission_overlay
+playerFalconMainUpdate                       = 0x800BADCC; // segment:mission_overlay
+spawnFalconEngineParticles                   = 0x800BB608; // segment:mission_overlay
+integrateFalconFlightPhysics                 = 0x800BBC58; // segment:mission_overlay
+computeTieInterceptorTransform               = 0x800BBF6C; // segment:mission_overlay
+triggerTieInterceptorEffect                  = 0x800BC290; // segment:mission_overlay
+computeTieInterceptorOrientation             = 0x800BC4F8; // segment:mission_overlay
+computeT16Transform                          = 0x800BCE74; // segment:mission_overlay
+playerT16MainUpdate                          = 0x800BD254; // segment:mission_overlay
+triggerT16Effect                             = 0x800BD958; // segment:mission_overlay
+buildNabooSubmodelTransform                  = 0x800BDC9C; // segment:mission_overlay
+triggerNabooEngineEffect                     = 0x800BE228; // segment:mission_overlay
+tickPlayerCraftBlinkIndicator                = 0x800BE4A8; // segment:mission_overlay
+applyDemoRecordedHudEvents                   = 0x800BECDC; // segment:mission_overlay
+clearPlayerSlotHudTracking                   = 0x800BEE18; // segment:mission_overlay
+initAllPlayersHudTracking                    = 0x800BEEAC; // segment:mission_overlay
+tickPlayerHudIndicators                      = 0x800BEFBC; // segment:mission_overlay
+loadPlayerSlotHudPreset                      = 0x800BF264; // segment:mission_overlay
+getDemoRecordedTimestep                      = 0x800BF468; // segment:mission_overlay
+updateHudHealthIndicator                     = 0x800BF790; // segment:mission_overlay
+evalPauseMenuInputMode                       = 0x800C1B64; // segment:mission_overlay
+broadcastSceneShutdownAndCleanup             = 0x800C3FEC; // segment:mission_overlay
+broadcastSceneEventWithPayload               = 0x800C401C; // segment:mission_overlay
+setRenderObjectTargetOrClear                 = 0x800C4060; // segment:mission_overlay
+probeNumberedAssetFilename                   = 0x800C40F8; // segment:mission_overlay
+findClosestRadarContactAndSetSweep           = 0x800C5580; // segment:mission_overlay
+registerObjectAndResolveDatItem              = 0x800C6340; // segment:mission_overlay
+accumulateClampedFloatField                  = 0x800C6468; // segment:mission_overlay
+getDisplayItemStateByte                      = 0x800C6498; // segment:mission_overlay
+initHangarDisplayItemTimers                  = 0x800C64B0; // segment:mission_overlay
+tickHangarDisplayItemAnimations              = 0x800C65CC; // segment:mission_overlay
+applyNpcPositionDrift                        = 0x800C6FFC; // segment:mission_overlay
+getConfigFloatPair                           = 0x800C7120; // segment:mission_overlay
+accumulateVectorInObjectFrame                = 0x800C713C; // segment:mission_overlay
+getConfigFloatValue                          = 0x800C722C; // segment:mission_overlay
+findNamedEntryInCurrentObject                = 0x800C723C; // segment:mission_overlay
+copyCurrentObjectMatrix                      = 0x800C7268; // segment:mission_overlay
+getSceneStatePtr                             = 0x800C7514; // segment:mission_overlay
+getGlobalFloatGameState                      = 0x800C7718; // segment:mission_overlay
+getObjectiveGlobalFloat                      = 0x800C7728; // segment:mission_overlay
+isLevelStateByteZero                         = 0x800C77A0; // segment:mission_overlay
+getScaledPlayerCraftSpeed                    = 0x800C794C; // segment:mission_overlay
+spawnEffectOnNamedDatItem                    = 0x800C7978; // segment:mission_overlay
+initActorTowardNamedDatItem                  = 0x800C79F0; // segment:mission_overlay
+initAnchoredActorTowardNamedDatItem          = 0x800C7AB0; // segment:mission_overlay
+despawnEffectOnNamedDatItem                  = 0x800C7C88; // segment:mission_overlay
+dispatchHudEffectUpdate                      = 0x800C7D44; // segment:mission_overlay
+triggerNamedAssetCue                         = 0x800C7D7C; // segment:mission_overlay
+initNpcActorFromSpawnMessage                 = 0x800C7DC0; // segment:mission_overlay
+playNpcStateChangeEffect                     = 0x800C7FF8; // segment:mission_overlay
+spawnNpcDestructionEffect                    = 0x800C8178; // segment:mission_overlay
+spawnNpcImpactEffectVariant                  = 0x800C8504; // segment:mission_overlay
+updateNpcOrientationFromMotion               = 0x800C8978; // segment:mission_overlay
+setupNpcModelForState                        = 0x800C8E90; // segment:mission_overlay
+playNpcAmbientEffect                         = 0x800CA18C; // segment:mission_overlay
+initNpcActorVariant                          = 0x800CA270; // segment:mission_overlay
+spawnProbeDroidGroundImpactEffect            = 0x800CA3A4; // segment:mission_overlay
+initProbeDroidScatterLaunch                  = 0x800CA560; // segment:mission_overlay
+updateProbeDroidHopState                     = 0x800CA720; // segment:mission_overlay
+findNearestNpcWithinRange                    = 0x800CBDA0; // segment:mission_overlay
+initActorFromSpawnTemplate                   = 0x800CC03C; // segment:mission_overlay
+tickActorTexturedSoundEffect                 = 0x800CC158; // segment:mission_overlay
+spawnAtAtFootstepDustBurst                   = 0x800CD38C; // segment:mission_overlay
+advanceAtStEffectPhaseSound                  = 0x800CEF20; // segment:mission_overlay
+tickAtStCannonFireEffect                     = 0x800CF09C; // segment:mission_overlay
+updateAtStBodyKinematics                     = 0x800CF20C; // segment:mission_overlay
+advanceAtStDeathAnimPhase                    = 0x800CFD0C; // segment:mission_overlay
+spawnPlayerAtStCannonFire                    = 0x800D1248; // segment:mission_overlay
+advancePlayerAtStLocomotion                  = 0x800D1578; // segment:mission_overlay
+updatePlayerAtStBehavior                     = 0x800D1730; // segment:mission_overlay
+spawnObjectImpactEffectWithSound             = 0x800E9D74; // segment:mission_overlay
+computeNpcOrientationFromAimVectors          = 0x800E9EC4; // segment:mission_overlay
+resetObjectPoolListHead                      = 0x800EB984; // segment:mission_overlay
+allocObjectPoolNode                          = 0x800EC110; // segment:mission_overlay
+resetObjectContextPool                       = 0x800EC4D8; // segment:mission_overlay
+freeAllObjectContextPoolNodes                = 0x800EC514; // segment:mission_overlay
+tickCraftMountedAnimationEffect              = 0x800EC6F0; // segment:mission_overlay
+dispatchSlotActionTwelveByGlobalId           = 0x800ECDDC; // segment:mission_overlay
+claimSongSlotForCurrentHandle                = 0x800ED150; // segment:mission_overlay
+tickActiveSongSlots                          = 0x800ED200; // segment:mission_overlay
+shouldSwitchToPendingSong                    = 0x800EDBB0; // segment:mission_overlay
+selectAndStageNextSong                       = 0x800EDC90; // segment:mission_overlay
+stopSongAndRebuildActiveCueList              = 0x800EDD8C; // segment:mission_overlay
+processPendingSoundCueRequest                = 0x800EDF68; // segment:mission_overlay
+tickSongFadeTimer                            = 0x800EE730; // segment:mission_overlay
+pushActiveSoundDescriptor                    = 0x800EE984; // segment:mission_overlay
+popActiveSoundDescriptor                     = 0x800EE9F4; // segment:mission_overlay
+preloadSceneReferencedSongs                  = 0x800EEA54; // segment:mission_overlay
+stageSongFromRequestDescriptor               = 0x800EED7C; // segment:mission_overlay
+resetMusicSubsystemState                     = 0x800EEF34; // segment:mission_overlay
+initLevelMusicBank                           = 0x800EF048; // segment:mission_overlay
+stopAllMusicWithFade                         = 0x800EF1B0; // segment:mission_overlay
+startLevelBackgroundMusic                    = 0x800EF2F8; // segment:mission_overlay
+tickObjectSoundCueState                      = 0x800EF510; // segment:mission_overlay
+triggerStageMusicForNamedDatItem             = 0x800EF770; // segment:mission_overlay
+triggerStageAmbientForNamedDatItem           = 0x800EF95C; // segment:mission_overlay
+stopMusicAndResetAudio                       = 0x800EFB40; // segment:mission_overlay
+preloadSceneSongsWrapper                     = 0x800EFB94; // segment:mission_overlay
+commitStagedSongAndPlay                      = 0x800EFBB4; // segment:mission_overlay
+stageSoundCueRequestByIdAndParam             = 0x800EFC84; // segment:mission_overlay
+getSoundCueSubsystemFlag                     = 0x800EFD54; // segment:mission_overlay
+evaluateTargetTrackingVisibility             = 0x800F0BA4; // segment:mission_overlay
+tickObjectAnimSubstruct                      = 0x800F0DC4; // segment:mission_overlay
+quicksortFloatKeysWithValues                 = 0x800F1198; // segment:mission_overlay
+gatherAndSortNearbyNpcViewPoints             = 0x800F1310; // segment:mission_overlay
+acquireNpcTargetsInAimCone                   = 0x800F15B8; // segment:mission_overlay
+raycastTerrainAndNpcs                        = 0x800F1B40; // segment:mission_overlay
+initActorRenderDescriptorWithNpcVelocity     = 0x800F1FF4; // segment:mission_overlay
+isVectorWithinConeAndRange                   = 0x800F2208; // segment:mission_overlay
+isVectorInConeWriteDistance                  = 0x800F2310; // segment:mission_overlay
+computeTurnAxisTowardTarget                  = 0x800F23F8; // segment:mission_overlay
+computeTurnVectorTowardTarget                = 0x800F2540; // segment:mission_overlay
+computeTurnVectorAndDistanceToTarget         = 0x800F2648; // segment:mission_overlay
+isPointInsideTriggerVolume                   = 0x800F2760; // segment:mission_overlay
+computeAnchorRelativePositionByDistanceRatio = 0x800F2AC4; // segment:mission_overlay
+initAnimSubstructFromParams                  = 0x800F2C6C; // segment:mission_overlay
+setAnimSubstructValueIfActive                = 0x800F2DA4; // segment:mission_overlay
+copyPipeDelimitedField                       = 0x800F30AC; // segment:mission_overlay
+copyRandomPipeDelimitedField                 = 0x800F3144; // segment:mission_overlay
+resolveScriptedNameTokenList                 = 0x800F3290; // segment:mission_overlay
+computeRandomizedOrientationFrame            = 0x800F34DC; // segment:mission_overlay
+updateNpcEffectIntensity                     = 0x800F3CB0; // segment:mission_overlay
+buildSineWaveEffectGeometryA                 = 0x800F5D34; // segment:mission_overlay
+buildSineWaveEffectGeometryB                 = 0x800F6954; // segment:mission_overlay
+renderNpcAnchoredProceduralEffect            = 0x800F7130; // segment:mission_overlay
+spawnAndUpdateEffectActors                   = 0x800F7C74; // segment:mission_overlay
+spawnNpcAnchoredEffectSlot                   = 0x800F9D68; // segment:mission_overlay
+flashMissionAlertObjectsAndPrint             = 0x800FADEC; // segment:mission_overlay
+beginMissionEndTransition                    = 0x800FAF0C; // segment:mission_overlay
+endMissionEndTransition                      = 0x800FB05C; // segment:mission_overlay
+requestMissionTransitionMode                 = 0x800FB190; // segment:mission_overlay
+setupMissionTransitionScreenOverlay          = 0x800FB2F8; // segment:mission_overlay
+tickMissionTransitionAndTeardown             = 0x800FB4B0; // segment:mission_overlay
+clearMissionObjectiveFlagsAndEnterPhaseSix   = 0x800FBD48; // segment:mission_overlay
+advanceMissionObjectiveStageWhenModeOne      = 0x800FBDCC; // segment:mission_overlay
+resetHudInstancesAndUnbindNpcs               = 0x800FC108; // segment:mission_overlay
+findNearestTargetableNpcInRange              = 0x800FC260; // segment:mission_overlay
+projectForwardTerrainImpactPoint             = 0x800FC564; // segment:mission_overlay
+tickHudInstanceTargetingAndSpawns            = 0x800FC720; // segment:mission_overlay
+dispatchHudInstanceWeaponEffect              = 0x800FE500; // segment:mission_overlay
+getActiveHudInstanceTargetPosition           = 0x800FEE74; // segment:mission_overlay
+stepObjectOrientationTowardTarget            = 0x800FEF10; // segment:mission_overlay
+resolveCraftAnimationNodeHandles             = 0x800FFE00; // segment:mission_overlay
+applyCraftAnimationKeyframePose              = 0x801001C8; // segment:mission_overlay
+despawnCraftAnimationSlotNpcs                = 0x80100594; // segment:mission_overlay
+despawnCraftAnimationSlotNpcsAndMarkStopping = 0x801006A8; // segment:mission_overlay
+tickCraftAnimationSlot                       = 0x80100950; // segment:mission_overlay
+setCraftAnimationSlotParams                  = 0x80101018; // segment:mission_overlay
+getCraftAnimationSlotFlag                    = 0x80101040; // segment:mission_overlay
+getCraftAnimationSlotValue                   = 0x80101068; // segment:mission_overlay
+// sets secondary weapon type/level fields in HUD struct
+setHudSecondaryWeaponInfo        = 0x800BFDC4; // segment:mission_overlay
+// thin wrapper: getPlayerVehicleId(0) — convenience getter for player 0's vehicle ID
+getLocalPlayerVehicleId  = 0x800C7524; // segment:mission_overlay
+randMod                             = 0x800C77D0; // segment:mission_overlay
+
 // Fake Function Fixing
 fake_func_800AA6CC = 0x800AA6CC; // segment:mission_overlay type:u32
 func_mission_overlay_800AA6D0      = 0x800AA6D0; // segment:mission_overlay
@@ -344,10 +1082,8 @@ fake_func_800AAADC = 0x800AAADC; // segment:mission_overlay type:u32
 // real function is playerSnowSpeederInit
 
 fake_func_800AD378 = 0x800AD378; // segment:mission_overlay type:u32
-func_mission_overlay_800AD380      = 0x800AD380; // segment:mission_overlay
 
 fake_func_800AE3E4 = 0x800AE3E4; // segment:mission_overlay type:u32
-func_mission_overlay_800AE3F0      = 0x800AE3F0; // segment:mission_overlay
 
 fake_func_800B42BC = 0x800B42BC; // segment:mission_overlay type:u32
 // real function is playerXwingInit
@@ -371,67 +1107,48 @@ fake_func_800BEBFC = 0x800BEBFC; // segment:mission_overlay type:u32
 func_mission_overlay_800BEC00      = 0x800BEC00; // segment:mission_overlay
 
 fake_func_800BF498 = 0x800BF498; // segment:mission_overlay type:u32
-func_mission_overlay_800BF4A0      = 0x800BF4A0; // segment:mission_overlay
 
 fake_func_800BF784 = 0x800BF784; // segment:mission_overlay type:u32
-func_mission_overlay_800BF790      = 0x800BF790; // segment:mission_overlay
 
 fake_func_800C41AC = 0x800C41AC; // segment:mission_overlay type:u32
-func_mission_overlay_800C41B0      = 0x800C41B0; // segment:mission_overlay
 
 fake_func_800C64A4 = 0x800C64A4; // segment:mission_overlay type:u32
-func_mission_overlay_800C64B0      = 0x800C64B0; // segment:mission_overlay
 
 fake_func_800C7DB4 = 0x800C7DB4; // segment:mission_overlay type:u32
-func_mission_overlay_800C7DC0      = 0x800C7DC0; // segment:mission_overlay
 
 fake_func_800CA26C = 0x800CA26C; // segment:mission_overlay type:u32
-func_mission_overlay_800CA270      = 0x800CA270; // segment:mission_overlay
 
 fake_func_800CEF1C = 0x800CEF1C; // segment:mission_overlay type:u32
-func_mission_overlay_800CEF20      = 0x800CEF20; // segment:mission_overlay
 
 fake_func_800D2C98 = 0x800D2C98; // segment:mission_overlay type:u32
-func_mission_overlay_800D2CA0      = 0x800D2CA0; // segment:mission_overlay
 
 fake_func_800D4EC4 = 0x800D4EC4; // segment:mission_overlay type:u32
-func_mission_overlay_800D4ED0      = 0x800D4ED0; // segment:mission_overlay
 
 fake_func_800DD2C4 = 0x800DD2C4; // segment:mission_overlay type:u32
-func_mission_overlay_800DD2D0      = 0x800DD2D0; // segment:mission_overlay
 
 fake_func_800DFB8C = 0x800DFB8C; // segment:mission_overlay type:u32
-func_mission_overlay_800DFB90      = 0x800DFB90; // segment:mission_overlay
 
 fake_func_800E406C = 0x800E406C; // segment:mission_overlay type:u32
 func_mission_overlay_800E4070      = 0x800E4070; // segment:mission_overlay
 
 fake_func_800E447C = 0x800E447C; // segment:mission_overlay type:u32
-func_mission_overlay_800E4480      = 0x800E4480; // segment:mission_overlay
 
 fake_func_800E71C8 = 0x800E71C8; // segment:mission_overlay type:u32
-func_mission_overlay_800E71D0      = 0x800E71D0; // segment:mission_overlay
 
 fake_func_800E8A34 = 0x800E8A34; // segment:mission_overlay type:u32
-func_mission_overlay_800E8A40      = 0x800E8A40; // segment:mission_overlay
 
 fake_func_800E9AD8 = 0x800E9AD8; // segment:mission_overlay type:u32
 func_mission_overlay_800E9AE0      = 0x800E9AE0; // segment:mission_overlay
 
 fake_func_800EC10C = 0x800EC10C; // segment:mission_overlay type:u32
-func_mission_overlay_800EC110      = 0x800EC110; // segment:mission_overlay
 
 fake_func_800EC6EC = 0x800EC6EC; // segment:mission_overlay type:u32
-func_mission_overlay_800EC6F0      = 0x800EC6F0; // segment:mission_overlay
 
 fake_func_800ECE04 = 0x800ECE04; // segment:mission_overlay type:u32
-func_mission_overlay_800ECE10      = 0x800ECE10; // segment:mission_overlay
 
 fake_func_800ED148 = 0x800ED148; // segment:mission_overlay type:u32
-func_mission_overlay_800ED150      = 0x800ED150; // segment:mission_overlay
 
 fake_func_800EFD74 = 0x800EFD74; // segment:mission_overlay type:u32
-func_mission_overlay_800EFD80      = 0x800EFD80; // segment:mission_overlay
 
 fake_func_800EFDDC = 0x800EFDDC; // segment:mission_overlay type:u32
 func_mission_overlay_800EFDE0      = 0x800EFDE0; // segment:mission_overlay
@@ -440,10 +1157,8 @@ fake_func_800FA248 = 0x800FA248; // segment:mission_overlay type:u32
 func_mission_overlay_800FA250      = 0x800FA250; // segment:mission_overlay
 
 fake_func_800FBE14 = 0x800FBE14; // segment:mission_overlay type:u32
-func_mission_overlay_800FBE20      = 0x800FBE20; // segment:mission_overlay
 
 fake_func_800FEF04 = 0x800FEF04; // segment:mission_overlay type:u32
-func_mission_overlay_800FEF10      = 0x800FEF10; // segment:mission_overlay
 
 fake_func_80101CCC = 0x80101CCC; // segment:mission_overlay type:u32
 // real function is lv2_initializeObjectTracking

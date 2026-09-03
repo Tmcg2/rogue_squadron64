@@ -221,21 +221,261 @@ getMedalInfo                = 0x800CC200; // segment:menu_overlay
 compareStatstoMedalInfo     = 0x800CC2B0; // segment:menu_overlay
 calculateShotAccuracy       = 0x800CC374; // segment:menu_overlay
 
-// Real functions missed by splat
-func_menu_overlay_800B3824 = 0x800B3824; // segment:menu_overlay
+
+// post-level save init (medal screen path)
+postLevelSaveInit         = 0x800C06D0; // segment:menu_overlay
+// menu overlay init (calls registerSaveService)
+menuOverlayInit    = 0x800C58A0; // segment:menu_overlay
+// hangar bay camera/scene update (gated hangarCameraState 0x800CC3E4==2, indexes per-bay tables by gHangarCurrentBay 0x800CD6E8); reached via LOOKUP_FUNC from func_800AAB70/func_800AAF90; calls playSongIfMusyXActive once (the bay music)
+updateHangarBayScene  = 0x800AB658; // segment:menu_overlay
+// (parent, x i16, y i16) — 10 callers. Sign-extends a1/a2 from 16-bit, converts to float, writes the floats to MEM[parent+0xC]+0x18 and +0x1C respectively. Companion to getStructField0xC at 0x800B3D08 (the trivial getter for parent+0xC ptr). Used to set a sub-struct's 2D position fields from integer screen-space coords — likely HUD / UI / 2D-overlay positioning.
+setChildPosFromI16Pair          = 0x800B3CD4; // segment:menu_overlay
+// service-worker tick handler. Loops: recvServiceMessage(workerKey) (blocking) → process result msg s3 via func_800B2630(msg+0x14, msg+0x18, workerKey). Then walks msg+0x14 → +0x8 chain doing sprintf_recomp formatting (uses global format string at MEM_W[0x800A5C40] as fmt arg) into local stack buffers at sp+0x52 and sp+0x84+0x2. Registered at priority 5 by initFormatMessageWorker.
+tickFormatMessageWorker         = 0x800B3650; // segment:menu_overlay
+// (priorityOverride u8) — registers + starts the tickFormatMessageWorker via registerServiceWorker(8 msgSlots, 0x800 stack, priority, &tickFormatMessageWorker). Stores returned worker ID at MEM_W[0x800CC854] and the same value at MEM_W[0x800CC858] (registry handle). Then calls startServiceWorker to launch the thread. Both callers pass priorityOverride = 5.
+initFormatMessageWorker         = 0x800B3EB8; // segment:menu_overlay
+// unregisters the format-message worker thread. Reads stored handle from MEM_W[0x800CC858] and calls unregisterServiceWorker(handle).
+shutdownFormatMessageWorker     = 0x800B3F00; // segment:menu_overlay
+// (parent, member) — disposes a queue member's allocated buffers. If parent+0x1C flag bits 0x6 are set: rs_free(member+0x3C) and func_800C6DBC(member+0x70) (alternate-format buffer). Always: rs_free(member+0x38) and func_800C6DBC(member+0x6C) (primary buffer). Cleanup helper used when removing a member from the format-message queue.
+disposeFormatMsgQueueMember     = 0x800B3E5C; // segment:menu_overlay
+// (token u32, string ptr) — PRODUCER side of the format-message queue. Allocates a 0x60-byte queue member via rs_malloc, rs_memsets to 0. Fills: member+0x14 = token (a0, scene-correlation id), member+0x58 = MEM_W[0x80139920] (current state global), member+0x5C = MEM_W[0x800CC854] (the worker's registration ID — same one initFormatMessageWorker stored). rs_strcpy's the input string (a1) into member+0x18 (the queue member's string buffer). Then sendServiceMessage(workerKey=MEM_W[0x80139920], handle=MEM_W[0x800CC858], member, 0) to enqueue. The tickFormatMessageWorker thread will pick up the member, process the string, and call disposeFormatMsgQueueMember to free buffers when done.
+enqueueFormatMessage            = 0x800B3F24; // segment:menu_overlay
+// registerServiceWorker(prio=4, qsz=0x800, tick=tickSongAssetLoadWorker) + startServiceWorker; stores handle at gSongAssetLoadWorkerHandle
+initSongAssetLoadWorker = 0x800C57CC; // segment:menu_overlay
+// Service worker tick: recvServiceMessage + parseLoadedSndSection + loadSongAssetByName — loads sequenced sound assets on demand.
+tickSongAssetLoadWorker = 0x800C5834; // segment:menu_overlay
+// big menu controller input handler (0x38E4 bytes); 0x800B47C4 is fake_func splat trampoline preceding it (per docs/menus + controller)
+menuControllerInput              = 0x800B47D0; // segment:menu_overlay
+// sets up D_800CE730 per current menu
+setupMenuData                    = 0x800BA0F0; // segment:menu_overlay
+// per-frame menu update (highlighting etc)
+updateMenuPerFrame               = 0x800BB394; // segment:menu_overlay
+// game settings menu input handler
+handleGameSettingsMenu           = 0x800BB234; // segment:menu_overlay
+// reads account data for account selection screen
+readAccountForSelectionScreen    = 0x800B85B4; // segment:menu_overlay
+// Elite Rogues highscore screen handler
+eliteRoguesMenuHandler           = 0x800BEA00; // segment:menu_overlay
+// mallocs/inits controller settings UI structs
+initControllerSettingsStructs    = 0x800BCE2C; // segment:menu_overlay
+// controller settings menu screen handler
+controllerSettingsScreen         = 0x800BD274; // segment:menu_overlay
+// prints weapon/shield text on level select screen
+printLevelSelectWeaponText   = 0x800B19EC; // segment:menu_overlay
+// rs_malloc's voice-line related struct for craft selection
+mallocVoiceLineStruct        = 0x800CBF60; // segment:menu_overlay
+// craft-selection voice-line helper (D_800CC4F8 lists) per docs/unsorted_thoughts
+craftSelectionVoiceLineHelper = 0x800AE264; // segment:menu_overlay
+// ~0xF18B handler for menu sub-type 02 per docs/menus
+menuSubtype02Handler = 0x800C30C8; // segment:menu_overlay
+// Menu-entry / overlay helpers (children of menuOverlayInit per call-graph analysis).
+// (ctx_out, craft_idx_byte, _, _) — calls getAvailablePlayerCraftFlagsConsiderUnlocks + hangarInitialize, then polls func_800AAD9C in a loop until !=0xFFFFFFFF (user selection), calls gracefulMenuShutdown, stores selection in ctx_out+0x1, returns 0/1. Wraps the hangar selection flow when entered from a menu overlay.
+runHangarMenuFromOverlay = 0x800C6854; // segment:menu_overlay
+// 36 callers: trivial — returns *(u32*)(a0 + 0xC). Generic pointer-at-offset-0xC getter used across many subsystems.
+getStructField0xC         = 0x800B3D08; // segment:menu_overlay
+// per-frame hangar camera-orbit lerp (~98 float ops). Reads gHangarCurrentBayCraft → indexes gHangarBayDescriptorArrayPtr (stride 0x278), pulls target float from entry+0x8->+0x14, caches at gHangarCameraOrbitTargetCache. Accumulates gHangarCameraOrbitAccum += (delta / const_at_800A56DC) per frame for the continuous glide toward the current bay. Called from the hangar tick func_800AAD9C.
+hangarTickCameraOrbit = 0x800ADB70; // segment:menu_overlay
+// rotating 3D ship-preview setup/render (menu)
+setupCraftPreviewModel               = 0x800C4184; // segment:menu_overlay
+// menu teardown: shutdownFormatMessageWorker + finalizeCurrentSpeechBuffer
+shutdownMenuMessagingAndSpeech       = 0x800C471C; // segment:menu_overlay
+// per-menu-screen music/SFX setup (sound-cue descriptor)
+cueMenuScreenAudioA                  = 0x800C4754; // segment:menu_overlay
+// loads a menu screen's song set (loadSongAssetByName x4)
+preloadMenuMusicSetA                 = 0x800C47F8; // segment:menu_overlay
+// menu screen music/SFX cue (distinct song set)
+cueMenuScreenAudioB                  = 0x800C4878; // segment:menu_overlay
+// menu screen SFX-cue (descriptor + parseLoadedSndSection)
+cueMenuScreenAudioC                  = 0x800C491C; // segment:menu_overlay
+// menu element transition animation (config-scaled)
+playMenuElementTransitionAnim        = 0x800C4A44; // segment:menu_overlay
+// per-selectable-craft menu animator (iterates flag bits)
+animateCraftSelectFlags              = 0x800C4C8C; // segment:menu_overlay
+// handles cheat-code entry from menu input
+applyMenuCheatCode                   = 0x800C4E6C; // segment:menu_overlay
+// spawns + positions + registers a menu list-item sprite
+spawnMenuListItemSprite              = 0x800C4F38; // segment:menu_overlay
+// creates a 2D HUD/menu sprite node at (x,y)
+createUiSpriteAt                     = 0x800C4FF4; // segment:menu_overlay
+// animated UI element update (pos/scale/alpha/frame)
+updateUiSpriteScrollAndAlpha         = 0x800C5118; // segment:menu_overlay
+// sets a UI group's animation frame from a phase float
+setMenuAnimGroupFrame                = 0x800C5244; // segment:menu_overlay
+// constructs a menu text/list element
+createMenuTextElement                = 0x800C5300; // segment:menu_overlay
+// menu-screen struct constructor (14x 0x80 + two 0x1000 buffers)
+allocMenuScreenState                 = 0x800C53D4; // segment:menu_overlay
+// destructor for allocMenuScreenState
+freeMenuScreenState                  = 0x800C5478; // segment:menu_overlay
+// timed/phased UI position update
+updateMenuElementTimedPosition       = 0x800C54E4; // segment:menu_overlay
+// applies 3 keyframe animations over player craft slots
+applyCraftSlotAnimations             = 0x800C5610; // segment:menu_overlay
+// if object fade-timer is 0, store the target value
+setMaterialFadeTargetIfIdle          = 0x800C56A4; // segment:menu_overlay
+// loads the menu backdrop set + random pick (load_hmt_and_hob)
+initMenuBackdropAndPickRandom        = 0x800C56E4; // segment:menu_overlay
+// unregisters the song-asset load service worker
+shutdownSongAssetLoadWorker          = 0x800C5808; // segment:menu_overlay
+// per-icon radar draw helper
+drawRadarIcon                        = 0x800C5D9C; // segment:menu_overlay
+// self-contained blocking results/text screen loop
+runResultsTextScreenLoop             = 0x800C5EF8; // segment:menu_overlay
+// front-end level-select START confirm/advance input
+handleLevelSelectStartConfirm        = 0x800B0650; // segment:menu_overlay
+// advances the front-end menu state machine
+tickMenuTransitionState              = 0x800B07F4; // segment:menu_overlay
+// initializes the menu UI widget/element array
+initMenuWidgetArray                  = 0x800B1430; // segment:menu_overlay
+// builds a level/ship-select text row (font metrics)
+layoutMenuTextRow                    = 0x800B180C; // segment:menu_overlay
+// sets player-slot 0 display animation channels
+setupPlayerCraftDisplayAnim          = 0x800B1D54; // segment:menu_overlay
+// blocks until audio/speech drains, then finalizes the speech buffer
+drainAudioAndFinalizeSpeechBuffer    = 0x800B24C4; // segment:menu_overlay
+// drives a timed float (fade/transition) to completion
+tickTimedScreenFadeFloat             = 0x800B2520; // segment:menu_overlay
+// screen-exit/transition: sound + toggle scene mesh flags
+playExitSoundAndToggleScreenMeshes   = 0x800B2564; // segment:menu_overlay
+// sprintf-formats a string into a renderable glyph buffer
+buildFormatMessageGlyphBuffer        = 0x800B2630; // segment:menu_overlay
+// constructs a text/glyph element struct
+allocFormatTextElement               = 0x800B2A98; // segment:menu_overlay
+// loads a numbered texture asset into a descriptor + registers it
+loadNamedTextureDescriptor           = 0x800B2D50; // segment:menu_overlay
+// allocates a w×h text texture/render-target + registers it
+allocTextRenderTarget                = 0x800B32F4; // segment:menu_overlay
+// builds/animates the level-select screen text textures
+buildLevelSelectTextTextures         = 0x800B3824; // segment:menu_overlay
+// width/height-scaled text element builder
+buildScaledFormatTextElement         = 0x800B3AFC; // segment:menu_overlay
+// build+render+free one format-message queue member
+processAndDisposeFormatMessage       = 0x800B3C70; // segment:menu_overlay
+// loops count, sprintf each glyph, registers the glyph textures
+rasterizeFormatMessageGlyphs         = 0x800B3D14; // segment:menu_overlay
+// tryRecvServiceMessage; stores a result byte if received
+pollServiceMessageByte               = 0x800B3FD8; // segment:menu_overlay
+// allocates the front-end text render-target
+initTextTextureTarget                = 0x800B4020; // segment:menu_overlay
+// updates a text/overlay lookup-table entry
+updateTextOverlayLookupEntry         = 0x800B4048; // segment:menu_overlay
+// oriented transform w/ randomized eased rotation
+loadCutsceneAssetsByIndex          = 0x800A9270; // segment:menu_overlay
+runHangarSelectionFrame            = 0x800AAD9C; // segment:menu_overlay
+composeNpcOrientationMatrix        = 0x800AB1C8; // segment:menu_overlay
+tickEasedCameraKeyframeBlend       = 0x800AE3EC; // segment:menu_overlay
+composeInterpolatedNodeMatrices    = 0x800AE814; // segment:menu_overlay
+setByteAcrossEntryList             = 0x800AEAC0; // segment:menu_overlay
+tickCraftSelectScreen              = 0x800AF3C0; // segment:menu_overlay
+handleCraftSelectInput             = 0x800AF6AC; // segment:menu_overlay
+spawnOrientedEffectWithEasedSpin   = 0x800B0148; // segment:menu_overlay
+runScriptedCraftCinematicEvent     = 0x800B08F4; // segment:menu_overlay
+startSlotLoopAnimWithVoiceSync     = 0x800B1B58; // segment:menu_overlay
+applyPlayerSlotAnimChannelKeyframe = 0x800B1EF4; // segment:menu_overlay
+accumulateShipThrottleCharge       = 0x800B4168; // segment:menu_overlay
+computeThrottleChargeFraction      = 0x800B4224; // segment:menu_overlay
+destroyPlayerShipRecord            = 0x800B4274; // segment:menu_overlay
+spawnProjectileObject              = 0x800B42D4; // segment:menu_overlay
+copyMorphTargetVertices            = 0x800B438C; // segment:menu_overlay
+buildPrefixedAssetName             = 0x800B43F4; // segment:menu_overlay
+spawnHudReticleAtMeshBounds        = 0x800B448C; // segment:menu_overlay
+positionHudSpriteOffset            = 0x800B44D0; // segment:menu_overlay
+createHudSpritePair                = 0x800B44EC; // segment:menu_overlay
+layoutHudSpriteScreenRect          = 0x800B4618; // segment:menu_overlay
+updateShipPartAnimation            = 0x800B80B4; // segment:menu_overlay
+buildHudAmmoReadout                = 0x800B82D8; // segment:menu_overlay
+resetMaterialTextureEffectSlots    = 0x800B87BC; // segment:menu_overlay
+setMaterialTextureByName           = 0x800B883C; // segment:menu_overlay
+easeAnimationKeyframe              = 0x800B8C08; // segment:menu_overlay
+cycleAccountLabelText              = 0x800B8E08; // segment:menu_overlay
+animateBannerOscillation           = 0x800B8F50; // segment:menu_overlay
+setupCraftAnimationFlagSet         = 0x800B9198; // segment:menu_overlay
+initVwingHudAndSlotState           = 0x800B9354; // segment:menu_overlay
+loadVwingMeshAssets                = 0x800B95D4; // segment:menu_overlay
+buildVwingRenderMatrices           = 0x800B9728; // segment:menu_overlay
+animateVwingThrusterMaterial       = 0x800B9994; // segment:menu_overlay
+updateVwingTrailGeometry           = 0x800B9BE4; // segment:menu_overlay
+playerVwingMainUpdate              = 0x800B9E98; // segment:menu_overlay
+driveFalconAnimationKeyframes      = 0x800BBA5C; // segment:menu_overlay
+applyTieInterceptorAnimState       = 0x800BBDD0; // segment:menu_overlay
+copyTieInterceptorAnimBuffer       = 0x800BBF80; // segment:menu_overlay
+applyTieInterceptorSlotAnim        = 0x800BC14C; // segment:menu_overlay
+updateTieInterceptorAnimFlag       = 0x800BC2C8; // segment:menu_overlay
+integrateTieInterceptorPhysics     = 0x800BC46C; // segment:menu_overlay
+spawnTieInterceptorParticles       = 0x800BC6F0; // segment:menu_overlay
+playerTieInterceptorMainUpdate     = 0x800BC834; // segment:menu_overlay
+easeT16AnimationKeyframe           = 0x800BD60C; // segment:menu_overlay
+allocT16EffectContext              = 0x800BD82C; // segment:menu_overlay
+computeNabooBankingOrientation     = 0x800BDAEC; // segment:menu_overlay
+handleNabooFlightInput             = 0x800BDCF8; // segment:menu_overlay
+handleNabooActionButtons           = 0x800BE3E8; // segment:menu_overlay
+tickMenuOptionEntry                = 0x800BF6D8; // segment:menu_overlay
+runMenuRandomBackdropScreen        = 0x800BF830; // segment:menu_overlay
+loadMenuSceneModelAndMaterials     = 0x800BFFBC; // segment:menu_overlay
+animateMenuSceneTransform          = 0x800C00D8; // segment:menu_overlay
+setMenuObjectColorPreset           = 0x800C0460; // segment:menu_overlay
+createMenuTextLabels               = 0x800C05A0; // segment:menu_overlay
+runMenuShipSelectScreen            = 0x800C131C; // segment:menu_overlay
+initMenuScreenRenderContext        = 0x800C17B4; // segment:menu_overlay
+runMenuContentStateMachine         = 0x800C1878; // segment:menu_overlay
+tickMenuSelectionEnterState        = 0x800C1B50; // segment:menu_overlay
+tickMenuSelectionActiveState       = 0x800C20E0; // segment:menu_overlay
+transformSceneMeshVertices         = 0x800C2574; // segment:menu_overlay
+runMenuModelViewerScreen           = 0x800C28F0; // segment:menu_overlay
+initMenuScreenCameraViewport       = 0x800C2E08; // segment:menu_overlay
+updateMenuItemAnimationState       = 0x800C2EFC; // segment:menu_overlay
+initInteractiveSceneContext        = 0x800C3FE0; // segment:menu_overlay
+resetMenuElementInputState         = 0x800C4C80; // segment:menu_overlay
+allocCraftPreviewEffectObject      = 0x800C4DB8; // segment:menu_overlay
+initCraftPreviewEffectWithRandom   = 0x800C4DF0; // segment:menu_overlay
+initMenuElementScrollAnimParams    = 0x800C4E50; // segment:menu_overlay
+getCraftStatIfThresholdMet         = 0x800C4ED8; // segment:menu_overlay
+resetMenuSelectionGlobalState      = 0x800C4F20; // segment:menu_overlay
+setCraftMaterialTextureByName      = 0x800C56C4; // segment:menu_overlay
+advanceWrappingPhaseAccumulator    = 0x800C6660; // segment:menu_overlay
+resetJfifDecodeState               = 0x800C6C40; // segment:menu_overlay
+freeJfifDecodeState                = 0x800C6DBC; // segment:menu_overlay
+rebuildDebrisCellGeometry          = 0x800C7970; // segment:menu_overlay
+emitDebrisCellFaces                = 0x800C7B68; // segment:menu_overlay
+computeCellGridIndices             = 0x800C804C; // segment:menu_overlay
+buildDebrisCellBitfield            = 0x800C821C; // segment:menu_overlay
+decodeDeltaCellCounts              = 0x800C83E4; // segment:menu_overlay
+allocDebrisCellTable               = 0x800C8520; // segment:menu_overlay
+buildCellSlotTableAndFindFree      = 0x800C86C8; // segment:menu_overlay
+findFreeCellBitSlot                = 0x800C87B0; // segment:menu_overlay
+allocCellBitGroup                  = 0x800C888C; // segment:menu_overlay
+allocCellGeometryBuffer            = 0x800C8A64; // segment:menu_overlay
+buildDebrisMeshFromCells           = 0x800C8C1C; // segment:menu_overlay
+cloneCellBufferWithAlloc           = 0x800C9A88; // segment:menu_overlay
+allocZeroedCellRecord              = 0x800C9B8C; // segment:menu_overlay
+runModelViewerLoop                 = 0x800C9BF0; // segment:menu_overlay
+initModelViewer                    = 0x800CA638; // segment:menu_overlay
+buildModelViewerTextPage           = 0x800CA714; // segment:menu_overlay
+runModelViewerSoundDemo            = 0x800CADB8; // segment:menu_overlay
+updateModelViewerAudioSource       = 0x800CB30C; // segment:menu_overlay
+loadModelViewerModels              = 0x800CB604; // segment:menu_overlay
+shutdownModelViewer                = 0x800CBB30; // segment:menu_overlay
+releaseMeshLinkedList              = 0x800CBB7C; // segment:menu_overlay
+freeModelViewerMeshChain           = 0x800CBBB8; // segment:menu_overlay
+releaseModelViewerModelAssets      = 0x800CBC24; // segment:menu_overlay
+setModelViewerObjectTransform      = 0x800CBCF4; // segment:menu_overlay
+runMusyXTaskWrapper                = 0x800CBD6C; // segment:menu_overlay
+appendNodeToListTail               = 0x800CBD88; // segment:menu_overlay
+appendNodeToListHead               = 0x800CBDC4; // segment:menu_overlay
+tickMultiPartVoiceLine             = 0x800CBE00; // segment:menu_overlay
+setVoiceLineLoopFlag               = 0x800CC02C; // segment:menu_overlay
+decrementTextTextureRefcount       = 0x800B3CC0; // segment:menu_overlay
+isPlayerShipActive                 = 0x800B4264; // segment:menu_overlay
 
 // Fake Function Fixing
 fake_func_800AEC54 = 0x800AEC54; // segment:menu_overlay type:u32
-func_menu_overlay_800AEC60      = 0x800AEC60; // segment:menu_overlay
+initCraftSelectScreen      = 0x800AEC60; // segment:menu_overlay
 
 fake_func_800B2628 = 0x800B2628; // segment:menu_overlay type:u32
-func_menu_overlay_800B2630      = 0x800B2630; // segment:menu_overlay
 
 fake_func_800B47C4 = 0x800B47C4; // segment:menu_overlay type:u32
-func_menu_overlay_800B47D0      = 0x800B47D0; // segment:menu_overlay
 
 fake_func_800C5898 = 0x800C5898; // segment:menu_overlay type:u32
-func_menu_overlay_800C58A0      = 0x800C58A0; // segment:menu_overlay
 
 fake_func_800C6968 = 0x800C6968; // segment:menu_overlay type:u32
 // Real function loadJfifAsset

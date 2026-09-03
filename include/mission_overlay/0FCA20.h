@@ -2,13 +2,7 @@
 #define MISSION_0FCA20_H
 
 #include "PR/ultratypes.h"
-
-struct rgba {
-    u8 red;   /* 0x00 */
-    u8 green; /* 0x01 */
-    u8 blue;  /* 0x02 */
-    u8 alpha; /* 0x03 */
-}; // size 0x4
+#include "common_types.h"
 
 struct xy_offset {
     u16 x; /* 0x0 */

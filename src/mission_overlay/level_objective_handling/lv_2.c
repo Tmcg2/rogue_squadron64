@@ -13,7 +13,7 @@ s32 lv2_initializeObjectTracking(void) {
     D_mission_overlay_8010B6C4 = 0;
     D_mission_overlay_8010B6C8 = 0;
     D_mission_overlay_8010B6CC = 0;
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     setObjectiveBoolean(0x20, 1U);
     addBooleanCountHandleWrapper(func_mission_overlay_801026CC, 0, 0, 0x3D, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_801026EC, 4, 1, 0, 0);
@@ -74,7 +74,7 @@ s32 lv2_checkComplexObjectives(void) {
             return 0;
         }
         if (getObjectiveBoolean(0x64) == 1) {
-            func_mission_overlay_800C7738();
+            setHudEnableBit4();
         }
         temp_v0_2 = getObjectiveBoolean(2);
         if ((temp_v0_2 != 1) || (getObjectiveBoolean(0x63) != 0) || (getObjectiveBoolean(8) != temp_v0_2) || (getObjectiveBoolean(0x64) != 0)) {
@@ -88,10 +88,10 @@ s32 lv2_checkComplexObjectives(void) {
                     return 0;
                 }
             } else {
-                func_mission_overlay_800C7738();
+                setHudEnableBit4();
             }
             if (getObjectiveBoolean(0x64) == 1) {
-                func_mission_overlay_800C7738();
+                setHudEnableBit4();
             }
             if ((getObjectiveCount(0x28) > 0) && (getObjectiveBoolean(0x6D) == 0)) {
                 setObjectiveBoolean(0x6D, 1U);
@@ -101,7 +101,7 @@ s32 lv2_checkComplexObjectives(void) {
                 return 0;
             }
             if (getObjectiveBoolean(0x6D) == 1) {
-                func_mission_overlay_800C7738();
+                setHudEnableBit4();
             }
         } else {
             setObjectiveBoolean(0x64, 1U);
@@ -113,7 +113,7 @@ s32 lv2_checkComplexObjectives(void) {
     }
     if ((getObjectiveBoolean(0x80) == 1) && (getObjectiveBoolean(0x7F) == 0)) {
         setObjectiveBoolean(0x7F, 1U);
-        setObjectiveBoolean(func_mission_overlay_800C77D0(3) + 1, 1U);
+        setObjectiveBoolean(randMod(3) + 1, 1U);
     }
     if ((getObjectiveBoolean(0x3B) == 0) && (getObjectiveTimer(1) >= 100.0f)) {
         if ((getObjectiveBoolean(1) == 1) && (getObjectiveBoolean(7) == 0)) {
@@ -151,10 +151,10 @@ s32 lv2_checkComplexObjectives(void) {
         temp_v0_5 = getObjectiveBoolean(1);
         if ((temp_v0_5 == temp_v0_4) && (D_mission_overlay_8010B6C4 == 0)) {
             D_mission_overlay_8010B6C4 = temp_v0_5;
-            func_mission_overlay_800C7884("Camera_01");
+            setHudFlagBit40AndStoreArg("Camera_01");
             activateObjectiveCompleteFlag(2);
             setObjectiveBooleans(&D_mission_overlay_8010B6C0, 0);
-            func_mission_overlay_800C7D60(string0_lv_2, 0);
+            delegateToLevelStageTick(string0_lv_2, 0);
         }
     }
     temp_v0_6 = getObjectiveBoolean(0x63);
@@ -162,10 +162,10 @@ s32 lv2_checkComplexObjectives(void) {
         temp_v0_7 = getObjectiveBoolean(2);
         if ((temp_v0_7 == temp_v0_6) && (D_mission_overlay_8010B6C8 == 0)) {
             D_mission_overlay_8010B6C8 = temp_v0_7;
-            func_mission_overlay_800C7884("Camera_02");
+            setHudFlagBit40AndStoreArg("Camera_02");
             activateObjectiveCompleteFlag(2);
             setObjectiveBooleans(&D_mission_overlay_8010B6C0, 0);
-            func_mission_overlay_800C7D60(string0_lv_2, 0);
+            delegateToLevelStageTick(string0_lv_2, 0);
         }
     }
     temp_v0_8 = getObjectiveBoolean(0x63);
@@ -173,10 +173,10 @@ s32 lv2_checkComplexObjectives(void) {
         temp_v0_9 = getObjectiveBoolean(3);
         if ((temp_v0_9 == temp_v0_8) && (D_mission_overlay_8010B6CC == 0)) {
             D_mission_overlay_8010B6CC = temp_v0_9;
-            func_mission_overlay_800C7884("Camera_03");
+            setHudFlagBit40AndStoreArg("Camera_03");
             activateObjectiveCompleteFlag(2);
             setObjectiveBooleans(&D_mission_overlay_8010B6C0, 0);
-            func_mission_overlay_800C7D60(string0_lv_2, 0);
+            delegateToLevelStageTick(string0_lv_2, 0);
         }
     }
     if (getObjectiveBoolean(0x1F) == 0) {
@@ -230,7 +230,7 @@ s32 lv2_checkComplexObjectives(void) {
         if (temp_v0_17 == temp_v0_16) {
             temp_v0_18 = getObjectiveBoolean(0x21);
             if ((temp_v0_18 == temp_v0_17) && (getObjectiveBoolean(0x63) == temp_v0_18)) {
-                func_mission_overlay_800C776C();
+                setHudEnableBit8();
             }
         }
     }
@@ -308,8 +308,8 @@ void func_mission_overlay_80102938(void) {
 void func_mission_overlay_8010295C(void) {
     playObjectiveVoiceLine2(0x11DU, 0.0f);
     playObjectiveVoiceLine2(0x1E3U, 0.5f);
-    func_mission_overlay_800C7884("Camera_04");
-    func_mission_overlay_800C7D98(3);
+    setHudFlagBit40AndStoreArg("Camera_04");
+    triggerSoundCueByType(3);
 }
 
 void func_mission_overlay_8010299C(void) {
@@ -319,8 +319,8 @@ void func_mission_overlay_8010299C(void) {
 void func_mission_overlay_801029C0(void) {
     playObjectiveVoiceLine2(0x11DU, 0.0f);
     playObjectiveVoiceLine2(0x1E3U, 0.5f);
-    func_mission_overlay_800C7884("Camera_05");
-    func_mission_overlay_800C7D98(3);
+    setHudFlagBit40AndStoreArg("Camera_05");
+    triggerSoundCueByType(3);
 }
 
 void func_mission_overlay_80102A00(void) {
@@ -341,10 +341,10 @@ const u8 padded_string_lv_2[12] = {
 void func_mission_overlay_80102A24(void) {
     playObjectiveVoiceLine2(0x11DU, 0.0f);
     playObjectiveVoiceLine2(0x1E3U, 0.5f);
-    func_mission_overlay_800C7884(padded_string_lv_2);
+    setHudFlagBit40AndStoreArg(padded_string_lv_2);
     // If matching isn't a concern, use this instead of the call above
     // func_mission_overlay_800C7884("Camera_06");
-    func_mission_overlay_800C7D98(3);
+    triggerSoundCueByType(3);
 }
 
 s32 lv2_80102A64(void) {

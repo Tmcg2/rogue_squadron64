@@ -27,7 +27,7 @@ s32 lv0_initializeObjectTracking(void) {
     setObjectiveBoolean(5, 1U);
     addBooleanCountHandleWrapper(func_mission_overlay_80101934, 0, 0, 1, 0x15);
     addBooleanCountHandleWrapper(func_mission_overlay_801018EC, 0, 0, 0x14, 1);
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     setObjectiveBoolean(0x3C, 1U);
     setObjectiveTimer(2, 0.0f);
     setObjectiveHiddenFlag(1, 1);

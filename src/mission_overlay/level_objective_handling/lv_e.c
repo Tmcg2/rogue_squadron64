@@ -66,7 +66,7 @@ s32 lve_initializeObjectTracking(void) {
     setObjectiveBoolean(0x5C, 1U);
     setObjectiveBoolean(0x5D, 1U);
     setObjectiveTimer(7, 4.0f);
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     return 0;
 }
 
@@ -81,18 +81,18 @@ s32 lve_checkComplexObjectives(void) {
     u32 var_a0;
 
     if (getObjectiveCount(0x1F) >= 5) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x17C, 0.3f);
         return 0;
     }
     if (getObjectiveCount(0x1E) >= 0xD) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x17D, 0.3f);
         return 0;
     }
     if (getObjectiveBoolean(0x66) == 1) {
         activateObjectiveCompleteFlag(4);
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         playObjectiveVoiceLine2(0x1E1, 0.3f);
         return 0;
     }
@@ -212,11 +212,11 @@ s32 lve_checkComplexObjectives(void) {
             activateObjectiveCompleteFlag(1);
             activateObjectiveCompleteFlag(2);
             setObjectiveBoolean(0x65, 1U);
-            func_mission_overlay_800C7884("MOFF_SEERDON_CAMERA");
+            setHudFlagBit40AndStoreArg("MOFF_SEERDON_CAMERA");
             setObjectiveTimer(7, 0.0f);
             playObjectiveVoiceLine2(0x1D7U, 0.3f);
-            func_mission_overlay_800C7D98(4);
-            func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 1);
+            triggerSoundCueByType(4);
+            delegateToLevelStageTick("MUSICRNG_LevelSettings", 1);
             return 0;
         }
         temp_v0_5 = getObjectiveBoolean(0x65);

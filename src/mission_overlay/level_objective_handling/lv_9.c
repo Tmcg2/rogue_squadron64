@@ -16,7 +16,7 @@ s32 lv9_initializeObjectTracking(void) {
     D_mission_overlay_8010D0D8 = 0;
     D_mission_overlay_8010D0DC = 0;
     D_mission_overlay_8010D0E0 = 0;
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80105304, 0, 0, 1, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_8010539C, 0, 0, 2, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_801053C8, 0, 0, 3, 1);
@@ -41,11 +41,11 @@ s32 lv9_initializeObjectTracking(void) {
 s32 lv9_checkComplexObjectives(void) {
     if ((D_mission_overlay_8010D0D0 == 0) && (getObjectiveCount(5) > 0)) {
         D_mission_overlay_8010D0D0 = 1;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x164U, 0.0f);
     }
     if (getObjectiveBoolean(0xD) > 0) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         activateObjectiveCompleteFlag(1);
     }
     if ((getDatItemHealthPercentage("Evac_Shuttle") < 35.0f) && (D_mission_overlay_8010D0D4 == 0)) {
@@ -102,7 +102,7 @@ const u8 blah[16] = {
 
 void func_mission_overlay_80105464(void) {
     setObjectiveBoolean(0x20, 1U);
-    func_mission_overlay_800C7884(blah);
+    setHudFlagBit40AndStoreArg(blah);
     setObjectiveBoolean(0xE, 1U);
 }
 
@@ -126,20 +126,20 @@ void func_mission_overlay_8010552C(void) {
     playObjectiveVoiceLine2(0x16U, 0.0f);
     playObjectiveVoiceLine2(0x2EBU, 2.0f);
     setObjectiveBoolean(0x79, 1U);
-    func_mission_overlay_800C7D98(5);
+    triggerSoundCueByType(5);
 }
 
 void func_mission_overlay_8010556C(void) {
     playObjectiveVoiceLine2(0x16U, 0.0f);
     playObjectiveVoiceLine2(0x2EBU, 2.0f);
     setObjectiveBoolean(0x7A, 1U);
-    func_mission_overlay_800C7D98(5);
+    triggerSoundCueByType(5);
 }
 
 void func_mission_overlay_801055AC(void) {
     playObjectiveVoiceLine2(0x16U, 0.0f);
     setObjectiveBoolean(0x7B, 1U);
-    func_mission_overlay_800C7D98(5);
+    triggerSoundCueByType(5);
 }
 
 void func_mission_overlay_801055E0(void) {
@@ -149,7 +149,7 @@ void func_mission_overlay_801055E0(void) {
 void func_mission_overlay_80105600(void) {
     playObjectiveVoiceLine2(0x18U, 0.0f);
     setObjectiveBoolean(0x7C, 1U);
-    func_mission_overlay_800C7D98(7);
+    triggerSoundCueByType(7);
 }
 
 void func_mission_overlay_80105634(void) {

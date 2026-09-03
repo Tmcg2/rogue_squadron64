@@ -16,7 +16,7 @@ const u8 lv_d_musicrng_levelsettings[] = {
 
 s32 lvd_initializeObjectTracking(void) {
     D_mission_overlay_8010D150 = 0;
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80107338, 0, 0, 0x32, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_80107354, 0, 0, 0x64, 1);
     return 0;
@@ -32,16 +32,16 @@ s32 lvd_calculateFriendliesSaved(void) {
 
 s32 lvd_checkComplexObjectives(void) {
     if (getObjectiveCount(0x3C) > 0) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
     }
     if ((getObjectiveCount(0x32) == 0xC) && (D_mission_overlay_8010D150 == 0)) {
         D_mission_overlay_8010D150 = 1;
-        func_mission_overlay_800C7884(lv_d_camera_01);
+        setHudFlagBit40AndStoreArg(lv_d_camera_01);
         activateObjectiveCompleteFlag(1);
         playObjectiveVoiceLine2(0xF5U, 0.0f);
         playObjectiveVoiceLine2(0x172U, 0.5f);
-        func_mission_overlay_800C7D60(lv_d_musicrng_levelsettings, 0);
-        func_mission_overlay_800C7D98(3);
+        delegateToLevelStageTick(lv_d_musicrng_levelsettings, 0);
+        triggerSoundCueByType(3);
     }
     return 0;
 }

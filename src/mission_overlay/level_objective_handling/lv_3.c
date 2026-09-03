@@ -10,7 +10,7 @@ s32 D_mission_overlay_8010D054;
 s32 lv3_initializeObjectTracking(void) {
     D_mission_overlay_8010D050 = 0;
     D_mission_overlay_8010D054 = 0;
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80103360, 0, 0, 0x19, 2);
     addBooleanCountHandleWrapper(func_mission_overlay_80103424, 0x1A, 1, 0, 0);
     addBooleanCountHandleWrapper(func_mission_overlay_80103464, 0x1C, 1, 0, 0);
@@ -38,7 +38,7 @@ s32 lv3_initializeObjectTracking(void) {
 s32 lv3_checkComplexObjectives(void) {
     if ((getObjectiveBoolean(4) > 0) && (D_mission_overlay_8010D050 == 0)) {
         D_mission_overlay_8010D050 = 1;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         dealDamagetoDatItem("Han_Solo_Stationary", 0x1869F);
         dealDamagetoDatItem("Rieekan_Shuttle_Stationary", 0x1869F);
         playObjectiveVoiceLine2(0x140U, 0.0f);
@@ -46,7 +46,7 @@ s32 lv3_checkComplexObjectives(void) {
     }
     if ((getObjectiveBoolean(0x12) > 0) && (D_mission_overlay_8010D050 == 0)) {
         D_mission_overlay_8010D050 = 1;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x237U, 0.0f);
         playObjectiveVoiceLine2(6U, 0.0f);
         playObjectiveVoiceLine2(0x5DU, 0.5f);
@@ -55,12 +55,12 @@ s32 lv3_checkComplexObjectives(void) {
         activateObjectiveCompleteFlag(2);
         activateObjectiveCompleteFlag(3);
         activateObjectiveCompleteFlag(4);
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         playObjectiveVoiceLine2(7U, 0.0f);
     }
     if ((getObjectiveBoolean(0x15) > 0) && (D_mission_overlay_8010D050 == 0)) {
         D_mission_overlay_8010D050 = 1;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x56U, 0.0f);
         playObjectiveVoiceLine2(0x5DU, 0.5f);
     }
@@ -99,7 +99,7 @@ const u8 tech_center_main[] = {
 void func_mission_overlay_80102E50(void) {
     setObjectiveBoolean(0xB, 1U);
     setObjectiveBoolean(0xC, 1U);
-    func_mission_overlay_800C7884(camera_solo_new);
+    setHudFlagBit40AndStoreArg(camera_solo_new);
     playObjectiveVoiceLine2(0x1E8U, 0.0f);
     playObjectiveVoiceLine2(0x1E6U, 0.0f);
     playObjectiveVoiceLine2(0x156U, 0.0f);
@@ -122,7 +122,7 @@ void func_mission_overlay_80102F58(void) {
     increaseObjectiveCount(1, 6);
     setObjectiveBoolean(6, 1U);
     setObjectiveBoolean(0x27, 1U);
-    func_mission_overlay_800C7884(camera_gvt_bldg);
+    setHudFlagBit40AndStoreArg(camera_gvt_bldg);
     playObjectiveVoiceLine2(0x5AU, 0.5f);
     playObjectiveVoiceLine2(0x235U, 0.0f);
     increaseObjectiveCount(0xD, 1);
@@ -178,17 +178,17 @@ void func_mission_overlay_80103160(void) {
 }
 
 void func_mission_overlay_801031C4(void) {
-    func_mission_overlay_800C7884(camera_cm_1);
+    setHudFlagBit40AndStoreArg(camera_cm_1);
     increaseObjectiveCount(0xF, 1);
     setObjectiveBoolean(8, 1U);
     addTimerHandleWrapper(func_mission_overlay_80103288, 8.0f);
     setObjectiveBoolean(0x6E, 0U);
     setObjectiveBoolean(0x6F, 1U);
-    func_mission_overlay_800C7D98(3);
+    triggerSoundCueByType(3);
 }
 
 void func_mission_overlay_8010322C(void) {
-    func_mission_overlay_800C7D98(5);
+    triggerSoundCueByType(5);
 }
 
 void func_mission_overlay_80103248(void) {
@@ -229,7 +229,7 @@ void func_mission_overlay_80103384(void) {
     setObjectiveBoolean(0x13, 1U);
     setObjectiveBoolean(0x14, 1U);
     increaseObjectiveCount(0x17, 1);
-    func_mission_overlay_800C7884(camera_hl_shuttle);
+    setHudFlagBit40AndStoreArg(camera_hl_shuttle);
     playObjectiveVoiceLine2(5U, 0.0f);
     increaseObjectiveCount(6, 1);
     setObjectiveBoolean(0x6F, 1U);

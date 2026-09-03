@@ -19,42 +19,127 @@ D_800A5B9C             = 0x800A5B9C; // type:asciz segment:cinematic_overlay
 ////////////////////////////////// Functions ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+// Cinematic timing chain
+
+
+
+
+
+
+
+// inner cinematic frame loop
+cinematicLoopBody                   = 0x800A5D80; // segment:cinematic_overlay
 load_cutscene                       = 0x800A6620; // segment:cinematic_overlay
-cuts_0058_bubble_sort               = 0x800AEA28; // segment:cinematic_overlay
-// - calls freeTxtFile, freeManifestSegmentAssets(MEM[0x80137CFC]), zmemcpy 0x50B default config to 0x800B0960
-freeCutsceneResources               = 0x800AEB38; // segment:cinematic_overlay
-// - iterates cuts_file.unk0058 entries (active count at +0x4E); for sub_type==0x15 stores +0x62 halfword; gated by MEM[0x80130B38] + MEM[0x800B0B1E]; called from load_cutscene
-processCutsceneActions              = 0x800ACE8C; // segment:cinematic_overlay
-// - per-frame screen-scale computation; reads MEM[0x800B0B0C/B2/B6] halfwords and 0x800A5A24/5A28 FP constants. Returns f24=2.0 in hi-res mode, 1.0 in lo-res (per project_cinematic_dual_drive memory)
-computeCutsceneScreenScale          = 0x800AD224; // segment:cinematic_overlay
+// Cinematic slot interpolation (called by cinematicLoopBody iter).
+// Walks a slot table at offset 0x13D8 within a struct, stride 76 bytes per
+// entry, calling cinematicSlotUpdate on each. Used during cinematic to
+// advance per-slot state machines (object position, fade, particle).
+// per-slot cutscene math: reads gCutsceneInfo[0x44] (frame counter), interpolates value/a3, multiplies by a2
+cinematicSlotUpdate                 = 0x800A6904; // segment:cinematic_overlay
 // - cinematic level setup: initNpcBookkeepingTables + scene globals + loadLevelAssets(MEM[0x800B090C+idx*2]); called from cinematicLoopBody
 setupCutsceneLevel                  = 0x800A6CE4; // segment:cinematic_overlay
 // - zeros 4-entry dispatcher table at MEM[0x800B09C0] and builds linked-list-by-pointer at MEM[0x800B0A00..A14]; called once per cinematic from cinematicLoopBody
 initCinematicDispatchSlots          = 0x800A6FC0; // segment:cinematic_overlay
-// - zeros halfword[0] of each of 64 slots (0x30B stride) at MEM[0x800B0D00..0x800B1900]; per-cutscene init from cinematicLoopBody
-initCutsceneSlotTable               = 0x800AEFC8; // segment:cinematic_overlay
-// - zeros byte[+0x12] + word[0] of each of 16 entries (0x14B stride) at MEM[0x800B0BC0], then calls func_800AA4F4 (cuts_0058 sub_type==0xB processor)
-resetCutsceneActionSlots            = 0x800AEB7C; // segment:cinematic_overlay
+// calls slotDispatcherIter for each active cinematic slot index (read from 0x80139560)
+cinematicSlotBatchDispatch          = 0x800A70E4; // segment:cinematic_overlay
+// dispatches effect handlers from cinematic loop
+slotEffectHandlerDispatch = 0x800A71B8; // segment:cinematic_overlay
+// - per-frame: for current level (a2 u8 → 0x20-stride entry in slotTable), iterates 4+ action-list fields at +0x1334, +0x1318 etc. Each list entry indexes vec3f_list at slotArr+0x25AC (stride 12) and calls cinematicSlotUpdate(slot, scene+0x20, f20=time, f22). Called from cinematicLoopBody between processCutsceneActions and initCinematicDispatchSlots.
+cutscenePopulateSlotsFromLevelLists = 0x800A73E4; // segment:cinematic_overlay
+// iterates over slot table (idx*76+0x13D8), calls cinematicSlotUpdate on each
+cinematicSlotDispatcher             = 0x800A76B8; // segment:cinematic_overlay
+spawnCutsceneObjectsFromList        = 0x800A7C4C; // segment:cinematic_overlay
+// - per-frame: iterates 0x13C-stride scene NPC slots (count at scene+0x4A, base MEM[0x800B1900]); for each slot reads byte at +0x13F7, selects action source by bit 7 (offset 0x50 vs scene+0x20+0x20), calls cinematicSlotDispatcher. Called from cinematicLoopBody after initCinematicDispatchSlots.
+cutsceneDispatchSlotsByFlag         = 0x800A8420; // segment:cinematic_overlay
+spawnCutsceneEffectsAndCues         = 0x800A89B0; // segment:cinematic_overlay
+// Scene init / per-level asset loader: zmemcpy's defaults (0x50 bytes from
+// 0x80037560 = gBootConfig area), loads "game_TXT" via findManifestEntryByName,
+// calls clearSceneBssRegion, allocNpcContextArrays, initNpcSlotList,
+// loadSndFiles. The entry point for setting up a mission/scene's runtime state.
+// 2 callers: bootstrap mission-scene runtime (text + NPCs + sound)
+initCutsceneAudioChannels           = 0x800A959C; // segment:cinematic_overlay
+initCutsceneScene                   = 0x800A98AC; // segment:cinematic_overlay
+initSceneForMission                 = 0x800A9ABC; // segment:cinematic_overlay
+emit3DSoundsForActiveNpcs           = 0x800A9D70; // segment:cinematic_overlay
+updatePositionalAudioSource         = 0x800AA1BC; // segment:cinematic_overlay
+applyCutsceneSlotMaterialOverrides  = 0x800AA4F4; // segment:cinematic_overlay
 // - per-frame from cinematicLoopBody: iterates 16 entries at MEM[0x800B0BC0] (0x14B stride); for each with byte[+0x12]!=0 (active), checks if current time (f12) is within [start_time +0x8, end_time +0xC], dereferences cutscene-entry at gCutsceneEntries[u16 at +0x10]
 tickCutsceneActionSlots             = 0x800AA658; // segment:cinematic_overlay
+applyNamedEffectParameterDefault    = 0x800AA850; // segment:cinematic_overlay
+spawnCutsceneDebrisField            = 0x800AAC88; // segment:cinematic_overlay
+// NPC update handler for "i_missile" (incoming missile) per string scan
+npcIncomingMissileUpdate            = 0x800ABD0C; // segment:cinematic_overlay
+buildCutsceneGradientBuffers        = 0x800AC574; // segment:cinematic_overlay
+spawnNpcBurstAlongSegment           = 0x800AC75C; // segment:cinematic_overlay
+// - iterates cuts_file.unk0058 entries (active count at +0x4E); for sub_type==0x15 stores +0x62 halfword; gated by MEM[0x80130B38] + MEM[0x800B0B1E]; called from load_cutscene
+processCutsceneActions              = 0x800ACE8C; // segment:cinematic_overlay
+// - per-frame screen-scale computation; reads MEM[0x800B0B0C/B2/B6] halfwords and 0x800A5A24/5A28 FP constants. Returns f24=2.0 in hi-res mode, 1.0 in lo-res (per project_cinematic_dual_drive memory)
+computeCutsceneScreenScale          = 0x800AD224; // segment:cinematic_overlay
+tickCutsceneCameraFromTimeline      = 0x800AD690; // segment:cinematic_overlay
+transformAndNormalizeDirectionByMatrix = 0x800ADBF8; // segment:cinematic_overlay
+// Backdrop asset loader: sprintf "backdrop/<name>" using format strings at
+// 0x800A5B60. Mallocs a 0x38-byte context, memsets to 0, then load_asset's
+// the named backdrop file. Caller-supplied name (a0) selects which backdrop.
+// 5 callers: (name str, ...) → loads "backdrop/<name>"
+loadBackdropAsset                   = 0x800ADF74; // segment:cinematic_overlay
+// cinematic asset loader (mallocs, registerHmtTextureInTable); called by cinematicInitializer
+initCinematicSceneAssets            = 0x800AE518; // segment:cinematic_overlay
+// Cinematic dispatch from main loop. Scans 16-byte slot status array (a0[0..15])
+// for cinematic phase states (categories <3, <2, ==0), sets aggregate state byte
+// at 0x800B0B1E, then conditionally calls cinematicLoopBody. The "should a cinematic
+// run this frame?" gate driving the cutscene system from mainGameLoop.
+// (139L) main-loop child
+dispatchCinematicFromMainLoop       = 0x800AE878; // segment:cinematic_overlay
 // - (level u8, stage u8) → bool: returns 1 if stage in {0, 1} or for special-level cases (Corellia stage 2, Logo stage 2); 0 otherwise
 shouldShowCutsceneForLevelStage     = 0x800AE928; // segment:cinematic_overlay
+// 76-case jump table dispatcher on NPC type id (0..0x4B). Returns the per-type
+// asset name string (e.g. 'b_lrsp', 'megaturret', 'b_ttu_hi') or NULL for
+// types without an associated asset. Pure lookup function (no allocations,
+// no side effects).
+// 2 callers: (npc_type_id u8) → const char* or NULL
+getAssetNameForNpcType              = 0x800AE98C; // segment:cinematic_overlay
+cuts_0058_bubble_sort               = 0x800AEA28; // segment:cinematic_overlay
+// pure jr-ra stub
+noopHandler_800AEB30                = 0x800AEB30; // segment:cinematic_overlay
+// - calls freeTxtFile, freeManifestSegmentAssets(MEM[0x80137CFC]), zmemcpy 0x50B default config to 0x800B0960
+freeCutsceneResources               = 0x800AEB38; // segment:cinematic_overlay
+// - zeros byte[+0x12] + word[0] of each of 16 entries (0x14B stride) at MEM[0x800B0BC0], then calls func_800AA4F4 (cuts_0058 sub_type==0xB processor)
+resetCutsceneActionSlots            = 0x800AEB7C; // segment:cinematic_overlay
+scheduleCutsceneActionSlot          = 0x800AEBD0; // segment:cinematic_overlay
+composeInterpolatedNodeMatricesAlt  = 0x800AEC48; // segment:cinematic_overlay
+// - per-frame: iterates active scene NPC slots (0x13C stride, count at scene+0x4A, base MEM[0x800B1900]); skips sentinel halfword[+0xB8]==0xFFFF entries; calls getNextSlotNpcTypeId and updates each based on type. Called from cinematicLoopBody after tickCutsceneActionSlots+npcIncomingMissileUpdate.
+tickCutsceneNpcSlots                = 0x800AEE14; // segment:cinematic_overlay
+despawnCutsceneNpcSlot              = 0x800AEF30; // segment:cinematic_overlay
+// - zeros halfword[0] of each of 64 slots (0x30B stride) at MEM[0x800B0D00..0x800B1900]; per-cutscene init from cinematicLoopBody
+initCutsceneSlotTable               = 0x800AEFC8; // segment:cinematic_overlay
 // - finds first slot in MEM[0x800B0D00] table whose halfword[0]==0 and zmemcpy's 0x30B from $a0 into it
 insertCutsceneSlot                  = 0x800AEFF0; // segment:cinematic_overlay
 // - (key:u16) linear search of 94-entry {u16 key, u16 value} table at MEM[0x800AF7B4]; returns value or 0xFFFF
 lookupCutsceneIdMapping             = 0x800AF03C; // segment:cinematic_overlay
-// - per-frame: for current level (a2 u8 → 0x20-stride entry in slotTable), iterates 4+ action-list fields at +0x1334, +0x1318 etc. Each list entry indexes vec3f_list at slotArr+0x25AC (stride 12) and calls cinematicSlotUpdate(slot, scene+0x20, f20=time, f22). Called from cinematicLoopBody between processCutsceneActions and initCinematicDispatchSlots.
-cutscenePopulateSlotsFromLevelLists = 0x800A73E4; // segment:cinematic_overlay
-// - per-frame: iterates 0x13C-stride scene NPC slots (count at scene+0x4A, base MEM[0x800B1900]); for each slot reads byte at +0x13F7, selects action source by bit 7 (offset 0x50 vs scene+0x20+0x20), calls cinematicSlotDispatcher. Called from cinematicLoopBody after initCinematicDispatchSlots.
-cutsceneDispatchSlotsByFlag         = 0x800A8420; // segment:cinematic_overlay
-// - per-frame: iterates active scene NPC slots (0x13C stride, count at scene+0x4A, base MEM[0x800B1900]); skips sentinel halfword[+0xB8]==0xFFFF entries; calls getNextSlotNpcTypeId and updates each based on type. Called from cinematicLoopBody after tickCutsceneActionSlots+npcIncomingMissileUpdate.
-tickCutsceneNpcSlots                = 0x800AEE14; // segment:cinematic_overlay
-// - 2-call wrapper invoked from cinematicLoopBody on cutscene exit: finalizeCurrentSpeechBuffer then func_80045708 (mission-asset teardown that rs_frees 0x80136FC4 + 0x80136DC0+8/+C and conditional cleanup based on MEM[0x80130B70] state).
-cinematicShutdownAudioAndAssets = 0x800AF260; // segment:cinematic_overlay
-// - byte-comparison helper: (a, b, len) - iterates first len bytes of a and b; returns 1 on first mismatch, 0 if all equal. NOT memcmp (returns boolean, not difference).
-bytesDiffer                         = 0x800AF284; // segment:cinematic_overlay
 // - (slotIdx u32) — reads halfword at gActiveSlots[slotIdx] (0x80139560 + slotIdx*2), calls findActiveNpcInSlotChain to find each NPC in that chain, and destroyNpcSlotByIndex's it. Loops until chain empty (returns 0xFFFF). Called during cinematic scene transitions to clear NPCs from a slot.
 destroyAllNpcsInSlotChain           = 0x800AF08C; // segment:cinematic_overlay
+// (a0=stateA, a1=stateB) — if (a0==4&&a1==1) OR (a0==7&&a1==0): load_hmt_and_hob("frontend/cut_ywng/cut_ywng") + walkMeshdef0List("cut_ywng"), stores result at MEM_W(0x800B0B18); otherwise clears it
+maybeLoadYwingCutscene              = 0x800AF0EC; // segment:cinematic_overlay
+buildBobbingObjectMatrix            = 0x800AF164; // segment:cinematic_overlay
+// - 2-call wrapper invoked from cinematicLoopBody on cutscene exit: finalizeCurrentSpeechBuffer then func_80045708 (mission-asset teardown that rs_frees 0x80136FC4 + 0x80136DC0+8/+C and conditional cleanup based on MEM[0x80130B70] state).
+cinematicShutdownAudioAndAssets     = 0x800AF260; // segment:cinematic_overlay
+// - byte-comparison helper: (a, b, len) - iterates first len bytes of a and b; returns 1 on first mismatch, 0 if all equal. NOT memcmp (returns boolean, not difference).
+bytesDiffer                         = 0x800AF284; // segment:cinematic_overlay
+matchKeywordWithPriority            = 0x800AF2C8; // segment:cinematic_overlay
+// per-frame delta-time computer
+cinematicComputeDt                  = 0x800AF360; // segment:cinematic_overlay
+// sets state ptr at 0x800B0934
+cinematicInitializer                = 0x800AF408; // segment:cinematic_overlay
+// returns 1 if MEM_W(0x800B0934) != 0 (cinematic state ptr set by cinematicInitializer), else 0
+isCinematicActive                   = 0x800AF540; // segment:cinematic_overlay
+// per-frame stage counter advance
+cinematicStageAdvancer              = 0x800AF550; // segment:cinematic_overlay
+// clears cinematic state
+cinematicDeactivator                = 0x800AF60C; // segment:cinematic_overlay
+getCinematicStateSubObject          = 0x800AF65C; // segment:cinematic_overlay
+// computes interpolation ratio from byte counter / float threshold
+cinematicInterpRatio                = 0x800AF668; // segment:cinematic_overlay
+
 
 
 // Fake Function Fixing

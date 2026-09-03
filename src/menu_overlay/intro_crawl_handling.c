@@ -22,7 +22,6 @@ s8 *gPostIntroCrawlHobFiles[4][4] = {
 extern char *gPostIntroCrawlCraftObjectNames[4][4];
 extern char *gPostIntroCrawlHobFiles[4][4];
 
-
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A78B0);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A78B8);
@@ -35,17 +34,17 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_over
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A78E8);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800C9BF0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", runModelViewerLoop);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CA638);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", initModelViewer);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CA714);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", buildModelViewerTextPage);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CADB8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", runModelViewerSoundDemo);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CB30C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", updateModelViewerAudioSource);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CB604);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", loadModelViewerModels);
 
 #ifdef NONMATCHING_DATA
 // This probably can't be matched until the ro/data for this entire file is figured out.
@@ -108,29 +107,29 @@ void selectPostCrawlCraft(u8 arg0) {
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", selectPostCrawlCraft);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBB30);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", shutdownModelViewer);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBB7C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", releaseMeshLinkedList);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBBB8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", freeModelViewerMeshChain);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBC24);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", releaseModelViewerModelAssets);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBCF4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", setModelViewerObjectTransform);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBD6C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", runMusyXTaskWrapper);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBD88);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", appendNodeToListTail);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBDC4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", appendNodeToListHead);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A7BC4);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBE00);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", tickMultiPartVoiceLine);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CBF60);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", mallocVoiceLineStruct);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", func_menu_overlay_800CC02C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", setVoiceLineLoopFlag);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", fake_func_800CC038);
 

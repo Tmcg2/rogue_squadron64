@@ -10,25 +10,25 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0E5080", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0E5080", D_mission_overlay_800A82B8);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E4480);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", resetCraftInstanceMotionState);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E4674);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", playDualTextureAttachmentCueB);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0E5080", D_mission_overlay_800A82D4);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E4874);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", playAttachmentMaterialSoundSimpleB);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E49B4);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", playDualTextureAttachmentCueC);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E4BB0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", transformCraftAnchorsApplySubFx2);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E4DC0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", tickCraftSplineOrientationVariant);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E56AC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", tickStructureWithDestructionAndChildren);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0E5080", D_mission_overlay_800A8304);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", func_mission_overlay_800E5B38);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", npcWaterCraftHandleDestruction);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0E5080", npcWaterCraftUpdate);
 

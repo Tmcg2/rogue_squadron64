@@ -280,8 +280,6 @@ registerSaveService       = 0x8006EF98;
 triggerSaveMessage        = 0x8006F274;
 // copies game-state bytes from 0x80130B47 to working buffer at 0x80145AB0
 loadAccountDataIntoStruct = 0x8006EAAC;
-// post-level save init (medal screen path)
-postLevelSaveInit         = 0x800C06D0;
 
 // NPC update dispatcher (gNpcSlotList: 0x800-entry list, gNpcContextArray: 0xC0 NPC contexts)
 // Per docs/npc_stuff/npc_stuff.md - each NPC context has update_func ptr at +0x00
@@ -289,24 +287,6 @@ postLevelSaveInit         = 0x800C06D0;
 slotDispatcherIter        = 0x8003E8DC;
 // inner per-slot dispatch; mallocs D_80130BC0/BC4 linked list entries
 slotDispatcherInner       = 0x8003EA4C;
-// dispatches effect handlers from cinematic loop
-slotEffectHandlerDispatch = 0x800A71B8;
-
-// Cinematic timing chain
-// inner cinematic frame loop
-cinematicLoopBody       = 0x800A5D80;
-// sets state ptr at 0x800B0934
-cinematicInitializer    = 0x800AF408;
-// per-frame stage counter advance
-cinematicStageAdvancer  = 0x800AF550;
-// clears cinematic state
-cinematicDeactivator    = 0x800AF60C;
-// per-frame delta-time computer
-cinematicComputeDt      = 0x800AF360;
-// computes interpolation ratio from byte counter / float threshold
-cinematicInterpRatio    = 0x800AF668;
-// returns 1 if MEM_W(0x800B0934) != 0 (cinematic state ptr set by cinematicInitializer), else 0
-isCinematicActive       = 0x800AF540;
 
 // SI (Serial Interface / controllers)
 // controller polling thread
@@ -369,8 +349,6 @@ setDisplayMode     = 0x8008EA14;
 reapplyDisplayMode = 0x8008EB5C;
 // reconfigures audio without thread creation: initFactor5Mutex + osAiSetFrequency + initN64RspMixer. Companion to initAudioSubsystem (which adds the thread creation). 1 caller: reapplyDisplayMode.
 reapplyAudioConfig = 0x80091C88;
-// menu overlay init (calls registerSaveService)
-menuOverlayInit    = 0x800C58A0;
 
 // Misc utility
 // fills time-snapshot struct
@@ -427,8 +405,6 @@ playSongIfMusyXActive = 0x80096C88;
 processSongByHandle   = 0x800966A4;
 // predicate: if gMusyXActiveFlag set, return (HU[a0+0x8] & 0x1); leaf off the spatial-SFX side (sibling of play3DSoundEvent), NOT a voice allocator
 isAudioVoiceActive    = 0x800989B8;
-// hangar bay camera/scene update (gated hangarCameraState 0x800CC3E4==2, indexes per-bay tables by gHangarCurrentBay 0x800CD6E8); reached via LOOKUP_FUNC from func_800AAB70/func_800AAF90; calls playSongIfMusyXActive once (the bay music)
-updateHangarBayScene  = 0x800AB658;
 
 // Song-command dispatch handlers — processSongByHandle fans out to these per-slot appliers (slot table
 // base 0x80149A00 stride 0xEF8; control block slot+0xEC0..0xEF0, cmd-flag byte slot+0xEEE). 2026-06-01.
@@ -454,9 +430,6 @@ tickSongSequence  = 0x80095ADC;
 advanceSongRegion = 0x80095244;
 
 // Mission/DAT/HUD/Account renames (batches 18-22, 2026-05-11)
-// 0x8007A068 + 0x8007A0A8 are named below as getControllerStickXPercentage / getControllerStickYPercentage (defined:true variants — same fn, kept one)
-// DMAs HMT/HOB for chosen craft (per notes.txt)
-choosePlayerCraftAssets         = 0x800FB6C0;
 // craft + level → secondary weapon id
 getSecondaryWeaponForCraftLevel = 0x800C6728;
 // sets D_80111254 (unused in practice)
@@ -497,68 +470,10 @@ emitProfilerBarSegment          = 0x80023D40;
 beginFrameDLChunk               = 0x8000A8A0;
 // (cueType u8, halfword_id u16, dataPtr, positionPtr (XYZ floats), [sp+0x58]=auxId u32, [sp+0x5C]=auxFloat) — primary cue/event submitter (28 callers across game). 13-case switch on (cueType - 2) at L_8005E448 selects per-category handler; pulls a cue ID halfword from a per-player localized table at MEM_W[0x80137CE4] + (playerIdx × stride) + MEM_W[0x80129610] using category-specific offset (+0x0, +0x10, +0x20, +0x38). Builds local cue descriptor at sp+0x1C..0x30 (slot, position × global scale at MEM_W[0x80043120], cue ID). Re-dispatches through a 14-case switch on (cueType - 1) at L_8005E6D8. Gates noopHandler calls and increments counter at MEM_W[0x80130B7C] only when mute byte at MEM_BU[0x80130B39] is 0. Listener position via getPlayerField2(0).
 dispatchCueByCategory           = 0x8005E3B0;
-// (state, mode u8 [0/1/else], altState, outFloatPtr) — ticks one of 3 (raw_timer i16, norm_float, advanced_flag u8) triplets. Mode 0 → state+0x15C/+0x158/+0x161. Mode 1 → state+0x188/+0x184/+0x18D. Else → altState+0x24/+0x20/+0x29. Reads the raw timer as i16, normalizes via division by float at MEM_W[0x800A89D4] (max-range constant), then calls sister func_800F1310 (~heavy actor-state updater that transforms position and resolves NPC slot via findActiveNpcInSlotChain). Writes the normalized value back to the matching float slot; sets the "advanced" byte flag to 1 if the value changed, else 0. When `outFloatPtr` (a3) is non-null, also publishes the new normalized value (or 0 if unchanged) there. 45 callers across funcs_36..40 — primary entry for ticking per-actor animation/interp channels.
-tickProgressChannel             = 0x800F1870;
 // (outMatrix=a0, ?=a1, f20=a2 float, randomSpread i32=a3, [sp+0x70]=fixedYaw i32, [sp+0x74]=fixedPitch i32) — builds a 3D rotation matrix at outMatrix typically sp+0x10. Picks random roll in [0, randomSpread) via rand_recomp() % a3 (returns 0 if spread==0), passes to buildRotationMatrixSlot0. Picks a second random angle (raw int16) via rand_recomp(), composes via composeRotationMatrixSlot1. Then optionally composes with two fixed angles from stack: fixedYaw via composeRotationMatrixSlot0 (skipped when 0), and fixedPitch via similar (truncated). 35 callers across game — the standard "spawn-direction randomizer" for particles/debris/projectile cones.
 composeRandomRotationMatrix     = 0x8007202C;
 // (playerSlot u16, channelIdx u16, phase f32, ...) — samples a keyframed animation channel from a player slot. a0 indexes gPlayerSlotTable (0x8009FC10) to fetch player ptr. a1 indexes into the channel sub-table at player+0x34 (count u16 at +0x8, key array halfwords at +0xC, value array halfwords at +0x10). Walks all entries finding the bounding (min,max) value pair, computes interpolated result scaled by globals at MEM_W[0x8003B73C..0x8003B740]. Calls func_80063A68 per-iteration (probably the keyframe-fetch helper). Combines with player base offset at player+0x6. 29 callers — primary entry for player-anim sampling during cinematic / scripted scenes.
 samplePlayerAnimChannel         = 0x80061F34;
-// (cueType u8) — 1-line wrapper that forwards a0 to initSoundCueRequest at 0x800EFCD4. 28 callers across game (gameplay events, weapon fire, UI clicks, etc). Companion wrappers at 0x800C7D60 → func_800EF770 (named-asset trigger) and 0x800C7D7C → func_800EF95C are sister entry points for different cue subsystems.
-triggerSoundCueByType           = 0x800C7D98;
-// (cueType u8 in [0..7]) — initializes the pending audio cue config struct at MEM_W[0x8010C200]: byte +0x8 = 0x7F (volume 127/127), halfword +0x4 = (cueType==3 ? 0x1D : 0x1E) priority, halfword +0x6 = MEM_HU[0x8010B304 + cueType*2] (the actual sound asset ID), halfword +0xA = 1 (request flag), halfwords +0x10..+0x12 = 0x64 (pan center), byte +0xF = 0, halfword +0xC..0xE bytes = 0. Also raises two pending-request flags: MEM_B[0x8010C262] = 1, MEM_B[0x8010C268] = 1. Early-out (no change) when cueType >= 8.
-initSoundCueRequest             = 0x800EFCD4;
-// (state, dispatchArg, dataPtr, sharedPtr, [f24], [f25], [sp+0x7B]=byte, [sp+0x7C]=...) — top-level "fire effect" entry, 54 callers across funcs_19/36..40. Reads state+0x14C float via getEffectIntensity (returned in f0). Submits a cue via dispatchCueByCategory with the asset's halfword ID from state+0x198, the f0 intensity, and the caller's float/byte aux params. If the caller's f22 float is strictly > 0.0, additionally calls slotDispatcherIter(returnedSlot, 0xA, &localTbl) to fire the slot-A effect chain. Used as the "play SFX + spawn visual" composite trigger.
-triggerCueWithSlotEffect        = 0x800F2FCC;
-// (state) -> f0 — 2-instr leaf getter: returns f0 = MEM_W[state+0x14C] (the per-asset effect intensity float). Companion to setEffectIntensity. Used by triggerCueWithSlotEffect to read intensity before submitting a cue.
-getEffectIntensity              = 0x800F2FB4;
-// (state, intensity f32) -> v0=1 — 2-instr leaf setter: writes MEM_W[state+0x14C] = a1 and returns 1 (always success). Companion to getEffectIntensity.
-setEffectIntensity              = 0x800F2FC0;
-// (state, positionPtr, scaleA f32, scaleB f32) — 22 callers, computes a world-space position anchored to an NPC. Reads state+0x130 (npc handle u16), resolves the active NPC via findActiveNpcInSlotChain + getNpcContextByIndex to get an NPC context (ctx). If ctx+0xC (mesh-part ref) is non-null, zmemcpy's a 0x30-byte transform from ctx+0x8 into local stack, then calls transformMeshPartIntoWorld(ctx+0xC, localTransform) to place the mesh part in world space. Otherwise uses state+0x8 as the base position. Calls func_800F2AC4(state, localTransform, scaleA, sp+0x40) — final transform helper — which writes 3 floats to sp+0x40..0x48 (final world position). Returns the deltas (sp+0x40 - positionPtr[0..8]) at sp+0x10..0x18 (and stores f0 at sp+0x50). Used by effect spawners to anchor visuals to an NPC's mesh part.
-resolveNpcAttachmentPos         = 0x800F0F94;
-// (actor, intensity f32) — 23 callers, type-keyed effect dispatcher on actor type byte at actor+0x112. Type 0 → no-op (early return). Type 1 → func_800F410C(actor, intensity). Type 2 → func_800F4E74. Type 3 → func_800F538C. Type 4 → func_800F8398. All handlers take (actor, intensity) as (a0, f0). Sister functions like func_800F9AB8 use the same +0x112 type byte for related per-type operations — actor+0x100..0x118 is the per-actor effect data block (+0x104..0x106 bytes, +0x108 word, +0x10C float intensity, +0x110 flags halfword, +0x112 type, +0x113..). Read state+0x110 flags via updateObjectFlags110.
-dispatchEffectByActorType       = 0x800F9A14;
-// (actor, angle1 f32, magnitude1 f32, angle2 f32, [sp+0x50]=magnitude2 f32) — 19 callers, initializes actor's motion/velocity parameter block at actor+0x114..+0x137 from 2 (angle, magnitude) pairs. Multiplies each angle by deg-to-rad scale at MEM_W[0x800A89EC] then passes to cosf_recomp. Multiplies each magnitude by scale at MEM_W[0x800A89F0]. Writes (cos1, mag1*scale, cos2, mag2*scale) into actor+0x114/+0x118/+0x11C/+0x120. Adds random ±8-step jitter (rand_recomp % 17) scaled by MEM_W[0x800A89F4] at actor+0x124. Resets state bytes: actor+0x135 = 1 (motion-active flag), +0x136 = 0, +0x137 = 0. Used by effect spawners to initialize particle/projectile motion from polar inputs.
-initActorMotionParams           = 0x800F2888;
-// (actor, srcXform, scale f32, mode, [sp+0x68]=outFloatPtr) — 11 callers, Euler integration wrapper around tickProgressChannel. zmemcpy's a 0x30-byte transform from a1 into local at sp+0x10. Reads velocity at local+0xC/+0x10/+0x14, integrates: local+0x0..+0x8 (position) += velocity × scale. Then forwards (actor, mode, local, outFloatPtr) to tickProgressChannel — when mode != 0/1, the function reads timer/norm/flag from this integrated local-state's +0x24/+0x20/+0x29 fields. Returns the tick result byte from tickProgressChannel.
-stepAndTickProgressChannel      = 0x800F2F10;
-// (actor, intensity f32, byte0 u8, byte1 u8, [sp+0x10]=byte2 u8, [sp+0x14]=param u32) -> v0 — 12 callers, type-guarded setter for the type-1 actor extended params block. Reads actor+0x112; if != 1, returns 0 immediately (type mismatch). On match (type == 1): writes intensity to actor+0x10C, byte0/1/2 to actor+0x104/+0x105/+0x106, param to actor+0x108. Returns 1 on success. Sister to dispatchEffectByActorType — operates on the same +0x112 type byte but is the WRITER for the type-1-specific +0x104..+0x10C block (vs. the dispatcher which is the type-keyed READER/INVOKER).
-setType1ActorParams             = 0x800F9AB8;
-// (actor, target f32, floor f32, duration f32, [sp+0x13]=channel u8) — 7 callers, type-1-guarded animation ramp updater. Returns immediately if actor+0x112 != 1. Selects between two parallel ramp channels at actor+0x48..+0x50 vs actor+0x50..+0x58 based on the channel byte (channel == 1 → actor+0x48 base, else → actor+0x50 base via a0 += 8). Per-channel layout (currentValue, delta, targetValue): writes scaled target, clamps to floor, recomputes delta. When delta > 0 also writes target to channel+0x10 and 1/duration to channel+0x14 (the inverse-duration speed). Otherwise rolls current = target and rescales actor+0x2C by MEM_W[actor+0x24]+0x24.
-updateType1AnimRamp             = 0x800F9B34;
-// (actor, intensity f32) — type-1 actor effect executor, dispatched from dispatchEffectByActorType when actor+0x112 == 1. ~600-instr handler (stack 0x1A8). Reads actor+0x198 (cue id) → getNpcContextField8 to get NPC ref. Reads actor+0xD8/+0xDC/+0xE0 (a base position triplet) and stages it on the stack. Reads s5+0x104 = actor+0x10C (type-1 intensity from setType1ActorParams) and gates further work on whether it's non-zero. The remainder is type-1 specific effect rendering / state update.
-executeActorType1Effect         = 0x800F410C;
-// (actor, intensity f32) — type-2 effect executor, dispatched from dispatchEffectByActorType. Stack 0x88. Same prologue as type-1 (reads actor+0x198 → getNpcContextField8 → NPC ctx in s3). Reads ctx+0x24 (likely a scale/distance ref) and ctx+0x0 (position). Diverges from type-1 with shorter / position-update-focused body. 1 caller (only invoked via the dispatcher).
-executeActorType2Effect         = 0x800F4E74;
-// (actor, intensity f32) — type-3 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as type-1/2.
-executeActorType3Effect         = 0x800F538C;
-// (actor, intensity f32) — type-4 effect executor, dispatched from dispatchEffectByActorType. 1 caller. Same +0x198 NPC-context prologue as the other Type{N} impls.
-executeActorType4Effect         = 0x800F8398;
-// (actor, a1 f32, a2 f32, a3 f32) — type-1-guarded setter. Returns 0 silently if actor+0x112 != 1. On match: writes (a1 × MEM_W[0x800A8F50]) to actor+0x68, (a2) to actor+0x84, (a3) to actor+0xD4. All offsets are relative to actor+0x8 base. Velocity-style 3-component setter for type-1 actors.
-setType1ActorVelocity           = 0x800F97B4;
-// (actor, value f32) — type-1-guarded swap of actor+0x40 float. If actor+0x112 != 1: returns 0. Else: reads old MEM_W[actor+0x40] into f0 (return), writes new value (a1) to actor+0x40, returns the old value.
-setType1ActorField40            = 0x800F97F4;
-// (actor, parent_ref u32, init_f f32, init_f2 f32) — converts an actor into a type-2 actor: sets actor+0x112 = 2, then reads actor+0x198 (cue id), looks up via getNpcContextField8 to get NPC context, copies its position (ctx+0xC/+0x10/+0x14) into actor+0x8/+0xC/+0x10. Zero-initializes a 0x25-byte block at actor+0x18..+0x3D (the type-2 extended state — float fields at +0x1C/+0x20/+0x24/+0x28/+0x2C all set to 0). Writes a3 (init_f2) → actor+0x14, a2 (init_f) → actor+0x18, actor+0x1C/+0x20/+0x24, a1 (parent_ref) → actor+0x38, zero bytes at actor+0x3C and +0x3D. Returns 1.
-initActorAsType2                = 0x800F981C;
-// (actor, a1 f32, a2 f32, a3 f32) — sister to setType1ActorVelocity for type 2. Returns 0 if actor+0x112 != 2. On match: writes the 3 floats into actor+0x8+0xZZ offsets (similar layout to type-1 variant; sister handler for type-2 actors).
-setType2ActorVelocity           = 0x800F98CC;
-// (actor) -> f0 — 3 callers, type-polymorphic getter returning the actor's "current value" float based on actor+0x112: type 1 → MEM_W[actor+0x50] (the type-1 ramp current from updateType1AnimRamp), type 4 → MEM_W[actor+0x28] (type-4 storage offset). Returns 0.0 for any other type. Used by external readers that don't care about which type-specific storage the actor uses.
-getActorCurrentValueByType      = 0x800F9BEC;
-// (actor, a1 f32, a2 f32, a3 f32, [sp+0x10]=p4 f32, [sp+0x14]=p5 f32) -> v0 — type-3-guarded setter. Returns 0 if actor+0x112 != 3. On match (a0+8 base): writes 0 to base+0x18, a1 → base+0x24 (actor+0x2C), a2 → base+0x28 (actor+0x30), a3 → base+0x1C (actor+0x24), p4 → base+0x20 (actor+0x28), p5 → base+0x2C (actor+0x34). Returns 1. The 5-float type-3 extended-state setter (block layout at actor+0x24..+0x34).
-setType3ActorParams             = 0x800F99C8;
-// (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 15 callers, comprehensive type-1 initializer. Sets actor+0x112 = 1, stores src ptr at actor+0x2C, copies src+0x1C → actor+0x8 (id field), src+0x20 → actor+0xC. Computes actor+0x10 = src+0x20 + src+0x1C * 12 (stride-12 array index). Zeroes the ramp channels at actor+0x4C/0x50/0x54/0x60 etc. Initializes ramp constants: actor+0x24 = MEM_W[0x800A8F2C] (1.0 float?), actor+0x48 = actor+0x50 = target (a2), actor+0x2C = target / src+0x24 (rate). Clamps actor+0x30 = duration × rate against MEM_W[0x800A8F2C]. If src+0x28 ptr is non-null, reads src+0x2C[0] → actor+0x40 (color/scale lookup); else uses default MEM_W[0x800A8F30]. Companion to initActorAsType2.
-initActorAsType1                = 0x800F947C;
-// (actor, src, target f32, duration f32, [sp+0x40]=initFloat f32, ...) — 1 caller. Nearly-identical variant of initActorAsType1 (same field layout, same ramp/duration math) but after the base init, additionally calls getNpcContextField8(actor+0x198) to fetch NPC ctx, then func_800662A0(actor+0x8, src+0x10, npcCtx, actor+0xC, actor+0x30) to apply an NPC-anchored transform/position setup. Use the variant when the actor needs world-space positioning from the NPC anchor; use the bare initActorAsType1 when caller will handle positioning itself.
-initActorAsType1WithAnchor      = 0x800F9674;
-// (actor, parent_ref u32, init_f f32, init_f2 f32) — 1 caller, sister of initActorAsType2. Sets actor+0x112 = 3, reads actor+0x198 → getNpcContextField8 → NPC ctx, copies ctx+0xC/+0x10/+0x14 (NPC pos XYZ) into actor+0x8/+0xC/+0x10. Zeroes the 0x25-byte extended state at actor+0x18..+0x3D. Writes init_f2 → actor+0x14, init_f → actor+0x18, parent_ref → actor+0x38, zero bytes at +0x3C/+0x3D. Returns 1. Almost identical to initActorAsType2 except for the type byte value.
-initActorAsType3                = 0x800F9918;
-// (actor, assetName ptr u32, ...) — 4 callers. Sets actor+0x112 = 4, then if assetName+0x0 is non-null: looks up the named DAT item via getLevelDatItemByName, validates result, branches on the item's byte at +0x2 (== 6, == 7, etc.) into format-specific paths. Sets actor+0x58 (= s2 = actor+0x50+0x8) for further setup. The type-4 actor variant is asset-name-driven (different from types 1-3 which are NPC-anchored). Likely used for spawning level-defined effects/objects by name.
-initActorAsType4                = 0x800F5A30;
-// () — gates on MEM_BU[0x8010C9F0] (request counter, must be 0 = idle); calls isSpeechBusyOrQueued. If speech is busy/queued: writes MEM_B[0x80130B14] = 2 (response-mode 2), OR's MEM_W[0x8010C9E0] with 0x1 (request-pending bit), increments MEM_B[0x8010C9F0] (counter). Sister of requestSpeechResponseMode1 — same shape, different mode value.
-requestSpeechResponseMode2      = 0x800FBAE8;
-// () — sister of requestSpeechResponseMode2; identical shape except writes MEM_B[0x80130B14] = 1 (response-mode 1) instead of 2. Same idle-counter gate, same isSpeechBusyOrQueued check, same pending-bit and counter increments.
-requestSpeechResponseMode1      = 0x800FBB44;
-// (actor) — 2 callers, type-1-guarded short reset. Returns immediately if actor+0x112 != 1. Else writes MEM_W[actor+0xFC] = 0 and MEM_W[actor+0x100] = MEM_W[0x800A8F54] (constant float, likely default "rate" or "alpha"). Pairs with setType1ActorParams (which writes the broader +0x104..+0x10C block) but resets just the +0xFC/+0x100 pair.
-resetType1FxFields              = 0x800F9B0C;
 // (channel, programPtr=0x80130CC0) — MusyX sequencer command-0x40 handler (decimal 64) dispatched from tickAudioChannel. Pushes one event into the channel's event ring at channel+0xC0 (4-byte entries, max 4 entries gated by counter at channel+0xD0). Each entry: byte+0 = MIDI status (0x80/0x82/0xA0/0xA1/0x83/0x84 selected from 6-entry sub-switch on the program byte's mid nibble), byte+1 = src+0x4, halfword+2 = src+0x0 scaled by a fixed-point quotient. Ring entry counter clamped to <4. Also OR's flag 0x100000 (bit 20) into channel+0x24 if the program byte+0x7 is zero. Companion ring to the other 6 seqCmd handlers (each writes a different ring on the channel).
 seqCmdHandler40                 = 0x8008B33C;
 // (channel, programPtr) — MusyX cmd-0x41 (decimal 65). Writes to the event ring at channel+0xD2, counter at channel+0xE2.
@@ -575,24 +490,6 @@ seqCmdHandler45                 = 0x8008B7EC;
 seqCmdHandler46                 = 0x8008B8DC;
 // 3 callers, per-frame audio sequencer driver: zeroes 4 frame counters (MEM_W[0x80140448], +0x80140458, +0x8013F03C, +0x80140454). Reads global tempo from MEM_W[0x80142038]; if non-zero, computes samples-per-tick via `(tempo × 0x7C × 0x100) / MEM_W[0x801440C0]` (the tempo divisor), shifts left 3, and stores result to MEM_W[0x8014ACC8] (the per-tick sample budget consumed by tickAudioChannel's +0x40 counter). Then calls tickAllAudioChannels to advance every active channel's sequencer one tick.
 tickAudioSequencerFrame         = 0x8008D960;
-// (parent, x i16, y i16) — 10 callers. Sign-extends a1/a2 from 16-bit, converts to float, writes the floats to MEM[parent+0xC]+0x18 and +0x1C respectively. Companion to getStructField0xC at 0x800B3D08 (the trivial getter for parent+0xC ptr). Used to set a sub-struct's 2D position fields from integer screen-space coords — likely HUD / UI / 2D-overlay positioning.
-setChildPosFromI16Pair          = 0x800B3CD4;
-// service-worker tick handler. Loops: recvServiceMessage(workerKey) (blocking) → process result msg s3 via func_800B2630(msg+0x14, msg+0x18, workerKey). Then walks msg+0x14 → +0x8 chain doing sprintf_recomp formatting (uses global format string at MEM_W[0x800A5C40] as fmt arg) into local stack buffers at sp+0x52 and sp+0x84+0x2. Registered at priority 5 by initFormatMessageWorker.
-tickFormatMessageWorker         = 0x800B3650;
-// (priorityOverride u8) — registers + starts the tickFormatMessageWorker via registerServiceWorker(8 msgSlots, 0x800 stack, priority, &tickFormatMessageWorker). Stores returned worker ID at MEM_W[0x800CC854] and the same value at MEM_W[0x800CC858] (registry handle). Then calls startServiceWorker to launch the thread. Both callers pass priorityOverride = 5.
-initFormatMessageWorker         = 0x800B3EB8;
-// unregisters the format-message worker thread. Reads stored handle from MEM_W[0x800CC858] and calls unregisterServiceWorker(handle).
-shutdownFormatMessageWorker     = 0x800B3F00;
-// (parent, member) — disposes a queue member's allocated buffers. If parent+0x1C flag bits 0x6 are set: rs_free(member+0x3C) and func_800C6DBC(member+0x70) (alternate-format buffer). Always: rs_free(member+0x38) and func_800C6DBC(member+0x6C) (primary buffer). Cleanup helper used when removing a member from the format-message queue.
-disposeFormatMsgQueueMember     = 0x800B3E5C;
-// (scene) — 9 callers, scene cleanup. If scene+0x1CC (NPC slot chain head u16) != 0xFFFF: loops calling getNextSlotNpcTypeId(slot) then destroyNpcSlotByIndex(slot) until type == 0xFFFF, then destroyNpcSlotChain(slot), then resets scene+0x1CC = 0xFFFF. If scene+0x24C (active byte) is non-zero: clears it and calls factor5RemoveListNode(scene+0x208) to unlink the scene from its parent list. Used by mission/objective scenes when shutting down (mission complete, fail, restart).
-destroySceneNpcsAndUnlink       = 0x800B4134;
-// (config, triggerSpec) — 9 callers, guarded 3D sound trigger. Multiple gates: global mute at MEM_BU[0x80138838], system mute at MEM_BU[0x80138926], per-player level flag at MEM_W[0x80130B40 + config+0xB8 * 4]+0xC bit 0x800000, per-player NPC flag at gPlayerSlotTable[playerIdx]+0x184 bits 0x78. When all gates pass AND triggerSpec+0x8 != 0: calls play3DSoundEvent with (sound=0, pos=config+0x4, alt=config+0x28, maxDist=24.0f, distScale=MEM_W[0x800A57BC], vol=0x7F, ?=0x1B, ?=0x5A). Used as the "play gated 3D effect sound" entry by various weapon/explosion/impact events.
-tryPlaySpatialSoundWithGates    = 0x800B3A10;
-// (scene) — if scene+0x1C0 (queue handle u32, sentinel -1 = empty) is not -1: calls func_80002BA8(handle) to cancel/release the handle and resets scene+0x1C0 = -1. Companion to enqueueFormatMessage which would have populated +0x1C0 with an active handle. Used when shutting down a scene that has a pending format-message request.
-cancelSceneQueueHandle          = 0x800B3F0C;
-// (token u32, string ptr) — PRODUCER side of the format-message queue. Allocates a 0x60-byte queue member via rs_malloc, rs_memsets to 0. Fills: member+0x14 = token (a0, scene-correlation id), member+0x58 = MEM_W[0x80139920] (current state global), member+0x5C = MEM_W[0x800CC854] (the worker's registration ID — same one initFormatMessageWorker stored). rs_strcpy's the input string (a1) into member+0x18 (the queue member's string buffer). Then sendServiceMessage(workerKey=MEM_W[0x80139920], handle=MEM_W[0x800CC858], member, 0) to enqueue. The tickFormatMessageWorker thread will pick up the member, process the string, and call disposeFormatMsgQueueMember to free buffers when done.
-enqueueFormatMessage            = 0x800B3F24;
 
 // Level 3 objective handlers (funcs_44, in cluster with lv3_initializeObjectTracking + lv3_checkComplexObjectives)
 // level-3 mission start: setObjectiveBoolean(0xB, 1), setObjectiveBoolean(0xC, 1), setHudFlagBit40AndStoreArg, plays 7 intro voice lines (0x1E8, 0x1E6, 0x156, 0x8D, 0x1, 0x13D, 0x8E), schedules 4 mission timers (15.0s/16.0s/20.0s/6.0s), setObjectiveBoolean(0x6F, 0). The mission-start initializer for level 3.
@@ -902,10 +799,6 @@ runDialogueSeq_2B4_142_1E6_11A = 0x80108D1C;
 // Misc 2-primitive wrappers
 // submitDmaSlot + waitDmaSlotComplete — synchronous DMA helper
 synchronousDmaTransfer  = 0x80005200;
-// registerServiceWorker(prio=4, qsz=0x800, tick=tickSongAssetLoadWorker) + startServiceWorker; stores handle at gSongAssetLoadWorkerHandle
-initSongAssetLoadWorker = 0x800C57CC;
-// Service worker tick: recvServiceMessage + parseLoadedSndSection + loadSongAssetByName — loads sequenced sound assets on demand.
-tickSongAssetLoadWorker = 0x800C5834;
 
 // Other thin wrappers (each is a 23-line wrapper around one named callee with hardcoded constant arg)
 // wrapper: triggerSoundCueByType(5) — fires sound cue type-5 from a specific call site (lv3).
@@ -984,40 +877,20 @@ unlinkTextureMaterialList        = 0x80021F78;
 tickAudioChannel                 = 0x8008BC10;
 // iterates 0x17C-stride active-channel array at 0x8013D880 (count at byte 0x80141AD0), calling tickAudioChannel for each populated slot. Outer MusyX sequencer tick.
 tickAllAudioChannels             = 0x8008C9AC;
-// big menu controller input handler (0x38E4 bytes); 0x800B47C4 is fake_func splat trampoline preceding it (per docs/menus + controller)
-menuControllerInput              = 0x800B47D0;
-// sets up D_800CE730 per current menu
-setupMenuData                    = 0x800BA0F0;
-// per-frame menu update (highlighting etc)
-updateMenuPerFrame               = 0x800BB394;
-// game settings menu input handler
-handleGameSettingsMenu           = 0x800BB234;
-// sets secondary weapon type/level fields in HUD struct
-setHudSecondaryWeaponInfo        = 0x800BFDC4;
 // initializes 0xF80-byte HUD struct
 initHudStruct                    = 0x800C0084;
 // parses DAT file Type 0 (spawn positions)
 parseDatSpawnPositions           = 0x80065790;
-// parses DAT file Type 7 (events)
-parseDatEventTriggers            = 0x800AA870;
 // sets up NPC update function pointers (DAT Type 6)
 setupNpcUpdateFunctions          = 0x800653B4;
 // mallocs gNpcContextArray (0xC0 × 0x3C) + gNpcContextArrayPtrs
 allocNpcContextArrays            = 0x8003FD54;
-// reads account data for account selection screen
-readAccountForSelectionScreen    = 0x800B85B4;
 // returns D_8013A5C0_type.unk50 (active account bitmask)
 getActiveAccountsBitmask         = 0x8006E8AC;
 // returns D_8013A5C0_type.unk51
 getAccountUnk51                  = 0x8006E8BC;
 // parses byte-packed account data (medals etc)
 parseAccountDataBytes            = 0x8006EB48;
-// Elite Rogues highscore screen handler
-eliteRoguesMenuHandler           = 0x800BEA00;
-// mallocs/inits controller settings UI structs
-initControllerSettingsStructs    = 0x800BCE2C;
-// controller settings menu screen handler
-controllerSettingsScreen         = 0x800BD274;
 
 // Save subsystem + asset DMA + craft selection (batch 23)
 // initializes the memory pack
@@ -1034,20 +907,10 @@ getAccountDataPtr            = 0x8006EE5C;
 setupAssetDma                = 0x80004E70;
 // teardown for asset-loading DMAs
 teardownAssetDma             = 0x80004C70;
-// rs_malloc's D_800CDA5C craft selection structs
-mallocCraftSelectionData     = 0x800A9364;
-// builds secondary weapon string for craft selection display
-buildSecondaryWeaponString   = 0x800AE530;
-// prints weapon/shield text on level select screen
-printLevelSelectWeaponText   = 0x800B19EC;
-// returns u32 of available ships per level
-getAvailableShipsForLevel    = 0x800C63C0;
 // sibling of getAvailableShipsForLevel; differs in some minor ways, also returns a u32 bitmask of craft available for given level (per docs/unsorted_thoughts)
 getAvailableShipsForLevelAlt = 0x800C6234;
 // (idx 0..7) — 8-way switch returning 0/1: tests per-craft availability against gGameSettings.flags + per-level table at 0x800A05D0 (stride 0x30). Called from func_8006B000 etc.
 isCraftAvailableByIdx        = 0x8006B180;
-// rs_malloc's voice-line related struct for craft selection
-mallocVoiceLineStruct        = 0x800CBF60;
 
 // Batch 24: docs-driven (asset/dma/snd/animation subsystems)
 // handles overlay-DMA struct (src/dest/sizes + BSS zero-fill) per docs/unsorted_thoughts
@@ -1068,16 +931,6 @@ readControllerInputs          = 0x80079F20;
 parseModelAnimType2Entry      = 0x80083468;
 // parses SND file sections (pool/proj/sdir) per docs/snd_files
 parseSndFiles                 = 0x80097518;
-// craft-selection voice-line helper (D_800CC4F8 lists) per docs/unsorted_thoughts
-craftSelectionVoiceLineHelper = 0x800AE264;
-
-// Batch 25: menu subsystem
-// ~0xF18B handler for menu sub-type 02 per docs/menus
-menuSubtype02Handler = 0x800C30C8;
-
-// Batch 26: cinematic helpers
-// calls slotDispatcherIter for each active cinematic slot index (read from 0x80139560)
-cinematicSlotBatchDispatch = 0x800A70E4;
 
 // Batch 27: audio / HMT
 // calls initFactor5Mutex + osAiSetFrequency + creates audio thread/mq/event; called from setDisplayMode
@@ -1137,10 +990,6 @@ yieldFromSpThread     = 0x8001A018;
 // tiny osYieldThread wrapper (called twice mid-submitGfxFrame)
 yieldFromGfxFrame     = 0x8001A038;
 
-// Batch 33: cinematic asset init
-// cinematic asset loader (mallocs, registerHmtTextureInTable); called by cinematicInitializer
-initCinematicSceneAssets = 0x800AE518;
-
 // DAT-file LOD bounding box markers — per docs/dat_files/load_level_dat.c.
 // Both convert (x_min, x_max, z_min, z_max) world coords to grid cell indices
 // (subtracting world origin at *(0x80136DE0) and multiplying by inverse cell size).
@@ -1153,43 +1002,11 @@ markHighLodCellsInGrid = 0x80043C30;
 // (meshdef1_ptr, 0, 0) — called during load_hmt_and_hob per docs/hob_files; checks meshdef1->+0xC bit 0x80000, reads distance at +0x1C, applies LOD scaling using globals at 0x80125ECC and 0x800006A0/A4. Iterates through meshdef1 linked list during HOB load.
 processMeshdef1ForLod  = 0x80014DE0;
 
-// Menu-entry / overlay helpers (children of menuOverlayInit per call-graph analysis).
-// (ctx_out, craft_idx_byte, _, _) — calls getAvailablePlayerCraftFlagsConsiderUnlocks + hangarInitialize, then polls func_800AAD9C in a loop until !=0xFFFFFFFF (user selection), calls gracefulMenuShutdown, stores selection in ctx_out+0x1, returns 0/1. Wraps the hangar selection flow when entered from a menu overlay.
-runHangarMenuFromOverlay = 0x800C6854;
 
-// NPC destruction handlers — share signature pattern: spawnDebris1Npc + spawnNpcType0xAFromTemplate
-// + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange + play3DSoundEvent.
-// Pattern matches across major destructible NPC types (AT-AT, water craft).
-// (1316 lines) AT-AT destruction: spawns debris/Type-0xA NPCs with random orientations + plays 3D sound. Exclusively called from npcAtAtUpdate.
-npcAtAtHandleDestruction       = 0x800CCC98;
-// (1174 lines) Water craft destruction handler: same spawn-debris + random + sound pattern as npcAtAtHandleDestruction. Exclusively called from npcWaterCraftUpdate.
-npcWaterCraftHandleDestruction = 0x800E5B38;
 
-// Additional NPC destruction handlers — same signature pattern (spawnDebris1Npc
-// + spawnNpcType0xAFromTemplate + spawnOrientedNpc + rand_recomp + scaleVec3ByRandomRange),
-// each exclusively called from its parent NPC update after unregisterAndFreeNpcSlot.
-// (849L) AT-ST walker destruction. Caller: npcAtStUpdate.
-npcAtStHandleDestruction           = 0x800CF898;
-// (931L) Imperial Shuttle destruction. Caller: npcShuttleUpdate.
-npcShuttleHandleDestruction        = 0x800D33CC;
-// (1082L) TIE variant destruction. Caller: npcTieVariantUpdate. Called after unregisterAndFreeNpcSlot + popNpcSlotFromTail.
-npcTieVariantHandleDestruction     = 0x800DAB98;
 // (1185L) Power generator destruction. Caller: npcPowerGeneratorUpdate. Called immediately after releaseMeshAsset.
 npcPowerGeneratorHandleDestruction = 0x8007636C;
 
-// Mission/level-end cleanup — calls calculateFriendliesSaved, resetSpeechSubsystem,
-// finalizeCurrentSpeechBuffer, freeAllHobFiles, freeTxtFile,
-// reset_and_free_model_animations, waitForAnyAudioSlot. Reads timer at
-// 0x80130BA4 and game-state constants. Called from mainGameLoop at mission end.
-// (234L) main-loop child
-endMissionCleanup = 0x800FB9E4;
-
-// Cinematic dispatch from main loop. Scans 16-byte slot status array (a0[0..15])
-// for cinematic phase states (categories <3, <2, ==0), sets aggregate state byte
-// at 0x800B0B1E, then conditionally calls cinematicLoopBody. The "should a cinematic
-// run this frame?" gate driving the cutscene system from mainGameLoop.
-// (139L) main-loop child
-dispatchCinematicFromMainLoop = 0x800AE878;
 
 // Initialize all 12 player slots. Iterates gPlayerSlotTable[0..11] and for
 // each slot pointer: zeros fields +0x20, +0x24, +0x28, +0x2C, +0x30, +0xEC,
@@ -1305,13 +1122,6 @@ isMusyXActive = 0x8008ED5C;
 // Star Wars walker NPCs (AT-AT, World Devastator, etc.) use a shared leg-stride
 // animation primitive driven by a phase counter at npc+0x6D.
 
-// AT-AT-specific leg-stride update. Called from npcAtAtUpdate ONCE per frame
-// when a float condition is met (after incrementing npc+0x6D step counter).
-// Calls lookupHmtTextureByName("0x800A6DCC", npc.assetData, ..., stride_buf)
-// to fetch the next stride keyframe, then computeWalkerLimbStrideTargets to
-// derive 3 vec3 outputs (likely left foot, right foot, body offset). Scales
-// each by global at *(0x800A6EC8).
-updateAtAtLegArticulation = 0x800CD558;
 
 // Shared walker leg-stride target computer (2 callers: AT-AT and World
 // Devastator). Args: (npcIdx u16, &posBuf out, &outBuf1 out, &outBuf2 out,
@@ -1328,29 +1138,7 @@ computeWalkerLimbStrideTargets = 0x8007602C;
 // end-of-stride foot-target positions for one limb cycle.
 transformLimbStrideAnchorsLocal = 0x80074B74;
 
-// Main AT-AT body transform updater (1473 lines, 51 named calls including
-// buildRotationMatrixSlot0/1, mat34CrossRowsAndCopyPos, factor5RemoveListNode,
-// getObjectMeshTransformOrLocal, isPendingChildNpcActive). Called twice from
-// npcAtAtUpdate per frame on alternative branches — the heavy per-frame body
-// pose update applying orientation, mesh transforms, and child-segment
-// management. Args: (npc s1, f22=animation_scale_float).
-tickAtAtBodyTransform = 0x800CC2AC;
 
-// Per-frame round-robin sub-feature processor. Each call builds a 3-char
-// asset name "sf" + (npc[+0x6E] + '1') on the stack and looks it up via
-// lookupHmtTextureByName, then findActiveNpcInSlotChain on the result.
-// Counter byte at +0x6E advances frame-by-frame to cycle through child
-// segments (likely 4 AT-AT legs as "sf0" through "sf3", or similar
-// numbered sub-meshes). Single caller: npcAtAtUpdate.
-processAtAtSubFeatureSlot = 0x800CCB1C;
-
-// AT-AT footstep/weapon audio + state update. Reads NPC weapon fields
-// at +0x7C, +0x78; calls func_80082EA0 + func_80082CFC; triggers
-// play3DSoundEvent; updates NPC state fields at +0xE7 (byte), +0xF0/+0xF4
-// (floats, likely cooldown timer), +0x90 (byte). Called BEFORE the body
-// transform pass each AT-AT update — likely the footstep thud or weapon
-// fire sound trigger synchronized to the +0x6D phase counter.
-tickAtAtAudioAndWeaponState = 0x800CC9B8;
 
 // Model animation runtime slot table (32 slots × 20-byte stride at 0x80139AA0).
 // Each slot stores: +0x0 active byte, +0x4 entry count, +0x8 secondary table ptr.
@@ -1517,15 +1305,6 @@ clearVec4QuadStruct  = 0x8001CA50;
 // 32-iter frame loop + load+init save data; AVs ~iter 1023 (post-cinematic)
 runIdleFramesAndLoadSaveData         = 0x8006D900;
 
-// Cinematic slot interpolation (called by cinematicLoopBody iter).
-// Walks a slot table at offset 0x13D8 within a struct, stride 76 bytes per
-// entry, calling cinematicSlotUpdate on each. Used during cinematic to
-// advance per-slot state machines (object position, fade, particle).
-// per-slot cutscene math: reads gCutsceneInfo[0x44] (frame counter), interpolates value/a3, multiplies by a2
-cinematicSlotUpdate     = 0x800A6904;
-// iterates over slot table (idx*76+0x13D8), calls cinematicSlotUpdate on each
-cinematicSlotDispatcher = 0x800A76B8;
-
 // Batch 38: per-frame camera + pre-load game-state reset + HUD/asset helpers (2026-05-11)
 // setupCameraMatrices is the 5th call in each game-screen handler's per-frame
 // primitive sequence (after pollControllerInputs / frameStartReset etc).
@@ -1553,8 +1332,6 @@ submitSceneNodeRender       = 0x80010014;
 resetGameSettingsAndMissionStats     = 0x8006E53C;
 
 // HUD + asset helpers (cross-referenced with sister-repo docs)
-// 4-pass minimax: finds index of corner element (top/bottom/left/right) over 8B-stride array; sets bounding rect in arg0 (see docs/hud_stuff/func_800BFEA0.c)
-findHudElementExtremes = 0x800BFEA0;
 // returns "planet" asset id for text-crawl pan-down (per docs/unsorted_thoughts/func_800C6900.c) — 0xFF for levels without text crawl
 getPlanetAssetForLevel = 0x800C6900;
 
@@ -1796,8 +1573,6 @@ lv9_setObjectiveBoolean_0x78         = 0x80105AE0;
 lv9_progressWithDialogueA            = 0x80105F48;
 // playObjectiveVoiceLine1(0x21D) + increaseObjectiveCount(0x63, 1). Sister of lv9_progressWithDialogueA — same obj id, different voice.
 lv9_progressWithDialogueB            = 0x80105F98;
-// NPC slot handler (per project_npc_handler_protocol.md) sitting directly after runHangarMenuFromOverlay. Action 1 (spawn): rs_malloc(0x1E8), reads vec3 pos from a2, getPlayerVehicleId(), looks up mesh via walkMeshdef0List using vehicle-id table at 0x8010A0FC, clearVec4QuadStruct on slot+0x28, popNpcSlotFromTail with prev-slot-id from MEM[0x80139574], applyFlagsToMeshTreeOrList, stores singleton ptr at MEM[0x8010C090]. Displays the player's currently-selected craft in the hangar.
-hangarVehicleDisplayNpcHandler       = 0x800C68A0;
 
 // Batch 52: asset loader + render state init + table lookup (2026-05-11)
 // Solid utility renames discovered while mapping out HOB subsystem.
@@ -1861,8 +1636,6 @@ allocAllInitialNpcSlots            = 0x8005C5D0;
 initPlayerMissionStateFromSettings = 0x8006E9E4;
 // sets init flag at 0x80138260; for player vehicle slot at 0x80138D18 (stride 0x144): zeros byte 0, writes link ptr to parallel data block at 0x80138268+i*0x5D0, copies default vec3f from constants and 16-byte template from MEM[0x8009DEE0]. Sets head ptr at 0x80138894. On first init (flag 0→1), also reads boot-config screen w/h via getBootConfigField12/14 and stores at +0x10/+0x14/+0x18/+0x1C of data block. Called from initMission.
 initPlayerVehicleStateTables       = 0x8004FFA8;
-// per-frame from every playerXxxUpdate: iterates 2 player slots in the 632-byte-stride table at 0x8010CA30; switches on state byte +0x0 (cases 1..8) to clear transient flags (+0x1, +0x210, +0x211 for states 3/8; just +0x1 for states 1/2/4/5; skip for 6/7). Then sets float at +0x24 to default speed (const at 0x800A4404) if getPlayerVehicleId(0) is non-zero OR func_800B585C(0) is non-zero; else 0.
-resetTransientPlayerStateFlags     = 0x800FED40;
 // per-mainGameLoop-frame: reads currentLevel from gGameSettings+0x0, indexes 48-byte-stride table at 0x800A05D0; copies 3 halfwords (offsets +0x4/+0x6/+0x8) shifted <<10 to global block at 0x80037590 (+0x30/+0x34/+0x38). Sets screen w/h based on gGameSettings.flags bit 0 (hi-res = 512×448 at +0x12/+0x14, plus 0x40 at +0x44; lo-res = 320×224, 0 at +0x44 if expansion-pak byte +0x23 is 0).
 applyLevelScreenAndCameraSettings  = 0x8006B000;
 // per-mainGameLoop-frame: copies bits 9..22 (mask 0x007FFE00) of gMissionState+0x8 (at 0x80130B18) into gGameSettings+0xC (at 0x80130B4C), preserving the other bits. Keeps the gGameSettings unlock-flags field in sync with runtime mission progress. Companion to unlockMissleUpgradeOnLevelCompletion which sets specific bits in that same field.
@@ -1895,8 +1668,6 @@ unlinkMusyXListNode                = 0x80099310;
 isPointXzWithinRangeOfRef          = 0x80047DAC;
 // (npc) — selects "active reference point" per scene state: (1) cinematic camera if scene byte 0x80130B39 nonzero (calls func_800AEA18); (2) fixed point 0x801375F8 if bit 3 of 0x8010CA1C set; (3) player slot 0 (func_8006C8F0) otherwise. Forwards (ref, npc) to isPointXzWithinRangeOfRef. Called by 25+ NPC update funcs to gate distant-NPC simulation.
 isNpcWithinActiveReferenceRange    = 0x80047D40;
-// (npc) — per-tick train car state machine: decrements byte +0xFC counter, when expired clears advance-flag at +0xFD and advances state from per-NPC table at npc+0x34. State table format selected by byte +0xB2: if 0 uses fields +0x134/+0x138, if non-zero uses +0xD4/+0xD8 offsets. Returns early if +0xFD already set or counter still > 0. Called by npcTrainCarUpdate.
-tickTrainCarStateMachine           = 0x800E1E1C;
 // 60 callers: f12 = input angle; subtracts global cycle-start at 0x80136DE0; if <0 wraps by adding range (modulo-style); if >=cycle-end-at-0x80136DE4 wraps too. Returns wrapped value in f0.
 wrapAngleToCyclicRange             = 0x80067D90;
 
@@ -1942,16 +1713,6 @@ setPlayerSlotAnimationFlag = 0x80063CFC;
 activateAnimationKeyframe  = 0x80061C74;
 
 // Batch 62: HUD enable-bit setters + screen-state gate (2026-05-11)
-// HUD flag bits at MEM_W(0x8010CFE0). Each setter OR-s a bit into the flags.
-// Gated by zero check at 0x8010CA20 (probably the "HUD active" master toggle).
-// Bits found so far: 0x4, 0x8, 0x40. Each likely controls a specific HUD element
-// (player score, secondary weapon, debug info, etc).
-// 43 callers: if MEM_W(0x8010CA20) == 0: OR bit 0x4 into HUD flags at 0x8010CFE0 and call func_80067938 (effect dispatcher)
-setHudEnableBit4           = 0x800C7738;
-// 23 callers: same pattern, bit 0x8
-setHudEnableBit8           = 0x800C776C;
-// 44 callers: writes a0 to 0x8008EC10 and sets bit 0x40 in HUD flags at 0x8010CFE0 (no master-toggle gate — runs unconditionally)
-setHudFlagBit40AndStoreArg = 0x800C7884;
 
 // Batch 63: player slot entry RGB color setter (2026-05-11)
 // Sets RGB bytes for an animation/object entry within a player slot.
@@ -1971,8 +1732,6 @@ removeLookupTableEntry    = 0x800643C4;
 destroyLookupTable        = 0x80064628;
 // (table, key) — searches 8-byte-stride table for entry matching key (+0x0 word); returns the byte at +0x5 of the matching entry (0 if not found). Read-only companion to setLookupEntryField5ByKey.
 getLookupEntryField5      = 0x8006465C;
-// 36 callers: trivial — returns *(u32*)(a0 + 0xC). Generic pointer-at-offset-0xC getter used across many subsystems.
-getStructField0xC         = 0x800B3D08;
 
 // Batch 65: random scale + factor5 audio wrapper variants (2026-05-11)
 // More high-call utility functions discovered in 0x80072* (effects/particles)
@@ -1988,8 +1747,6 @@ play3DSoundEventVariant = 0x80098BDC;
 
 // Batch 66: vec3 length clamp + gPlayers field getter (2026-05-11)
 // More high-value primitives discovered while mapping remaining unnamed functions.
-// 30 callers: calls vec3Length(a0); if length >= constant_at_0x800A51D0, divides each component (x/y/z) by length (normalizes to unit). Otherwise unchanged. Used for direction/velocity clamping.
-clampVec3ToUnitIfLongerThan = 0x800AA350;
 // 28 callers: returns *(u16*)(gPlayers + a0*0x2A0 + 0x2). Simple per-player u16 field getter (likely state, team, or status flags).
 getPlayerField2             = 0x8006C994;
 
@@ -2014,12 +1771,6 @@ spawnOrientedNpc = 0x80072684;
 destroyNpcSlotChain = 0x8003F0C8;
 
 // Batch 70: object detail-level setter + getter (2026-05-11)
-// Setter/getter pair for an object's "detail level" or "quality" field at +0x19A.
-// The setter also updates flag bits (clears 0xC0, sets (3-level)<<6) and reads field +0x198.
-// 34 callers: (object_ptr, level u16) — stores level at +0x19A, fetches +0x198 → getNpcContextByIndex, updates flag bits in +0x14
-setObjectDetailLevel = 0x800F2830;
-// 14 callers: returns *(s16*)(a0 + 0x19A) — counterpart getter
-getObjectDetailLevel = 0x800F287C;
 
 // Batch 71 (2026-05-11): clearly-identifiable utility/getter/setter functions
 // covering the highest-caller unnamed funcs after batch 70. Each is a thin
@@ -2045,12 +1796,6 @@ getNextSlotNpcTypeId = 0x80040218;
 // 49 callers: (start_idx u16, out_chain_info_or_null) — walks NPC slot chain, returns first active slot's NPC type; 0xFFFF if none
 findActiveNpcInSlotChain = 0x8003FC28;
 
-// Object flag-bit pair (bit 0x10 of obj+0x14 = pending-update marker?).
-// Pattern mirrors setHudEnableBit4 (0x10 already named).
-// 27 callers: (object_ptr) — *(u16*)(obj+0x14) |= 0x10
-setObjectFlagBit4   = 0x800F2AA4;
-//  3 callers: (object_ptr) — *(u16*)(obj+0x14) &= ~0x10
-clearObjectFlagBit4 = 0x800F2AB4;
 
 // Asset-release primitive for the mesh-tree (HOB/HMT) family. Decrements
 // refcount at *(u16*)(node+0x3A) of node = node[0]; if zero, walks 4
@@ -2067,40 +1812,6 @@ releaseMeshAsset = 0x8005779C;
 // 45 callers: (position_ptr, y_velocity_f32) — wrapper around spawnNpcOfType
 spawnNpcType0xAFromTemplate = 0x800612A4;
 
-// Defensive pending-child npc cleanup. Op on sub-struct obj+0x114:
-// if (p[0x20]==1 && p[0x1A]!=0xFFFF) { resolve via findActiveNpcInSlotChain
-// on p[0x1C]; if result is valid, unregisterAndFreeNpcSlot the npc at p[0x1E]
-// and clear p[0x1A]/p[0x1E] to 0xFFFF; clear p[0x20] to 0 }.
-// 17 callers: (object_ptr) — clears the per-object pending child npc slot on cleanup
-clearPendingChildNpc = 0x800F2A24;
-
-// Thin wrapper: reads obj->+0x130 (the obj's primary npc-index halfword) and
-// looks it up via findActiveNpcInSlotChain. Returns the NPC type id or 0xFFFF.
-// 10 callers: (object_ptr) — convenience accessor returning findActiveNpcInSlotChain(obj+0x130, NULL)
-getObjectNpcTypeId = 0x800F2A00;
-
-// Computes effective object detail level (range 0-3). Used to gate which LOD
-// mesh / draw-detail path to take. If the npc has a linked object (npc_ctx+0x10
-// non-null), returns that object's stored level (obj+0x19A). Otherwise derives
-// it from npc_ctx+0x15's top 2 bits: detail = (3 - (byte>>6)).
-//  2 callers: (slot_idx u16) — returns effective detail-level 0..3
-getNpcDetailLevelByIndex = 0x800F27F0;
-
-// Object spawn/init — the canonical "create and initialize" function. Calls
-// the lower-level allocator func_800EC110, then zeros and stamps the standard
-// object fields (+0x14 flags, +0x19A detail=3 default, +0x130 npc slot via
-// allocateNpcSlot, +0x1A8 self-ref to obj+0x1AC). If an optional extras struct
-// (a3) is provided, copies its +0x10/+0x14 words and runs the optional
-// callback (jalr a4). Returns 1 on success, 3 on alloc failure.
-// 21 callers: (out_ptr_storage, spawn_data, template, extras_struct_or_null, callback_or_null) — returns 1/3
-createAndInitObject = 0x800EC588;
-
-// Increments a per-stage "level-1 detail" object counter at 0x80130B84 when
-// the obj's stored detail-level (top 2 bits of obj+0x15) equals 0b10. Used
-// at the end of per-object update to tally objects rendered at mid-detail
-// for the current frame's perf/draw-budget tracking.
-// 21 callers: (object_ptr) — increments mid-detail object counter at 0x80130B84
-tallyMidDetailObject = 0x800F3260;
 
 // Transforms a mesh-part's local-space vector at +0x4C of obj->[0x0] (the
 // linked mesh struct) by obj's matrix at +0x28, writing into caller-provided
@@ -2146,63 +1857,6 @@ queueAudioVoiceCmd = 0x800964C8;
 // 29 callers: (chain_info_struct) — cached lookup-validator returning current NPC type id
 revalidateNpcSlotIterator = 0x8003EEF4;
 
-// Reads "player_StartPosition" from the loaded level dat (`getLevelDatItemByName`)
-// and copies its position (3 floats at +0x10/+0x14/+0x18) and rotation (3 words
-// at +0x1C/+0x20/+0x24) into the caller's struct at offsets +0x4..+0x18. Used
-// during mission/level setup. Has an a1 pre-flag that short-circuits the load.
-// 23 callers: (out_struct, skip_flag) — fills out_struct with level-dat "player_StartPosition" entry
-loadPlayerStartPosition = 0x800AFE4C;
-
-// Dispatcher: routes to func_800F0DC4 with either obj+0x138 or obj+0x164 as
-// the sub-struct ptr, based on a flag arg. Used to apply same operation to
-// one of two embedded sub-objects.
-// 20 callers: (obj, f1, f2, flag) — call func_800F0DC4 with obj+0x138 or obj+0x164
-applyToObjectSubstructByFlag = 0x800F2D38;
-
-// Conditional float-set on the same obj+0x138 / obj+0x164 sub-struct family.
-// Only writes the float at sub_struct+0x10 if sub_struct[+0x18]!=0 AND
-// sub_struct[+0x2B]==0. The flag arg selects which sub-struct.
-// 14 callers: (obj, f_value, flag) — conditional setter on obj+0x138/+0x164 sub-struct
-setObjectSubstructF10IfReady = 0x800F2D74;
-
-// Object action dispatcher: gated by struct[+0x4]==1. Reads struct[+0x8] (sub-
-// ptr) and struct[+0x2] (slot index), builds an action argv on stack
-// {0xFFFF, 7, sub->[0], 0}, then calls slotDispatcherIter(slot_idx, action=5).
-// Returns 1 on dispatch, 0 if gated off.
-// 21 callers: (unused, action_struct) — invoke slot dispatcher action 5 when struct active
-dispatchSlotAction5IfActive = 0x800EFD80;
-
-// Batch 73 (2026-05-11): more object-substruct / NPC-pending-child accessors.
-
-// Status check for the obj+0x114 pending-child-npc sub-struct (same struct as
-// clearPendingChildNpc). Returns 1 only if all of: p[+0x21]!=0, p[+0x20]!=0,
-// none of p[+0x1A]/+0x1C/+0x1E are 0xFFFF, the chain-resolved npc exists,
-// and that npc's obj+0x14 has bit 0x10 set. Otherwise returns 0.
-// 27 callers: (obj_ptr) — true iff obj's queued child NPC slot is live and flagged active
-isPendingChildNpcActive = 0x800F06BC;
-
-// Initializes the obj+0x138/+0x164 anim sub-struct from many args. The flag
-// at sp+0x18 selects which sub-struct (0x164 if non-zero, else 0x138). Sets
-// 10+ fields: position floats at +0x0/+0x4, dest float at +0x8, timer/halfword
-// at +0x1C (with off-by-one fixup), counter words at +0x10/+0x18, flag byte
-// at +0x2B=1, plus several globals multiplied in.
-// 25 callers: (obj, f_pos_x, f_pos_y, f_timer, ...stack args, flag) — full init of obj anim sub-struct
-initObjectAnimSubstruct = 0x800F2B88;
-
-// Combined mesh-position getter: looks up the obj's chained NPC (via
-// findActiveNpcInSlotChain on obj+0x130) and its context. If the caller passes
-// a non-null out-buffer AND the npc has a mesh ptr (ctx+0xC != 0), copies
-// 48 bytes of npc data starting at ctx+0x8 into the buffer, then transforms
-// the mesh part into world space via transformMeshPartIntoWorld. Returns
-// either the populated out-buffer or the npc's direct local-space data ptr.
-// 17 callers: (obj, optional_out_buffer) — returns world-transformed mesh data or local ptr
-getObjectMeshTransformOrLocal = 0x800F2988;
-
-// 16-bit RMW flag update for object field +0x110. (set_mask, clear_mask)
-// args: new_val = (current | set) & ~clear; store back.
-// 18 callers: (obj, set_mask u16, clear_mask u16) — RMW of *(u16*)(obj+0x110)
-updateObjectFlags110 = 0x800F9AF4;
-
 // Quaternion multiply in (w, x, y, z) component order. Computes q1 * q2 → out:
 //   out.w = q1.w*q2.w - (q1.x*q2.x + q1.y*q2.y + q1.z*q2.z)
 //   out.xyz = q1.w*q2.xyz + q2.w*q1.xyz + q1.xyz × q2.xyz
@@ -2232,8 +1886,6 @@ noopHandler_80092388 = 0x80092388;
 // pure jr-ra stub (Factor 5 audio)
 noopHandler_80099C44 = 0x80099C44;
 // pure jr-ra stub
-noopHandler_800AEB30 = 0x800AEB30;
-// pure jr-ra stub
 noopHandler_800DFB84 = 0x800DFB84;
 // pure jr-ra stub (adjacent to noopHandler at 0x800EFD6C)
 noopHandler_800EFD64 = 0x800EFD64;
@@ -2247,19 +1899,6 @@ returnOne_80023334 = 0x80023334;
 // pure `return 1` stub
 returnOne_8002335C = 0x8002335C;
 
-// "return 0" stub. Used as default-fail/skip callback.
-// pure `return 0` stub
-returnZero_800F3258 = 0x800F3258;
-
-// Single-float setter at 0x8011A840. Left as default func_80017B78 — the
-// caller-side meaning of the float isn't identified yet, so a name like
-// `setGlobalFloat_8011A840` would only encode coordinates. Returns to the
-// no-address-encoded-name rule.
-
-// Trivial object-byte clearer: stores 0 to obj+0x112. Counterpart to many
-// other obj+0x112 (state-byte) accessors.
-// 2 callers: MEM_B(obj+0x112) = 0
-clearObjectField112 = 0x800F9474;
 
 // NPC slot-table allocator. Allocates a 8-byte header struct + (capacity*8)
 // data array via rs_malloc. Stores: hdr->+0x0 = data_ptr, +0x4 = 0 (count),
@@ -2313,12 +1952,6 @@ loadTieBomberSprite = 0x8005ECE8;
 // 1 caller: load_asset("shield_PAL")
 loadShieldPalette   = 0x8007C268;
 
-// Destroys an object's owned NPC slot if the ownership flag is set.
-// Pairs with createAndInitObject (0x800EC588) which sets obj+0x1A4=1 and
-// stores the slot index at obj+0x198. Pure cleanup path called from various
-// per-object destroy paths.
-// 22 callers: (obj_ptr) — if obj+0x1A4!=0 → destroyNpcSlotByIndex(obj+0x198)
-destroyObjectOwnedNpcSlot = 0x800EC6C0;
 
 // Float-to-int via truncation: trunc.w.s f12 → v0. Two-instruction utility.
 // The name encodes the operation, not coordinates.
@@ -2369,23 +2002,6 @@ initNpcBookkeepingTables = 0x80056350;
 // load-balanced enqueue into 1 of 2 NPC render buckets
 addNpcToVisibilityBucket = 0x80057C8C;
 
-// Player-init common helper: called from every playerXxxInit (Awing, Falcon,
-// AtSt, NabooStarfighter, SnowSpeeder, ...). Resets 0x8011A6B0/B4, reads the
-// craft's flags at gPlayers[craft_idx]+0x184, then branches on bit 0x40:
-// when set (atmospheric/ground craft), stamps byte 1 at 0x8011A6B8 and uses
-// the slot-chain at player+0x1CC; otherwise sets player+0x1C8=2, clears
-// +0x184/+0x15C, and stamps 0xFFFF at +0x1CC.
-// 10 callers, all playerXxxInit — sets up flight-vs-ground state from craft flags
-initPlayerCraftMovementMode = 0x800B37C0;
-
-// Per-player update-step helper: indexes per-player slot at 0x8010CF20 +
-// idx*24, checks slot->+0x4->+0x0 byte (active flag). If active, calls
-// func_80100594, then rs_free(slot->+0x8) and rs_free(slot->+0xC).
-// Effectively a per-frame cleanup pass for the player's two aux buffers
-// when an "active" flag has been set since the previous frame. Called from
-// every playerXxxUpdate function.
-// 9 callers, all playerXxxUpdate — conditional aux-buffer free
-freePlayerAuxBuffersIfActive = 0x80100F40;
 
 // Batch 77 (2026-05-11): asset-loader wrappers identified by the string
 // literals they sprintf or pass to the loader. Each name encodes what the
@@ -2427,10 +2043,6 @@ loadTopCloudsAsset       = 0x8005A120;
 npcDebris1Update         = 0x8006F6A0;
 // (npc_ctx, ...) → calls spawnNpcOfType(npcDebris1Update=0x8006F6A0, sp+0x10, 1, 0xF, ...); 26 callers (debris spawn helper)
 spawnDebris1Npc          = 0x80072384;
-// thin wrapper: getPlayerVehicleId(0) — convenience getter for player 0's vehicle ID
-getLocalPlayerVehicleId  = 0x800C7524;
-// per-frame HUD struct updater (per docs/unsorted_thoughts: "very involved in [hud_struct] innerworkings"); called from 10+ playerXxxUpdate functions
-updatePlayerHudFrame     = 0x800FD31C;
 // (texLutIdx u16) — clears D_8011A444[idx]; scans for other refs to same D_80128F08_index; if none, frees texture data via func_8001E7D0 (refcount release)
 releaseTextureLutEntry   = 0x80022790;
 // (dlPtr, flags) — appends RDP state-setup commands to dlPtr based on flag bits: 0xE7000000 (PIPESYNC) header, then per-flag G_SETOTHERMODE_L/H variants, depth/alpha modes, scissor; used by mesh dispatch (per docs/unsorted_thoughts)
@@ -2443,14 +2055,10 @@ npcWakeUpdate            = 0x80076BE4;
 npcVortexUpdate          = 0x80081ABC;
 // NPC update handler for "shield" effect (5-case state machine on a1-1; per string scan); distinct from npcShieldGeneratorUpdate
 npcShieldUpdate          = 0x8007AEF8;
-// NPC update handler for "i_missile" (incoming missile) per string scan
-npcIncomingMissileUpdate = 0x800ABD0C;
 // NPC update handler for "wtrspray" effect (per string scan); per-frame counterpart to initWaterSprayParticles
 npcWaterSprayUpdate      = 0x80072EC4;
 // (pos, vel, ...) → calls spawnNpcOfType(npcWaterSprayUpdate=0x80072EC4, ...); per spawn-wrapper handler-addr analysis
 spawnWaterSprayNpc       = 0x800777F0;
-// (a0=stateA, a1=stateB) — if (a0==4&&a1==1) OR (a0==7&&a1==0): load_hmt_and_hob("frontend/cut_ywng/cut_ywng") + walkMeshdef0List("cut_ywng"), stores result at MEM_W(0x800B0B18); otherwise clears it
-maybeLoadYwingCutscene   = 0x800AF0EC;
 
 // Sky horizon HOB loader: getHobObjectByName("sky_horizon"), allocates and
 // copies into a per-scene buffer. Initializes the skybox horizon mesh.
@@ -2469,27 +2077,6 @@ clearActiveVoiceLine     = 0x80056330;
 // (f12 delta_time) per-frame from cinematicLoopBody + runInMissionFrame: manages the voice subtitle line in the 0x20-byte context at MEM[0x80139010]. Checks gGameSettings bits to select fallback subtitle id (0x222 if +0x16 set, 0x223 if +0x10 bit 0x20 set), invalidates outdated lines, and ticks the active line's animation/lifetime.
 tickVoiceSubtitleDisplay = 0x80055CB0;
 
-// 76-case jump table dispatcher on NPC type id (0..0x4B). Returns the per-type
-// asset name string (e.g. 'b_lrsp', 'megaturret', 'b_ttu_hi') or NULL for
-// types without an associated asset. Pure lookup function (no allocations,
-// no side effects).
-// 2 callers: (npc_type_id u8) → const char* or NULL
-getAssetNameForNpcType = 0x800AE98C;
-
-// Backdrop asset loader: sprintf "backdrop/<name>" using format strings at
-// 0x800A5B60. Mallocs a 0x38-byte context, memsets to 0, then load_asset's
-// the named backdrop file. Caller-supplied name (a0) selects which backdrop.
-// 5 callers: (name str, ...) → loads "backdrop/<name>"
-loadBackdropAsset     = 0x800ADF74;
-// per-frame hangar camera-orbit lerp (~98 float ops). Reads gHangarCurrentBayCraft → indexes gHangarBayDescriptorArrayPtr (stride 0x278), pulls target float from entry+0x8->+0x14, caches at gHangarCameraOrbitTargetCache. Accumulates gHangarCameraOrbitAccum += (delta / const_at_800A56DC) per frame for the continuous glide toward the current bay. Called from the hangar tick func_800AAD9C.
-hangarTickCameraOrbit = 0x800ADB70;
-
-// Scene init / per-level asset loader: zmemcpy's defaults (0x50 bytes from
-// 0x80037560 = gBootConfig area), loads "game_TXT" via findManifestEntryByName,
-// calls clearSceneBssRegion, allocNpcContextArrays, initNpcSlotList,
-// loadSndFiles. The entry point for setting up a mission/scene's runtime state.
-// 2 callers: bootstrap mission-scene runtime (text + NPCs + sound)
-initSceneForMission = 0x800A9ABC;
 
 // Particle pool allocator: mallocs 0x3600 bytes (128 entries of 0x6C each),
 // stores at 0x80130BD0, links them into a per-index chain (-1 sentinel at
@@ -2505,13 +2092,6 @@ allocAndInitParticlePool = 0x80040310;
 // 3 callers: load "weapons" HMT, register 15 weapon HOBs by name
 loadWeaponsHobObjects = 0x8005E7EC;
 
-// Count trailing zero bits in a 16-bit value. When (a0 & 1) is set, returns 0.
-// Otherwise shifts right until the low bit is set, counting iterations.
-// Called from playerXxxInit to convert a craft-mask bit (e.g. 0x0008) to a
-// craft index (e.g. 3). Behavior on a0==0 is unsafe (infinite loop in a path
-// that assumes a high bit will eventually appear).
-// 5 callers, all playerXxxInit — bit-to-index converter
-countTrailingZeros16 = 0x800BF2F4;
 
 // Math primitives. Two-instruction floating-point utilities that the compiler
 // emitted as named functions rather than inlining (probably because of `-O2
@@ -2536,29 +2116,7 @@ parseLoadedSndSection = 0x80066918;
 // 3 callers: (addr, halfword_count) → osWritebackDCache(addr, count * 2)
 writebackDCacheHalfwords = 0x80092588;
 
-// Per-player HUD-struct setup for the current secondary weapon. Indexes
-// gHudStructArray (D_8010CA30) by player_idx, stamps secondaryWeapon/Count/
-// Reset/IsAdvanced + crosshair flag from cheat-code state, builds 10 texture
-// IDs via func_800554D8 in a loop, then copies hud_elements forward via a
-// rotate-then-overwrite pattern. Documented in docs/hud_stuff/func_800FBE20.c.
-// 3 callers: (player_idx, weapon, count, isAdvanced) — populates hud_struct slice
-configurePlayerSecondaryWeaponHud = 0x800FBE20;
-// state machine: switch on missionStats.secondaryWeapon (D_80130B10+0x2) ∈ {2..8} → check corresponding "advanced" bit (10/12/15) in gGameSettings.flags → call configurePlayerSecondaryWeaponHud(player_skip, secWeapon, secWeaponMax, is_advanced). Callers: playerAtStInit, playerAwingUpdate, playerFalconUpdate.
-refreshPlayerSecondaryWeaponHud   = 0x800FEC98;
 
-// Pause-screen init/update. On first call (when arg0->unk258==0 AND game
-// state D_8010CA20==5), builds the dim-quad mini-hob: 4 vertices at
-// ±0x100, single quad face, color (0,0,0,0). Plays UI sound effects via
-// func_800880D8/func_8008E0B0. Documented in docs/hud_stuff/func_800C1D3C.c.
-// 2 callers: (hud_ext_struct, transition_f32) — pause-screen dim quad setup + ongoing update
-initOrUpdatePauseScreenDim = 0x800C1D3C;
-
-// Pause-menu state machine. Dispatches on game state via 20-entry jump table
-// at 0x800A66A8 covering pause-menu phases (entry anim, hover, exit anim,
-// selection feedback). Operates on the hud_ext struct (func_800C0084_type).
-// Documented in docs/hud_stuff/func_800C298C.c.
-// 2 callers: (caller_ctx, hud_ext_struct) — 20-state pause menu dispatcher
-runPauseMenuStateMachine = 0x800C298C;
 
 // MusyX note-rate compute: a0=note_id, a1=context_word (-1 → default 0x40005622
 // where the low 24 bits 0x5622=22050 is NTSC sample rate). Extracts the top
@@ -2680,20 +2238,8 @@ submitDmaRequestBatch                   = 0x8000569C;
 convertMat3x4ToN64Mtx                   = 0x80018D80;
 // (a0-a3 = 4 signed shorts + ~9 word stack args + 3 hw stack args = 16 total) — DUAL ROLE: (1) writes GFX state globals at vram 0x80017C14-0x80017C38 — width to MEM_W[0x8011A838], 2nd word to MEM_W[0x8011A844], height halfword to MEM_H[0x8011A848], and current draw fb to MEM_W[0x8011A84C] (or 0 if flags bit 0x200 set); these are what the SET_COLOR_IMAGE emitter at 0x80009124 reads to fill DL bytes. (2) Copies 'mat_default' literal from strMatDefault (0x800007D0) onto local stack as material name, populates material entry from args, calls registerHmtTextureInTable (0x80022B90). Callers: advanceVideoFrame (per-frame) and initVideoBootWrapper (boot). The name is partly misleading — it's the gfx-state-and-default-material composite setter, not just material construction.
 buildAndRegisterDefaultMaterial         = 0x80017B88;
-// Called from teardown chain of all 10 player*Update funcs (after destroySceneNpcsAndUnlink + rs_free + releaseMeshAsset). (1) Releases 10 texture LUT entries via releaseTextureLutEntry from u16 array at 0x8010CA3A (matches notes.txt "8010CA3A is the start of a u16 array 10(?) elements big"). (2) Iterates 2 HUD-instance structs of 0x278 bytes starting at 0x8010CA30 (0x4F0 total = 2 * 0x278): for each, if byte+0x0==3||==8 AND byte+0x210!=0 → destroyNpcSlotChain(halfword@+0x212) to unbind bound NPCs; if byte+0x274!=0 → factor5RemoveListNode(instance+0x230) to detach from scene graph.
-teardownHudInstancesAndUnbindNpcs       = 0x800FE434;
 // 20 named callers — generic craft-NPC factory. Args: (f12=x, f14=y, a2=craftType_lowNibble). rs_malloc(0x1E4=484) for new NPC context, calls loadCraftShadowTextures(type), initializes ~15 fields of the NPC: +0x78=0x02960001 flags, +0x80=9 typeID, self-pointers at +0x30/+0x8C/+0x90 to inner offsets +0x6C/+0xC8/+0x178, clears +0x20..0x2C/+0x70..0x88, looks up craft-specific halfword from secondary table at 0x8013A528 (2*type stride), sets +0xD8 to constant data at 0x800A09C0, calls clearStructPair2C30(entry+0xC8). Returns the new NPC pointer in v0. Called from npc*Update funcs (AT-AT, AT-PT, AT-ST, GroundTransport, etc.) when a missile / debris / sub-craft needs to spawn — often from a 20-byte stride spawn-table at 0x800B04AC keyed by parent's slot index.
 allocateAndInitCraftNpcContext          = 0x8006BD18;
-// 17 named callers (across AT-AT, AT-PT, AT-ST, GroundTransport, ProbeDroid, PowerGenerator, RadarDish, etc. update funcs). Thin 2-step destroyer: (1) clearPendingChildNpc(MEM_W[a0+0]) clears pending-spawn state on the child reference; (2) func_800EC388(a0) unlinks the node from one of two doubly-linked lists at MEM[0x8011C0D0]/[0x8011C0D4] (chosen by node-byte0 zero check) when (node_byte0 + extra_byte_at_a0+4) == 4, then unconditionally rs_free()'s the node. Always returns 1.
-clearPendingAndDestroyChildNpc          = 0x800EC684;
-// 12 callers, ALL `lvN_initializeObjectTracking` (for every level 0..b). One-instruction setter: MEM_W[0x8013973C] = f12. Each level passes its own per-level float during init. The paired byte at MEM_B[0x8013973A] is cleared by other writers (func_8005E950) that set both fields. Read by an object-init function around 0x800DA478 which stores the value into a stack slot at sp+0xC4 — i.e., per-object setup absorbs the level-wide scalar. Purpose of the scalar (probably a distance/scale/threshold factor) unknown without deeper trace; the setter signature is unambiguous.
-setLevelObjectTrackingScalar            = 0x800C7CEC;
-// Sole non-internal caller is clearPendingAndDestroyChildNpc. Takes (a0=node-pair-struct). Reads node = MEM_W[a0+0] and extra_byte = MEM_BU[a0+4]. If (node_byte0 + extra_byte) == 4: unlinks the node from one of two doubly-linked lists by patching the prev/next pointers at node+0x8 / node+0xC, head ptr selected from MEM[0x8011C0D0] (when node_byte0 != 0) or MEM[0x8011C0D4] (when node_byte0 == 0). Then unconditionally rs_free(node). The (kind+extra)==4 condition is some refcount/state gate for "safe to detach".
-unlinkAndFreeChildNpcNode               = 0x800EC388;
-// 9 callers, ALL player*Update — initializes a craft animation slot. (a0=craft_ptr, a1=slotIdx&0xFF, a2=animTemplate_ptr). Indexes into 24-byte-stride table at 0x8010CF20 (= 0x8011 - 0x30E0): entry = base + 24 * slotIdx. Writes entry+0x0=a0 (craft), entry+0x4=a2 (template). Reads count from MEM_BU[a2+0]; if zero, skip alloc. Otherwise rs_malloc(count*2) twice and stores at entry+0x8 and entry+0xC — paired anim parameter buffers. Then runs an inner loop walking the template entries.
-allocateCraftAnimationStateForSlot      = 0x801007C0;
-// 9 callers, ALL player*Update — paired with allocateCraftAnimationStateForSlot. (a0=slotIdx&0xFF). Calls func_80100594(slotIdx) for pre-step, indexes same table at 0x8010CF20, clears 4 state bytes at entry+0x10..0x13, writes paired animation-timing globals: MEM_W[0x8010D028] = constant float from 0x800A9548, MEM_W[0x8010D02C] = MEM_W[craft+0xE8] (animation speed?). Effectively resets a craft's animation playback state.
-resetCraftAnimationStateForSlot         = 0x80100FA8;
 // 6 callers (controllerSettingsScreen, eliteRoguesMenuHandler, hangarInitialize, initVoiceSubtitleSystem, menuControllerInput, postLevelStatScreen) — 3-field setter on the menu/player-slot-table state header at 0x80139960: byte_state=a0, x_hw=a1, y_hw=a2. Same fields are reset by initAllPlayerSlots (state byte =1, x_hw=y_hw=0x140 default). Typical menu-screen call shape: setMenuOverlayHeaderState(1, 0, 0) at screen entry.
 setMenuOverlayHeaderState               = 0x80063E2C;
 // 5 callers in every frame-rendering top-level loop (cinematicLoopBody, menuControllerInput, menuSubtype02Handler, runIdleFramesAndLoadSaveData, runInMissionFrame). Begins a frame DL chunk via beginFrameDLChunk then emits 7 profiler bar segments via emitProfilerBarSegment (matches `project_builtin_profiler_overlay.md`: "Caller emits 7 bars/frame"). Each call pulls bar timing/color from global timing block at 0x8012DC50 / 0x8012A910 / 0x8012A914 with per-bar Y-offsets descending from screen-width-minus-0x28. Profiler is dormant in retail (gated by MEM_B[0x80038CE0] = 0) but codepath intact.
@@ -2706,16 +2252,6 @@ tickMusyXIfActive                       = 0x8008DA00;
 loadAssetAndIterateSubchunks            = 0x80054EF0;
 // 4 callers in Actor type-1 family (executeActorType1Effect, initActorAsType1, initActorAsType1WithAnchor) + hangarInitialize. (a0, a1, a2, a3=actor_ptr, sp+0x38=fZ). Builds vec3 = (0, 0, fZ) on the stack (zero X/Y, caller-supplied forward), calls func_80065A60(...) which is the underlying 4-ptr+3-float transform helper to write into the actor's transform block, then clears actor+0x8 (the "base position ref" field per project_actor_effect_struct.md) so the actor uses local-frame instead of anchored ref. Per memory note, this is the specific anchor-transform setup that `initActorAsType1WithAnchor` uses to attach a type-1 actor's transform to its NPC anchor.
 setupActorAnchorTransformType1          = 0x800662A0;
-// 18 callers across npc*Update (Actor type-1/2/3/4 family). (a0=actor, a1=byte_flag, a2=out_render_descriptor, a3=mode_byte, sp+0x40=arg). Gated on MEM_BU[actor+0x1A7] — the "render descriptor initialized" flag per project_actor_effect_struct.md. When set, skips (descriptor already prepared this frame). When clear: marks out+0x6=0xFFFF (invalidate), early-exits if (a1&0xFF)!=0, checks 4-byte flags at actor+0x1A4 with 0xFF00FF00 mask (also early-exits if any selected bit set), then when a3==1 fetches NPC context via getNpcContextField8(actor+0x198) and copies its vec3 to out+0x10/+0x14/+0x18. First-time prep of the render descriptor; the init flag is set elsewhere in the caller chain after success.
-initActorRenderDescriptorIfUninit       = 0x800F1E7C;
-// 17 callers across Actor type-1/2/3/4 family npc*Update functions. (a0=actor, ...). Sets s0=actor+0x114, gates on motion-active flag MEM_BU[actor+0x135] (memory: +0x135 = motion-active byte), then byte at actor+0x134, then validates three anchor halfwords at actor+0x12A/+0x12C/+0x12E vs 0xFFFF sentinel. Calls findActiveNpcInSlotChain(slotHandle=halfword@+0x12C, 0) to resolve the NPC anchor, then performs LOS validation. Sister of func_800F09A8 ("computes delta vector after LOS" per memory). Per project_actor_effect_struct.md: this is the "target/LOS validation against NPC anchor".
-validateActorTargetLOS                  = 0x800F07AC;
-// 13 callers, sister of validateActorTargetLOS. Identical prologue: s0=actor+0x114, gates on motion-active flag at actor+0x135, gates on byte at actor+0x134, validates anchor halfword at actor+0x130 (NPC slot handle per project_actor_effect_struct.md) vs 0xFFFF sentinel. Then computes the delta vector from anchor NPC's world position to actor's local frame (per memory: "computes delta vector after LOS"). Used by the same Actor family npc*Update funcs after validateActorTargetLOS confirms anchor validity.
-computeActorAnchorDeltaAfterLOS         = 0x800F09A8;
-// 11 callers in Actor cluster — perpendicular emit-direction generator with random rotation. Gated on actor+0x162 (per project_actor_effect_struct.md: "duration/count for perpendicular emit"). Args: (a0=actor, a1=src_vecs_struct, a2=flag_byte). (1) vec3Cross(sp+0x10, src+0x18, src+0xC) — perpendicular axis from two source vectors. (2) Uses count at +0x162 as angle-bound; two rand_recomp calls produce angles in [-1, 1] / count via constants at 0x800A9018/0x800A901C. (3) quatFromAxisAngle(perp_axis, angle1) and quatFromAxisAngle(src+0x18, angle2). (4) quatMultiply → combined rotation. (5) rotateVec3ByQuat(src+0xC) → write back rotated vector. Result is a randomly-rotated direction around the perpendicular axis, used for spawning debris/particles with directional spread.
-generatePerpEmitDirectionWithJitter     = 0x800F2DC8;
-// 4 callers in Actor type-1 family. (a0=actor, a1=mat_target). Type-guard: actor+0x112 must == 1 (Actor type 1 per project_actor_effect_struct.md). Zero-gate: float at actor+0xF0 must == 0.0 (proceed only when this gate value is zero — likely "needs frame-sync this tick"). When both pass: getNpcContextField8(MEM_HU[actor+0x198]) → NPC anchor context, then mat34CrossRowsAndCopyPos(sp+0x10, ctx, 1.0) and matrix-inverse work to write the anchor's local frame into the actor's transform matrix. Per memory note: "type-1 large body, reads actor+0xF0 zero-gate then getNpcContextField8". Updates a type-1 actor's transform to track its NPC anchor when the zero-gate condition triggers.
-syncType1ActorFrameToAnchorIfZeroGate   = 0x800F9C30;
 // 15 callers in NPC update funcs (AT-AT, AT-PT, AT-ST, GroundTransport, PowerGenerator, ProbeDroid, RadarDish, ShieldGenerator, etc.). (a0=npc, ...). Reads PathState ptr at MEM[npc+0x8]; if NULL, exits with original position. Then gates on mission-mode at MEM_W[0x8010CA20]: when mode != 0 (paused/cinematic) raw-copies the PathState base position (v1+0x0/+0x4/+0x8) into the output stack vec3 (sp+0x10..+0x18). When mode == 0 (active gameplay) applies first-order Taylor back-extrapolation `out[i] = base[i] - vel[i] * f4` using scale constant at MEM_W[0x8003D1FC] — same Taylor pattern as named primitive vec3ExtrapolateFirstOrder (0x80077784, per project_spline_based_architecture.md), but reads the PathState from npc+0x8 rather than a caller-supplied struct. After the position fill, reads halfword type at npc+0x4 and continues with type-specific work for types in [8..14]. Predictive position used downstream for spatial effects (e.g. sound/shadow placement) that need "where will this NPC be in 1 frame".
 extrapolateNpcPositionForCurrentMode    = 0x80076250;
 // 13 callers — mix of npc*Update (AT-PT, GroundTransport, ProbeDroid, RadarDish, ShuttleUpdate) + npc*HandleDestruction (AT-AT, AT-ST, Shuttle). Args: (a0=position vec3 ptr, a2=f10 scaleA, a3=f14 scaleB, sp+0xB0=f6 scaleC). Matches the destruction-effect-burst signature from project_spline_based_architecture.md: spawnDebris1Npc + spawnOrientedNpc + spawnNpcOfType (×N) + composeRandomRotationMatrix + scaleVec3ByRandomRange + rand_recomp — produces the debris + oriented-debris + explosion-NPC bursts at the supplied world position with caller-tuned scale parameters. Shared spawn-cascade primitive called whenever an NPC takes critical damage or explodes, including from inside update funcs (likely "secondary explosion" mid-life cases) — not only from per-NPC destruction handlers.
@@ -2736,8 +2272,6 @@ spawnByteAnimDebrisWithParam            = 0x8005EC60;
 splineWalkerCraftNpcHandler             = 0x8006C3A0;
 // 7 callers across AT-AT/AT-PT/AT-ST destruction handlers + GroundTransport/GroundTroop/RadarDish/TankDroid update funcs. Thin wrapper around spawnNpcOfType: builds 16-byte descriptor on stack (a0/a1/a2/a3=pos+type fields, a3=hw_param at sp+0x1C), then calls spawnNpcOfType(handler=splineWalkerCraftNpcHandler, descriptor=sp+0x10, type=1, subtype=0xA). Spawns a craft NPC that will fly a curved path — typical use: "after this large unit's death, spawn an escape craft / replacement squadron".
 spawnSplineWalkerCraft                  = 0x8006C6FC;
-// NPC slot handler per project_npc_handler_protocol.md. 10 spawn-sites from playerSnowSpeederUpdate (snow speeder's audio attachments). Action 1: reads parent_slot_idx halfword from msg+0x0 → stores at slot+0x0, reads sound_template_idx halfword from msg+0x2 → stores at slot+0x4, computes 24-byte-stride table index at MEM[0x8010BB00 + template_idx*24] (= 0x8011 - 0x6500 base), stores template ptr at slot+0x4C. Calls getNpcContextField8 to fetch parent NPC ctx; if null, self-destructs. Else: validates parent gear/state, calls play3DSoundEvent with templated 3-byte audio params (vol/pan/pitch) from the template entry and parent NPC's audio anchor at parentCtx+0x24. Action 2: destroyNpcSlotChain. Action 3 (tick): re-emit / position-track sound to follow parent. The 24-byte template table at 0x8010BB00 holds per-effect-type 3D sound presets — the snow speeder spawns 10 distinct sound instances (engine, cockpit, lasers, tow cable, etc.) via this handler.
-attached3DSoundEmitterNpcHandler        = 0x800BF4A0;
 // NPC slot handler per project_npc_handler_protocol.md. 9 spawn-sites from playerSnowSpeederUpdate (snow speeder's mesh attachments). Action 1: reads parent_slot_idx from msg+0x0, fetches parent context via getNpcContextByIndex; if parent_ctx+0xC (mesh part ref) is NULL, self-destructs. Otherwise calls dispatchOverlaySetupByParentAssetName(parentMeshPart, slot, parent_slot_idx) to per-asset-name route the overlay setup, then writes constant data pointer D_8009EBD0 (mesh template?) into parentMeshPart+0x4 — replacing the parent's mesh component with this attachment's geometry. Action 2 (destroy): iterates 2 buffers at slot+0x1C/+0x20 and rs_free's each (geometry buffers allocated during overlay setup). Used to attach detachable cosmetic / visual components to a parent NPC (tow cable rigging, weapon mounts, exhaust trails, etc.).
 attachedMeshOverlayNpcHandler           = 0x8005427C;
 // Inner helper for attachedMeshOverlayNpcHandler (Action 1). (a0=overlay_slot, a1=parent_slot_id_hw). Reads parent NPC's HMT asset name string at MEM[overlay_slot+0x0+0x0], then does cascading rs_strcmp comparisons against a series of asset-name constants at 0x8003ABFC/0x8003AC04/0x8003AC0C/etc. — per-craft routing of the overlay setup (different code path for snow speeder vs other parent vehicles). The string-keyed dispatch is how the snow speeder's 9 distinct mesh attachments get configured: same handler, parent-asset-name selects which sub-handler logic runs.
@@ -2756,10 +2290,6 @@ spawnRandomScaleEffectDefault           = 0x80061268;
 randomlyScaledColoredEffectNpcHandler   = 0x80060900;
 // NPC slot handler per project_npc_handler_protocol.md. 1 spawn-site from cutsceneActorNpcHandler (i.e., spawned BY cutscene actors as a sub-NPC). Action 1 allocates rs_malloc(0xF14=3860 bytes) — the largest NPC context observed, much bigger than craft NPCs (484 bytes). Reads game-state bytes at MEM[0x80130B39] (scene-state) and MEM[0x80130B40] (cutscene-active flag, checks for value 0x13). Body uses heavy spline-walker math primitives (sqrt + normalize_vector + initVec4TripletFromArgs + composeRotationMatrixSlot0 + composeRotationMatrixSlot2) — same pattern as the spline-following NPC update functions per project_spline_based_architecture.md. The 3860-byte context + cinematic-actor spawn lineage + spline math => this is a heavy cinematic NPC that follows a pre-defined path through a cutscene (scripted craft flybys, scripted enemy movements).
 cinematicSplineWalkerNpcHandler         = 0x8005BCC4;
-// NPC slot handler per project_npc_handler_protocol.md. Action 1 (spawn): stores msg at slot+0x4, reads msg+0x10/+0x14/+0x18 (vec3 position) → slot's child struct +0x8/+0xC/+0x10, clears flags at child+0x48/+0x4C/+0x4D. Looks up parent NPC's mesh-part data via MEM[a2+0xA4] (mesh part ref), then halfword index at MEM[a2+0xA8]+0xA6 — uses that to index into the active-craft spatial grid at MEM[0x801375D8]+0x34 (the same grid documented in `updateActiveGridCellState`) to fetch an animation entry. Reads animation pose float from MEM[entry+0x10] to slot+0x10. The grid-driven animation lookup suggests this is an **animated sub-effect mounted to an active player/enemy craft** — e.g., a per-craft particle/effect that plays through the same animation system as the craft's mesh parts (engine flame, hit flash, etc.).
-craftMountedAnimationNpcHandler         = 0x800ECC28;
-// Sister of craftMountedAnimationNpcHandler in funcs_40.c. NPC slot handler per project_npc_handler_protocol.md but with extended action set (1/2/3/7 instead of standard 1/2/3/4). Action 1 (spawn): reads vec3 from msg+0x10/+0x14/+0x18 → stores at slot+0x4/+0x8/+0xC (position), zero-initializes velocity vec3 at slot+0x10/+0x14/+0x18 and another vec3 at slot+0x28/+0x2C/+0x30 (angular velocity / scale-derivative), zeroes slot+0x34/+0x38. Calls popNpcSlotFromTail. Action 2 (destroy): stamps 0xFFFF at slot+0x6 (mark inactive), then iterates entries comparing slot+0x30 vs slot+0x6C, and on each iteration calls **parseDatItemCommon** — the canonical DAT item parser. The use of parseDatItemCommon on cleanup is diagnostic: this NPC owns a DAT-item-defined entity (level-placed spawn point, trigger, breakable prop, etc.). 320-byte stack frame indicates substantial tick work in Action 3.
-datItemActorNpcHandler                  = 0x800ECE10;
 // NPC slot handler per project_npc_handler_protocol.md, no enumerable spawnNpcOfType callers (vtable-reached). Action 1: walkMeshdef0List(D_8003D7E0) for a fixed mesh asset → stores at slot+0x30. Then reads TWO source pointers (msg+0x0 and msg+0x4) representing two parent NPC positions, and writes the per-axis sum (parent1.x+parent2.x, parent1.y+parent2.y, parent1.z+parent2.z) into slot+0x0/+0x4/+0x8. Initializes a 6-float block at slot+0xC..+0x20 with constants (probably an identity-ish transform from the +0x14/+0x1C reads of 0.0/constant). Computes a scaled parameter (halfword at parent1+0x70 multiplied by two constants at 0x8003D7EC/0x8003D7F0) and writes to slot+0x34. Pattern of "two source positions + fixed mesh asset" is characteristic of bridging/connecting visuals between two NPCs (e.g., tow-cable segments, weapon links, animated tether visuals).
 twoPointPositionedNpcHandler            = 0x8007E504;
 // NPC slot handler with extended 12-action dispatch (vs standard 4 — actions 1..12 in range, fallthrough for 5-10). 2 spawn-sites from func_80072870. Action 1 rs_malloc(0x2E0=736 bytes) + getNpcContextField8 + getNpcContextByIndex for parent lookup. Heavier event-set than basic NPCs — likely a scripted entity (weapon, projectile, or sub-game-state) that responds to many events.
@@ -2788,8 +2318,6 @@ checkAndReturnByteFlagAsU8              = 0x8005940C;
 distanceAndDopplerNpcHelper             = 0x80073E4C;
 // 3-byte triplet setter at MEM_B[0x8012A86C/+0x8012A86D/+0x8012A86E] = (a0, a1, a2). Returns 1. 4 callers in frame-rendering top-level loops (loadLevelAssets, runIdleFramesAndLoadSaveData, runInMissionFrame, slotEffectHandlerDispatch). Sister of setMissionLevelInitByte — sets 3 consecutive state bytes for per-frame render state. Adjacent setters at 0x80017AB0/0x80017AC0/0x80017AD0 write single bytes at +0x8012A870/+0x8012A871/+0x8012A872.
 setFrameLevelStateBytes                 = 0x80017A90;
-// Thin wrapper around func_800EF770. 6 callers, all level handlers: lv1_playPairedDialogueA, lv2_checkComplexObjectives, lv5_startMissionAndBriefing, lvd_checkComplexObjectives, lve_checkComplexObjectives, lvk_checkComplexObjectives. Sister of playObjectiveVoiceLine* wrappers but for a stage-tick delegate (func_800EF770 still unnamed).
-delegateToLevelStageTick                = 0x800C7D60;
 // 8 callers (parseDatItemSubtypes1To5 + 7 NPC update funcs). Recursive DAT tree-walker: reads byte at node+0x0 — if 0xFF (terminator) skip; if bit 0x80 set (branch node), iterates 4 children of stride 0x38 each. For each child with non-zero byte+0x6, appends the byte to a global growing buffer at MEM_B[0x8010A898] (counter) + MEM_W[0x8010A89C] (head). Flattens DAT subtype identifiers from a tree structure into a global list — likely used for subtype-keyed dispatch lookup during NPC and DAT-item parsing.
 walkDatTreeAndCollectSubtypes           = 0x80072AF8;
 // 4 callers. Wrapper around spawnNpcOfType: stores 4 caller args (a0/a1/a2/a3) at sp+0x10/+0x18/+0x1C/+0x14 (position + extra params), then calls spawnNpcOfType(handler=randomlyScaledColoredEffectNpcHandler, descriptor=sp+0x10, type=1, subtype=0xA). Sister of spawnRandomScaleEffectDefault but supplies caller-controlled args for the colored variant.
@@ -2800,8 +2328,6 @@ spawnRandomScaleColoredEffectAltVariant = 0x800612E0;
 spawnMinimalRandomNpc                   = 0x80061380;
 // Thin wrapper calling spawnNpcOfType(handler=stubNpcHandler at 0x8006C4FC, ...). 1 caller; spawns a stateless "marker" NPC near the spline-walker family in funcs_16.
 spawnStubMarkerNpc                      = 0x8006C738;
-// Mission-overlay spawn wrapper for the HUD NPC (handler=handleHUD at 0x800C0084). Counts non-zero level-completion-flag bytes for the current level (loop over 4-byte stride table at 0x80108D2C[level*4]), stores count at MEM_B[0x80130B17] (gMissionState+0x7), then spawnNpcOfType(handleHUD, 0, ..., lifetime=0x64). Stores the spawned NPC slot index at MEM_H[0x8010BFD0]. Actually defined in mission_overlay; listed here because the rename pipeline (build-redefine-map.py) only reads main_overlay.txt.
-spawnHudNpc                             = 0x800C3F70;
 // Thin wrapper (38 instrs) calling spawnNpcOfType(handler=randomParticleWithParentNpcHandler at 0x80074D44, ...). 1 spawn site.
 spawnRandomParticleWithParent           = 0x80077570;
 // Tiny wrapper (14 instrs) calling spawnNpcOfType(handler=randomBurstNpcHandlerVariant at 0x800403EC, ...). Probably the sole caller wrapping the funcs_9 random-burst handler.
@@ -2818,8 +2344,6 @@ walkDatTreeAndVisitChildren             = 0x80071928;
 dispatchDatSubtypeByRandomIndex         = 0x80071308;
 // 1 caller of multiEventTemplateNpcHandler. Stack frame 0x58 with f20 scale, byte at sp+0x6F (extra param). Likely the spawn-wrapper for the 12-action handler — sets up complex msg from multiple caller args.
 spawnMultiEventNpcWrapper               = 0x80072870;
-// 4 callers (lv5_startMissionAndBriefing, lvb_checkComplexObjectives, lvb_initializeObjectTracking, playVoice_0x65). Tiny getter-setter: reads byte at MEM_B[0x801399F8 + a0] (level-state byte table at 0x80140000-0x6608), writes a1 back to same location, returns old value. Atomic byte swap on a level-state table.
-getAndSetByteAtLevelStateTable          = 0x800C7648;
 // Reads gMusyXActiveFlag (MEM_BU[0x800A0F50]) — same gate as tickMusyXIfActive. 4 callers across MusyX-adjacent code. Sub-helper that early-returns when MusyX isn't initialized; on success does its main work on caller-supplied s0=a0.
 mostlyMusyxFlagGatedHelper              = 0x80098E84;
 // 4 callers (NPC + Shuttle update funcs). Reads game-state byte MEM_BU[0x80130B63] (per docs, a flags byte for input/state). Stack frame 0x40 with float arg f20=a3. Likely a gated NPC update helper that uses the game state to enable/disable its work.
@@ -2940,409 +2464,13 @@ refreshEffectObjectCamerasAndState      = 0x80052F94;
 dispatchEffectObjectBehavior            = 0x800531BC;
 // advances an animated-texture frame index and lazy-loads/registers the HMT texture
 updateAnimatedTextureStreaming          = 0x80053F7C;
-// fades an attachment's material alpha then plays a 3D sound at it
-playAttachmentMaterialFadeSound         = 0x800DD930;
-// builds rotation matrices, transforms two anchor vec3s, applies motion (gated on pending-child)
-transformCraftDualAnchorsAndApplyMotion = 0x800DDA70;
-// full enemy-craft lifecycle: spline T&L + 3D audio + debris/child spawns + objective counters + teardown
-tickEnemyCraftWithDestruction           = 0x800DDBF0;
-// clears a craft-subsystem global counter
-resetCraftSubsystemGlobal               = 0x800DFB78;
-// per-instance anim/detail setup (setNpcHealth + setObjectDetailLevel + initActorMotionParams)
-applyCraftAnimAndDetailParams           = 0x800DFB90;
-// attachment material cue + 3D sound (with setObjectSubstructF10IfReady prefix)
-playAttachmentMaterialSoundVariantA     = 0x800DFF54;
-// attachment material cue + 3D sound (sibling of variantA)
-playAttachmentMaterialSoundVariantB     = 0x800E00E4;
-// attachment cue + 3D sound via slot-dispatcher iteration
-playAttachmentCueWithSlotIter           = 0x800E026C;
-// two-texture attachment cue + 3D sound (a2 mode flag)
-playDualTextureAttachmentCue            = 0x800E03F8;
-// minimal single-texture attachment cue + 3D sound
-playAttachmentMaterialSoundSimple       = 0x800E0748;
-// build rotation matrices + transform two anchors + apply sub-effects
-transformCraftAnchorsAndApplySubFx      = 0x800E08F8;
-// canonical spline-walker orientation math + 3D audio + list-node removal
-tickCraftSplineOrientation              = 0x800E0CE4;
-// two-segment craft: tickCraftSplineOrientation then a second orientation pass
-tickCraftSplineOrientationDual          = 0x800E13AC;
-// assembles 3 oriented debris transforms (scale/quat/pos compose)
-buildDebrisTransformStack               = 0x800E1F5C;
-// incrementally rotates a frame toward a target axis (quat slerp-like)
-slerpFrameTowardTargetAxis              = 0x800E23FC;
-// walker-class unit: limb-stride T&L + spline + multi-phase debris + speech + teardown
-tickWalkerCraftWithLimbsAndDestruction  = 0x800E2674;
-// thin wrapper: playDualTextureAttachmentCue mode 0
-playDualTextureAttachmentCueMode0       = 0x800E4034;
-// thin wrapper: playDualTextureAttachmentCue mode 1
-playDualTextureAttachmentCueMode1       = 0x800E4050;
-// resets/inits a craft instance's per-row motion state
-resetCraftInstanceMotionState           = 0x800E4480;
-// two-texture attachment cue + 3D sound (sibling)
-playDualTextureAttachmentCueB           = 0x800E4674;
-// single-texture attachment cue + 3D sound (sibling)
-playAttachmentMaterialSoundSimpleB      = 0x800E4874;
-// two-texture attachment cue + 3D sound (sibling)
-playDualTextureAttachmentCueC           = 0x800E49B4;
-// build rotation matrices + transform anchors + apply sub-effects (sibling)
-transformCraftAnchorsApplySubFx2        = 0x800E4BB0;
-// two-pass spline-orientation, orientation-only (no audio)
-tickCraftSplineOrientationVariant       = 0x800E4DC0;
-// destructible structure: debris stack + oriented-NPC spawns + child-craft recursion + teardown
-tickStructureWithDestructionAndChildren = 0x800E56AC;
-// build rotation matrices + transform anchors + LOS check + apply sub-effects
-transformCraftAnchorsApplySubFx3        = 0x800E71D0;
-// multi-craft squadron: per-member spline paths + 3D audio + objective counters + teardown
-tickFighterSquadronWithSplinePaths      = 0x800E7390;
-// attachment cue + 3D sound without an HMT texture lookup
-playAttachmentCueNoTexture              = 0x800E8828;
-// per-instance anim/detail setup (sibling of applyCraftAnimAndDetailParams)
-applyCraftAnimDetailParamsB             = 0x800E8948;
-// multi-phase destruction state machine (jump-table on phase: debris/child spawns)
-runDestructionPhaseSequence             = 0x800E8A40;
-// craft from DAT template, per-frame tick, phased destruction, objective counters, teardown
-tickCraftWithPhasedDestruction          = 0x800E8EDC;
-// NPC spawn/init: copies HP from child template, sets health + detail level
-initNpcHealthAndDetailFromChild         = 0x800E9A84;
-// inits an object's anim substruct + detail level
-initObjectAnimAndDetail                 = 0x800E9B10;
-// selects a destruction sound by object state and plays it (3D)
-playStateGatedDestroySound              = 0x800E9BF4;
 
 // === batch2 2026-06-01: funcs_38 (NPC behavior), funcs_34 (HUD/menu), funcs_30 (front-end/text)
-// NPC spawn/init: setNpcHealth then motion/anim/detail, state byte +0xFA
-npcInitFromTemplate                  = 0x800D2B5C;
-// NPC init: setNpcHealth+initActorMotionParams+anim+detail
-npcInitWithMotionParams              = 0x800D2CA0;
-// per-frame visual/SFX channel: HMT tex + attach-pos + progress-channel + cue + 3D sound
-npcTickEffectChannelA                = 0x800D2EE0;
-// effect-channel tick variant (HMT tex + cue + 3D sound)
-npcTickEffectChannelB                = 0x800D307C;
-// effect-channel tick that also fans out via slotDispatcherIter
-npcTickEffectChannelWithSlotDispatch = 0x800D3240;
-// init a child NPC bound to a parent (wires parent-link fields)
-npcInitChildLinkedToParent           = 0x800D4ED0;
-// advance spin angle accumulators by dt*rate, wrap, build quat orientation
-advanceNpcSpinOrientation            = 0x800D5078;
-// large destructible/debris-spawning NPC Update (switch)
-npcDebrisFieldUpdate                 = 0x800D5208;
-// minimal NPC init (health/motion/anim/detail, no extra logic)
-npcInitSimpleModel                   = 0x800D5FE0;
-// shared effect-tick body (attach-pos + cue + slot-dispatch + 3D sound)
-npcTickEffectChannelShared           = 0x800D6134;
-// thin wrapper: npcTickEffectChannelShared mode 0
-npcTickEffectChannelSharedMode0      = 0x800D7818;
-// thin wrapper: npcTickEffectChannelShared mode 1
-npcTickEffectChannelSharedMode1      = 0x800D7834;
-// tank-droid aim/orientation solver (mat/quat math)
-npcTankDroidComputeAimMotion         = 0x800D634C;
-// wingman (re)init: memset, health, state byte, load HMT materials
-npcWingmanResetState                 = 0x800D7850;
-// wingman state-0 handler (getNpcWingmanStateData case 0)
-npcWingmanState0                     = 0x800D7CF8;
-// wingman state-1 handler
-npcWingmanState1                     = 0x800D7EC0;
-// wingman state handler (calls npcWingmanStateEffectShared)
-npcWingmanState2                     = 0x800D9F90;
-// wingman state handler
-npcWingmanState3                     = 0x800DA064;
-// wingman state handler
-npcWingmanState4                     = 0x800DA13C;
-// wingman state handler
-npcWingmanState5                     = 0x800DA234;
-// wingman state handler
-npcWingmanState6                     = 0x800DA368;
-// wingman state slot that no-ops/always-succeeds (returns 1)
-npcWingmanStateNoop                  = 0x800DA360;
-// wingman behavior/comms driver (mode switch, playSpeechClip)
-npcWingmanBehaviorByMode             = 0x800D80B4;
-// spawns burst/hit effects for the wingman
-npcWingmanSpawnBurstEffects          = 0x800D8988;
-// wingman steering/orientation (vec/quat)
-npcWingmanSteerToward                = 0x800D8CB8;
-// updates the wingman's positional engine-sound source
-npcWingmanUpdateEngineAudio          = 0x800D9234;
-// TIE-variant effect-tick (cue + slot-dispatch)
-npcTieVariantTickEffects             = 0x800DA440;
-// TIE-variant steering/turn solver
-npcTieVariantSteerToward             = 0x800DA7D8;
-// TIE-variant attachment effect tick (LOS + cue)
-npcTieVariantTickAttachmentEffect    = 0x800DA9B0;
-// radar-dish spawn/init
-npcRadarDishInit                     = 0x800DC228;
-// radar-dish aim/track solver
-npcRadarDishComputeAimMotion         = 0x800DC300;
-// NPC init: health/motion/detail only (no anim substruct)
-npcInitMinimalNoAnim                 = 0x800DD248;
-// NPC init incl. anim substruct
-npcInitFullModel                     = 0x800DD2D0;
-// per-NPC effect-channel tick (attach-pos + cue + HMT + 3D sound)
-npcTickEffectChannelC                = 0x800DD50C;
-// effect-channel tick (sibling)
-npcTickEffectChannelD                = 0x800DD64C;
-// effect-channel tick (sibling)
-npcTickEffectChannelE                = 0x800DD78C;
-// rotating 3D ship-preview setup/render (menu)
-setupCraftPreviewModel               = 0x800C4184;
-// plots a vertical radar blip into the grid 0x80136DC0
-plotRadarBlipColumn                  = 0x800C41B0;
-// plots a horizontal radar blip into the grid
-plotRadarBlipRow                     = 0x800C435C;
-// menu teardown: shutdownFormatMessageWorker + finalizeCurrentSpeechBuffer
-shutdownMenuMessagingAndSpeech       = 0x800C471C;
-// per-menu-screen music/SFX setup (sound-cue descriptor)
-cueMenuScreenAudioA                  = 0x800C4754;
-// loads a menu screen's song set (loadSongAssetByName x4)
-preloadMenuMusicSetA                 = 0x800C47F8;
-// menu screen music/SFX cue (distinct song set)
-cueMenuScreenAudioB                  = 0x800C4878;
-// menu screen SFX-cue (descriptor + parseLoadedSndSection)
-cueMenuScreenAudioC                  = 0x800C491C;
-// menu element transition animation (config-scaled)
-playMenuElementTransitionAnim        = 0x800C4A44;
-// per-selectable-craft menu animator (iterates flag bits)
-animateCraftSelectFlags              = 0x800C4C8C;
-// sin/cos per-slot craft-select animation update
-updateCraftSelectAnimState           = 0x800C4D8C;
-// handles cheat-code entry from menu input
-applyMenuCheatCode                   = 0x800C4E6C;
-// spawns + positions + registers a menu list-item sprite
-spawnMenuListItemSprite              = 0x800C4F38;
-// creates a 2D HUD/menu sprite node at (x,y)
-createUiSpriteAt                     = 0x800C4FF4;
-// animated UI element update (pos/scale/alpha/frame)
-updateUiSpriteScrollAndAlpha         = 0x800C5118;
-// sets a UI group's animation frame from a phase float
-setMenuAnimGroupFrame                = 0x800C5244;
-// constructs a menu text/list element
-createMenuTextElement                = 0x800C5300;
-// menu-screen struct constructor (14x 0x80 + two 0x1000 buffers)
-allocMenuScreenState                 = 0x800C53D4;
-// destructor for allocMenuScreenState
-freeMenuScreenState                  = 0x800C5478;
-// timed/phased UI position update
-updateMenuElementTimedPosition       = 0x800C54E4;
-// applies 3 keyframe animations over player craft slots
-applyCraftSlotAnimations             = 0x800C5610;
-// if object fade-timer is 0, store the target value
-setMaterialFadeTargetIfIdle          = 0x800C56A4;
-// loads the menu backdrop set + random pick (load_hmt_and_hob)
-initMenuBackdropAndPickRandom        = 0x800C56E4;
-// unregisters the song-asset load service worker
-shutdownSongAssetLoadWorker          = 0x800C5808;
-// radar sweep/rotation renderer (trig over radar fields)
-renderRadarSweep                     = 0x800C5918;
-// per-icon radar draw helper
-drawRadarIcon                        = 0x800C5D9C;
-// self-contained blocking results/text screen loop
-runResultsTextScreenLoop             = 0x800C5EF8;
-// top-level radar/minimap render (walks blip list, plots, sweep)
-renderRadarMinimap                   = 0x800C5F90;
-// searches a level-keyed table, returns parallel u16 value
-lookupCraftValueByLevelKey           = 0x800C62C4;
-// zeros a craft/menu selection counter global
-resetCraftSelectionCounter           = 0x800C6334;
-// front-end level-select START confirm/advance input
-handleLevelSelectStartConfirm        = 0x800B0650;
-// advances the front-end menu state machine
-tickMenuTransitionState              = 0x800B07F4;
-// destroys an NPC and spawns its debris/particles + speech
-spawnNpcDestructionDebris            = 0x800B0850;
-// builds a craft's spline orientation matrix + plays sound
-updateSplineCraftTransform           = 0x800B0A88;
-// pure transform/orientation builder from a quat
-computeOrientedTransformFromQuat     = 0x800B1024;
-// initializes the menu UI widget/element array
-initMenuWidgetArray                  = 0x800B1430;
-// builds a level/ship-select text row (font metrics)
-layoutMenuTextRow                    = 0x800B180C;
-// main player-craft/boss per-frame flight physics core
-updatePlayerCraftPhysics             = 0x800B1BE8;
-// sets player-slot 0 display animation channels
-setupPlayerCraftDisplayAnim          = 0x800B1D54;
-// blocks until audio/speech drains, then finalizes the speech buffer
-drainAudioAndFinalizeSpeechBuffer    = 0x800B24C4;
-// drives a timed float (fade/transition) to completion
-tickTimedScreenFadeFloat             = 0x800B2520;
-// screen-exit/transition: sound + toggle scene mesh flags
-playExitSoundAndToggleScreenMeshes   = 0x800B2564;
-// sprintf-formats a string into a renderable glyph buffer
-buildFormatMessageGlyphBuffer        = 0x800B2630;
-// constructs a text/glyph element struct
-allocFormatTextElement               = 0x800B2A98;
-// loads a numbered texture asset into a descriptor + registers it
-loadNamedTextureDescriptor           = 0x800B2D50;
-// allocates a w×h text texture/render-target + registers it
-allocTextRenderTarget                = 0x800B32F4;
-// ORs capability bits into the per-player craft record
-applyCraftCapabilityFlags            = 0x800B36FC;
-// builds/animates the level-select screen text textures
-buildLevelSelectTextTextures         = 0x800B3824;
-// width/height-scaled text element builder
-buildScaledFormatTextElement         = 0x800B3AFC;
-// build+render+free one format-message queue member
-processAndDisposeFormatMessage       = 0x800B3C70;
 // decrements the text-texture refcount byte
-decrementTextTextureRefcount         = 0x800B3CC0;
-// loops count, sprintf each glyph, registers the glyph textures
-rasterizeFormatMessageGlyphs         = 0x800B3D14;
-// schedules a timed scene format-message (cancels pending, timing table)
-scheduleSceneFormatMessageTimed      = 0x800B3E4C;
-// dedup'd voice-line dispatch (skips if same as last)
-playSpeechClipOncePerChange          = 0x800B3F50;
-// plays a voice line once per level (14-entry ring)
-playSpeechClipOncePerLevel           = 0x800B3FB4;
-// tryRecvServiceMessage; stores a result byte if received
-pollServiceMessageByte               = 0x800B3FD8;
-// allocates the front-end text render-target
-initTextTextureTarget                = 0x800B4020;
-// updates a text/overlay lookup-table entry
-updateTextOverlayLookupEntry         = 0x800B4048;
-// clears the per-level one-shot voice gate for one id
-resetSpeechOncePerLevelFlag          = 0x800B40A0;
-// copies a vec3 into a player slot's position field
-setPlayerSlotPositionVec3            = 0x800B40F0;
-// wrapper -> computeBootConfigScaledVec4
-spawnScaledBootVec4Effect            = 0x800D2C58;
-// shared per-state effect emitter for wingman state handlers
-npcWingmanStateEffectShared          = 0x800D7A6C;
-// oriented transform w/ randomized eased rotation
-spawnOrientedEffectWithEasedSpin     = 0x800B0148;
-// mass-spawns randomized debris/effect NPCs
-spawnSceneDebrisAndEffectCluster     = 0x800B01E4;
 
 // === batch3 2026-06-01: funcs_31/32 player-craft, funcs_28 cinematic/hangar
-accumulateShipThrottleCharge           = 0x800B4168;
-decayWeaponCooldownTimer               = 0x800B41BC;
-getWeaponChargeLevel                   = 0x800B41EC;
-advancePitchTowardTarget               = 0x800B41FC;
-computeThrottleChargeFraction          = 0x800B4224;
-isPlayerShipActive                     = 0x800B4264;
-destroyPlayerShipRecord                = 0x800B4274;
-spawnProjectileObject                  = 0x800B42D4;
-copyMorphTargetVertices                = 0x800B438C;
-buildPrefixedAssetName                 = 0x800B43F4;
-spawnHudReticleAtMeshBounds            = 0x800B448C;
-positionHudSpriteOffset                = 0x800B44D0;
-createHudSpritePair                    = 0x800B44EC;
-playWeaponFireSound                    = 0x800B4588;
-layoutHudSpriteScreenRect              = 0x800B4618;
-playXwingEngineSound                   = 0x800B4F54;
-isWeaponSlotReady                      = 0x800B585C;
-resetEngineTrailQuads                  = 0x800B5B4C;
-acquireLockOnTarget                    = 0x800B63C8;
-emitTexturedImpactEffect               = 0x800B67A0;
-updateEngineThrustEffect               = 0x800B6990;
-findLockOnTarget                       = 0x800B7590;
-orientEffectToVelocity                 = 0x800B7A4C;
-spawnTexturedExplosionBurst            = 0x800B7DFC;
-updateShipPartAnimation                = 0x800B80B4;
-buildHudAmmoReadout                    = 0x800B82D8;
-setMaterialTextureByName               = 0x800B883C;
-easeAnimationKeyframe                  = 0x800B8C08;
-updateVwingEngineEffect                = 0x800B8C30;
-cycleAccountLabelText                  = 0x800B8E08;
-animateBannerOscillation               = 0x800B8F50;
-setupCraftAnimationFlagSet             = 0x800B9198;
-initVwingHudAndSlotState               = 0x800B9354;
-loadVwingMeshAssets                    = 0x800B95D4;
-orientVwingSubmodelByQuat              = 0x800B95E0;
-buildVwingRenderMatrices               = 0x800B9728;
-tickVwingEngineAudio                   = 0x800B9950;
-animateVwingThrusterMaterial           = 0x800B9994;
-updateVwingTrailGeometry               = 0x800B9BE4;
-playerVwingMainUpdate                  = 0x800B9E98;
-computeFalconFlightTransform           = 0x800BA620;
-triggerFalconEngineEffect              = 0x800BAA00;
-bindFalconSubmodelMaterials            = 0x800BAB70;
-playerFalconMainUpdate                 = 0x800BADCC;
-spawnFalconEngineParticles             = 0x800BB608;
-driveFalconAnimationKeyframes          = 0x800BBA5C;
-integrateFalconFlightPhysics           = 0x800BBC58;
-applyTieInterceptorAnimState           = 0x800BBDD0;
-computeTieInterceptorTransform         = 0x800BBF6C;
-copyTieInterceptorAnimBuffer           = 0x800BBF80;
-applyTieInterceptorSlotAnim            = 0x800BC14C;
-triggerTieInterceptorEffect            = 0x800BC290;
-updateTieInterceptorAnimFlag           = 0x800BC2C8;
-integrateTieInterceptorPhysics         = 0x800BC46C;
-computeTieInterceptorOrientation       = 0x800BC4F8;
-spawnTieInterceptorParticles           = 0x800BC6F0;
-playerTieInterceptorMainUpdate         = 0x800BC834;
-computeT16Transform                    = 0x800BCE74;
-playerT16MainUpdate                    = 0x800BD254;
-easeT16AnimationKeyframe               = 0x800BD60C;
-computeNabooBankingOrientation         = 0x800BDAEC;
-buildNabooSubmodelTransform            = 0x800BDC9C;
-handleNabooFlightInput                 = 0x800BDCF8;
-triggerNabooEngineEffect               = 0x800BE228;
-handleNabooActionButtons               = 0x800BE3E8;
-scaleVec3ByScalar                      = 0x800AA3B4;
-addScaledVec3ToVec3                    = 0x800AA3E0;
-buildRotationMatrixFromEulerAngles     = 0x800AA424;
-applyCutsceneSlotMaterialOverrides     = 0x800AA4F4;
-buildTransformMatrixFromEulerAngles    = 0x800AA570;
-spawnCutsceneDebrisField               = 0x800AAC88;
-runHangarSelectionFrame                = 0x800AAD9C;
-composeEffectObjectTransformMatrix     = 0x800AADD4;
-composeNpcOrientationMatrix            = 0x800AB1C8;
-tickEffectObjectMotionAndOrientation   = 0x800AC330;
-buildCutsceneGradientBuffers           = 0x800AC574;
-spawnNpcBurstAlongSegment              = 0x800AC75C;
-tickCinematicEffectObject              = 0x800AC7B4;
-triggerPlayerVehicleSpecialSlotEffect  = 0x800AD320;
-computeTrackedObjectWorldAnchor        = 0x800AD380;
-updateCinematicCameraStateMachine      = 0x800AD418;
-tickCutsceneCameraFromTimeline         = 0x800AD690;
-transformAndNormalizeDirectionByMatrix = 0x800ADBF8;
-submitCameraTrackedObjectToRender      = 0x800ADD5C;
-emitEffectParticlesAlongPath           = 0x800ADF2C;
-getEffectModelPoolHandle               = 0x800AE280;
-beginCameraViewTransition              = 0x800AE290;
-requestCameraSnapToTrackedAnchor       = 0x800AE320;
-beginCameraTrackedTransition           = 0x800AE358;
-advanceCameraTransitionOnCue           = 0x800AE390;
-isCameraTransitionIdle                 = 0x800AE3BC;
-tickEasedCameraKeyframeBlend           = 0x800AE3EC;
-initPlayerCraftTrailBuffers            = 0x800AE3F0;
-emitTexturedEffectCue                  = 0x800B88C8;
-allocT16EffectContext                  = 0x800BD82C;
-triggerT16Effect                       = 0x800BD958;
-applyNamedEffectParameterDefaults      = 0x800AA850;
-loadEffectModelInstancePool            = 0x800AE138;
-freeEffectModelInstancePool            = 0x800AE218;
 
 // === batch4 2026-06-01: funcs_40 music-mgr, funcs_10 map-grid, funcs_36 NPC/debris
-spawnObjectImpactEffectWithSound    = 0x800E9D74;
-computeNpcOrientationFromAimVectors = 0x800E9EC4;
-resetObjectPoolListHead             = 0x800EB984;
-allocObjectPoolNode                 = 0x800EC110;
-resetObjectContextPool              = 0x800EC4D8;
-freeAllObjectContextPoolNodes       = 0x800EC514;
-tickCraftMountedAnimationEffect     = 0x800EC6F0;
-dispatchSlotActionTwelveByGlobalId  = 0x800ECDDC;
-claimSongSlotForCurrentHandle       = 0x800ED150;
-tickActiveSongSlots                 = 0x800ED200;
-shouldSwitchToPendingSong           = 0x800EDBB0;
-selectAndStageNextSong              = 0x800EDC90;
-stopSongAndRebuildActiveCueList     = 0x800EDD8C;
-processPendingSoundCueRequest       = 0x800EDF68;
-tickSongFadeTimer                   = 0x800EE730;
-pushActiveSoundDescriptor           = 0x800EE984;
-popActiveSoundDescriptor            = 0x800EE9F4;
-preloadSceneReferencedSongs         = 0x800EEA54;
-stageSongFromRequestDescriptor      = 0x800EED7C;
-resetMusicSubsystemState            = 0x800EEF34;
-initLevelMusicBank                  = 0x800EF048;
-stopAllMusicWithFade                = 0x800EF1B0;
-startLevelBackgroundMusic           = 0x800EF2F8;
-tickObjectSoundCueState             = 0x800EF510;
-triggerStageMusicForNamedDatItem    = 0x800EF770;
-triggerStageAmbientForNamedDatItem  = 0x800EF95C;
-stopMusicAndResetAudio              = 0x800EFB40;
-preloadSceneSongsWrapper            = 0x800EFB94;
-commitStagedSongAndPlay             = 0x800EFBB4;
-stageSoundCueRequestByIdAndParam    = 0x800EFC84;
 computeGridLayerScrollOffset        = 0x800455C8;
 teardownAnimatedMapGridLayer        = 0x80045708;
 setGridLayerScrollX                 = 0x800457AC;
@@ -3371,37 +2499,6 @@ buildGridCellMesh                   = 0x8004B930;
 getGridCellFromWorldPos             = 0x8004C2D4;
 buildGridCellMeshNoLabel            = 0x8004CBFC;
 rotateObjectMatrixAboutStoredAxis   = 0x8004D078;
-getGlobalFloatGameState             = 0x800C7718;
-getObjectiveGlobalFloat             = 0x800C7728;
-isLevelStateByteZero                = 0x800C77A0;
-randMod                             = 0x800C77D0;
-getScaledPlayerCraftSpeed           = 0x800C794C;
-rebuildDebrisCellGeometry           = 0x800C7970;
-spawnEffectOnNamedDatItem           = 0x800C7978;
-initActorTowardNamedDatItem         = 0x800C79F0;
-initAnchoredActorTowardNamedDatItem = 0x800C7AB0;
-emitDebrisCellFaces                 = 0x800C7B68;
-despawnEffectOnNamedDatItem         = 0x800C7C88;
-dispatchHudEffectUpdate             = 0x800C7D44;
-triggerNamedAssetCue                = 0x800C7D7C;
-initNpcActorFromSpawnMessage        = 0x800C7DC0;
-playNpcStateChangeEffect            = 0x800C7FF8;
-spawnNpcDestructionEffect           = 0x800C8178;
-buildDebrisCellBitfield             = 0x800C821C;
-decodeDeltaCellCounts               = 0x800C83E4;
-spawnNpcImpactEffectVariant         = 0x800C8504;
-allocDebrisCellTable                = 0x800C8520;
-findFreeCellBitSlot                 = 0x800C87B0;
-allocCellBitGroup                   = 0x800C888C;
-updateNpcOrientationFromMotion      = 0x800C8978;
-allocCellGeometryBuffer             = 0x800C8A64;
-buildDebrisMeshFromCells            = 0x800C8C1C;
-setupNpcModelForState               = 0x800C8E90;
-cloneCellBufferWithAlloc            = 0x800C9A88;
-allocZeroedCellRecord               = 0x800C9B8C;
-runModelViewerLoop                  = 0x800C9BF0;
-playNpcAmbientEffect                = 0x800CA18C;
-initNpcActorVariant                 = 0x800CA270;
 
 // === batch5: funcs_19 actor/effect, funcs_3 gfx-DL, funcs_14 player-anim
 forwardToNpcGeneratorSpawn             = 0x80077AC0;
@@ -3492,47 +2589,6 @@ setPlayerSlotEnabledFlag               = 0x80064220;
 invokeMenuOverlayHeaderCallback        = 0x80064248;
 
 // === batch6: funcs_37 walkers, funcs_42 cinematic/transition, funcs_9 NPC-slot/terrain
-spawnProbeDroidGroundImpactEffect      = 0x800CA3A4;
-initProbeDroidScatterLaunch            = 0x800CA560;
-updateProbeDroidHopState               = 0x800CA720;
-initModelViewer                        = 0x800CA638;
-buildModelViewerTextPage               = 0x800CA714;
-runModelViewerSoundDemo                = 0x800CADB8;
-updateModelViewerAudioSource           = 0x800CB30C;
-loadModelViewerModels                  = 0x800CB604;
-shutdownModelViewer                    = 0x800CBB30;
-releaseMeshLinkedList                  = 0x800CBB7C;
-freeModelViewerMeshChain               = 0x800CBBB8;
-releaseModelViewerModelAssets          = 0x800CBC24;
-setModelViewerObjectTransform          = 0x800CBCF4;
-appendNodeToListTail                   = 0x800CBD88;
-findNearestNpcWithinRange              = 0x800CBDA0;
-appendNodeToListHead                   = 0x800CBDC4;
-tickMultiPartVoiceLine                 = 0x800CBE00;
-setVoiceLineLoopFlag                   = 0x800CC02C;
-initActorFromSpawnTemplate             = 0x800CC03C;
-tickActorTexturedSoundEffect           = 0x800CC158;
-spawnAtAtFootstepDustBurst             = 0x800CD38C;
-advanceAtStEffectPhaseSound            = 0x800CEF20;
-tickAtStCannonFireEffect               = 0x800CF09C;
-updateAtStBodyKinematics               = 0x800CF20C;
-advanceAtStDeathAnimPhase              = 0x800CFD0C;
-spawnPlayerAtStCannonFire              = 0x800D1248;
-advancePlayerAtStLocomotion            = 0x800D1578;
-updatePlayerAtStBehavior               = 0x800D1730;
-computeRandomizedOrientationFrame      = 0x800F34DC;
-updateNpcEffectIntensity               = 0x800F3CB0;
-buildSineWaveEffectGeometryA           = 0x800F5D34;
-buildSineWaveEffectGeometryB           = 0x800F6954;
-renderNpcAnchoredProceduralEffect      = 0x800F7130;
-spawnAndUpdateEffectActors             = 0x800F7C74;
-spawnNpcAnchoredEffectSlot             = 0x800F9D68;
-flashMissionAlertObjectsAndPrint       = 0x800FADEC;
-beginMissionEndTransition              = 0x800FAF0C;
-endMissionEndTransition                = 0x800FB05C;
-requestMissionTransitionMode           = 0x800FB190;
-setupMissionTransitionScreenOverlay    = 0x800FB2F8;
-tickMissionTransitionAndTeardown       = 0x800FB4B0;
 reinsertNpcIntoSortedFreeList          = 0x8003EC10;
 relinkNpcSlotToNewParentGroup          = 0x8003EFDC;
 spawnChildNpcWithTransform             = 0x8003F1D0;
@@ -3576,33 +2632,6 @@ decodeAndFillVoiceBlock                      = 0x8009C904;
 applyVoiceDelayFilter                        = 0x8009D8C4;
 runVoiceLatticeFilter                        = 0x8009D980;
 renderVoiceAudioBlock                        = 0x8009DB44;
-spawnCutsceneObjectsFromList                 = 0x800A7C4C;
-spawnCutsceneEffectsAndCues                  = 0x800A89B0;
-loadCutsceneAssetsByIndex                    = 0x800A9270;
-initCutsceneAudioChannels                    = 0x800A959C;
-initCutsceneScene                            = 0x800A98AC;
-computeAngleToTargetFromTransform            = 0x800A9B80;
-emit3DSoundsForActiveNpcs                    = 0x800A9D70;
-buildOrientationFromPosAndAngles             = 0x800A9E70;
-stepAngleTowardTarget                        = 0x800A9FCC;
-updatePositionalAudioSource                  = 0x800AA1BC;
-computeCraftSelectTurnFromInput              = 0x800AE5C4;
-composeInterpolatedNodeMatrices              = 0x800AE814;
-populateCutsceneSubtitleTextIds              = 0x800AE830;
-playRandomCutsceneVoiceLine                  = 0x800AE960;
-setByteAcrossEntryList                       = 0x800AEAC0;
-scheduleCutsceneActionSlot                   = 0x800AEBD0;
-composeInterpolatedNodeMatricesAlt           = 0x800AEC48;
-initCraftSelectScreen                        = 0x800AEC60;
-integrateCraftVelocityAndCollide             = 0x800AECF8;
-despawnCutsceneNpcSlot                       = 0x800AEF30;
-playCutsceneObjectImpactSound                = 0x800AEF58;
-tickCutsceneObject                           = 0x800AF04C;
-buildBobbingObjectMatrix                     = 0x800AF164;
-matchKeywordWithPriority                     = 0x800AF2C8;
-tickCraftSelectScreen                        = 0x800AF3C0;
-handleCraftSelectInput                       = 0x800AF6AC;
-findNearestSceneObjectToPoint                = 0x800AFCF4;
 walkDatTreeAndAllocSubtypeBuffers            = 0x80071064;
 composeRandomRotationMatrixVariant           = 0x8007218C;
 spawnOrientedEffectIfBudgetOk                = 0x80072418;
@@ -3649,25 +2678,8 @@ evaluateVoiceModulatorRecordZero             = 0x80084AE8;
 evaluateVoiceModulatorRecordOne              = 0x80084B08;
 evaluateVoiceModulatorRecordTwo              = 0x80084B28;
 evaluateVoiceModulatorRecordThree            = 0x80084B48;
-clearMissionObjectiveFlagsAndEnterPhaseSix   = 0x800FBD48;
-advanceMissionObjectiveStageWhenModeOne      = 0x800FBDCC;
-resetHudInstancesAndUnbindNpcs               = 0x800FC108;
-findNearestTargetableNpcInRange              = 0x800FC260;
-projectForwardTerrainImpactPoint             = 0x800FC564;
-tickHudInstanceTargetingAndSpawns            = 0x800FC720;
-dispatchHudInstanceWeaponEffect              = 0x800FE500;
 commitHudInstancePendingState                = 0x800FEE28;
-getActiveHudInstanceTargetPosition           = 0x800FEE74;
 isHudSecondaryWeaponActive                   = 0x800FEECC;
-stepObjectOrientationTowardTarget            = 0x800FEF10;
-resolveCraftAnimationNodeHandles             = 0x800FFE00;
-applyCraftAnimationKeyframePose              = 0x801001C8;
-despawnCraftAnimationSlotNpcs                = 0x80100594;
-despawnCraftAnimationSlotNpcsAndMarkStopping = 0x801006A8;
-tickCraftAnimationSlot                       = 0x80100950;
-setCraftAnimationSlotParams                  = 0x80101018;
-getCraftAnimationSlotFlag                    = 0x80101040;
-getCraftAnimationSlotValue                   = 0x80101068;
 attachDebrisModelVariant                     = 0x8006C9C0;
 updateDestructionDebrisNpc                   = 0x8006CBB0;
 applyAccountUnlocksToSettings                = 0x8006E018;
@@ -3821,35 +2833,6 @@ allocateSongChannelArray                     = 0x8008F0A0;
 setupSongRenderBuffers                       = 0x8008F2FC;
 advanceVolumeFadeEnvelope                    = 0x8008F4D8;
 buildSongDecodeBufferRing                    = 0x8008F65C;
-tickPlayerCraftBlinkIndicator                = 0x800BE4A8;
-applyDemoRecordedHudEvents                   = 0x800BECDC;
-clearPlayerSlotHudTracking                   = 0x800BEE18;
-initAllPlayersHudTracking                    = 0x800BEEAC;
-tickPlayerHudIndicators                      = 0x800BEFBC;
-loadPlayerSlotHudPreset                      = 0x800BF264;
-getDemoRecordedTimestep                      = 0x800BF468;
-tickMenuOptionEntry                          = 0x800BF6D8;
-updateHudHealthIndicator                     = 0x800BF790;
-runMenuRandomBackdropScreen                  = 0x800BF830;
-loadMenuSceneModelAndMaterials               = 0x800BFFBC;
-animateMenuSceneTransform                    = 0x800C00D8;
-setMenuObjectColorPreset                     = 0x800C0460;
-createMenuTextLabels                         = 0x800C05A0;
-runMenuShipSelectScreen                      = 0x800C131C;
-initMenuScreenRenderContext                  = 0x800C17B4;
-runMenuContentStateMachine                   = 0x800C1878;
-tickMenuSelectionEnterState                  = 0x800C1B50;
-evalPauseMenuInputMode                       = 0x800C1B64;
-tickMenuSelectionActiveState                 = 0x800C20E0;
-transformSceneMeshVertices                   = 0x800C2574;
-runMenuModelViewerScreen                     = 0x800C28F0;
-initMenuScreenCameraViewport                 = 0x800C2E08;
-updateMenuItemAnimationState                 = 0x800C2EFC;
-initInteractiveSceneContext                  = 0x800C3FE0;
-broadcastSceneShutdownAndCleanup             = 0x800C3FEC;
-broadcastSceneEventWithPayload               = 0x800C401C;
-setRenderObjectTargetOrClear                 = 0x800C4060;
-probeNumberedAssetFilename                   = 0x800C40F8;
 acquireSampleStreamBlock                     = 0x8008F758;
 initSampleStreamBlockCache                   = 0x8008F858;
 moveSampleBlockToFront                       = 0x8008F95C;
@@ -3956,25 +2939,6 @@ getLevelConfigHalfword                       = 0x8006B604;
 getLevelExpansionMemoryBudget                = 0x8006B630;
 getPlayerCraftRecordByIdx                    = 0x8006C918;
 getPlayerRecordTargetBuffer                  = 0x8006C96C;
-evaluateTargetTrackingVisibility             = 0x800F0BA4;
-tickObjectAnimSubstruct                      = 0x800F0DC4;
-quicksortFloatKeysWithValues                 = 0x800F1198;
-gatherAndSortNearbyNpcViewPoints             = 0x800F1310;
-acquireNpcTargetsInAimCone                   = 0x800F15B8;
-raycastTerrainAndNpcs                        = 0x800F1B40;
-initActorRenderDescriptorWithNpcVelocity     = 0x800F1FF4;
-isVectorWithinConeAndRange                   = 0x800F2208;
-isVectorInConeWriteDistance                  = 0x800F2310;
-computeTurnAxisTowardTarget                  = 0x800F23F8;
-computeTurnVectorTowardTarget                = 0x800F2540;
-computeTurnVectorAndDistanceToTarget         = 0x800F2648;
-isPointInsideTriggerVolume                   = 0x800F2760;
-computeAnchorRelativePositionByDistanceRatio = 0x800F2AC4;
-initAnimSubstructFromParams                  = 0x800F2C6C;
-setAnimSubstructValueIfActive                = 0x800F2DA4;
-copyPipeDelimitedField                       = 0x800F30AC;
-copyRandomPipeDelimitedField                 = 0x800F3144;
-resolveScriptedNameTokenList                 = 0x800F3290;
 buildEffectObjectWorldTransform              = 0x8004F1CC;
 activateSceneNodeAndAudioListener            = 0x80050E28;
 registerSceneNodeAndInvertRotation           = 0x8005321C;
@@ -4015,10 +2979,6 @@ getSpeechPlaybackElapsedTime                 = 0x800679D0;
 getPlayerSlotAnimChannelCount      = 0x80063F70;
 getPlayerSlotEntryBaseShort        = 0x80064154;
 samplePlayerSlotChannelScaledShort = 0x80064178;
-runScriptedCraftCinematicEvent     = 0x800B08F4;
-tickCinematicObjectStateMachine    = 0x800B13E0;
-startSlotLoopAnimWithVoiceSync     = 0x800B1B58;
-applyPlayerSlotAnimChannelKeyframe = 0x800B1EF4;
 loadGridCellTilesByDistance        = 0x80046484;
 buildGridCellAdjacencyTable        = 0x80048434;
 lv4_anchorActorsToDatItems         = 0x80103B34;
@@ -4027,15 +2987,7 @@ lv4_setMissionFlagB                = 0x80103C40;
 lv9_triggerEventOnPlayerProximity  = 0x80104CCC;
 lv9_resetProximityTriggerState     = 0x80104F6C;
 lvb_advanceComplexObjectiveStages  = 0x8010695C;
-computeCellGridIndices             = 0x800C804C;
-buildCellSlotTableAndFindFree      = 0x800C86C8;
-tickCraftAbilityCooldown           = 0x800B77D0;
-resetMaterialTextureEffectSlots    = 0x800B87BC;
 getCutsceneRuntimeContext          = 0x800AEA18;
-getCinematicStateSubObject         = 0x800AF65C;
-getSoundCueSubsystemFlag           = 0x800EFD54;
-runMusyXTaskWrapper                = 0x800CBD6C;
-resetEffectSequenceState           = 0x800AE20C;
 
 // === batch11 sweep-3: funcs_4/12/35/1/6/5/49/2/7/48/34
 renderLitTexturedMeshFaces             = 0x8000F624;
@@ -4075,20 +3027,6 @@ computeNamedAttachPointTransform       = 0x8005857C;
 createMeshInstanceFromSource           = 0x80059294;
 setMeshInstanceLodAndRebuildNodes      = 0x80059338;
 findModelChildNodeByName               = 0x800594F8;
-registerObjectAndResolveDatItem        = 0x800C6340;
-accumulateClampedFloatField            = 0x800C6468;
-getDisplayItemStateByte                = 0x800C6498;
-initHangarDisplayItemTimers            = 0x800C64B0;
-tickHangarDisplayItemAnimations        = 0x800C65CC;
-resetJfifDecodeState                   = 0x800C6C40;
-freeJfifDecodeState                    = 0x800C6DBC;
-applyNpcPositionDrift                  = 0x800C6FFC;
-getConfigFloatPair                     = 0x800C7120;
-accumulateVectorInObjectFrame          = 0x800C713C;
-getConfigFloatValue                    = 0x800C722C;
-findNamedEntryInCurrentObject          = 0x800C723C;
-copyCurrentObjectMatrix                = 0x800C7268;
-getSceneStatePtr                       = 0x800C7514;
 clearDmaReadyFlag                      = 0x80003390;
 processAssetLoadStep                   = 0x80003D64;
 teardownAssetManifestService           = 0x80004FD8;
@@ -4148,14 +3086,6 @@ lvfTickObjectiveStageCountdown         = 0x80108260;
 lvgResetObjectiveProgressState         = 0x80108A64;
 lvgAdvanceObjectiveStageAndCue         = 0x80108A70;
 lvhBindObjectiveVoiceLinesAndStart     = 0x80108C98;
-resetMenuElementInputState             = 0x800C4C80;
-allocCraftPreviewEffectObject          = 0x800C4DB8;
-initCraftPreviewEffectWithRandom       = 0x800C4DF0;
-initMenuElementScrollAnimParams        = 0x800C4E50;
-getCraftStatIfThresholdMet             = 0x800C4ED8;
-resetMenuSelectionGlobalState          = 0x800C4F20;
-findClosestRadarContactAndSetSweep     = 0x800C5580;
-setCraftMaterialTextureByName          = 0x800C56C4;
 returnZeroStub                         = 0x80000C60;
 spillArgsNoopHandler                   = 0x80004FB0;
 zlibReturnZeroStub                     = 0x800051F8;
@@ -4166,7 +3096,6 @@ setGfxTaskYieldParams                  = 0x8001C310;
 missionCleanupNoopHook                 = 0x8006590C;
 getPlayerSlotLookupBase                = 0x80063C18;
 returnZeroAudioStub                    = 0x80097AC8;
-advanceWrappingPhaseAccumulator        = 0x800C6660;
 
 // Fake Function Fixing
 

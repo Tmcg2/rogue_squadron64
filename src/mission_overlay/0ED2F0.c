@@ -1,10 +1,10 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", func_mission_overlay_800EC6F0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", tickCraftMountedAnimationEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", func_mission_overlay_800ECC28);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", craftMountedAnimationNpcHandler);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", func_mission_overlay_800ECDDC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", dispatchSlotActionTwelveByGlobalId);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ED2F0", fake_func_800ECE04);
 

@@ -17,13 +17,13 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C2C);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C34);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B2630);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", buildFormatMessageGlyphBuffer);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C40);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B2A98);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", allocFormatTextElement);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B2D50);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", loadNamedTextureDescriptor);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", strMenuAlpha);
 
@@ -33,9 +33,9 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", strMenuP);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5C7C);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B32F4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", allocTextRenderTarget);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3650);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", tickFormatMessageWorker);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5CB4);
 
@@ -53,59 +53,59 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", strMenuGRAD2A);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/1197D0", D_menu_overlay_800A5D40);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3824);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", buildLevelSelectTextTextures);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3AFC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", buildScaledFormatTextElement);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3C70);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", processAndDisposeFormatMessage);
 
-void func_menu_overlay_800B3CC0(void) {
+void decrementTextTextureRefcount(void) {
     D_menu_overlay_800CC850--;
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3CD4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", setChildPosFromI16Pair);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3D08);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", getStructField0xC);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3D14);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", rasterizeFormatMessageGlyphs);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3E5C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", disposeFormatMsgQueueMember);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3EB8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", initFormatMessageWorker);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3F00);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", shutdownFormatMessageWorker);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3F24);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", enqueueFormatMessage);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B3FD8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", pollServiceMessageByte);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4020);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", initTextTextureTarget);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4048);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", updateTextOverlayLookupEntry);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4168);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", accumulateShipThrottleCharge);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4224);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", computeThrottleChargeFraction);
 
-s32 func_menu_overlay_800B4264(void) {
+s32 isPlayerShipActive(void) {
     return D_menu_overlay_800CC85C != 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4274);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", destroyPlayerShipRecord);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B42D4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", spawnProjectileObject);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B438C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", copyMorphTargetVertices);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B43F4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", buildPrefixedAssetName);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B448C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", spawnHudReticleAtMeshBounds);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B44D0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", positionHudSpriteOffset);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B44EC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", createHudSpritePair);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", func_menu_overlay_800B4618);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", layoutHudSpriteScreenRect);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/1197D0", fake_func_800B47C4);
 

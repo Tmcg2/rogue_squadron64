@@ -1,6 +1,6 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C00A0", func_mission_overlay_800BF4A0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C00A0", attached3DSoundEmitterNpcHandler);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C00A0", fake_func_800BF784);
 

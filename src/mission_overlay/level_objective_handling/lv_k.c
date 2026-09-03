@@ -16,15 +16,15 @@ s32 lvk_checkComplexObjectives(void) {
     if (D_mission_overlay_8010D1F0 == 0) {
         if ((getObjectiveCount(1) == 0x25) && (getObjectiveCount(2) == 0xF)) {
             D_mission_overlay_8010D1F0 = 1;
-            func_mission_overlay_800C7D60(lv_k_musicrng_levelsettings, 0);
-            func_mission_overlay_800C7D98(0);
+            delegateToLevelStageTick(lv_k_musicrng_levelsettings, 0);
+            triggerSoundCueByType(0);
             addTimerHandleWrapper(func_mission_overlay_80109558, 5.5f);
         } else if (getObjectiveCount(1) == 0x25) {
             temp_v0 = getObjectiveBoolean(4);
             if (temp_v0 == 1) {
                 D_mission_overlay_8010D1F0 = temp_v0;
-                func_mission_overlay_800C7D60(lv_k_musicrng_levelsettings, 0);
-                func_mission_overlay_800C7D98(1);
+                delegateToLevelStageTick(lv_k_musicrng_levelsettings, 0);
+                triggerSoundCueByType(1);
                 addTimerHandleWrapper(func_mission_overlay_80109574, 4.5f);
             }
         }
@@ -38,11 +38,11 @@ s32 lvk_checkComplexObjectives(void) {
 }
 
 void func_mission_overlay_80109558(void) {
-    func_mission_overlay_800C776C();
+    setHudEnableBit8();
 }
 
 void func_mission_overlay_80109574(void) {
-    func_mission_overlay_800C7738();
+    setHudEnableBit4();
 }
 
 s32 lvk_initializeObjectTracking(void) {

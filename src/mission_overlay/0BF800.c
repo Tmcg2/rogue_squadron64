@@ -14,19 +14,19 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0BF800", D_mission_overlay_800A
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BEC00);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BECDC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", applyDemoRecordedHudEvents);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BEE18);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", clearPlayerSlotHudTracking);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BEEAC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", initAllPlayersHudTracking);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0BF800", D_mission_overlay_800A6214);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BEFBC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", tickPlayerHudIndicators);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BF264);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", loadPlayerSlotHudPreset);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BF2F4);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", countTrailingZeros16);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BF358);
 
@@ -34,7 +34,7 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800B
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BF408);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", func_mission_overlay_800BF468);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", getDemoRecordedTimestep);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BF800", fake_func_800BF498);
 

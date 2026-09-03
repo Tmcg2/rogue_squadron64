@@ -1,10 +1,10 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", func_mission_overlay_800DC300);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", npcRadarDishComputeAimMotion);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", npcRadarDishUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", func_mission_overlay_800DD248);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", npcInitMinimalNoAnim);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0DCF00", fake_func_800DD2C4);
 

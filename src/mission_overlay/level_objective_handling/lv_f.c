@@ -37,32 +37,32 @@ s32 lvf_checkComplexObjectives(f32 arg0) {
 
     temp_s0_2 = getObjectiveCount(0xA) + getObjectiveCount(0xB) + getObjectiveCount(0xC);
     if (D_mission_overlay_8010D1A8 == 0) {
-        if ((getObjectiveCount(1) >= 0x19) && (func_mission_overlay_800C7514() == 0)) {
+        if ((getObjectiveCount(1) >= 0x19) && (getSceneStatePtr() == 0)) {
             D_mission_overlay_8010D1A8 = 1;
-            func_mission_overlay_800C7738();
+            setHudEnableBit4();
             playObjectiveVoiceLine1(0x250U);
         }
         if (getObjectiveCount(1) >= 0x12) {
-            temp_v0 = func_mission_overlay_800C7514();
+            temp_v0 = getSceneStatePtr();
             if (temp_v0 == 1) {
                 D_mission_overlay_8010D1A8 = temp_v0;
-                func_mission_overlay_800C7738();
+                setHudEnableBit4();
                 playObjectiveVoiceLine1(0x250U);
             }
         }
-        if ((getObjectiveCount(1) >= 0xB) && (func_mission_overlay_800C7514() == 2)) {
+        if ((getObjectiveCount(1) >= 0xB) && (getSceneStatePtr() == 2)) {
             D_mission_overlay_8010D1A8 = 1;
-            func_mission_overlay_800C7738();
+            setHudEnableBit4();
             playObjectiveVoiceLine1(0x250U);
         }
-        if ((getObjectiveCount(1) >= 9) && (func_mission_overlay_800C7514() == 3)) {
+        if ((getObjectiveCount(1) >= 9) && (getSceneStatePtr() == 3)) {
             D_mission_overlay_8010D1A8 = 1;
-            func_mission_overlay_800C7738();
+            setHudEnableBit4();
             playObjectiveVoiceLine1(0x250U);
         }
         if ((getObjectiveCount(2) >= 3) && (temp_s0_2 == 0x14)) {
             D_mission_overlay_8010D1A8 = 1;
-            func_mission_overlay_800C776C();
+            setHudEnableBit8();
             activateObjectiveCompleteFlag(2);
         }
         if ((D_mission_overlay_8010D1AC == 0) && (calculateDatItemDistanceToPlayer("Dev_South") <= 15.0f)) {
@@ -92,21 +92,21 @@ void func_mission_overlay_80108260(f32 arg0) {
     } else {
         if (D_mission_overlay_8010D1A0 != 2) {
             D_mission_overlay_8010D1A0 = 2;
-            func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 2);
+            delegateToLevelStageTick("MUSICRNG_LevelSettings", 2);
         }
         return;
     }
     if (temp_fv0 < 30.0f) {
         if (D_mission_overlay_8010D1A0 != 1) {
             D_mission_overlay_8010D1A0 = 1;
-            func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 1);
+            delegateToLevelStageTick("MUSICRNG_LevelSettings", 1);
         }
         D_mission_overlay_8010D1A4 = 6.0f;
     } else if (D_mission_overlay_8010D1A0 == 1) {
         D_mission_overlay_8010D1A4 -= arg0;
         if (D_mission_overlay_8010D1A4 <= 0.0f) {
             D_mission_overlay_8010D1A0 = 0;
-            func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 0);
+            delegateToLevelStageTick("MUSICRNG_LevelSettings", 0);
         }
     }
 }

@@ -14,15 +14,15 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0B4EC0", D_mission_overlay_800A
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", playerXwingInit);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", func_mission_overlay_800B4588);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", playWeaponFireSound);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", playerXwingFireBlaster);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", func_mission_overlay_800B4F54);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", playXwingEngineSound);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", playerXwingUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", func_mission_overlay_800B585C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", isWeaponSlotReady);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0B4EC0", fake_func_800B58B4);
 

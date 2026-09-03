@@ -234,7 +234,7 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuSnowspeeder);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuPlCraftsSnowspeeder);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B47D0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", menuControllerInput);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6644);
 
@@ -366,35 +366,35 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6850);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6854);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B80B4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateShipPartAnimation);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B82D8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", buildHudAmmoReadout);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B85B4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", readAccountForSelectionScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B87BC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", resetMaterialTextureEffectSlots);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B883C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMaterialTextureByName);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B8C08);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", easeAnimationKeyframe);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B8E08);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cycleAccountLabelText);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B8F50);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateBannerOscillation);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9198);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setupCraftAnimationFlagSet);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6964);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6970);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9354);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initVwingHudAndSlotState);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A699C);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A69BC);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B95D4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", loadVwingMeshAssets);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A69F4);
 
@@ -404,55 +404,55 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6A14);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6A1C);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9728);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", buildVwingRenderMatrices);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9994);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateVwingThrusterMaterial);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9BE4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateVwingTrailGeometry);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800B9E98);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", playerVwingMainUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BA0F0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setupMenuData);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BB234);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", handleGameSettingsMenu);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BB394);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateMenuPerFrame);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BBA5C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", driveFalconAnimationKeyframes);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BBDD0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyTieInterceptorAnimState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BBF80);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", copyTieInterceptorAnimBuffer);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BC14C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyTieInterceptorSlotAnim);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BC2C8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateTieInterceptorAnimFlag);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BC46C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", integrateTieInterceptorPhysics);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BC6F0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", spawnTieInterceptorParticles);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BC834);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", playerTieInterceptorMainUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BCE2C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initControllerSettingsStructs);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BD274);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", controllerSettingsScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BD60C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", easeT16AnimationKeyframe);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BD82C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", allocT16EffectContext);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BDAEC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", computeNabooBankingOrientation);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BDCF8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", handleNabooFlightInput);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BE3E8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", handleNabooActionButtons);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6DC0);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6DCC);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BEA00);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", eliteRoguesMenuHandler);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6DF8);
 
@@ -518,19 +518,19 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6E98);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6E9C);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BF6D8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickMenuOptionEntry);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6EB8);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BF830);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", runMenuRandomBackdropScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800BFFBC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", loadMenuSceneModelAndMaterials);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C00D8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateMenuSceneTransform);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C0460);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMenuObjectColorPreset);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C05A0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createMenuTextLabels);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMedalSh);
 
@@ -544,7 +544,7 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6FF8);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A7008);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C06D0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", postLevelSaveInit);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A7038);
 
@@ -552,101 +552,101 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A7040);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", postLevelStatScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C131C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", runMenuShipSelectScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C17B4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuScreenRenderContext);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C1878);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", runMenuContentStateMachine);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A70F4);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C1B50);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickMenuSelectionEnterState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C20E0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickMenuSelectionActiveState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C2574);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", transformSceneMeshVertices);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C28F0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", runMenuModelViewerScreen);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C2E08);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuScreenCameraViewport);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C2EFC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateMenuItemAnimationState);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A7354);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A737C);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C30C8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", menuSubtype02Handler);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C3FE0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initInteractiveSceneContext);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4184);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setupCraftPreviewModel);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getPlayerRankString);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C471C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", shutdownMenuMessagingAndSpeech);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4754);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioA);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C47F8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", preloadMenuMusicSetA);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4878);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioB);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C491C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioC);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getControllerSettingsTitle);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4A44);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", playMenuElementTransitionAnim);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", loadControllerModel);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", loadHelmetModel);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4C80);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", resetMenuElementInputState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4C8C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateCraftSelectFlags);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4DB8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", allocCraftPreviewEffectObject);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4DF0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initCraftPreviewEffectWithRandom);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4E50);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuElementScrollAnimParams);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4E6C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyMenuCheatCode);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4ED8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getCraftStatIfThresholdMet);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4F20);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", resetMenuSelectionGlobalState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4F38);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", spawnMenuListItemSprite);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C4FF4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createUiSpriteAt);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5118);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateUiSpriteScrollAndAlpha);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5244);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMenuAnimGroupFrame);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5300);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createMenuTextElement);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C53D4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", allocMenuScreenState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5478);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", freeMenuScreenState);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C54E4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateMenuElementTimedPosition);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5610);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyCraftSlotAnimations);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C56A4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMaterialFadeTargetIfIdle);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C56C4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setCraftMaterialTextureByName);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C56E4);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuBackdropAndPickRandom);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C57CC);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initSongAssetLoadWorker);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5808);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", shutdownSongAssetLoadWorker);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", func_menu_overlay_800C5834);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickSongAssetLoadWorker);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", fake_func_800C5898);
 

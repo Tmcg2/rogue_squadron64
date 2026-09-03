@@ -1,10 +1,10 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D7850);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanResetState);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D7974);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D7A6C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanStateEffectShared);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A781C);
 
@@ -12,11 +12,11 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7824);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D7CF8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState0);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7834);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D7EC0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState1);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7844);
 
@@ -24,39 +24,39 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A784C);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D80B4);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanBehaviorByMode);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D8988);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanSpawnBurstEffects);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7954);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D8CB8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanSteerToward);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D9234);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanUpdateEngineAudio);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800D9F90);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState2);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA064);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState3);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA13C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState4);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA234);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState5);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA360);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanStateNoop);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA368);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcWingmanState6);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7B00);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA440);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcTieVariantTickEffects);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA7D8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcTieVariantSteerToward);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DA9B0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcTieVariantTickAttachmentEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DAB98);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcTieVariantHandleDestruction);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcTieVariantUpdate);
 
@@ -146,6 +146,6 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7CF8);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", func_mission_overlay_800DC228);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0D8450", npcRadarDishInit);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0D8450", D_mission_overlay_800A7D00);

@@ -44,13 +44,13 @@ s32 lv4_checkComplexObjectives(void) {
     s32 temp_v0_4;
 
     if (getObjectiveCount(0x10) >= 3) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
     }
     if (getObjectiveCount(0xF) >= 3) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
     }
     if ((getObjectiveCount(0x1C) > 0) && (D_mission_overlay_8010D060 == 1)) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         activateObjectiveCompleteFlag(1);
         activateObjectiveCompleteFlag(2);
     }
@@ -70,7 +70,7 @@ s32 lv4_checkComplexObjectives(void) {
     temp_v0_3 = getObjectiveBoolean(0x1A);
     if ((temp_v0_3 == 1) && (D_mission_overlay_8010D074 == 0)) {
         D_mission_overlay_8010D074 = temp_v0_3;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine1(0xCU);
     }
     if (getObjectiveBoolean(0xC) == 0) {
@@ -131,20 +131,20 @@ void func_mission_overlay_80103A90(void) {
 }
 
 void func_mission_overlay_80103AB0(void) {
-    func_mission_overlay_800C7884("Cut_Camera");
+    setHudFlagBit40AndStoreArg("Cut_Camera");
     playObjectiveVoiceLine2(0x238U, 0.0f);
     playObjectiveVoiceLine2(0x30U, 0.0f);
     playObjectiveVoiceLine2(0x142U, 0.0f);
     addTimerHandleWrapper(func_mission_overlay_80103B34, 2.0f);
     addTimerHandleWrapper(func_mission_overlay_80103B88, 7.0f);
-    func_mission_overlay_800C7D98(3);
+    triggerSoundCueByType(3);
     setObjectiveBoolean(0x6F, 1U);
 }
 
 void func_mission_overlay_80103B34(void) {
-    func_mission_overlay_800C7AB0("Y_Wing_uno", "y_wing_intercity");
-    func_mission_overlay_800C7AB0("Y_Wing_dos", "y_wing_intercity");
-    func_mission_overlay_800C7AB0("Y_Wing_tres", "y_wing_intercity");
+    initAnchoredActorTowardNamedDatItem("Y_Wing_uno", "y_wing_intercity");
+    initAnchoredActorTowardNamedDatItem("Y_Wing_dos", "y_wing_intercity");
+    initAnchoredActorTowardNamedDatItem("Y_Wing_tres", "y_wing_intercity");
 }
 
 void func_mission_overlay_80103B88(void) {

@@ -26,7 +26,7 @@ s32 lv5_initializeObjectTracking(void) {
 void func_mission_overlay_80103E5C(void) {
     setObjectiveBoolean(0x32, 1U);
     activateObjectiveCompleteFlag(2);
-    func_mission_overlay_800C7884("Camera1");
+    setHudFlagBit40AndStoreArg("Camera1");
     playObjectiveVoiceLine2(0xEU, 1.5f);
     playObjectiveVoiceLine2(0xFU, 1.0f);
     playObjectiveVoiceLine2(0x147U, 0.0f);
@@ -36,9 +36,9 @@ void func_mission_overlay_80103E5C(void) {
     playObjectiveVoiceLine2(0x149U, 1.0f);
     playObjectiveVoiceLine2(0x2A3U, 8.0f);
     setObjectiveBoolean(0x6E, 1U);
-    func_mission_overlay_800C7D98(0);
-    func_mission_overlay_800C7D60("MUSICRNG_LevelDefaults", 0);
-    func_mission_overlay_800C7648(0, 0);
+    triggerSoundCueByType(0);
+    delegateToLevelStageTick("MUSICRNG_LevelDefaults", 0);
+    getAndSetByteAtLevelStateTable(0, 0);
     addTimerHandleWrapper(func_mission_overlay_801040F0, 10.0f);
 }
 
@@ -88,7 +88,7 @@ void func_mission_overlay_801040D0(void) {
 }
 
 void func_mission_overlay_801040F0(void) {
-    func_mission_overlay_800C7648(0, 1);
+    getAndSetByteAtLevelStateTable(0, 1);
 }
 
 s32 lv5_80104110(void) {
@@ -103,14 +103,14 @@ s32 lv5_calculateFriendliesSaved(void) {
 s32 lv5_checkComplexObjectives(void) {
     if ((getObjectiveCount(2) >= 4) && (D_mission_overlay_8010D080 == 0)) {
         D_mission_overlay_8010D080 = 1;
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x11U, 1.0f);
         playObjectiveVoiceLine2(0xDDU, 1.0f);
         playObjectiveVoiceLine2(0x14BU, 0.5f);
     }
     if ((getObjectiveCount(4) >= 9) && (D_mission_overlay_8010D084 == 0)) {
         D_mission_overlay_8010D084 = 1;
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         activateObjectiveCompleteFlag(1);
         activateObjectiveCompleteFlag(3);
     }

@@ -6,11 +6,11 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0BE650", D_mission_overlay_800A
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", playerNabooStarfighterInit);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", func_mission_overlay_800BDC9C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", buildNabooSubmodelTransform);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", func_mission_overlay_800BE228);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", triggerNabooEngineEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", func_mission_overlay_800BE4A8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", tickPlayerCraftBlinkIndicator);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BE650", playerNabooStarfighterUpdate);
 

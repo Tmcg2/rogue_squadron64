@@ -1,6 +1,6 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C64B0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", initHangarDisplayItemTimers);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C70B0", D_mission_overlay_800A6880);
 
@@ -36,20 +36,20 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C70B0", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C70B0", D_mission_overlay_800A6904);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C65CC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", tickHangarDisplayItemAnimations);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C68A0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", hangarVehicleDisplayNpcHandler);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C6FFC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", applyNpcPositionDrift);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C7120);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", getConfigFloatPair);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C713C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", accumulateVectorInObjectFrame);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C722C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", getConfigFloatValue);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C723C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", findNamedEntryInCurrentObject);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", func_mission_overlay_800C7268);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C70B0", copyCurrentObjectMatrix);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C70B0", D_mission_overlay_800A6958);

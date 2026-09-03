@@ -579,15 +579,19 @@ SECTIONS
         build/src/main/66FB0.o(.rodata);
         build/src/main/67690.o(.rodata);
         build/src/main/68990.o(.rodata);
-        build/asm/data/main/3D4D0.rodata.o(.rodata);
+        build/src/main/6A6F0.o(.rodata);
         build/src/main/6B8B0.o(.rodata);
         build/asm/data/main/3D560.rodata.o(.rodata);
         build/asm/data/main/3D5D0.rodata.o(.rodata);
         build/src/main/6E500.o(.rodata);
-        build/asm/data/main/3D770.rodata.o(.rodata);
-        build/asm/data/main/3DAF0.rodata.o(.rodata);
-        build/asm/data/main/3E100.rodata.o(.rodata);
-        build/asm/data/main/3E230.rodata.o(.rodata);
+        build/src/main/700B0.o(.rodata);
+        build/src/main/738F0.o(.rodata);
+        build/src/main/79E80.o(.rodata);
+        build/src/main/7A8E0.o(.rodata);
+        build/src/main/7ACF0.o(.rodata);
+        build/src/main/7B470.o(.rodata);
+        build/src/main/7CEA0.o(.rodata);
+        build/asm/data/main/3E710.rodata.o(.rodata);
         build/asm/data/main/3EA70.rodata.o(.rodata);
         build/src/main/9A850.o(.rodata);
         build/asm/data/main/3EB00.rodata.o(.rodata);
@@ -688,7 +692,7 @@ SECTIONS
         build/asm/data/main/A1690.data.o(.data);
         build/asm/data/main/A1970.data.o(.data);
         build/asm/data/main/A1980.data.o(.data);
-        build/asm/data/main/A1990.data.o(.data);
+        build/src/main/7CEA0.o(.data);
         build/src/main/82E70.o(.data);
         build/asm/data/main/A1B50.data.o(.data);
         build/asm/data/main/A2360.data.o(.data);
@@ -1108,7 +1112,7 @@ SECTIONS
     {
         FILL(0x00000000);
         cinematic_overlay_RODATA_START = .;
-        build/asm/data/cinematic_overlay/137580.rodata.o(.rodata);
+        build/src/cinematic_overlay/1381D0.o(.rodata);
         cinematic_overlay_TEXT_START = .;
         build/src/cinematic_overlay/1381D0.o(.text);
         . = ALIGN(., 16);

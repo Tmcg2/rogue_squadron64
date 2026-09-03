@@ -139,9 +139,9 @@ enum Level getCurrentLevel(void) {
     return gCurrentLevel;
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7514);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", getSceneStatePtr);
 
-enum PlayerCraft func_mission_overlay_800C7524(void) {
+enum PlayerCraft getLocalPlayerVehicleId(void) {
     return getPlayerVehicleId(0);
 }
 
@@ -203,7 +203,7 @@ s32 getObjectiveCount(s32 countIndex) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7648);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", getAndSetByteAtLevelStateTable);
 
 void setObjectiveHiddenFlag(s32 arg0, s32 arg1) {
     u32 temp_a1;
@@ -240,15 +240,15 @@ f32 setObjectiveTimer(s32 timerIndex, f32 timerValue) {
     return blah;
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7718);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", getGlobalFloatGameState);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7728);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", getObjectiveGlobalFloat);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7738);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", setHudEnableBit4);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C776C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", setHudEnableBit8);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C77A0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", isLevelStateByteZero);
 
 void setFriendliesSaved(s32 arg0) {
     if (arg0 < 0) {
@@ -260,8 +260,9 @@ void setFriendliesSaved(s32 arg0) {
     missionStats.friendlies_saved = arg0;
 }
 
-s16 func_mission_overlay_800C77D0(s32 arg0) {
-    return (rand() % arg0);
+s16 randMod(s32 arg0) {
+    s16 thing = rand();
+    return (thing % arg0);
 }
 
 u8 addBooleanCountHandleWrapper(void (*handle)(), s32 booleanIndex, s32 booleanValue, s32 countIndex, s32 countValue) {
@@ -272,4 +273,4 @@ u8 addTimerHandleWrapper(void (*handle)(), f32 timerValue) {
     return addTimerHandle(handle, timerValue);
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", func_mission_overlay_800C7884);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C7EB0", setHudFlagBit40AndStoreArg);

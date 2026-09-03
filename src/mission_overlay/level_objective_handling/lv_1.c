@@ -51,7 +51,7 @@ const u8 padded_string_lv_1[32] = {
 void func_mission_overlay_80101AF8(void) {
     playObjectiveVoiceLine2(0x4CU, 0.0f);
     playObjectiveVoiceLine2(0x29CU, 3.0f);
-    func_mission_overlay_800C7D60(padded_string_lv_1, 0);
+    delegateToLevelStageTick(padded_string_lv_1, 0);
     // If matching isn't a concern, use this instead of the call above
     //func_mission_overlay_800C7D60("MUSICRNG_ConvoyStart", 0);
 }
@@ -91,14 +91,14 @@ s32 lv1_checkComplexObjectives(void) {
 
     if (D_mission_overlay_8010D040 == 0) {
         if (getObjectiveCount(0xD) >= 5) {
-            func_mission_overlay_800C7738();
+            setHudEnableBit4();
             playObjectiveVoiceLine2(0x50U, 1.0f);
             D_mission_overlay_8010D040 = 1;
         }
         temp_v0 = getObjectiveBoolean(6);
         if (temp_v0 == 1) {
             D_mission_overlay_8010D040 = temp_v0;
-            func_mission_overlay_800C776C();
+            setHudEnableBit8();
             activateObjectiveCompleteFlag(1);
         }
     }

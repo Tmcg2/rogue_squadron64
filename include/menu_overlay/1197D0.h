@@ -3,7 +3,7 @@
 
 #include "PR/ultratypes.h"
 
-void func_menu_overlay_800B3CC0(void);
-s32  func_menu_overlay_800B4264(void);
+void decrementTextTextureRefcount(void);
+s32  isPlayerShipActive(void);
 
 #endif

@@ -13,29 +13,29 @@ s32 lvi_checkComplexObjectives(void) {
     s32 temp_v0;
 
     if ((getDatItemHealth("reb_generator") < 0x41) && (D_mission_overlay_8010D1E4 == 0)) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         D_mission_overlay_8010D1E4 = 1;
-        func_mission_overlay_800C7884("camera_fail");
+        setHudFlagBit40AndStoreArg("camera_fail");
         playObjectiveVoiceLine2(0x11U, 0.0f);
         playObjectiveVoiceLine2(6U, 0.0f);
         addTimerHandleWrapper(func_mission_overlay_801090CC, 5.0f);
     }
     temp_v0 = getObjectiveBoolean(7);
     if ((temp_v0 == 1) && (D_mission_overlay_8010D1E4 == 0)) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         D_mission_overlay_8010D1E4 = temp_v0;
-        func_mission_overlay_800C7884("camera_fail");
+        setHudFlagBit40AndStoreArg("camera_fail");
         playObjectiveVoiceLine2(0x11U, 0.0f);
         playObjectiveVoiceLine2(6U, 0.0f);
         addTimerHandleWrapper(func_mission_overlay_801090F0, 5.0f);
     }
     if ((getObjectiveCount(4) == 8) && (D_mission_overlay_8010D1EC == 0)) {
-        func_mission_overlay_800C776C();
-        func_mission_overlay_800C7884("camera_win_cut_1");
+        setHudEnableBit8();
+        setHudFlagBit40AndStoreArg("camera_win_cut_1");
         playObjectiveVoiceLine2(0x2BEU, 0.0f);
         playObjectiveVoiceLine2(0x2BFU, 1.0f);
         activateObjectiveCompleteFlag(3);
-        func_mission_overlay_800C7D98(7);
+        triggerSoundCueByType(7);
         D_mission_overlay_8010D1EC = 1;
     }
     return 0;
@@ -76,24 +76,24 @@ void func_mission_overlay_80109208(void) {
 }
 
 void func_mission_overlay_8010922C(void) {
-    func_mission_overlay_800C7884("Camera_on_ATAT");
+    setHudFlagBit40AndStoreArg("Camera_on_ATAT");
     playObjectiveVoiceLine2(0x126U, 1.5f);
     playObjectiveVoiceLine2(0x127U, 0.0f);
     playObjectiveVoiceLine2(0x137U, 2.0f);
     activateObjectiveCompleteFlag(2);
-    func_mission_overlay_800C7AB0("wingman_speeder1", "wingman_to_big_battle");
-    func_mission_overlay_800C7AB0("wingman_speeder2", "wingman_to_big_battle");
+    initAnchoredActorTowardNamedDatItem("wingman_speeder1", "wingman_to_big_battle");
+    initAnchoredActorTowardNamedDatItem("wingman_speeder2", "wingman_to_big_battle");
     D_mission_overlay_8010D1E8 = 1;
     setObjectiveBoolean(0x78, 1U);
     D_mission_overlay_8010D1E0 = 2;
-    func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 2);
-    func_mission_overlay_800C7D98(4);
+    delegateToLevelStageTick("MUSICRNG_LevelSettings", 2);
+    triggerSoundCueByType(4);
 }
 
 void func_mission_overlay_801092E4(void) {
     addTimerHandleWrapper(func_mission_overlay_80109324, 5.0f);
     D_mission_overlay_8010D1E0 = 1;
-    func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 1);
+    delegateToLevelStageTick("MUSICRNG_LevelSettings", 1);
 }
 
 const u8 lv_i_camera_on_rogue[24] = {
@@ -101,12 +101,12 @@ const u8 lv_i_camera_on_rogue[24] = {
 };
 
 void func_mission_overlay_80109324(void) {
-    func_mission_overlay_800C7884(lv_i_camera_on_rogue);
+    setHudFlagBit40AndStoreArg(lv_i_camera_on_rogue);
     playObjectiveVoiceLine2(0x2BDU, 1.0f);
     playObjectiveVoiceLine2(0x11AU, 0.0f);
     playObjectiveVoiceLine2(0x11BU, 0.0f);
     activateObjectiveCompleteFlag(1);
-    func_mission_overlay_800C7D98(3);
+    triggerSoundCueByType(3);
 }
 
 void func_mission_overlay_80109384(void) {

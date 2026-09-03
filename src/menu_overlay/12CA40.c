@@ -10,9 +10,9 @@
 
 #include "menu_overlay/12CA40.h"
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C58A0);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", menuOverlayInit);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C5D9C);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", drawRadarIcon);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/12CA40", strMenuALPHA);
 
@@ -32,7 +32,7 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/12CA40", strMenuSPECIAL);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/12CA40", D_menu_overlay_800A7644);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C5EF8);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", runResultsTextScreenLoop);
 
 s32 getAvailablePlayerCraftFlagsConsiderUnlocks(enum Level levelId) {
     s32 availableCraftFlags;
@@ -185,7 +185,7 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C6660);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", advanceWrappingPhaseAccumulator);
 
 s32 getLevelHardwiredDifficulty(u8 levelId) {
     return 0;
@@ -241,7 +241,7 @@ s32 hasKasanMoorDefected(u8 levelId) {
     return levelId < LEVEL_JADEMOON ? 4 : 5;
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", func_menu_overlay_800C6854);
+INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", runHangarMenuFromOverlay);
 
 u8 getLevelIntroCrawlId(u8 levelId) {
     switch (levelId) {

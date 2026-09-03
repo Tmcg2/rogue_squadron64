@@ -1,30 +1,30 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CBDA0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", findNearestNpcWithinRange);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CC03C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", initActorFromSpawnTemplate);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0CC9A0", D_mission_overlay_800A6D60);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CC158);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", tickActorTexturedSoundEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CC2AC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", tickAtAtBodyTransform);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CC9B8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", tickAtAtAudioAndWeaponState);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0CC9A0", D_mission_overlay_800A6DCC);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0CC9A0", D_mission_overlay_800A6DD0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CCB1C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", processAtAtSubFeatureSlot);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0CC9A0", D_mission_overlay_800A6DE0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CCC98);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", npcAtAtHandleDestruction);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CD38C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", spawnAtAtFootstepDustBurst);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", func_mission_overlay_800CD558);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0CC9A0", updateAtAtLegArticulation);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0CC9A0", D_mission_overlay_800A6ECC);
 

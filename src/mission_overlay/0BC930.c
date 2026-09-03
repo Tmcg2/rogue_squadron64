@@ -2,11 +2,11 @@
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", playerTieInterceptorInit);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", func_mission_overlay_800BBF6C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", computeTieInterceptorTransform);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", func_mission_overlay_800BC290);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", triggerTieInterceptorEffect);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", func_mission_overlay_800BC4F8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", computeTieInterceptorOrientation);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0BC930", playerTieInterceptorUpdate);
 

@@ -2,13 +2,13 @@
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9AE0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9B10);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", initObjectAnimAndDetail);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9BF4);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", playStateGatedDestroySound);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9D74);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", spawnObjectImpactEffectWithSound);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9EC4);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", computeNpcOrientationFromAimVectors);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800EA470);
 
@@ -16,7 +16,7 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0EA6E0", D_mission_overlay_800A
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", npcAtPtUpdate);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800EB984);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", resetObjectPoolListHead);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0EA6E0", D_mission_overlay_800A87B0);
 

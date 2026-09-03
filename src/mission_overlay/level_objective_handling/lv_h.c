@@ -5,7 +5,7 @@
 #include "mission_overlay/level_objective_handling/lv_h.h"
 
 s32 lvh_initializeObjectTracking(void) {
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80108C98, 7, 1, 0, 0);
     addBooleanCountHandleWrapper(func_mission_overlay_80108D1C, 0xF, 1, 0, 0);
     addBooleanCountHandleWrapper(func_mission_overlay_80108D6C, 0x10, 1, 0, 0);
@@ -18,14 +18,14 @@ s32 lvh_initializeObjectTracking(void) {
 }
 
 void func_mission_overlay_80108C98(void) {
-    func_mission_overlay_800C7884("Cam_01");
+    setHudFlagBit40AndStoreArg("Cam_01");
     playObjectiveVoiceLine2(0x8DU, 0.0f);
     playObjectiveVoiceLine2(0x13DU, 0.5f);
     playObjectiveVoiceLine2(1U, 0.0f);
     playObjectiveVoiceLine2(2U, 0.0f);
     playObjectiveVoiceLine2(3U, 0.0f);
     playObjectiveVoiceLine2(0x13FU, 0.0f);
-    func_mission_overlay_800C7D60("MUSICRNG_LevelSettings", 1);
+    delegateToLevelStageTick("MUSICRNG_LevelSettings", 1);
 }
 
 void func_mission_overlay_80108D1C(void) {
@@ -73,16 +73,16 @@ s32 lvh_calculateFriendliesSaved(void) {
 }
 
 s32 lvh_checkComplexObjectives(void) {
-    if (((f64) func_mission_overlay_800C794C() < -0.3) && (getObjectiveBoolean(0x64) == 0)) {
+    if (((f64) getScaledPlayerCraftSpeed() < -0.3) && (getObjectiveBoolean(0x64) == 0)) {
         setObjectiveBoolean(0x64, 1U);
         increaseObjectiveCount(0x65, 1);
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x2B8U, 0.0f);
         playObjectiveVoiceLine2(0x1F0U, 0.0f);
         return 0;
     }
     if (getObjectiveBoolean(0xA) == 1) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
     }
     return 0;
 }

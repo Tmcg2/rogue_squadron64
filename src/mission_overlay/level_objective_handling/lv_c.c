@@ -12,7 +12,7 @@ s32 lvc_initializeObjectTracking(void) {
     D_mission_overlay_8010D140 = 0;
     D_mission_overlay_8010D144 = 0;
     D_mission_overlay_8010D148 = 1;
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80106F80, 0xB, 1, 0, 0);
     addBooleanCountHandleWrapper(func_mission_overlay_80106FC4, 0, 0, 0xA, 2);
     addBooleanCountHandleWrapper(func_mission_overlay_80106FF4, 0x3D, 1, 0, 0);
@@ -27,26 +27,26 @@ s32 lvc_initializeObjectTracking(void) {
 
 s32 lvc_checkComplexObjectives(f32 arg0) {
     if (getObjectiveBoolean(0x51) == 1) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x5DU, 0.0f);
         playObjectiveVoiceLine2(0x14BU, 0.0f);
     }
     if (getObjectiveCount(0x14) >= 7) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x5DU, 0.0f);
         playObjectiveVoiceLine2(0x14BU, 0.0f);
     }
     if (getObjectiveCount(0x1F) >= 3) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x5DU, 0.0f);
         playObjectiveVoiceLine2(0x14BU, 0.0f);
     }
     if (getObjectiveCount(0xA) >= 4) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x1D0U, 0.0f);
     }
     if ((getObjectiveCount(0x20) > 0) && (getObjectiveCount(0x1E) >= 3) && (getObjectiveBoolean(0x61) == 1)) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
     }
     if (D_mission_overlay_8010D148 != 0) {
         func_mission_overlay_80106E94(arg0);
@@ -95,14 +95,14 @@ void func_mission_overlay_80106E94(f32 arg0) {
     if (temp_fv0 < 20.0f) {
         if (D_mission_overlay_8010D144 == 0) {
             D_mission_overlay_8010D144 = 1;
-            func_mission_overlay_800C7D60(lv_c_musicrng_levelsettings, 1);
+            delegateToLevelStageTick(lv_c_musicrng_levelsettings, 1);
         }
         D_mission_overlay_8010D140 = 10.0f;
     } else if (D_mission_overlay_8010D144 != 0) {
         D_mission_overlay_8010D140 -= arg0;
         if (D_mission_overlay_8010D140 <= 0.0f) {
             D_mission_overlay_8010D144 = 0;
-            func_mission_overlay_800C7D60(lv_c_musicrng_levelsettings, 0);
+            delegateToLevelStageTick(lv_c_musicrng_levelsettings, 0);
         }
     }
 }
@@ -123,12 +123,12 @@ void func_mission_overlay_80106FF4(void) {
 }
 
 void func_mission_overlay_80107018(void) {
-    func_mission_overlay_800C7884(lv_c_city_cam_01);
+    setHudFlagBit40AndStoreArg(lv_c_city_cam_01);
     playObjectiveVoiceLine2(0x1D1U, 0.0f);
-    func_mission_overlay_800C7D98(4);
+    triggerSoundCueByType(4);
     setObjectiveBoolean(0x78, 1U);
     D_mission_overlay_8010D148 = 0;
-    func_mission_overlay_800C7D60(lv_c_musicrng_levelsettings, 0);
+    delegateToLevelStageTick(lv_c_musicrng_levelsettings, 0);
 }
 
 void func_mission_overlay_80107070(void) {
@@ -136,9 +136,9 @@ void func_mission_overlay_80107070(void) {
 }
 
 void func_mission_overlay_80107094(void) {
-    func_mission_overlay_800C7884(lv_8_camera_at_st);
+    setHudFlagBit40AndStoreArg(lv_8_camera_at_st);
     playObjectiveVoiceLine2(0x2CAU, 5.0f);
-    func_mission_overlay_800C7D98(3);
+    triggerSoundCueByType(3);
 }
 
 void func_mission_overlay_801070C8(void) {
@@ -146,9 +146,9 @@ void func_mission_overlay_801070C8(void) {
 }
 
 void func_mission_overlay_801070F0(void) {
-    func_mission_overlay_800C7884(lv_8_city_cam_02);
+    setHudFlagBit40AndStoreArg(lv_8_city_cam_02);
     playObjectiveVoiceLine2(0x2A5U, 0.0f);
-    func_mission_overlay_800C7D98(4);
+    triggerSoundCueByType(4);
 }
 
 void func_mission_overlay_80107124(void) {
@@ -157,7 +157,7 @@ void func_mission_overlay_80107124(void) {
 }
 
 void func_mission_overlay_8010715C(void) {
-    func_mission_overlay_800C7978(lv_8_train_engine, 0.0f, 0, 2.0f);
+    spawnEffectOnNamedDatItem(lv_8_train_engine, 0.0f, 0, 2.0f);
     activateObjectiveCompleteFlag(1);
 }
 

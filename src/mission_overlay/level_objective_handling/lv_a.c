@@ -5,7 +5,7 @@
 #include "mission_overlay/level_objective_handling/lv_a.h"
 
 s32 lva_initializeObjectTracking(void) {
-    func_mission_overlay_800C7CEC(7.5f);
+    setLevelObjectTrackingScalar(7.5f);
     addBooleanCountHandleWrapper(func_mission_overlay_80105ED0, 0, 0, 0x32, 9);
     addBooleanCountHandleWrapper(func_mission_overlay_80105EF8, 0, 0, 0x31, 7);
     addBooleanCountHandleWrapper(func_mission_overlay_80105F20, 0, 0, 0x35, 0xA);
@@ -138,11 +138,11 @@ s32 lva_calculateFriendliesSaved(void) {
 
 s32 lva_checkComplexObjectives(void) {
     if (getObjectiveCount(0x63) >= 6) {
-        func_mission_overlay_800C776C();
+        setHudEnableBit8();
         playObjectiveVoiceLine2(0x21DU, 0.0f);
     }
     if (getObjectiveCount(0x33) >= 0xA) {
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine2(0x55U, 0.0f);
     }
     return 0;

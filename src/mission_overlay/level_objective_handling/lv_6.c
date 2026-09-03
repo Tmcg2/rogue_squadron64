@@ -8,7 +8,7 @@
 s32 lv6_checkComplexObjectives(void) {
     if (getObjectiveCount(0x22) == 1) {
         why:
-        func_mission_overlay_800C7738();
+        setHudEnableBit4();
         playObjectiveVoiceLine1(0x65U);
         return 0;
     }
@@ -31,7 +31,7 @@ s32 lv6_checkComplexObjectives(void) {
         }
         if ((getObjectiveCount(0x63) == 2) && (getObjectiveBoolean(0xB) == 0)) {
             setObjectiveBoolean(0xB, 1U);
-            func_mission_overlay_800C776C();
+            setHudEnableBit8();
         }
         return 0;
     }
@@ -43,7 +43,7 @@ const u8 lv_6_string[] = {
 };
 
 s32 lv6_initializeObjectTracking(void) {
-    func_mission_overlay_800C7CEC(15.0f);
+    setLevelObjectTrackingScalar(15.0f);
     addBooleanCountHandleWrapper(func_mission_overlay_8010444C, 0, 0, 0x14, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_8010447C, 0, 0, 0x15, 1);
     addBooleanCountHandleWrapper(func_mission_overlay_80104498, 0, 0, 0xD, 1);
@@ -73,7 +73,7 @@ void func_mission_overlay_80104498(void) {
 }
 
 void func_mission_overlay_801044B4(void) {
-    func_mission_overlay_800C7D60(lv_6_string, 0);
+    delegateToLevelStageTick(lv_6_string, 0);
 }
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/level_objective_handling/lv_6", fake_func_801044D8);

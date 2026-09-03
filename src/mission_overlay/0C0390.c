@@ -4,7 +4,6 @@
 #include "mission_state.h"
 #include "player.h"
 #include "secondary_weapons.h"
-#include "hud.h"
 
 #include "mission_overlay/0C0390.h"
 
@@ -34,9 +33,9 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C0390", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C0390", D_mission_overlay_800A62E0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800BF790);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", updateHudHealthIndicator);
 
-void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
+void setHudSecondaryWeaponInfo(struct func_800C0084_type *arg0) {
     u8 secondaryWeaponLevel;
     u8 secondaryWeaponType;
 
@@ -82,23 +81,23 @@ void func_mission_overlay_800BFDC4(struct func_800C0084_type *arg0) {
     arg0->secondaryWeaponLevel = secondaryWeaponLevel;
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800BFEA0);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", findHudElementExtremes);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", handleHUD);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C1B64);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", evalPauseMenuInputMode);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C1D3C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", initOrUpdatePauseScreenDim);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C298C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", runPauseMenuStateMachine);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C3F70);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", spawnHudNpc);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C3FEC);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", broadcastSceneShutdownAndCleanup);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C401C);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", broadcastSceneEventWithPayload);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C4060);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", setRenderObjectTargetOrClear);
 
 f32 getPlayerHealthPercentage(s32 arg0) {
     if ((gPlayers[arg0].inner.currentHealth <= 0.0f)) {
@@ -108,7 +107,7 @@ f32 getPlayerHealthPercentage(s32 arg0) {
     } 
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", func_mission_overlay_800C40F8);
+INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", probeNumberedAssetFilename);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", fake_func_800C41AC);
 
