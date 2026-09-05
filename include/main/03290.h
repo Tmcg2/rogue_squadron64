@@ -1,8 +1,9 @@
-#ifndef MAIN_03310_H
-#define MAIN_03310_H
+#ifndef MAIN_03290_H
+#define MAIN_03290_H
 
 #include "PR/ultratypes.h"
 
+u32  computeElapsedMillis(void);
 f32  getViModePeriod(void);
 u8   getViModeType(void);
 void setViModeType(void);

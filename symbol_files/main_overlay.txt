@@ -2890,7 +2890,7 @@ coalesceFreeHeapBlocks                       = 0x800022F8;
 getResetVectorRegion                         = 0x800025B0;
 fatalErrorHalt                               = 0x800025D4;
 getUsableRdramSize                           = 0x80002664;
-computeElapsedMillis                         = 0x8000268C;
+computeElapsedMillis                         = 0x80002690;
 startRumbleEffect                            = 0x80002ADC;
 stopRumbleEffect                             = 0x80002BA8;
 initRumblePakSlots                           = 0x80002C5C;
@@ -3098,6 +3098,8 @@ getPlayerSlotLookupBase                = 0x80063C18;
 returnZeroAudioStub                    = 0x80097AC8;
 
 // Fake Function Fixing
+
+fake_func_8000268C = 0x8000268C; // defined:true type:u32
 
 fake_func_800027B8 = 0x800027B8; // defined:true type:u32
 // Called after osContGetReadData in func_80002E10

@@ -5,7 +5,6 @@
 #include "cinematic_overlay/linker_variables.h"
 #include "main/01720.h"
 #include "main/03F80.h"
-#include "main/08120.h"
 
 /* Data Variables, uncomment when Data matching is possible
 s32 gCurrentLoadedOverlay = -1;
@@ -77,27 +76,3 @@ INCLUDE_ASM("asm/nonmatchings/main/01720", idle_thread_handle);
 INCLUDE_ASM("asm/nonmatchings/main/01720", queueDeferredClearRequest);
 
 INCLUDE_ASM("asm/nonmatchings/main/01720", clearFrameReadyFlag);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", ensureHeapInitialized);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", getTotalFreeHeapSize);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", findLargestFreeHeapChunk);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", rs_malloc);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", rs_free);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", buildHeapFreeList);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", initMainHeap);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", coalesceFreeHeapBlocks);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", getResetVectorRegion);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", fatalErrorHalt);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", getUsableRdramSize);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", computeElapsedMillis);

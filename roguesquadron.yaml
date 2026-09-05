@@ -83,8 +83,8 @@ segments:
     vram: 0x80000440
     follows_vram: entry
     subsegments:
-      - [0x01040, .rodata,  "main/01720"]
-      - [0x01050, .rodata,  "main/03310"]
+      - [0x01040, .rodata,  "main/031B0"]
+      - [0x01050, .rodata,  "main/03290"]
       - [0x01060, rodata,  "main/01060"] # Should be tied to 033C0, but that isn't playing nice for some reason :(
       - [0x01070, rodata,  "main/01070"]
       - [0x01080, rodata,  "main/01080"]
@@ -99,7 +99,9 @@ segments:
       - [0x016B0, .rodata,  "zlib/infblock"]
       - [0x016E0, .rodata,  "zlib/infcodes"]
       - [0x01720, c,     "main/01720"]
-      - [0x03310, c,     "main/03310"]
+      - [0x02490, c,     "main/02490"]
+      - [0x031B0, c,     "main/031B0"]
+      - [0x03290, c,     "main/03290"]
       - [0x033C0, c,     "main/033C0"]
       - [0x03F80, c,     "main/03F80"]
       - [0x04030, c,     "main/04030"]
@@ -260,7 +262,7 @@ segments:
       - [0x38160, data,    "main/38160"]
       - [0x381B0, data,    "main/381B0"]
       - [0x381C0, data,    "main/381C0"]
-      - [0x38220, data,    "main/38220"]
+      - [0x38220, .data,    "main/03290"]
       - [0x38230, data,    "main/38230"]
       - [0x38240, data,    "main/38240"]
       - [0x38250, data,    "main/38250"]
@@ -719,7 +721,7 @@ segments:
     vram: 0x8010D200
     subsegments:
       - {type: bss, vram: 0x8010D200, name: "main/8010D200"              }
-      - {type: .bss, vram: 0x8010FF20, name: "main/03310"                }
+      - {type: .bss, vram: 0x8010FF20, name: "main/03290"                }
       - {type: .bss, vram: 0x8010FF30, name: "main/033C0"                }
       - {type: .bss, vram: 0x801107A0, name: "main/04080"              } # 04080.c
       - {type: bss, vram: 0x80111260, name: "main/80111260"              }

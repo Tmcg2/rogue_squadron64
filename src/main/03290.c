@@ -2,9 +2,31 @@
 
 #include "PR/os.h"
 
-#include "main/03310.h"
+#include "main/03290.h"
+#include "main/080E0.h"
 
 u8 rsViModeType;
+
+u32 D_main_80037620 = 0;
+u32 data_pad_03290[] = {
+    0x156AFFF5,
+    0x3C020001,
+    0x10C00030,
+};
+
+u32 computeElapsedMillis(void) {
+    u32 temp_s0_2;
+    u32 temp_s0;
+    u32 temp_v1;
+    u64 temp_ret;
+
+    temp_s0 = D_main_80037620;
+    temp_v1 = osGetTime();
+    temp_s0_2 = temp_v1 - temp_s0;
+    D_main_80037620 = temp_v1;
+    temp_ret = u64DivU64((u64)temp_s0_2 * 1000000000, osClockRate);
+    return u64DivU64(temp_ret, 1000);
+}
 
 f32 getViModePeriod(void) {
     f32 var_fv0;
@@ -18,7 +40,7 @@ f32 getViModePeriod(void) {
 }
 
 // DO NOT DELETE ME I'M REQUIRED FOR MATCHING
-static const u32 rodata_padding[] = {
+const u32 rodata_pad_03290[] = {
     0x800032D4,
     0x800032F8,
 };
@@ -49,4 +71,4 @@ u8 getOsResetType(void) {
     return osResetType;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/03310", fake_func_800027B8);
+INCLUDE_ASM("asm/nonmatchings/main/03290", fake_func_800027B8);

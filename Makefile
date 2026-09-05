@@ -58,7 +58,7 @@ $(GCC272SN0001):
 	tar xzf "$(@D)/n64_sn272_0001.tar.gz" -C "$(@D)"
 	chmod +x "$@"
 
-build/src/main/03310.s: N64CC = $(GCC272SN0001)
+build/src/main/03290.s: N64CC = $(GCC272SN0001)
 build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: CFLAGS += -ffast-math
