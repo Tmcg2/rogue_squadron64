@@ -1,5 +1,10 @@
 #include "common.h"
 
+#include "game_settings.h"
+
+#include "main/562A0.h"
+#include "menu_overlay/11B970.h"
+
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBKasan);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBJanson);
@@ -582,7 +587,9 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initInteractiveSceneContext)
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setupCraftPreviewModel);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getPlayerRankString);
+char *getPlayerRankString(s32 arg0) {
+    return getGameOrFrontText(arg0 + 0x92);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", shutdownMenuMessagingAndSpeech);
 
@@ -594,7 +601,13 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioB);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioC);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getControllerSettingsTitle);
+void getControllerSettingsTitle(char *title) {
+    if (gGameSettings.languageSelect == LANGUAGE_FR) {
+        sprintf(title, "%s %s", getGameOrFrontText(0xB1), getGameOrFrontText(gGameSettings.controllerSetting + 0x7F));
+    } else {
+        sprintf(title, "%s %s", getGameOrFrontText(gGameSettings.controllerSetting + 0x7F), getGameOrFrontText(0xB1));
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", playMenuElementTransitionAnim);
 

@@ -32,7 +32,7 @@ INCLUDE_ASM("asm/nonmatchings/main/562A0", loadTxtFile);
 
 INCLUDE_ASM("asm/nonmatchings/main/562A0", loadGameOrFrontTxtFile);
 
-s8 *getGameOrFrontText(s32 textId) {
+char *getGameOrFrontText(s32 textId) {
     if ((textId >= 0) && (textId < languageStringcount)) {
         return &languageData.data[languageData.offsets[textId]];
     }

@@ -5,8 +5,8 @@
 #include "common_types.h"
 
 struct xy_offset {
-    /* 0x0 */ u16 x;
-    /* 0x2 */ u16 y;
+    /* 0x0 */ s16 x;
+    /* 0x2 */ s16 y;
 }; // size = 0x4
 
 struct ui_element {
