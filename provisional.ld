@@ -96,8 +96,8 @@ SECTIONS
     {
         FILL(0x00000000);
         main_RODATA_START = .;
-        build/src/main/01720.o(.rodata);
-        build/src/main/03310.o(.rodata);
+        build/src/main/031B0.o(.rodata);
+        build/src/main/03290.o(.rodata);
         build/src/main/03F80.o(.rodata);
         build/src/main/04030.o(.rodata);
         build/src/main/04080.o(.rodata);
@@ -147,7 +147,9 @@ SECTIONS
         build/asm/libultra/io/controller.o(.rodata);
         main_TEXT_START = .;
         build/src/main/01720.o(.text);
-        build/src/main/03310.o(.text);
+        build/src/main/02490.o(.text);
+        build/src/main/031B0.o(.text);
+        build/src/main/03290.o(.text);
         build/src/main/033C0.o(.text);
         build/src/main/03F80.o(.text);
         build/src/main/04030.o(.text);
@@ -296,7 +298,7 @@ SECTIONS
         build/asm/data/main/38160.data.o(.data);
         build/asm/data/main/381B0.data.o(.data);
         build/asm/data/main/381C0.data.o(.data);
-        build/asm/data/main/38220.data.o(.data);
+        build/src/main/03290.o(.data);
         build/asm/data/main/38230.data.o(.data);
         build/asm/data/main/38240.data.o(.data);
         build/asm/data/main/38250.data.o(.data);
@@ -650,7 +652,7 @@ SECTIONS
         main_TEXT_END = .;
         main_TEXT_SIZE = ABSOLUTE(main_TEXT_END - main_TEXT_START);
         build/src/main/01720.o(.data);
-        build/src/main/03310.o(.data);
+        build/src/main/03290.o(.data);
         build/src/main/033C0.o(.data);
         build/src/main/03F80.o(.data);
         build/src/main/04080.o(.data);
@@ -1185,7 +1187,8 @@ SECTIONS
         FILL(0x00000000);
         main_bss_BSS_START = .;
         build/asm/data/main/8010D200.bss.o(.bss);
-        build/src/main/03310.o(.bss);
+        build/src/main/02490.o(.bss);
+        build/src/main/03290.o(.bss);
         build/src/main/033C0.o(.bss);
         build/src/main/04080.o(.bss);
         build/asm/data/main/80111260.bss.o(.bss);
