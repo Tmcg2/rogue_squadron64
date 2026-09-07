@@ -10,9 +10,6 @@ This is something of a dumping ground for extern definitions of variables that a
 Hopefully it doesn't become a variable landfill.
 */
 
-// Fake variable D_80110AA0 <- 0x20
-extern struct D_80110A80_entry gManifestTable[4];
-
 extern enum   PlayerCraft dDefaultCraftForLevel[NUM_LEVELS];
 extern u8 D_main_bss_80130B39; // 0x80130B39
 

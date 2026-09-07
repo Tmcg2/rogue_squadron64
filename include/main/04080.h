@@ -2,6 +2,7 @@
 #define MAIN_04080_H
 
 #include "PR/ultratypes.h"
+#include "PR/os.h"
 
 #include "zlib/zlib.h"
 
@@ -116,5 +117,51 @@ s32   returnZeroStubZlib(void);
 u8   *resolveAssetRamAddress(s32);
 u8    getDmaSlotMutex(void);
 void  setDmaWorkerPriority(s32);
+
+// We have to extern everything, otherwise GCC does some wacky variable reordering
+// In reality, all I want extern'd is `dmaSlotMaxTxStepSize`
+extern OSMesg      D_main_801107A0[8];
+extern OSMesgQueue D_main_801107C0;
+extern u32 bss_pad0_04080;
+extern OSIoMesg    D_main_801107E0[8];
+extern OSMesg      dmaSlotMesgBuffer[8];
+extern OSMesgQueue dmaSlotMesgQueue[8];
+extern OSMesg      gDmaSlotLockMesg;
+extern u32 bss_pad1_04080;
+extern u32 bss_pad2_04080;
+extern OSMesgQueue gDmaSlotLockQueue;
+extern s32         nextOpenDmaSlot;
+extern s32         dmaSlotsAvailable;
+extern u8         *dmaSlotDestAddr[8];
+extern s32         dmaSlotTotalTxSize[8];
+extern u8         *dmaSlotSrcAddr[8];
+extern s32         dmaSlotTxSoFar[8];
+extern s32         dmaSlotTxRemaning[8];
+extern s32         dmaSlotTxThisStep[8];
+extern volatile u8 dmaSlotMutex;
+extern u8 bss_pad3_04080;
+extern u8 bss_pad4_04080;
+extern u8 bss_pad5_04080;
+extern struct data_block_header_entry *D_main_bss_80110A74;
+extern u32 bss_pad6_04080;
+extern u32 bss_pad7_04080;
+extern struct D_80110A80_entry gManifestTable[4]; // The name of this variable is wonky because otherwise it gets placed in the BSS section incorrectly
+extern struct D_80110BC0_type  D_main_80110BC0[16];
+extern s32 D_main_bss_80110D40;
+extern u8 *D_main_bss_80110D44;
+extern s32 D_main_bss_80110D48;
+extern s32 D_main_bss_80110D4C;
+extern u8 *D_main_bss_80110D50;
+extern s32 D_main_bss_80110D54;
+extern u32 bss_pad8_04080;
+extern u32 bss_pad9_04080;
+extern struct D_80110D60_type D_main_bss_80110D60[8];
+extern union  D_80111100_type gServiceWorkerMesgBuf[8];
+extern u32 D_main_bss_80111240;
+extern s32 D_main_bss_80111244;
+extern s32 D_main_bss_80111248;
+extern s32 D_main_bss_8011124C;
+extern s32 D_main_bss_80111250;
+extern u32 dmaSlotMaxTxStepSize;
 
 #endif

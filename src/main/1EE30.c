@@ -7,12 +7,13 @@
 #include "main/1EE30.h"
 
 u16 D_main_bss_80128EF0;
-u16 bss_pad;
+u16 bass_pad0_1EE30;
 struct MaterialPoolEntry   *D_main_bss_80128EF4;
 struct MaterialPoolEntry   *D_main_bss_80128EF8;
 u16 **D_main_bss_80128EFC;
 struct MaterialPoolEntry  **D_main_bss_80128F00;
-void *D_main_bss_80128F04;
+u16 D_main_bss_80128F04;
+u16 bass_pad1_1EE30;
 struct D_main_bss_80128F08 *D_main_bss_80128F08;
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", initTextureLUTAndAllocBuffers);
@@ -252,7 +253,7 @@ void tickTextureMaterialExpiry(void) {
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", resetMaterialExpiryById);
 
-void *findAndUnlinkSmallestEntry(void) {
+struct DisplayListBuffer *findAndUnlinkSmallestEntry(void) {
     u32 var_a3;
     struct MaterialPoolEntry *var_a1;
     struct MaterialPoolEntry *var_v1;
@@ -351,7 +352,7 @@ INCLUDE_ASM("asm/nonmatchings/main/1EE30", loadAndDecodeTexture);
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", uploadTextureDescriptorData);
 
-void *getTextureDataByMaterialId(u16 arg0) {
+u8 *getTextureDataByMaterialId(u16 arg0) {
     return D_main_bss_80128F08[D_main_bss_8011A444[arg0].D_80128F08_index].texture_data;
 }
 

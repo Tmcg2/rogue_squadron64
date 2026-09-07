@@ -42,7 +42,7 @@ build/tyler.z64: build/tyler.elf
 	$(OBJCOPY) $< $@ -O binary
 
 build/tyler.elf: $(O_FILES) $(LDSCRIPT)
-	$(LD) -Map=$@.map -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -o $@
+	$(LD) -Map=$@.map -EB -T $(LDSCRIPT) -T undefined_funcs_auto.txt -T undefined_syms_auto.txt -G0 -o $@
 
 $(BUILD_DIRS):
 	mkdir -p $@
@@ -64,6 +64,7 @@ build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: CFLAGS += -ffast-math
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
+build/src/main/24570.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: CFLAGS = -quiet -O3 -G0 -mips3
 

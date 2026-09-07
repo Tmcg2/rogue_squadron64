@@ -104,6 +104,9 @@ char *D_main_800A05C8[] = {
     "speech",
 };
 
+// DO NOT DELETE ME I AM REQUIRED FOR MATCHING
+u32 data_pad_67690 = 0x10400019;
+
 INCLUDE_ASM("asm/nonmatchings/main/67690", initSpeechSubsystem);
 
 INCLUDE_ASM("asm/nonmatchings/main/67690", enqueueSpeechClip);

@@ -6,7 +6,6 @@
 #include "main/06170.h"
 #include "main/07800.h"
 #include "main/08120.h"
-#include "PR/os.h"
 #include "compiler/gcc/string.h"
 
 OSMesg      D_main_801107A0[8];
@@ -34,7 +33,7 @@ u8 bss_pad5_04080;
 struct data_block_header_entry *D_main_bss_80110A74;
 u32 bss_pad6_04080;
 u32 bss_pad7_04080;
-struct D_80110A80_entry D_gManifestTable[4]; // The name of this variable is wonky because otherwise it gets placed in the BSS section incorrectly
+struct D_80110A80_entry gManifestTable[4];
 struct D_80110BC0_type  D_main_80110BC0[16];
 s32 D_main_bss_80110D40;
 u8 *D_main_bss_80110D44;
@@ -346,18 +345,18 @@ s32 freeManifestSegmentAssets(s32 arg0) {
 
     if (arg0 == -1) {
         for (var_s1 = 0; var_s1 < 4; var_s1++) {
-            if (D_gManifestTable[var_s1].one != 1) continue;
+            if (gManifestTable[var_s1].one != 1) continue;
 
             for (var_a1 = 0; var_a1 < 0x10; var_a1++) {
                 if ((D_main_80110BC0[var_a1].unk00 == 1) && (D_main_80110BC0[var_a1].unk10 == var_s1)) {
                     D_main_80110BC0[var_a1].unk00 = 0;
                 }
             }
-            rs_free(D_gManifestTable[var_s1].manifest);
-            D_gManifestTable[var_s1].one = 0;
+            rs_free(gManifestTable[var_s1].manifest);
+            gManifestTable[var_s1].one = 0;
         }
     } else {
-        var_s0 = &D_gManifestTable[arg0];
+        var_s0 = &gManifestTable[arg0];
         for (var_a1 = 0; var_a1 < 0x10; var_a1++) {
             if ((D_main_80110BC0[var_a1].unk00 == 1) && (D_main_80110BC0[var_a1].unk10 == arg0)) {
                 D_main_80110BC0[var_a1].unk00 = 0;
@@ -441,9 +440,9 @@ s32 setManifestEntryName(s32 arg0, u8 *arg1) {
         return 0;
     }
     if (arg1 != NULL) {
-        rs_strcpy(D_gManifestTable[arg0].unk20, arg1);
+        rs_strcpy(gManifestTable[arg0].unk20, arg1);
     } else {
-        D_gManifestTable[arg0].unk20[0] = '\0';
+        gManifestTable[arg0].unk20[0] = '\0';
     }
     return 1;
 }
@@ -529,7 +528,7 @@ s32 returnZeroStubZlib(void) {
 }
 
 u8 *resolveAssetRamAddress(s32 arg0) {
-    return &D_gManifestTable[D_main_80110BC0[arg0].unk10].data[D_main_80110BC0[arg0].manfiest->data_offset];
+    return &gManifestTable[D_main_80110BC0[arg0].unk10].data[D_main_80110BC0[arg0].manfiest->data_offset];
 }
 
 u8 getDmaSlotMutex(void) {

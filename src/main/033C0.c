@@ -29,7 +29,7 @@ u8           gControllerBits[8];
 
 INCLUDE_ASM("asm/nonmatchings/main/033C0", processPolledControllerData);
 
-u32 startRumbleEffect(u8 arg0, void *arg1) {
+u32 startRumbleEffect(u8 arg0, UNIDENTIFIED_TYPE *arg1) {
     if (D_main_bss_80110740 == 0) {
         osRecvMesg(&D_main_bss_80110750, NULL, 1);
         D_main_80110520[arg0].unk6B = 1;

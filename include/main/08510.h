@@ -17,7 +17,8 @@ struct D_main_bss_8011A444 {
 
 extern struct D_main_bss_8011A444 *D_main_bss_8011A444;
 
-void heapFreeListInsert(struct DisplayListBuffer*);
 void registerSiCallback(void (*)(void));
+void heapFreeListInsert(struct DisplayListBuffer*);
+Gfx *allocateDisplayListBuffer(void);
 
 #endif

@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/08510.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/08510", registerSiCallback);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", findAndZeroTableSlotMatching);
@@ -80,6 +82,34 @@ INCLUDE_ASM("asm/nonmatchings/main/08510", reserveAndEmitDLEntry);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", reserveAlignedDLSpace);
 
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005A0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005A8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005B0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005B8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005C0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005C8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005D0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005D8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005E0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005E8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005F0);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_800005F8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_80000600);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", D_main_80000608);
+
 INCLUDE_ASM("asm/nonmatchings/main/08510", heapFreeListDequeue);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", emitTexturedFaceGeometry);
@@ -155,3 +185,5 @@ INCLUDE_ASM("asm/nonmatchings/main/08510", initVideoBootWrapper);
 INCLUDE_ASM("asm/nonmatchings/main/08510", freeRenderSubsystemResources);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", fake_func_800186D8);
+
+INCLUDE_RODATA("asm/nonmatchings/main/08510", junk_800007E8);
