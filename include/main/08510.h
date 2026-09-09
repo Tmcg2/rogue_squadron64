@@ -4,6 +4,8 @@
 #include "PR/ultratypes.h"
 #include "PR/gbi.h"
 
+#include "hob.h"
+
 struct DisplayListBuffer {
     struct DisplayListBuffer *next; /* 0x000 */
     struct DisplayListBuffer *prev; /* 0x004 */
@@ -20,5 +22,6 @@ extern struct D_main_bss_8011A444 *D_main_bss_8011A444;
 void registerSiCallback(void (*)(void));
 void heapFreeListInsert(struct DisplayListBuffer*);
 Gfx *allocateDisplayListBuffer(void);
+void enqueueMeshForDeferredRelease(struct meshdef1*);
 
 #endif

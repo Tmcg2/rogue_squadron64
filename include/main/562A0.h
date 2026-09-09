@@ -12,6 +12,10 @@ enum Language {
     NUM_LANGUAGES,
 };
 
+s32   loadTxtFile(u8*, u8);
+void  loadGameOrFrontTxtFile(u8*);
 char *getGameOrFrontText(s32 textId);
+void  loadVoiceTxtFile(u8*);
+char *getVoiceTxtStringPtr(void);
 
 #endif

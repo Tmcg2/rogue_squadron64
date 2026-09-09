@@ -30,7 +30,9 @@ u32 data_pad_562A0 = 0x00431021;
 
 INCLUDE_ASM("asm/nonmatchings/main/562A0", loadTxtFile);
 
-INCLUDE_ASM("asm/nonmatchings/main/562A0", loadGameOrFrontTxtFile);
+void loadGameOrFrontTxtFile(u8 *arg0) {
+    loadTxtFile(arg0, 0);
+}
 
 char *getGameOrFrontText(s32 textId) {
     if ((textId >= 0) && (textId < languageStringcount)) {
@@ -41,10 +43,14 @@ char *getGameOrFrontText(s32 textId) {
 
 INCLUDE_ASM("asm/nonmatchings/main/562A0", freeTxtFile);
 
-INCLUDE_ASM("asm/nonmatchings/main/562A0", loadVoiceTxtFile);
+void loadVoiceTxtFile(u8 *arg0) {
+    loadTxtFile(arg0, 1);
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/562A0", getVoiceText);
 
-INCLUDE_ASM("asm/nonmatchings/main/562A0", getVoiceTxtStringPtr);
+char *getVoiceTxtStringPtr(void) {
+    return voiceTxtString;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/562A0", fake_func_80055A2C);

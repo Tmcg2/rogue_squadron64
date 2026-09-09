@@ -205,9 +205,9 @@ loop_20:
                 if (arg2 & 2) {
                     // `temp_s0` is a texture_entry pointer
                     temp_s0 = &var_s6[var_s5];
-                    func_8007A260(temp_s0);
+                    downscaleImageHalfResBoxFilter(temp_s0);
                     if (arg2 & 4) {
-                        func_8007A260(temp_s0);
+                        downscaleImageHalfResBoxFilter(temp_s0);
                     }
                 }
                 var_s5 += 0x34;
@@ -248,7 +248,7 @@ loop_20:
                 // texture_index's into the D_80128F08_index's used in D_8011A444
                 // Presumably, D_8011A444 holds all loaded structures, which will come from a variety of HMT files
                 // so we need to remap the texture indexes for later use
-                *var_s2_2 = func_80022B90((struct material_entry *) temp_a0, var_a1, 0U);
+                *var_s2_2 = registerHmtTextureInTable((struct material_entry *) temp_a0, var_a1, 0U);
                 var_s2_2 += 2;
                 var_s0 += 0x24;
                 temp_t0_2 = sp78 + 1;

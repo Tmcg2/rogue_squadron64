@@ -5,6 +5,7 @@
 
 void mat3x4Multiply(Mat4x3, Mat4x3, Mat4x3);
 void transformVec3ByMat34(Mat4x3, Vec3f, Vec3f);
+void rotateVec3ByMat3x3(Mat4x3, Vec3f, Vec3f);
 void vec3Cross(Vec3f, Vec3f, Vec3f);
 void zmemcpy(u8*, u8*, u32);
 

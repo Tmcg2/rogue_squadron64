@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "common_types.h"
+
 #include "main/01720.h"
 #include "main/3F160.h"
 
@@ -8,8 +10,8 @@ u16 gNpcSlotListTail;
 u16 pad; // necessary for matching, for some reason. Without this pointers beneath it end up misaligned which makes no sense to me
 struct D_80130BB8_type *gNpcContextArray;
 struct D_80130BB8_type **gNpcContextArrayPtrs;
-void *D_main_bss_80130BC0;
-void *D_main_bss_80130BC4;
+UNIDENTIFIED_TYPE *D_main_bss_80130BC0;
+UNIDENTIFIED_TYPE *D_main_bss_80130BC4;
 s32   gNpcNextOpenSlot;
 
 void initNpcSlotList(void) {
@@ -253,8 +255,8 @@ void allocNpcContextArrays(void) {
         gNpcContextArrayPtrs[var_a2] = &gNpcContextArray[var_a2];
     }
     gNpcNextOpenSlot = 0xBF;
-    D_main_bss_80130BC4 = 0;
-    D_main_bss_80130BC0 = 0;
+    D_main_bss_80130BC4 = NULL;
+    D_main_bss_80130BC0 = NULL;
 }
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", destroyNpcContextArrays);

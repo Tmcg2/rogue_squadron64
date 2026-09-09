@@ -165,15 +165,24 @@ It appears to be bunch of floats and then a terminating all-F-word.
 ## Meshdef0
 
 ```cpp
-struct meshdef0 {
+struct meshdef0_inner {
     /* 0x00 */ uint32_t next_meshdef0_offset;
     /* 0x04 */ uint32_t prev_meshdef0_offset;
     /* 0x08 */ uint32_t unknown_meshdef0_offset0;
     /* 0x0C */ uint32_t unknown_meshdef0_offset1;
     /* 0x10 */ uint32_t meshdef1_offset;
-    /* 0x14 */ float big_block_o_floats[14];
-    /* 0x4C */ float big_block_o_floats2[14];
-}; // size = (without big_block_o_floats2) 0x4C, otherwise 0x84
+    /* 0x14 */ float two_floats[2];
+    /* 0x1C */ f32 mtx[4][3];
+}; // size = 0x4C
+
+struct meshdef0 {
+    /* 0x00 */ struct meshdef0_inner inner;
+    /* 0x4C */ u32 flags;
+    /* 0x50 */ float somevector0[3];
+    /* 0x5C */ float somevector1[3];
+    /* 0x68 */ float somequat0[4];
+    /* 0x78 */ float somevector2[3];
+}; // size = 0x84
 ```
 
 `meshdef0`s can seemingly have a linked list like structure, hence the `next` and `prev` entries.
@@ -185,10 +194,7 @@ Maybe they're some form of sub-mesh?
 
 `meshdef1_offset` is exactly what it sounds like.
 
-`big_block_o_floats` is actuallly a little ambiguous, I'm assuming its all floats but it could potentially have other stuff hidden in there.
-Also the size of it is a little speculative.
-`func_80056EB0` suggests that `meshdef0`'s should have a size of `0x4C`, but that leaves 14 floats unaccounted for in the HOB files themselves.
-I don't know what to make of that.
+It seems like the `inner` struct type gets copied 
 
 ## Meshdef1
 
