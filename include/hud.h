@@ -10,21 +10,33 @@ struct xy_offset {
 }; // size = 0x4
 
 struct ui_element {
-    /* 0x00 */ struct ui_element *prev;
-    /* 0x04 */ struct ui_element *next;
-    // These seem to control whether the UI element is visible or not, somehow
-    /* 0x08 */ u16 texture_count;
-    /* 0x0A */ u16 unknown0A;
-    /* 0x0C */ u16 *texture_id_pointer;
-    /* 0x10 */ struct xy_offset *xy_offset_pointer;
-    /* 0x14 */ u32 flags;
-    /* 0x18 */ f32 xpos;
-    /* 0x1C */ f32 ypos;
-    /* 0x20 */ f32 zero; // zpos?, maybe padding
-    /* 0x24 */ f32 width_scale;
-    /* 0x28 */ f32 height_scale;
-    /* 0x2C */ struct rgba rgba;
+    struct ui_element *prev;             /* 0x00 */
+    struct ui_element *next;             /* 0x04 */
+    u16 texture_count;                   /* 0x08 These seem to control whether the UI element is visible or not, somehow */
+    u16 unknown0A;                       /* 0x0A */
+    u16 *texture_id_pointer;             /* 0x0C */
+    struct xy_offset *xy_offset_pointer; /* 0x10 */
+    u32 flags;                           /* 0x14 */
+    f32 xpos;                            /* 0x18 */
+    f32 ypos;                            /* 0x1C */
+    f32 zero;                            /* 0x20 zpos?, maybe padding */
+    f32 width_scale;                     /* 0x24 */
+    f32 height_scale;                    /* 0x28 */
+    struct rgba rgba;                    /* 0x2C */
 }; // size = 0x30
+
+struct some_ui_list_entry {
+    struct ui_element *elem; /* 0x0 */
+    u8 priority;             /* 0x4 */
+    u8 active;               /* 0x5 */
+    u16 pad;                 /* 0x6 */
+}; // size 0x8
+
+struct some_ui_list_root {
+    struct some_ui_list_entry *list; /* 0x0 */
+    u16 size;                        /* 0x4 */
+    u16 capacity;                    /* 0x6 */
+}; // size 0x8
 
 struct func_800C0084_d84_type {
     /* 0x00 */ u32 unk00[8];

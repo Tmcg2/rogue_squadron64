@@ -2,7 +2,11 @@
 
 INCLUDE_ASM("asm/nonmatchings/main/5FA70", steerOrientationTowardTarget);
 
+INCLUDE_RODATA("asm/nonmatchings/main/5FA70", D_main_8003B224);
+
 INCLUDE_ASM("asm/nonmatchings/main/5FA70", levelOrientationToReferenceAxis);
+
+INCLUDE_RODATA("asm/nonmatchings/main/5FA70", D_main_8003B248);
 
 INCLUDE_ASM("asm/nonmatchings/main/5FA70", emitTrailPuffAndCue);
 
@@ -10,22 +14,4 @@ INCLUDE_ASM("asm/nonmatchings/main/5FA70", guidedEffectNpcHandler);
 
 INCLUDE_ASM("asm/nonmatchings/main/5FA70", initWeaponSlotIndexTable);
 
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", randomlyScaledEffectNpcHandler);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", randomlyScaledColoredEffectNpcHandler);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", minimalRandomNpcHandler);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", loadExplosionTextures);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", spawnRandomScaleEffectDefault);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", spawnNpcType0xAFromTemplate);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", spawnRandomScaleColoredEffectAltVariant);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", spawnRandomScaleColoredEffectFromCaller);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", spawnMinimalRandomNpc);
-
-INCLUDE_ASM("asm/nonmatchings/main/5FA70", fake_func_800613B8);
+INCLUDE_RODATA("asm/nonmatchings/main/5FA70", D_main_8003B2F4);

@@ -6,6 +6,7 @@
 
 struct ui_element *getPlayerSlotFieldAt34(u16, u16);
 void setPlayerSlotEntryRGB(u16, u16, struct rgba*);
+void clearPlayerSlotPointerAndFlag(u16);
 u16  findCharEntryValueByKey(u16, u8);
 u8   findCharEntryByteByKey(u16, u8);
 s16  getPlayerSlotEntryBaseShort(u16);

@@ -1725,7 +1725,7 @@ setPlayerSlotEntryRGB = 0x80063E54;
 // 33 callers: under factor5MutexAcquire — (audio_entry, position vec3, velocity vec3, pan u8 normalized by /127). Updates entry's spatial fields at +0xC/+0x10/+0x14 (pos), +0x18/+0x1C/+0x20 (vel), +0x28/+0x2C (pan). Gated by MusyX-active flag.
 updateActive3DAudioSource = 0x800988E8;
 // 32 callers: read-version of setLookupEntryField5ByKey. Walks 8-byte stride table at *(a0+0x0) count=*(u16*)(a0+0x4), finds entry where entry.field0 == a1, returns it.
-findLookupEntryByKey      = 0x800642A0;
+insertLookupEntry         = 0x800642A0;
 // (table, key) — searches 8-byte-stride table at *(a0+0x0) (count u16 at +0x4) for entry whose +0x0 word matches key; if found, shifts subsequent entries down to fill the gap and decrements count. Companion to findLookupEntryByKey/setLookupEntryField5ByKey.
 removeLookupTableEntry    = 0x800643C4;
 // (table) — rs_frees the entries array at table+0x0, then rs_frees the table struct itself. Companion destructor to the table allocator.

@@ -58,7 +58,13 @@ void setPlayerSlotEntryRGB(u16 arg0, u16 arg1, struct rgba *arg2) {
 
 INCLUDE_ASM("asm/nonmatchings/main/61FC0", setPlayerSlotPointerAndFlag);
 
-INCLUDE_ASM("asm/nonmatchings/main/61FC0", clearPlayerSlotPointerAndFlag);
+void clearPlayerSlotPointerAndFlag(u16 arg0) {
+    struct someFontThing *temp_v0;
+
+    temp_v0 = D_main_8009FC10[arg0];
+    temp_v0->unk0FC = NULL;
+    temp_v0->unk100 = 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/61FC0", isAnimInstanceActive);
 
@@ -66,7 +72,9 @@ INCLUDE_ASM("asm/nonmatchings/main/61FC0", getPlayerAnimChannelEntryByIds);
 
 INCLUDE_ASM("asm/nonmatchings/main/61FC0", getPlayerAnimChannelEntryReversed);
 
-INCLUDE_ASM("asm/nonmatchings/main/61FC0", identityReturnArg);
+s32 identityReturnArg(s32 arg0) {
+    return arg0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/61FC0", getPlayerSlotAnimChannelCount);
 
