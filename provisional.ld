@@ -930,7 +930,7 @@ SECTIONS
         build/asm/data/mission_overlay/0AB6E0.bss.o(.bss);
         build/asm/data/mission_overlay/0ADF80.bss.o(.bss);
         build/asm/data/mission_overlay/0AEFF0.bss.o(.bss);
-        build/asm/data/mission_overlay/0B4EC0.bss.o(.bss);
+        build/src/mission_overlay/0B4EC0.o(.bss);
         build/src/mission_overlay/0B64C0.o(.bss);
         build/src/mission_overlay/0B81D0.o(.bss);
         build/src/mission_overlay/0B9600.o(.bss);
@@ -940,7 +940,7 @@ SECTIONS
         build/src/mission_overlay/0BE650.o(.bss);
         build/asm/data/mission_overlay/0BF800.bss.o(.bss);
         build/src/mission_overlay/0C00A0.o(.bss);
-        build/asm/data/mission_overlay/0C0390.bss.o(.bss);
+        build/src/mission_overlay/0C0390.o(.bss);
         build/asm/data/mission_overlay/0C4DB0.bss.o(.bss);
         build/asm/data/mission_overlay/0C70B0.bss.o(.bss);
         build/src/mission_overlay/0C84A0.o(.bss);

@@ -9,7 +9,6 @@ void transformVec3ByAffineMatrix(Mat4x3 arg0, Vec3f arg1, Vec3f arg2) {
     arg2[2] = (arg0[2][0] * arg1[0]) + (arg0[2][1] * arg1[1]) + (arg0[2][2] * arg1[2]) + arg0[3][2];
 }
 
-#if 0
 void normalizeVec3(Vec3f arg0) {
     f32 temp_fa0;
     f32 temp_fv0;
@@ -21,9 +20,6 @@ void normalizeVec3(Vec3f arg0) {
     arg0[1] /= temp_fv0_2;
     arg0[2] /= temp_fv0_2;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/9A850", normalizeVec3);
-#endif
 
 void crossProductVec3(Vec3f arg0, Vec3f arg1, Vec3f arg2) {
     arg0[0] = (arg1[1] * arg2[2]) - (arg1[2] * arg2[1]);
@@ -31,7 +27,6 @@ void crossProductVec3(Vec3f arg0, Vec3f arg1, Vec3f arg2) {
     arg0[2] = (arg1[0] * arg2[1]) - (arg1[1] * arg2[0]);
 }
 
-#if 0
 void invertOrientationMatrix(Mat4x3 arg0, Mat4x3 arg1) {
     f32 temp_fa0;
     f32 temp_ft1_2;
@@ -64,10 +59,5 @@ const u32 rodata_junk[] = {
     0x8FA9002C,
     0x8DAB0008,
 };
-#else
-INCLUDE_ASM("asm/nonmatchings/main/9A850", invertOrientationMatrix);
-#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/9A850", fake_func_80099FDC);
-
-INCLUDE_RODATA("asm/nonmatchings/main/9A850", D_main_8003DEF0); // Can be removed when invertOrientationMatrix is matched

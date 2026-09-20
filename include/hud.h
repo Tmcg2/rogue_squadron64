@@ -170,4 +170,9 @@ struct func_800C0084_type {
     /* 0xF7F */ u8 unkF7F;
 }; // size = 0xF80
 
+struct healthIndicatorColors {
+    /* 0x00 */ struct rgba upper;
+    /* 0x04 */ struct rgba lower;
+}; // size = 0x8
+
 #endif

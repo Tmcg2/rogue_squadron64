@@ -1,11 +1,28 @@
 #include "common.h"
 
+#include "PR/gu.h"
+
 #include "game_settings.h"
+#include "levels.h"
 #include "mission_state.h"
 #include "player.h"
 #include "secondary_weapons.h"
 
+#include "main/3F160.h"
 #include "mission_overlay/0C0390.h"
+
+u16 D_mission_overlay_8010BFD0;
+u16 bss_pad0_0C0390;
+u32 bss_pad1_0C0390;
+struct rgba D_mission_overlay_8010BFD8;
+f32 D_mission_overlay_8010BFDC;
+
+// Interim Data externs
+// These might actually be one big array, based on the access pattern in `updateHudHealthIndicator`
+extern struct healthIndicatorColors advancedShieldColors;
+extern struct healthIndicatorColors standardHealthColors[2];
+extern struct healthIndicatorColors criticalHealthColors[3];
+extern u8 missionObjectiveTextIds[0x14][4];
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C0390", D_mission_overlay_800A6250);
 
@@ -33,7 +50,65 @@ INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C0390", D_mission_overlay_800A
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0C0390", D_mission_overlay_800A62E0);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", updateHudHealthIndicator);
+void updateHudHealthIndicator(struct func_800C0084_type *arg0, f32 arg1) {
+    f32 temp_fa0;
+    f32 temp_fv0;
+    f32 temp_fv1;
+    f32 var_fs0;
+    f32 permuter;
+    f32 magic;
+    s32 temp_ft2;
+    struct healthIndicatorColors *var_a1;
+
+    temp_fv0 = getPlayerHealthPercentage(arg0->unk234);
+    if (temp_fv0 < 0.25f) {
+        var_fs0 = (0.25f - temp_fv0) * 4.0f;
+        var_a1 = criticalHealthColors;
+    } else {
+        temp_fv1 = gPlayers[arg0->unk234].inner.advancedShieldTimer;
+        if (temp_fv1 > 0.0f) {
+            var_a1 = &advancedShieldColors;
+            arg0->playerHealthPercentage = temp_fv0;
+            var_fs0 = 1.0f - temp_fv1;
+        } else {
+            var_fs0 = (1.0f - temp_fv0) * 4.0f;
+            temp_ft2 = (s32) var_fs0;
+            var_a1 = &standardHealthColors[temp_ft2];
+            var_fs0 -= (f32) temp_ft2;
+        }
+    }
+    if (temp_fv0 < arg0->playerHealthPercentage) {
+        arg0->unk23C = 1.0f;
+    }
+    arg0->playerHealthPercentage = temp_fv0;
+    arg0->upperHealthIndicatorColor.r = var_a1->upper.r + ((var_a1[1].upper.r - var_a1->upper.r) * var_fs0);
+    arg0->upperHealthIndicatorColor.g = var_a1->upper.g + ((var_a1[1].upper.g - var_a1->upper.g) * var_fs0);
+    arg0->upperHealthIndicatorColor.b = var_a1->upper.b + ((var_a1[1].upper.b - var_a1->upper.b) * var_fs0);
+    arg0->upperHealthIndicatorColor.a = 0xB9;
+    arg0->lowerHealthIndicatorColor.r = var_a1->lower.r + ((var_a1[1].lower.r - var_a1->lower.r) * var_fs0);
+    arg0->lowerHealthIndicatorColor.g = var_a1->lower.g + ((var_a1[1].lower.g - var_a1->lower.g) * var_fs0);
+    arg0->lowerHealthIndicatorColor.b = var_a1->lower.b + ((var_a1[1].lower.b - var_a1->lower.b) * var_fs0);
+    arg0->lowerHealthIndicatorColor.a = 0x5C;
+    if (temp_fv0 < 0.25f) {
+        temp_fa0 = (cosf(2.0f * (arg0->unk238 * 3.1415927f)) + 1.0f) * 0.5f;
+        arg0->upperHealthIndicatorColor.a *= temp_fa0;
+        var_fs0 = (2.0f * var_fs0) * arg1;
+        arg0->unk238 += (var_fs0) + arg1;
+    }
+    if (arg0->unk23C > 0.0f) {
+        var_fs0 = (sinf((2.0f * (2.0f * arg0->unk23C * 3.1415927f)) - 1.5707964f) + 1.0f) * 0.5f;
+        arg0->upperHealthIndicatorColor.r += (0xFF - arg0->upperHealthIndicatorColor.r) * var_fs0;
+        arg0->upperHealthIndicatorColor.g += (0xFF - arg0->upperHealthIndicatorColor.g) * var_fs0;
+        arg0->upperHealthIndicatorColor.b += (0xFF - arg0->upperHealthIndicatorColor.b) * var_fs0;
+        permuter = (2.0f * arg0->unk23C);
+        magic = (cosf(2.0f * (permuter * 3.1415927f)) + 1.0f);
+        arg0->upperHealthIndicatorColor.a *= (magic * 0.5f);
+        arg0->unk23C -= arg1;
+        if (arg0->unk23C < 0.0f) {
+            arg0->unk23C = 0.0f;
+        }
+    }
+}
 
 void setHudSecondaryWeaponInfo(struct func_800C0084_type *arg0) {
     u8 secondaryWeaponLevel;
@@ -91,7 +166,18 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", initOrUpdatePauseScreenDi
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", runPauseMenuStateMachine);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", spawnHudNpc);
+void spawnHudNpc(void) {
+    s32 var_a0;
+    s32 var_v0;
+    u32 var_a1;
+
+    var_a1 = 0;
+    for (var_a0 = 0; var_a0 < 4; var_a0++) {
+        if (missionObjectiveTextIds[gCurrentLevel][var_a0] != 0) var_a1++;
+    }
+    gMissionState.numMissionObjectives = var_a1;
+    D_mission_overlay_8010BFD0 = spawnNpcOfType(handleHUD, NULL, 4U, 0x64U);
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", broadcastSceneShutdownAndCleanup);
 

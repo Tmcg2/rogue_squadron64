@@ -3669,8 +3669,16 @@ D_main_bss_80130B88 = 0x80130B88; // type:OSContPad size:0x18
 D_main_8013D880 = 0x8013D880; // type:u32 size:0x2F80
 
 aspTask    = 0x80149470; // type:OSTask size:0x40
-// type_size:0x24 count:0x40
-D_main_801529C0 = 0x801529C0; // type:u32 size:0x900
+
+// type_size:0xEF8 count:0x8
+D_main_bss_80149A00 = 0x80149A00; // type:u32 size:0x77C0
+
+// type_size:0x18 count:0x100
+D_main_bss_801511C0 = 0x801511C0; // type:u32 size:0x1800
+
+D_main_bss_801529C0 = 0x801529C0; // type:u32
+D_main_bss_801529C4 = 0x801529C4; // type:u32
+D_main_bss_801529CC = 0x801529CC; // type:u32
 D_main_80153420 = 0x80153420; // size:0x1228
 
 numSpeechSamples    = 0x80154670; // size:0x4
