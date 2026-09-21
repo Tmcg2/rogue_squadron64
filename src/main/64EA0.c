@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "main/02490.h"
+#include "main/02420.h"
 #include "main/64EA0.h"
 
 void insertLookupEntry(struct some_ui_list_root *arg0, struct ui_element *arg1, u8 arg2) {

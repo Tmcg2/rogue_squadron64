@@ -97,7 +97,8 @@ segments:
       - [0x016B0, .rodata,  "zlib/infblock"]
       - [0x016E0, .rodata,  "zlib/infcodes"]
       - [0x01720, c,     "main/01720"]
-      - [0x02490, c,     "main/02490"]
+      - [0x01850, c,     "main/01850"]
+      - [0x02420, c,     "main/02420"]
       - [0x031B0, c,     "main/031B0"]
       - [0x03290, c,     "main/03290"]
       - [0x033C0, c,     "main/033C0"]
@@ -257,8 +258,7 @@ segments:
       - [0x37CE0, asm,     "libultra/libc/ldiv"]
       - [0x37E70, asm,     "libultra/libc/xlitob"]
       - [0x38110, asm,     "libultra/os/yieldthread"]
-      - [0x38160, data,    "main/38160"]
-      - [0x381B0, data,    "main/381B0"]
+      - [0x38160, .data,    "main/01720"]
       - [0x381C0, data,    "main/381C0"]
       - [0x38220, .data,    "main/03290"]
       - [0x38230, data,    "main/38230"]
@@ -720,7 +720,7 @@ segments:
     vram: 0x8010D200
     subsegments:
       - {type: bss, vram: 0x8010D200, name: "main/8010D200"              }
-      - {type: .bss, vram: 0x8010FEE0, name: "main/02490"                }
+      - {type: .bss, vram: 0x8010FEE0, name: "main/02420"                }
       - {type: .bss, vram: 0x8010FF20, name: "main/03290"                }
       - {type: .bss, vram: 0x8010FF30, name: "main/033C0"                }
       - {type: .bss, vram: 0x801107A0, name: "main/04080"                }

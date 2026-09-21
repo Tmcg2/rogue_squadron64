@@ -127,7 +127,8 @@ SECTIONS
         build/asm/libultra/io/controller.o(.rodata);
         main_TEXT_START = .;
         build/src/main/01720.o(.text);
-        build/src/main/02490.o(.text);
+        build/src/main/01850.o(.text);
+        build/src/main/02420.o(.text);
         build/src/main/031B0.o(.text);
         build/src/main/03290.o(.text);
         build/src/main/033C0.o(.text);
@@ -275,8 +276,7 @@ SECTIONS
         build/asm/libultra/libc/xlitob.o(.text);
         build/asm/libultra/os/yieldthread.o(.text);
         main_DATA_START = .;
-        build/asm/data/main/38160.data.o(.data);
-        build/asm/data/main/381B0.data.o(.data);
+        build/src/main/01720.o(.data);
         build/asm/data/main/381C0.data.o(.data);
         build/src/main/03290.o(.data);
         build/asm/data/main/38230.data.o(.data);
@@ -1167,7 +1167,7 @@ SECTIONS
         FILL(0x00000000);
         main_bss_BSS_START = .;
         build/asm/data/main/8010D200.bss.o(.bss);
-        build/src/main/02490.o(.bss);
+        build/src/main/02420.o(.bss);
         build/src/main/03290.o(.bss);
         build/src/main/033C0.o(.bss);
         build/src/main/04080.o(.bss);

@@ -1,32 +1,33 @@
 #include "common.h"
 
 #include "PR/os.h"
-#include "main/02490.h"
-
-struct D_main_bss_8010FF08_type {
-    u32 dataAddress; /* 0x0 */
-    u32 dataSize;    /* 0x4 */
-}; // size 0x8
-
-struct heapBlockHeader {
-    u16 unk00;  /* 0x00 */
-    u16 flags;  /* 0x02 */
-    u32 size;   /* 0x04 */
-    u32 pad[2]; /* 0x08 */
-}; // size 0x10;
+#include "main/02420.h"
 
 OSMesgQueue D_main_8010FEE0;
 OSMesg D_main_bss_8010FEF8;
 struct heapBlockHeader *D_main_bss_8010FEFC;
 struct heapBlockHeader *D_main_bss_8010FF00;
-u32 bss_pad_02490;
+u32 bss_pad_02420;
 struct D_main_bss_8010FF08_type *D_main_bss_8010FF08;
 u32 D_main_bss_8010FF0C;
 struct heapBlockHeader *D_main_bss_8010FF10;
 struct heapBlockHeader *D_main_bss_8010FF14;
 struct heapBlockHeader *D_main_bss_8010FF18;
 
-INCLUDE_ASM("asm/nonmatchings/main/02490", ensureHeapInitialized);
+s32 queueDeferredClearRequest(struct heapBlockHeader *arg0, s32 arg1) {
+    if ((arg0 != 0) & (arg1 != 0)) {
+        buildHeapFreeList(&D_main_bss_8010FF00, 0, NULL, arg0, (u32)arg0 + arg1, 1);
+    } else {
+        D_main_bss_8010FF00 = NULL;
+    }
+    return 1;
+}
+
+void clearFrameReadyFlag(void) {
+    D_main_bss_8010FEFC = NULL;
+}
+
+INCLUDE_ASM("asm/nonmatchings/main/02420", ensureHeapInitialized);
 
 u32 getTotalFreeHeapSize(void) {
     u32 var_a1;
@@ -128,9 +129,9 @@ why:
     return var_s2;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/02490", rs_free);
+INCLUDE_ASM("asm/nonmatchings/main/02420", rs_free);
 
-INCLUDE_ASM("asm/nonmatchings/main/02490", buildHeapFreeList);
+INCLUDE_ASM("asm/nonmatchings/main/02420", buildHeapFreeList);
 
 #if 0
 void initMainHeap(u32 arg0, struct D_main_bss_8010FF08_type *arg1, struct heapBlockHeader *arg2, struct heapBlockHeader *arg3) {
@@ -196,7 +197,7 @@ void initMainHeap(u32 arg0, struct D_main_bss_8010FF08_type *arg1, struct heapBl
     D_main_bss_8010FEFC = NULL;
 }
 #else
-INCLUDE_ASM("asm/nonmatchings/main/02490", initMainHeap);
+INCLUDE_ASM("asm/nonmatchings/main/02420", initMainHeap);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/main/02490", coalesceFreeHeapBlocks);
+INCLUDE_ASM("asm/nonmatchings/main/02420", coalesceFreeHeapBlocks);

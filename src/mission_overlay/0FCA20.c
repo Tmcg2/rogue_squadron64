@@ -1,6 +1,10 @@
 #include "common.h"
 
+#include "crafts.h"
+#include "hud.h"
 #include "secondary_weapons.h"
+
+#include "mission_overlay/0B4EC0.h"
 #include "mission_overlay/0FCA20.h"
 
 static struct hud_struct D_mission_overlay_8010CA30[2];
@@ -43,7 +47,35 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", dispatchHudInstanceWeapon
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", refreshPlayerSecondaryWeaponHud);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", resetTransientPlayerStateFlags);
+void resetTransientPlayerStateFlags(void) {
+    u8 var_s1;
+    struct hud_struct *temp_s0;
+
+    for (var_s1 = 0; var_s1 < 2;  var_s1++) {
+        temp_s0 = &D_mission_overlay_8010CA30[var_s1];
+        switch (temp_s0->secondaryWeapon) {
+        case SECONDARY_WEAPON_SEEKER_MISSILES:
+        case SECONDARY_WEAPON_SEEKER_TORPEDOS:
+            temp_s0->secondaryWeaponState = 0;
+            temp_s0->unk210 = 0;
+            temp_s0->unk211 = 0;
+            break;
+        case SECONDARY_WEAPON_ION_CANNON:
+        case SECONDARY_WEAPON_MISSLES:
+        case SECONDARY_WEAPON_BOMBS:
+        case SECONDARY_WEAPON_PROTON_TORPEDOS:
+            temp_s0->secondaryWeaponState = 0;
+            break;
+        }
+        if (getPlayerVehicleId(0) != CRAFT_XWING) {
+            temp_s0->alpha_scaling = 1.0f;
+        } else if (!isWeaponSlotReady(0U)) {
+            temp_s0->alpha_scaling = 0.0f;
+        } else {
+            temp_s0->alpha_scaling = 1.0f;
+        }
+    }
+}
 
 void resetSecondaryWeaponCount(void) {
     u8 var_a0;
@@ -71,4 +103,8 @@ u8 getHudSecondaryWeponCount(void) {
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", fake_func_800FEF04);
 
-INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0FCA20", D_mission_overlay_800A942C);
+// DO NOT DELTE ME I AM REQUIRED FOR MATCHING
+const u32 rodata_pad_0FCA20[] = {
+    0x00000000,
+    0x8FC20024,
+};

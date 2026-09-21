@@ -170,6 +170,35 @@ struct func_800C0084_type {
     /* 0xF7F */ u8 unkF7F;
 }; // size = 0xF80
 
+struct hud_struct {
+    u8 secondaryWeapon;                            /* 0x000 */
+    u8 secondaryWeaponState;                       /* 0x001 Involved in the firing of secondary weapons in one way or another */
+    u8 secondaryWeaponCount;                       /* 0x002 */
+    u8 secondaryWeaponReset;                       /* 0x003 Or maybe, secondaryWeaponMax? */
+    u8 secondaryWeaponIsAdvanced;                  /* 0x004 */
+    u8 crosshairOnOff;                             /* 0x005 */
+    u8 unknown006;                                 /* 0x006 */
+    u8 unknown007;                                 /* 0x007 */
+    u16 unknown008;                                /* 0x008 */
+    // I think these are indices into D_8011A444;
+    u16 texture_ids[10];                           /* 0x00A */
+    // u16 compiler_padding;                       /* 0x01E */
+    u32 unknown020;                                /* 0x020 could be padding? */
+    f32 alpha_scaling;                             /* 0x024 */
+    struct ui_element outerCrosshairRingElement;   /* 0x028 */
+    struct ui_element innerCrosshairRingElement;   /* 0x058 */
+    struct ui_element bombCrosshairRingElement;    /* 0x088 */
+    struct ui_element hud_elements[5];             /* 0x0B8 */
+    struct ui_element seekerCrosshairRing1Element; /* 0x088 */
+    struct ui_element seekerCrosshairRing2Element; /* 0x088 */
+    u32 unknown_words208[2];                       /* 0x208 */
+    u8 unk210;                                     /* 0x210 */
+    u8 unk211;                                     /* 0x211 */
+    u8 unk212;                                     /* 0x212 */
+    u8 unk213;                                     /* 0x213 */
+    u32 unknown_words214[0x19];                    /* 0x214 */
+}; // size 0x278
+
 struct healthIndicatorColors {
     /* 0x00 */ struct rgba upper;
     /* 0x04 */ struct rgba lower;

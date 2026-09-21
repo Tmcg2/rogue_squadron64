@@ -1,18 +1,50 @@
 #include "common.h"
 
+#include "game_config.h"
 #include "menu_overlay/linker_variables.h"
 #include "mission_overlay/linker_variables.h"
 #include "cinematic_overlay/linker_variables.h"
 #include "main/01720.h"
 #include "main/03F80.h"
+#include "main/3EBA0.h"
 
-/* Data Variables, uncomment when Data matching is possible
+struct game_config gBootConfig = {
+    0x00000000,
+    mainGameLoop,
+    0x00000000,
+    0x00000000,
+    {
+        0x0000,
+        0x0140,
+        0x00E0,
+        0x0010,
+        0x0200,
+        0x0000,
+    },
+    {
+        0x00005622,
+        0x14,
+        0x10,
+        0x0700,
+        0x00000000,
+        0x00000000,
+    },
+    {
+        0x00000400,
+        0x00057800,
+        0x00010000,
+        0x0007D000,
+        0x0400,
+        0x0200,
+        0x0008,
+        0x0008,
+        0x00001800,
+    },
+    0x00000000,
+    0x00000000,
+};
+
 s32 gCurrentLoadedOverlay = -1;
-*/
-
-// Interim `extern` definitions for Data variables. Remove these when Data matching is possible.
-
-extern s32 gCurrentLoadedOverlay;
 
 void loadOverlay(s32 arg0) {
     struct overlay_dma local0;
@@ -51,28 +83,13 @@ void loadOverlay(s32 arg0) {
     gCurrentLoadedOverlay = arg0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/01720", getGameConfig);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", isPreNmiPending);
-
-s32 returnZeroStub(void) {
-    return 0;
+struct game_config *getGameConfig(void) {
+    return &gBootConfig;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/01720", mainBootstrapWorker);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", partitionFramebufferMemory);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", thread3_video_handle);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", runVideoFrameTick);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", main);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", preNmiResetThread);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", idle_thread_handle);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", queueDeferredClearRequest);
-
-INCLUDE_ASM("asm/nonmatchings/main/01720", clearFrameReadyFlag);
+// DO NOT DELTE ME I AM REQUIRED FOR MATCHING
+u32 data_pad_01720[] = {
+    0x2542FFFF,
+    0x48821800,
+    0x488A1900,
+};

@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "main/02490.h"
+#include "main/02420.h"
 #include "main/08510.h"
 #include "main/1D000.h"
 #include "main/56F50.h"
