@@ -16,7 +16,7 @@ static u32 padding_junk[] = {
 //   after the .text section, I wonder if  this was some statically linked library?
 
 #if 0
-s16 rand(void) {
+u16 rand(void) {
     rngSeed *= 0xA8351D63;
     return (rngSeed >> 6) % 32768;
 }

@@ -279,7 +279,7 @@ SECTIONS
         build/src/main/01720.o(.data);
         build/asm/data/main/381C0.data.o(.data);
         build/src/main/03290.o(.data);
-        build/asm/data/main/38230.data.o(.data);
+        build/src/main/03F80.o(.data);
         build/asm/data/main/38240.data.o(.data);
         build/asm/data/main/38250.data.o(.data);
         build/asm/data/main/383C0.data.o(.data);

@@ -22,11 +22,15 @@ extern struct cutsceneIdMapEntry gCutsceneIdMappingTable[];
 
 /* BSS Variables, uncomment when BSS matching is possible
 
+struct D_cinematic_overlay_800B0D00_type D_cinematic_overlay_800B0D00[0x40];
+UNIDENTIFIED_TYPE *D_cinematic_overlay_800B1900;
 struct cuts_file_constant *D_cinematic_overlay_800B1904;
 Vec3f *D_cinematic_overlay_800B1A08;
 */
 
 // Interim `extern` definitions for BSS variables. Remove these when BSS matching is possible.
+extern struct D_cinematic_overlay_800B0D00_type D_cinematic_overlay_800B0D00[0x40];
+extern UNIDENTIFIED_TYPE *D_cinematic_overlay_800B1900;
 extern struct cuts_file_constant *D_cinematic_overlay_800B1904;
 extern Vec3f *D_cinematic_overlay_800B1A08;
 
@@ -334,9 +338,24 @@ INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", tickCutsceneNpcSlots);
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", despawnCutsceneNpcSlot);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", initCutsceneSlotTable);
+void initCutsceneSlotTable(void) {
+    u32 var_a0;
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", insertCutsceneSlot);
+    for (var_a0 = 0; var_a0 < 0x40; var_a0++) {
+        D_cinematic_overlay_800B0D00[var_a0].unk00 = 0;
+    }
+}
+
+void insertCutsceneSlot(struct D_cinematic_overlay_800B0D00_type *arg0) {
+    u32 var_v1;
+
+    for (var_v1 = 0; var_v1 < 0x40; var_v1++) {
+        if (D_cinematic_overlay_800B0D00[var_v1].unk00 == 0) {
+            zmemcpy(&D_cinematic_overlay_800B0D00[var_v1], arg0, sizeof(struct D_cinematic_overlay_800B0D00_type));
+            break;
+        }
+    }
+}
 
 u16 lookupCutsceneIdMapping(s32 arg0) {
     u16 var_a1;

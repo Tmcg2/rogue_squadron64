@@ -1,6 +1,9 @@
 #ifndef DAT_H
 #define DAT_H
 
+#include "PR/ultratypes.h"
+#include "common_types.h"
+
 enum DAT_SUBTYPE {
     DAT_UNKNOWN_00 /* 0x00 */,
     DAT_TYPE_0_PLAYER_START_POSITION /* 0x01 */,
@@ -97,5 +100,108 @@ enum DAT_SUBTYPE {
     DAT_TYPE_0_52 /* 0x52 One of the NONAME entry types */,
     DAT_NUM_SUBTYPES /* 0x53 */,
 };
+
+struct dat_item_header {
+    u16 subtype;     /* 0x00 */
+    u8  type;        /* 0x02 */
+    u8  unk03;       /* 0x03 */
+    u16 unk04;       /* 0x04 */
+    u16 unk06;       /* 0x06 */
+    u32 item_size;   /* 0x08 */
+    char *item_name; /* 0x0C */
+}; // size 0x10
+
+struct dat_entry_type_0 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_1 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_2 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_3 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_4 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_5 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_6 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct dat_entry_type_7 {
+    struct dat_item_header header; /* 0x00 */
+    union {
+        u32 standin; // In reality, there's going to be a bunch of structs inside this union
+    } subtype_data;
+}; // size variable
+
+struct data_hashmap_bucket {
+    void *dat_entry;  /* 0x0 Purposefully void, can point to any of the varouis DAT entry types */
+    char *entry_name; /* 0x4 */
+}; // size 0x8
+
+struct dat_file_header {
+    u32    type0_count;                   /* 0x00 */
+    struct dat_entry_type_0 **type0_ptrs; /* 0x04 */
+    u32    type1_count;                   /* 0x08 */
+    struct dat_entry_type_1 **type1_ptrs; /* 0x0C */
+    u32    type2_count;                   /* 0x10 */
+    struct dat_entry_type_2 **type2_ptrs; /* 0x14 */
+    u32    type3_count;                   /* 0x18 */
+    struct dat_entry_type_3 **type3_ptrs; /* 0x1C */
+    u32    type4_count;                   /* 0x20 */
+    struct dat_entry_type_4 **type4_ptrs; /* 0x24 */
+    u32    type5_count;                   /* 0x28 */
+    struct dat_entry_type_5 **type5_ptrs; /* 0x2C */
+    u32    type6_count;                   /* 0x30 */
+    struct dat_entry_type_6 **type6_ptrs; /* 0x34 */
+    u32    type7_count;                   /* 0x38 */
+    struct dat_entry_type_7 **type7_ptrs; /* 0x3C */
+    u32    hashmap_size;                  /* 0x40 */
+    struct data_hashmap_bucket **buckets; /* 0x44 */
+}; // size 0x48
+
+struct D_main_bss_801375D8_type {
+    struct dat_file_header dat_data; /* 0x00 */
+    f32  unk04; /* 0x04 */
+    f32  unk08; /* 0x08 */
+    f32  unk0C; /* 0x0C */
+    f32  unk10; /* 0x10 */
+    u32  unk14; /* 0x14 */
+    u32  unk18; /* 0x18 */
+    u16 *unk1C; /* 0x1C */
+}; // size 0x20
 
 #endif

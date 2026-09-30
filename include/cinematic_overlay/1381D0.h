@@ -4,6 +4,8 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
+#include "hob.h"
+
 struct cuts_0058_type {
     u32 sub_type; /* 0x00 */
     u32 unk04;    /* 0x04 */
@@ -46,12 +48,46 @@ enum CutsceneType {
     NUM_CUTSCENE_TYPES /* 0x3 */,
 };
 
+struct D_cinematic_overlay_800B0D00_type {
+    u16   unk00;              /* 0x00 */
+    u16   unk02;              /* 0x02 */
+    Vec3f unk04;              /* 0x04 */
+    Vec3f unk10;              /* 0x10 */
+    f32   unk1C;              /* 0x1C */
+    f32   unk20;              /* 0x20 */
+    f32   unk24;              /* 0x24 */
+    f32   unk28;              /* 0x28 */
+    UNIDENTIFIED_TYPE *unk2C; /* 0x2C */
+}; // size 0x30
+
+struct D_cinematic_overlay_800B1900_type {
+    /* 0x000 */
+    Mat4x3 unk020; /* 0x020 */
+    UNIDENTIFIED_TYPE *unk050; /* 0x050 */
+    UNIDENTIFIED_TYPE *unk054; /* 0x054 */
+    u16 unk058; /* 0x058 */
+    u16 unk05A; /* 0x05A */
+    u32 unk05C; /* 0x05C */
+    UNIDENTIFIED_TYPE *unk060; /* 0x060 */
+    f32 unk064; /* 0x064 */
+    f32 unk068; /* 0x068 */
+    UNIDENTIFIED_TYPE *unk06C; /* 0x06C */
+    Vec3f  unk070; /* 0x070 */
+    Vec3f  unk07C; /* 0x07C */
+    Mat4x3 unk088; /* 0x088 */
+    u16 unk0B8; /* 0x0B8 */
+    u16 unk0BA; /* 0x0BA */
+    /* 0x0BC */
+}; // size 0x13C
+
 void   func_cinematic_overlay_800AC75C(u8, u8, Vec3f, Vec3f);
 u8     shouldShowCutsceneForLevelStage(u8, u8);
 char  *getAssetNameForNpcType(u8);
 Vec3f *func_cinematic_overlay_800AEA18(void);
 void   cuts_0058_bubble_sort(struct cuts_file_constant*);
 void   noopHandler_800AEB30(void);
+void   initCutsceneSlotTable(void);
+void   insertCutsceneSlot(struct D_cinematic_overlay_800B0D00_type*);
 u16    lookupCutsceneIdMapping(s32);
 void   cinematicShutdownAudioAndAssets(void);
 s32    bytesDiffer(u8 *arg0, u8 *arg1, u32 arg2);

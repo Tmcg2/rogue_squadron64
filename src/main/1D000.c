@@ -249,18 +249,13 @@ INCLUDE_ASM("asm/nonmatchings/main/1D000", normalize_vector);
 
 #if 0
 void vec3NormalizeInto(Vec3f arg0, Vec3f arg1) {
-    f32 temp_ft1;
     f32 temp_fv0;
-    f32 temp_fv0_2;
-    f32 temp_fv1;
+    f32 why;
 
-    temp_ft1 = arg1[0];
-    temp_fv1 = arg1[1];
-    temp_fv0 = arg1[2];
-    temp_fv0_2 = sqrtf((temp_ft1 * temp_ft1) + (temp_fv1 * temp_fv1) + (temp_fv0 * temp_fv0));
-    arg0[0] = (arg1[0] / temp_fv0_2);
-    arg0[1] = (arg1[1] / temp_fv0_2);
-    arg0[2] = (arg1[2] / temp_fv0_2);
+    temp_fv0 = sqrtf((arg1[0] * arg1[0]) + (arg1[1] * arg1[1]) + (arg1[2] * arg1[2]));
+    arg0[0] = (arg1[0] / temp_fv0);
+    arg0[1] = (arg1[1] / temp_fv0);
+    arg0[2] = (arg1[2] / temp_fv0);
 }
 #else
 INCLUDE_ASM("asm/nonmatchings/main/1D000", vec3NormalizeInto);

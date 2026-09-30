@@ -261,7 +261,7 @@ segments:
       - [0x38160, .data,    "main/01720"]
       - [0x381C0, data,    "main/381C0"]
       - [0x38220, .data,    "main/03290"]
-      - [0x38230, data,    "main/38230"]
+      - [0x38230, .data,    "main/03F80"]
       - [0x38240, data,    "main/38240"]
       - [0x38250, data,    "main/38250"]
       - [0x383C0, data,    "main/383C0"]

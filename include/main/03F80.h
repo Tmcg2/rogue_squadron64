@@ -5,6 +5,8 @@
 
 #include "main/01720.h"
 
-void processOverlayDmaStruct(struct overlay_dma*);
+void setVideoReadyFlag(void);
+s32  clearDmaReadyFlag(void);
+s32  processOverlayDmaStruct(struct overlay_dma*);
 
 #endif

@@ -9,7 +9,7 @@
 struct DisplayListBuffer {
     struct DisplayListBuffer *next; /* 0x000 */
     struct DisplayListBuffer *prev; /* 0x004 */
-    Gfx displayList[0x40];          /* 0x008 */
+    Gfx displayList[0x20];          /* 0x008 */
 }; // size 0x108
 
 struct D_main_bss_8011A444 {
@@ -21,7 +21,10 @@ extern struct D_main_bss_8011A444 *D_main_bss_8011A444;
 
 void registerSiCallback(void (*)(void));
 void heapFreeListInsert(struct DisplayListBuffer*);
+s32  countDisplayListChunks(void);
+struct DisplayListBuffer *reclaimDisplayListChunk(void);
 Gfx *allocateDisplayListBuffer(void);
 void enqueueMeshForDeferredRelease(struct meshdef1*);
+s32  resetMaterialPoolWrapper(void);
 
 #endif

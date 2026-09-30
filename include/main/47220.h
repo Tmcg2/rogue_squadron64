@@ -3,6 +3,10 @@
 
 #include "common_types.h"
 
-s32 isPointXzWithinRangeOfRef(Vec3f, Vec3f);
+#include "dat.h"
+
+void  getLevelDatItemByName(char*);
+void *getDatItemByName(struct dat_file_header*, char*);
+s32   isPointXzWithinRangeOfRef(Vec3f, Vec3f);
 
 #endif

@@ -2,6 +2,11 @@
 
 #include "player.h"
 
+#include "main/6C310.h"
+
+// Interim BSS externs
+extern u16 D_main_bss_8013A528[14];
+
 INCLUDE_ASM("asm/nonmatchings/main/6C310", loadCraftShadowTextures);
 
 INCLUDE_ASM("asm/nonmatchings/main/6C310", applyCentripetalBankingToNpcCorners);

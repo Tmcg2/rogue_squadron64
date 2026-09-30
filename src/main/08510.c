@@ -1,6 +1,10 @@
 #include "common.h"
 
 #include "main/08510.h"
+#include "main/1EE30.h"
+
+// Interim BSS externs
+extern struct DisplayListBuffer *D_main_bss_801163B0;
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", registerSiCallback);
 
@@ -8,13 +12,84 @@ INCLUDE_ASM("asm/nonmatchings/main/08510", findAndZeroTableSlotMatching);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", clearFourWordTable);
 
+#if 0
+// I strongly suspect this file is compiled with O3, and that this function gets inlined
+void heapFreeListInsert(struct DisplayListBuffer *arg0) {
+    struct DisplayListBuffer *var_v1;
+
+    if (arg0 != NULL) {
+        var_v1 = arg0;
+        if (arg0->next != NULL) {
+            do {
+                var_v1 = var_v1->next;
+            } while (var_v1->next != NULL);
+        }
+        var_v1->next = D_main_bss_801163B0;
+        if (D_main_bss_801163B0 != NULL) {
+            D_main_bss_801163B0->prev = var_v1;
+        }
+        D_main_bss_801163B0 = arg0;
+        D_main_bss_801163B0->prev = NULL;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/08510", heapFreeListInsert);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", heapWalker);
 
-INCLUDE_ASM("asm/nonmatchings/main/08510", countDisplayListChunks);
+#if 0
+s32 countDisplayListChunks(void) {
+    s32 blah;
+    struct DisplayListBuffer *var_v1;
 
+    blah = 0;
+    var_v1 = D_main_bss_801163B0;
+    while (var_v1 != NULL) {
+        var_v1 = var_v1->next;
+        blah += sizeof(struct DisplayListBuffer);
+    }
+    return blah;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/main/08510", countDisplayListChunks);
+#endif
+
+#if 0
+struct DisplayListBuffer *reclaimDisplayListChunk(void) {
+    struct DisplayListBuffer *temp_a0;
+    struct DisplayListBuffer *temp_v0;
+    struct DisplayListBuffer *temp_v0_2;
+    struct DisplayListBuffer *var_v1;
+
+    temp_a0 = D_main_bss_801163B0;
+    if (temp_a0 == NULL) {
+        temp_v0 = findAndUnlinkSmallestEntry();
+        heapFreeListInsert(temp_v0);
+        // if (temp_v0 != NULL) {
+        //     var_v1 = temp_v0;
+        //     if (temp_v0->next != NULL) {
+        //         do {
+        //             var_v1 = var_v1->next;
+        //         } while (var_v1->next != NULL);
+        //     }
+        //     var_v1->next = D_main_bss_801163B0;
+        //     if (D_main_bss_801163B0 != NULL) {
+        //         D_main_bss_801163B0->prev = var_v1;
+        //     }
+        //     D_main_bss_801163B0 = temp_v0;
+        //     temp_v0->prev = NULL;
+        // }
+    }
+    D_main_bss_801163B0 = D_main_bss_801163B0->next;
+    if (D_main_bss_801163B0 != NULL) {
+        D_main_bss_801163B0->prev = NULL;
+    }
+    return temp_a0;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/08510", reclaimDisplayListChunk);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", allocateDisplayListBuffer);
 
@@ -172,7 +247,10 @@ INCLUDE_ASM("asm/nonmatchings/main/08510", setViewStateTripletBytes);
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", setMissionLevelInitByte);
 
-INCLUDE_ASM("asm/nonmatchings/main/08510", resetMaterialPoolWrapper);
+s32 resetMaterialPoolWrapper(void) {
+    resetMaterialPool();
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", setRenderViewScaleFloat);
 

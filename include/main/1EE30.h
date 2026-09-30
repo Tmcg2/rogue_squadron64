@@ -3,6 +3,9 @@
 
 #include "common_types.h"
 #include "PR/ultratypes.h"
+
+#include "textures.h"
+
 #include "main/08510.h"
 
 struct MaterialPoolEntry {
@@ -44,6 +47,7 @@ s32   unlinkTextureMaterialList(u16);
 void  tickTextureMaterialExpiry(void);
 struct DisplayListBuffer *findAndUnlinkSmallestEntry(void);
 struct MaterialPoolEntry *popMaterialNodeIntoBucket(u16);
+s32   registerHmtTextureInTable(struct material_entry*, struct texture_entry*, u32);
 u8   *getTextureDataByMaterialId(u16);
 s32   returnOne_80023334(void);
 s32   returnOne_8002335C(void);
