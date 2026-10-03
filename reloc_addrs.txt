@@ -1,5 +1,11 @@
 rom:0x4630 reloc:MIPS_HI16 symbol:gManifestTable addend:+0x20
 rom:0x4634 reloc:MIPS_LO16 symbol:gManifestTable addend:+0x20
+ 
+rom:0xB0540 reloc:MIPS_HI16 symbol:D_mission_overlay_8010BDD8 addend:+0x4
+rom:0xB0544 reloc:MIPS_LO16 symbol:D_mission_overlay_8010BDD8 addend:+0x4
 
 rom:0xC1F6C reloc:MIPS_HI16 symbol:D_mission_overlay_8010BFD8 addend:+0x3
 rom:0xC1F70 reloc:MIPS_LO16 symbol:D_mission_overlay_8010BFD8 addend:+0x3
+
+rom:0xD31AC reloc:MIPS_HI16 symbol:D_mission_overlay_8010BE18 addend:+0x6
+rom:0xD31B0 reloc:MIPS_LO16 symbol:D_mission_overlay_8010BE18 addend:+0x6

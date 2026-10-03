@@ -3,7 +3,8 @@
 
 #include "PR/ultratypes.h"
 
-void decrementTextTextureRefcount(void);
-s32  isPlayerShipActive(void);
+void  decrementTextTextureRefcount(void);
+s32   isPlayerShipActive(void);
+char *buildPrefixedAssetName(char*);
 
 #endif

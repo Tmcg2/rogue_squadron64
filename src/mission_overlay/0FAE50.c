@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0FAE50.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FAE50", func_mission_overlay_800FA250);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FAE50", func_mission_overlay_800FA6A4);

@@ -616,7 +616,7 @@ segments:
       - {type: bss, vram: 0x8010B6E0, name: "mission_overlay/0ADF80"}
       - {type: bss, vram: 0x8010B740, name: "mission_overlay/0AEFF0"}
       - {type: .bss, vram: 0x8010BC80, name: "mission_overlay/0B4EC0"}
-      - {type: bss, vram: 0x8010BCA0, name: "mission_overlay/0BF800"}
+      - {type: .bss, vram: 0x8010BCA0, name: "mission_overlay/0BF800"}
       - {type: .bss, vram: 0x8010BFD0, name: "mission_overlay/0C0390"}
       - {type: bss, vram: 0x8010BFE0, name: "mission_overlay/0C4DB0"}
       - {type: bss, vram: 0x8010C090, name: "mission_overlay/0C70B0"}
@@ -671,7 +671,7 @@ segments:
       - [0x00130D90, c,       "menu_overlay/intro_crawl_handling"]
       - [0x001331E0, c,       "menu_overlay/1331E0"]
       - [0x00133580, data,    "menu_overlay/110410"]
-      - [0x00133890, data,    "menu_overlay/115E00"]
+      - [0x00133890, .data,    "menu_overlay/115E00"]
       - [0x001339F0, data,    "menu_overlay/1197D0"]
       - [0x00133A10, data,    "menu_overlay/11B970"]
       - [0x00134450, data,    "menu_overlay/12CA40"]

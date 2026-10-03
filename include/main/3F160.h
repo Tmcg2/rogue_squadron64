@@ -9,18 +9,18 @@ struct D_80130BB8_type;
 typedef s32 (*npc_update)(struct D_80130BB8_type *self, u16 arg1, void *arg2);
 
 struct D_80130BB8_type {
-    npc_update update_func; /* 0x00 */
-    void *unk04;            /* 0x04 */
-    void *unk08;            /* 0x08 */
-    u32 unk0C;              /* 0x0C */
-    u32 unk10;              /* 0x10 */
-    u16 unk14;              /* 0x14 */
-    u16 unk16;              /* 0x16 */
-    u8 unk18;               /* 0x18 */
-    u8 unk19;               /* 0x19 */
-    u8 unk1A;               /* 0x1A */
-    u8 unk1B;               /* 0x1B */
-    u16 unk1C[16];          /* 0x1C */
+    npc_update update_func;   /* 0x00 */
+    UNIDENTIFIED_TYPE *unk04; /* 0x04 */
+    UNIDENTIFIED_TYPE *unk08; /* 0x08 */
+    u32 unk0C;                /* 0x0C */
+    u32 unk10;                /* 0x10 */
+    u16 unk14;                /* 0x14 */
+    u16 unk16;                /* 0x16 */
+    u8 unk18;                 /* 0x18 */
+    u8 unk19;                 /* 0x19 */
+    u8 unk1A;                 /* 0x1A */
+    u8 unk1B;                 /* 0x1B */
+    u16 unk1C[16];            /* 0x1C */
 }; // size = 0x3C
 
 struct D_80130BB0_type {
