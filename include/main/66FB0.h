@@ -3,4 +3,9 @@
 
 #include "PR/ultratypes.h"
 
+void loadSndFiles(void);
+void initAudioListenerFromCamera(void);
+void teardownAudioListenerNode(void);
+void waitForAnyAudioSlot(void);
+
 #endif

@@ -4,6 +4,6 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
-
+void initWaterSprayEffectAndSfx(void);
 
 #endif

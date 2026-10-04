@@ -4,7 +4,8 @@
 #include "PR/ultratypes.h"
 #include "crafts.h"
 
-u32 load_naboo_starfighter(u32);
+void clearTrackedNpcSlots(void);
+u32  load_naboo_starfighter(u32);
 enum PlayerCraft getPlayerVehicleId(s32);
 
 extern u16 D_main_bss_8013A528[14];

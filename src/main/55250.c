@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/55250.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/55250", tickWrappingTimerAccumulatorList);
 
 INCLUDE_ASM("asm/nonmatchings/main/55250", loadAssetIntoNewSlot);

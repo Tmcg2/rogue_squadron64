@@ -8,6 +8,7 @@
 void updateHudHealthIndicator(struct func_800C0084_type*, f32);
 void setHudSecondaryWeaponInfo(struct func_800C0084_type*);
 s32  handleHUD(struct D_80130BB8_type*, s32, UNIDENTIFIED_TYPE*);
+void broadcastSceneShutdownAndCleanup(void);
 void spawnHudNpc(void);
 f32  getPlayerHealthPercentage(s32);
 

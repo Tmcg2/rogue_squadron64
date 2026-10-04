@@ -11,6 +11,7 @@ void serializeSettingsToSaveAndPersist(void);
 void applyVolumeSettingsToMixer(void);
 s32  getActiveAccountsBitmask(void);
 s32  getAccountUnk51(void);
+void initPlayerMissionStateFromSettings(void);
 void initializeNumLives(void);
 struct EliteRogueData *getSaveScratchBufferPtr(void);
 u8   findUnusedAccountId(void);

@@ -25,6 +25,9 @@ s32  countDisplayListChunks(void);
 struct DisplayListBuffer *reclaimDisplayListChunk(void);
 Gfx *allocateDisplayListBuffer(void);
 void enqueueMeshForDeferredRelease(struct meshdef1*);
+s32  selectRenderPresetByIndex(u8);
+s32  selectSecondaryPresetByIndex(u8);
+s32  setMissionLevelInitByte(s8);
 s32  resetMaterialPoolWrapper(void);
 
 #endif

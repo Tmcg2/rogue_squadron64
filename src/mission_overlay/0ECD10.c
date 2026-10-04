@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0ECD10.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ECD10", allocObjectPoolNode);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ECD10", unlinkAndFreeChildNpcNode);

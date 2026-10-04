@@ -6,4 +6,7 @@
 extern u8 D_main_8009ECF0[];
 extern char *D_main_8009ED00[];
 
+void loadWeaponsHobObjects(void);
+void freeEffectAssetBuffers(void);
+
 #endif

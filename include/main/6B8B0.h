@@ -7,7 +7,7 @@
 void decrypt_ns_hmt(u8*, s32, u32);
 s32  isCraftAvailableByIdx(s32);
 s32  getLevelCutsceneActorCallbackPrimary(void);
-s32 getLevelCutsceneActorCallbackSecondary(void);
+s32  getLevelCutsceneActorCallbackSecondary(void);
 s32  getLevelExpansionMemoryBudget(void);
 s32  getLevelTimeLimit(void);
 

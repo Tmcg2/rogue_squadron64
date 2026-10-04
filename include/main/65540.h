@@ -3,6 +3,7 @@
 
 #include "PR/ultratypes.h"
 
+s32  missionCleanupNoopHook(void);
 void datItemSetObjectiveBooleanCount(s32, s32, s32, s32, s32, s32);
 
 #endif

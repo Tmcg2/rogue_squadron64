@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/56630.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/56630", initVoiceSubtitleSystem);
 
 INCLUDE_ASM("asm/nonmatchings/main/56630", linkHudNodeAndComputeScreenPos);

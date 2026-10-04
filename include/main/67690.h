@@ -3,6 +3,10 @@
 
 #include "PR/ultratypes.h"
 
-void finalizeCurrentSpeechBuffer();
+u8   initSpeechSubsystem(u8, u8);
+void resetSpeechSubsystem(void);
+void finalizeCurrentSpeechBuffer(void);
+void beginSpeechTimingWindow(void);
+void endSpeechTimingWindow(void);
 
 #endif

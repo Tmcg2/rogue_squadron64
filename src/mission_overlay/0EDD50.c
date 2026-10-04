@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0EDD50.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", claimSongSlotForCurrentHandle);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", tickActiveSongSlots);

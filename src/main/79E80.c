@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/79E80.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/79E80", heavyMechSubEffectNpcHandler);
 
 INCLUDE_ASM("asm/nonmatchings/main/79E80", concatChildTransformAlongChain);

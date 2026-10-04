@@ -40,6 +40,7 @@ void destroyNpcSlotByIndex(u16);
 void destroyNpcSlotChain(u16);
 void freeNpcSlotArray(void);
 void allocNpcContextArrays(void);
+void destroyNpcContextArrays(void);
 u16  spawnNpcWithSubtype(npc_update, void*, u32, u8);
 u16  spawnNpcOfType(npc_update, void*, u32, u8);
 struct D_80130BB8_type *getNpcContextByIndex(u16);

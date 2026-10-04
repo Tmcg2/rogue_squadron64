@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/48A50.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/48A50", allocAndInitGridCellArray);
 
 INCLUDE_ASM("asm/nonmatchings/main/48A50", loadLevelTextureCache);

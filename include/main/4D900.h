@@ -5,7 +5,9 @@
 #include "common_types.h"
 #include "rs_math.h"
 
+void initPlayerVehicleStateTables(void);
 void computeAimAnglesFromObjectPositions(Mat4x3, Mat4x3, Vec3f, f32);
+void resetSceneNodeShakeStateArray(void);
 void computeAimAnglesFromPoints(Vec3f, Vec3f, Vec3f, f32);
 
 #endif

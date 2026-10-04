@@ -3,4 +3,6 @@
 
 #include "PR/ultratypes.h"
 
+void allocAllInitialNpcSlots(void);
+
 #endif
