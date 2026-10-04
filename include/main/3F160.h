@@ -33,7 +33,7 @@ void initNpcSlotList(void);
 s32  allocateNpcSlot(struct D_80130BB8_type*);
 u16  popNpcSlotFromTail(u16, struct D_80130BB8_type*);
 void unregisterAndFreeNpcSlot(u16, struct D_80130BB8_type*);
-s32  slotDispatcherIter(u16, s32, void*);
+s32  slotDispatcherIter(u16, s32, UNIDENTIFIED_TYPE*);
 void slotDispatcherInner(struct D_80130BB8_type*);
 void reinsertNpcIntoSortedFreeList(struct D_80130BB8_type*);
 void destroyNpcSlotByIndex(u16);

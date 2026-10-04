@@ -8,7 +8,9 @@
 #include "player.h"
 #include "secondary_weapons.h"
 
+#include "main/bss_80130B10.h"
 #include "main/3F160.h"
+#include "mission_overlay/0BF800.h"
 #include "mission_overlay/0C0390.h"
 
 u16 D_mission_overlay_8010BFD0;

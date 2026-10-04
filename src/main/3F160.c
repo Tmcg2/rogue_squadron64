@@ -124,7 +124,7 @@ void unregisterAndFreeNpcSlot(u16 arg0, struct D_80130BB8_type *arg1) {
     }
 }
 
-s32 slotDispatcherIter(u16 arg0, s32 arg1, void *arg2) {
+s32 slotDispatcherIter(u16 arg0, s32 arg1, UNIDENTIFIED_TYPE *arg2) {
     u16 temp_s3;
     u16 var_s0;
     struct D_80130BB8_type *temp_a0;

@@ -4,9 +4,9 @@
 #include "PR/ultratypes.h"
 
 s32  flagVoiceChainForStop(u32);
-void factor5MutexAcquire();
-void factor5MutexRelease();
-f32 sqrtf_recomp(f32);
+void factor5MutexAcquire(void);
+void factor5MutexRelease(void);
+f32  sqrtf_recomp(f32);
 
 extern u8 gMusyXActiveFlag;
 

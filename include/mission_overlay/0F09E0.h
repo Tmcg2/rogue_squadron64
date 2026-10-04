@@ -4,12 +4,6 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
-struct Struct3f {
-    f32 x;
-    f32 y;
-    f32 z;
-};
-
 s32  isVectorWithinConeAndRange(Mat4x3, f32, f32, Vec3f);
 s32  isVectorInConeWriteDistance(Mat4x3, f32, f32, Vec3f, f32*);
 s32  computeTurnAxisTowardTarget(Mat4x3, f32, f32, Vec3f, UNIDENTIFIED_TYPE*, struct Struct3f*);

@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/98960.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/98960", clearStreamedVoiceFlags);
 
 INCLUDE_ASM("asm/nonmatchings/main/98960", serviceStreamedVoices);

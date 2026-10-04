@@ -4,5 +4,6 @@
 #include "textures.h"
 
 void full_header_image_offset_convert(struct texture_entry*, u32);
+u16  loadAndRelocateAsset(char*, char*, u32);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "PR/ultratypes.h"
 #include "common_types.h"
+#include "factor5_list.h"
 
 struct xy_offset {
     /* 0x0 */ s16 x;
@@ -171,14 +172,14 @@ struct func_800C0084_type {
 }; // size = 0xF80
 
 struct hud_struct {
-    u8 secondaryWeapon;                            /* 0x000 */
-    u8 secondaryWeaponState;                       /* 0x001 Involved in the firing of secondary weapons in one way or another */
-    u8 secondaryWeaponCount;                       /* 0x002 */
-    u8 secondaryWeaponReset;                       /* 0x003 Or maybe, secondaryWeaponMax? */
-    u8 secondaryWeaponIsAdvanced;                  /* 0x004 */
-    u8 crosshairOnOff;                             /* 0x005 */
-    u8 unknown006;                                 /* 0x006 */
-    u8 unknown007;                                 /* 0x007 */
+    u8  secondaryWeapon;                           /* 0x000 */
+    u8  secondaryWeaponState;                      /* 0x001 Involved in the firing of secondary weapons in one way or another */
+    u8  secondaryWeaponCount;                      /* 0x002 */
+    u8  secondaryWeaponReset;                      /* 0x003 Or maybe, secondaryWeaponMax? */
+    u8  secondaryWeaponIsAdvanced;                 /* 0x004 */
+    u8  crosshairOnOff;                            /* 0x005 */
+    u8  unknown006;                                /* 0x006 */
+    u8  unknown007;                                /* 0x007 */
     u16 unknown008;                                /* 0x008 */
     // I think these are indices into D_8011A444;
     u16 texture_ids[10];                           /* 0x00A */
@@ -189,14 +190,23 @@ struct hud_struct {
     struct ui_element innerCrosshairRingElement;   /* 0x058 */
     struct ui_element bombCrosshairRingElement;    /* 0x088 */
     struct ui_element hud_elements[5];             /* 0x0B8 */
-    struct ui_element seekerCrosshairRing1Element; /* 0x088 */
-    struct ui_element seekerCrosshairRing2Element; /* 0x088 */
+    struct ui_element seekerCrosshairRing1Element; /* 0x1A8 */
+    struct ui_element seekerCrosshairRing2Element; /* 0x1D8 */
     u32 unknown_words208[2];                       /* 0x208 */
-    u8 unk210;                                     /* 0x210 */
-    u8 unk211;                                     /* 0x211 */
-    u8 unk212;                                     /* 0x212 */
-    u8 unk213;                                     /* 0x213 */
-    u32 unknown_words214[0x19];                    /* 0x214 */
+    u8  unk210;                                    /* 0x210 */
+    u8  unk211;                                    /* 0x211 */
+    u16 unk212;                                    /* 0x212 */
+    u32 unk214;                                    /* 0x214 */
+    u32 unk218;                                    /* 0x218 */
+    Vec3f unk21C;                                  /* 0x21C */
+    u8  unk228;                                    /* 0x228 */
+    u8  unk229;                                    /* 0x229 */
+    u8  unk22A;                                    /* 0x22A */
+    u8  unk22B;                                    /* 0x22B */
+    f32 unk22C;                                    /* 0x22C */
+    struct factor5_list_node node;                 /* 0x230 */
+    u32 unk270;                                    /* 0x270 */
+    u8  unk274;                                    /* 0x274 */
 }; // size 0x278
 
 struct healthIndicatorColors {

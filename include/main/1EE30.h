@@ -42,6 +42,7 @@ u8    buildMaterialFreeList(void);
 s32   createMaterialPool(void);
 u16   getTextureLUTFieldAt8(u16);
 u16   getTextureLUTFieldAtA(u16);
+s32   releaseTextureLutEntry(u16);
 s32   getTextureDimsBySlot(u16, u16*, u16*);
 s32   unlinkTextureMaterialList(u16);
 void  tickTextureMaterialExpiry(void);

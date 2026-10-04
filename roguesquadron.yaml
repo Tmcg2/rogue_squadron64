@@ -583,7 +583,7 @@ segments:
       - [0x0010A5B0, data,   "mission_overlay/0BC930"]
       - [0x0010A600, data,   "mission_overlay/0BD840"]
       - [0x0010A660, data,   "mission_overlay/0BE650"]
-      - [0x0010A6D0, data,   "mission_overlay/0BF800"]
+      - [0x0010A6D0, .data,   "mission_overlay/0BF800"]
       - [0x0010A700, data,   "mission_overlay/0C00A0"]
       - [0x0010A8B0, data,   "mission_overlay/0C0390"]
       - [0x0010ABE0, data,   "mission_overlay/0C4DB0"]
