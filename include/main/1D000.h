@@ -32,4 +32,6 @@ void quatToRotationMatrix(Vec4f, Mat4x3);
 void convertMat3x4ToQuat(Mat4x3, Vec4f);
 void slerpQuaternions(Vec4f, Vec4f, f32, Vec4f);
 void composeQuatToMat3x4(Mat4x3, Vec4f);
+f32 floatModulo(f32, f32);
+
 #endif

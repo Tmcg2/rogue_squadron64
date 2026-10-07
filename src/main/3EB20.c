@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/3EB20.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/3EB20", clearSceneBssRegion);
 
 INCLUDE_ASM("asm/nonmatchings/main/3EB20", clearDeferredClearRequest);

@@ -7,5 +7,6 @@ void loadSndFiles(void);
 void initAudioListenerFromCamera(void);
 void teardownAudioListenerNode(void);
 void waitForAnyAudioSlot(void);
+void freeAudioCacheEntry(s32);
 
 #endif

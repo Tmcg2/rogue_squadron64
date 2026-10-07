@@ -3,6 +3,7 @@
 
 #include "PR/ultratypes.h"
 
+s32  resetModelAnimSlotTable(void);
 void dispatchAudioCommand(u8, u16, u8, u8, u8);
 void playSimpleAudioCmd(u8, u16, u8);
 void setupAudioFaderRamp(u8, u16, u8);

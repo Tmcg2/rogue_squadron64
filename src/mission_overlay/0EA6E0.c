@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0EA6E0.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", func_mission_overlay_800E9AE0);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EA6E0", initObjectAnimAndDetail);

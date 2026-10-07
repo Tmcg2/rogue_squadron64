@@ -145,7 +145,7 @@ SECTIONS
         build/src/main/08120.o(.text);
         build/src/main/08510.o(.text);
         build/asm/main/192E0.o(.text);
-        build/asm/main/1A410.o(.text);
+        build/src/main/1A410.o(.text);
         build/src/main/1D000.o(.text);
         build/src/main/1EE30.o(.text);
         build/src/main/24570.o(.text);
@@ -645,7 +645,7 @@ SECTIONS
         build/src/main/08120.o(.data);
         build/src/main/08510.o(.data);
         build/asm/main/192E0.o(.data);
-        build/asm/main/1A410.o(.data);
+        build/src/main/1A410.o(.data);
         build/src/main/1D000.o(.data);
         build/src/main/1EE30.o(.data);
         build/asm/main/24D30.o(.data);

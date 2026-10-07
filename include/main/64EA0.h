@@ -11,6 +11,7 @@ void  destroyLookupTable(struct some_ui_list_root*);
 u32   getLookupEntryField5(struct some_ui_list_root*, struct ui_element*);
 void  setLookupEntryField5ByKey(struct some_ui_list_root*, struct ui_element*, u8);
 void  relocateLookupEntryToNewKey(struct some_ui_list_root*, struct ui_element*, u8);
+void *load_asset_with_malloc_flags(char*, u16);
 void *load_asset(char*);
 
 #endif

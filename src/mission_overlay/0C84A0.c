@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0C84A0.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C84A0", calculateDatItemDistanceToPlayer);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C84A0", getScaledPlayerCraftSpeed);

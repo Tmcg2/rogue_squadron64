@@ -19,7 +19,7 @@ INCLUDE_ASM("asm/nonmatchings/main/40F10", initNpcContextFromTransform);
 
 INCLUDE_ASM("asm/nonmatchings/main/40F10", spawnRandomBurstNpcVariantWrapper);
 
-void destroyNpcSlotByIndexU16(s32 arg0) {
+void destroyNpcSlotByIndexU16(u16 arg0) {
     destroyNpcSlotByIndex(arg0);
 }
 

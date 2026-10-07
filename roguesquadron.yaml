@@ -120,7 +120,7 @@ segments:
       # This is what it would be if you split them up
       # - [0x192E0, data,    "main/192E0"]
       # - [0x19314, hasm,    "main/19314"]
-      - [0x1A410, asm,     "main/1A410"]
+      - [0x1A410, c,     "main/1A410"]
       - [0x1D000, c,     "main/1D000"]
       - [0x1EE30, c,     "main/1EE30"]
       - [0x24570, c,     "main/24570"]

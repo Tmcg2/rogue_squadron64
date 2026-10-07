@@ -29,6 +29,12 @@ struct D_80130BB0_type {
     u16 prev_idx;                  /* 0x06 */
 }; // size = 0x8
 
+struct findActiveNpcInSlotChain_arg1 {
+    u16 unk0; /* 0x0 */
+    u16 unk2; /* 0x2 */
+    u16 unk4; /* 0x4 */
+}; // size 0x6
+
 void initNpcSlotList(void);
 s32  allocateNpcSlot(struct D_80130BB8_type*);
 u16  popNpcSlotFromTail(u16, struct D_80130BB8_type*);
@@ -39,13 +45,14 @@ void reinsertNpcIntoSortedFreeList(struct D_80130BB8_type*);
 void destroyNpcSlotByIndex(u16);
 void destroyNpcSlotChain(u16);
 void freeNpcSlotArray(void);
+u16  findActiveNpcInSlotChain(u16, struct findActiveNpcInSlotChain_arg1*);
 void allocNpcContextArrays(void);
 void destroyNpcContextArrays(void);
 u16  spawnNpcWithSubtype(npc_update, void*, u32, u8);
 u16  spawnNpcOfType(npc_update, void*, u32, u8);
 struct D_80130BB8_type *getNpcContextByIndex(u16);
 void *getNpcContextField8(u16);
-u16  findFreeNpcSlotByKey(struct D_80130BB8_type*, u16);
+u16  findFreeNpcSlotByKey(u16, u16);
 u16  getNextSlotNpcTypeId(u16);
 u16  getNpcNextSlotIndex(u16);
 void destroyTransientNpcSlots(void);

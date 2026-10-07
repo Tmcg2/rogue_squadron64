@@ -40,7 +40,10 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", triggerStageAmbientForNam
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", stopMusicAndResetAudio);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", preloadSceneSongsWrapper);
+s32 preloadSceneSongsWrapper(void) {
+    preloadSceneReferencedSongs();
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0EDD50", commitStagedSongAndPlay);
 

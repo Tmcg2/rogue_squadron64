@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/0DDED0.h"
+
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0DDED0", D_mission_overlay_800A7DE0);
 
 INCLUDE_RODATA("asm/nonmatchings/mission_overlay/0DDED0", D_mission_overlay_800A7DEC);

@@ -1,11 +1,28 @@
 #include "common.h"
 #include "common_types.h"
+
+#include "PR/os.h"
+#include "compiler/gcc/string.h"
+
+#include "cheat_codes.h"
 #include "dat.h"
+#include "game_settings.h"
 #include "levels.h"
-#include "cinematic_overlay/1381D0.h"
+
+#include "main/bss_80130BD0.h"
+#include "main/bss_80139010.h"
+#include "main/02420.h"
+#include "main/08120.h"
+#include "main/08510.h"
 #include "main/192E0.h"
+#include "main/1D000.h"
+#include "main/3F160.h"
+#include "main/40F10.h"
 #include "main/42AF0.h"
+#include "main/48A50.h"
 #include "main/66FB0.h"
+#include "main/79E80.h"
+#include "cinematic_overlay/1381D0.h"
 
 struct cutsceneIdMapEntry {
     u16 unk0;
@@ -13,12 +30,19 @@ struct cutsceneIdMapEntry {
 };
 
 /* Data Variable, uncomment when Data matching is possible
+char *cutsceneTypeStrings[] = {
+    "intro",
+    "extro",
+    "special"
+};
 struct cutsceneIdMapEntry gCutsceneIdMappingTable[] = {...};
+UNIDENTIFIED_TYPE *D_cinematic_overlay_800B0934 = NULL;
 */
 
 // Interim `extern` definitions for Data variable. Remove these when Data is matchable
-
+extern char *cutsceneTypeStrings[];
 extern struct cutsceneIdMapEntry gCutsceneIdMappingTable[];
+extern UNIDENTIFIED_TYPE *D_cinematic_overlay_800B0934;
 
 /* BSS Variables, uncomment when BSS matching is possible
 
@@ -29,10 +53,14 @@ Vec3f *D_cinematic_overlay_800B1A08;
 */
 
 // Interim `extern` definitions for BSS variables. Remove these when BSS matching is possible.
-extern struct D_cinematic_overlay_800B0D00_type D_cinematic_overlay_800B0D00[0x40];
-extern UNIDENTIFIED_TYPE *D_cinematic_overlay_800B1900;
+extern u8  D_cinematic_overlay_800B0B1E;
+extern u16 D_cinematic_overlay_800B0B20;
+extern struct D_cinematic_overlay_800B0D00_type  D_cinematic_overlay_800B0D00[0x40];
+extern struct D_cinematic_overlay_800B1900_type *D_cinematic_overlay_800B1900;
 extern struct cuts_file_constant *D_cinematic_overlay_800B1904;
 extern Vec3f *D_cinematic_overlay_800B1A08;
+extern s32 D_cinematic_overlay_800B1A10[];
+extern s32 D_cinematic_overlay_800B1A20[];
 
 INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", D_cinematic_overlay_800A5130);
 
@@ -44,6 +72,60 @@ INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", strCutsceneTypeIntro
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicLoopBody);
 
+#if 0
+// Due to string re-use in the rodata section, this can't be fully matched until a couple other functions
+// are matched too
+// As written though, the .text section matches 100%
+struct cuts_file_constant *load_cutscene(u8 level_id, u8 cutscene_type) {
+    char sp10[0x20];
+    u32 var_s1;
+    u32 var_s4;
+    struct cuts_file_constant *temp_v0;
+
+    sprintf(sp10, "cuts/id%d_%s", level_id, cutsceneTypeStrings[cutscene_type]);
+    temp_v0 = load_asset_with_malloc_flags(sp10, 0x10U);
+    processCutsceneActions(temp_v0, gGameSettings.vehicleId);
+    D_cinematic_overlay_800B0B20 = 0;
+    if (level_id == LEVEL_LOGO) {
+        if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_KOELSCH) {
+            // These memcpy's get compiled out entirely, the loop inside them
+            // gets unrolled too. I was not expecting that.
+            memcpy(temp_v0->unk13D8[0x20].unk00, "pl_crafts/vwing", 0x10);
+            memcpy(temp_v0->unk13D8[0x23].unk00, "pl_crafts/vwing", 0x10);
+        }
+    }
+    D_cinematic_overlay_800B1900 = rs_malloc(temp_v0->unk13D8_active_count * sizeof(struct D_cinematic_overlay_800B1900_type), 0x10U);
+    rs_memset(D_cinematic_overlay_800B1900, 0U, temp_v0->unk13D8_active_count * sizeof(struct D_cinematic_overlay_800B1900_type));
+    for (var_s4 = 0; var_s4 < temp_v0->unk13D8_active_count; var_s4++) {
+        D_cinematic_overlay_800B1900[var_s4].unk000 = 0;
+        D_cinematic_overlay_800B1900[var_s4].unk068 = 5.0f;
+        D_cinematic_overlay_800B1900[var_s4].unk0B8 = 0xFFFF;
+        clearVec4QuadStruct(D_cinematic_overlay_800B1900[var_s4].unk088);
+        var_s1 = strlen(temp_v0->unk13D8[var_s4].unk00) - 1;
+        D_cinematic_overlay_800B1900[var_s4].unk001 = var_s1;
+        if (rs_strcmp(temp_v0->unk13D8[var_s4].unk00, "pl_crafts/t16") == 0) continue;
+        if (!((temp_v0->unk13D8[var_s4].unk00[var_s1] - '0') < 0xAU)) continue;
+
+        while (((temp_v0->unk13D8[var_s4].unk00[var_s1] - '0') < 0xAU) || (temp_v0->unk13D8[var_s4].unk00[var_s1] == '_')) {
+            var_s1--;
+        }
+        D_cinematic_overlay_800B1900[var_s4].unk001 = var_s1;
+    }
+    cuts_0058_bubble_sort(temp_v0);
+    spawnCutsceneObjectsFromList(temp_v0, level_id, 0U);
+    initWaterSprayEffectAndSfx();
+    spawnCutsceneObjectsFromList(temp_v0, level_id, 1U);
+    if (level_id != LEVEL_TALORAAN) {
+        loadLevelTextureCache(0x5DC0);
+    }
+    initCutsceneAudioChannels(temp_v0);
+    for (var_s4 = 0; var_s4 < 4; var_s4++) {
+        D_cinematic_overlay_800B1A10[var_s4] = -1;
+        D_cinematic_overlay_800B1A20[var_s4] = -1;
+    }
+    return temp_v0;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", load_cutscene);
 
 INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", strCinPlCraftsVwing);
@@ -51,6 +133,7 @@ INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", strCinPlCraftsVwing)
 INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", D_cinematic_overlay_800A518C);
 
 INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", D_cinematic_overlay_800A519C);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicSlotUpdate);
 
@@ -240,7 +323,41 @@ INCLUDE_RODATA("asm/nonmatchings/cinematic_overlay/1381D0", D_cinematic_overlay_
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", initCinematicSceneAssets);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", dispatchCinematicFromMainLoop);
+void dispatchCinematicFromMainLoop(u8 *arg0, u8 arg1) {
+    s32 var_a1;
+    u8 allBronze;
+    u8 allSilver;
+    u8 allGold;
+    u8 var_v0;
+    u8 temp_v1;
+
+    allBronze = 1;
+    allSilver = 1;
+    allGold = 1;
+    for (var_v0 = 0; var_v0 < 0x10; var_v0++) {
+        temp_v1 = arg0[var_v0];
+        if (temp_v1 < 3) {
+            allGold = 0;
+        }
+        if (temp_v1 < 2) {
+            allSilver = 0;
+        }
+        if (temp_v1 < 1) {
+            allBronze = 0;
+        }
+    }
+    D_cinematic_overlay_800B0B1E = 0;
+    if (allBronze) {
+        D_cinematic_overlay_800B0B1E = 1;
+    }
+    if (allSilver) {
+        D_cinematic_overlay_800B0B1E = 2;
+    }
+    if (allGold) {
+        D_cinematic_overlay_800B0B1E = 3;
+    }
+    cinematicLoopBody(3, 2, arg1);
+}
 
 u8 shouldShowCutsceneForLevelStage(u8 levelId, u8 arg1) {
     u8 ret;
@@ -334,9 +451,48 @@ INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", scheduleCutsceneActionS
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", composeInterpolatedNodeMatricesAlt);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", tickCutsceneNpcSlots);
+void tickCutsceneNpcSlots(struct cuts_file_constant *arg0) {
+    Vec3f sp10;
+    Vec3f sp20;
+    u32 temp_s1;
+    u16 temp_s0;
+    u32 var_s3;
 
+    for (var_s3 = 0; var_s3 < arg0->unk13D8_active_count; var_s3++) {
+        temp_s0 = D_cinematic_overlay_800B1900[var_s3].unk0B8;
+        if (temp_s0 == 0xFFFF) continue;
+        temp_s1 = getNextSlotNpcTypeId(temp_s0);
+        if (temp_s1 != 0xFFFF) {
+            sp10[0] =  0.0f;
+            sp10[1] = -0.1f;
+            sp10[2] = -0.4f;
+            transformVec3ByMat34(D_cinematic_overlay_800B1900[var_s3].unk088, sp10, sp20);
+            setNpcForwardVectorByIndex(temp_s1, sp20);
+        } else {
+            destroyNpcSlotChain(temp_s0);
+            D_cinematic_overlay_800B1900[var_s3].unk0B8 = temp_s1;
+        }
+    }
+}
+#if 0
+void despawnCutsceneNpcSlot(u8 arg0) {
+    s32 temp_a0;
+    s32 temp_a0_2;
+    u16 temp_s1;
+
+    temp_s1 = D_cinematic_overlay_800B1900[arg0].unk0B8;
+    if (temp_s1 != 0xFFFF) {
+        temp_a0_2 = getNextSlotNpcTypeId(temp_s1);
+        if (temp_a0_2 != 0xFFFF) {
+            destroyNpcSlotByIndexU16(temp_a0_2);
+        }
+        destroyNpcSlotChain(temp_s1);
+        D_cinematic_overlay_800B1900[arg0].unk0B8 = 0xFFFF;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", despawnCutsceneNpcSlot);
+#endif
 
 void initCutsceneSlotTable(void) {
     u32 var_a0;
@@ -370,7 +526,14 @@ u16 lookupCutsceneIdMapping(s32 arg0) {
     return ret;
 }
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", destroyAllNpcsInSlotChain);
+void destroyAllNpcsInSlotChain(s32 arg0) {
+    struct findActiveNpcInSlotChain_arg1 sp10;
+    u16 temp_a0;
+
+    while ((temp_a0 = findActiveNpcInSlotChain(D_main_bss_80139560[arg0], &sp10)) != 0xFFFF) {
+        destroyNpcSlotByIndex(temp_a0);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", maybeLoadYwingCutscene);
 
@@ -392,11 +555,34 @@ s32 bytesDiffer(u8 *arg0, u8 *arg1, u32 arg2) {
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", matchKeywordWithPriority);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicComputeDt);
+f32 cinematicComputeDt(void) {
+    struct timeSnapshotFiller_arg0 sp10;
+    f32 temp_fv0;
+    f32 var_fs0;
+    f32 var_fv0;
+
+    timeSnapshotFiller(&sp10);
+    var_fs0 = sp10.unk20;
+    D_main_bss_8013889C += 1;
+    temp_fv0 = floatModulo(var_fs0, sp10.unk1C);
+    if (temp_fv0 > 0.0f) {
+        if ((temp_fv0 / sp10.unk1C) < 0.5f) {
+            var_fs0 -= temp_fv0;
+        } else {
+            var_fs0 = (var_fs0 + sp10.unk1C) - temp_fv0;
+        }
+    }
+    if (var_fs0 <= 0.0f) {
+        var_fs0 = 0.016666668f;
+    }
+    return var_fs0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicInitializer);
 
-INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", isCinematicActive);
+s32 isCinematicActive(void) {
+    return D_cinematic_overlay_800B0934 != 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", cinematicStageAdvancer);
 

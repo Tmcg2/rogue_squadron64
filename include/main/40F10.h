@@ -5,6 +5,7 @@
 
 void allocAndInitParticlePool(void);
 void freeNpcBurstSpawnerTables(void);
-void destroyNpcSlotByIndexU16(s32);
+void destroyNpcSlotByIndexU16(u16);
+void setNpcForwardVectorByIndex(u16, Vec3f);
 
 #endif

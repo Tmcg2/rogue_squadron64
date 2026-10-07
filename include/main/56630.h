@@ -4,6 +4,7 @@
 #include "PR/ultratypes.h"
 
 void initVoiceSubtitleSystem(void);
+void tickVoiceSubtitleDisplay(f32);
 void freeSubtitleOverlay(void);
 
 #endif

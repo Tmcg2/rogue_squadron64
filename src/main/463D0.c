@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/463D0.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/463D0", initGridLayerFromLevelData);
 
 INCLUDE_ASM("asm/nonmatchings/main/463D0", updateGridLayerScroll);

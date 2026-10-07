@@ -239,7 +239,24 @@ void freeNpcSlotArray(void) {
     gNpcSlotList = NULL;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/3F160", findActiveNpcInSlotChain);
+u16 findActiveNpcInSlotChain(u16 arg0, struct findActiveNpcInSlotChain_arg1 *arg1) {
+    while (arg0 != 0xFFFF) {
+        if (gNpcSlotList[arg0].unk00 != NULL) {
+            if (arg1 != NULL) {
+                arg1->unk0 = arg0;
+                arg1->unk2 = gNpcSlotList[arg0].next_idx;
+                if (arg1->unk2 != 0xFFFF) {
+                    arg1->unk4 = gNpcSlotList[arg1->unk2].next_idx;
+                } else {
+                    arg1->unk4 = 0xFFFF;
+                }
+            }
+            return gNpcSlotList[arg0].unk00->unk16;
+        }
+        arg0 = gNpcSlotList[arg0].next_idx;
+    }
+    return 0xFFFF;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/3F160", findFirstActiveNpcChildInChain);
 
@@ -333,7 +350,7 @@ void *getNpcContextField8(u16 arg0) {
     }
 }
 
-u16 findFreeNpcSlotByKey(struct D_80130BB8_type *arg0, u16 arg1) {
+u16 findFreeNpcSlotByKey(u16 arg0, u16 arg1) {
     u16 var_s0;
 
     var_s0 = 0xFFFF;

@@ -6,6 +6,8 @@
 
 #include "hob.h"
 
+#include "main/bss_80139010.h"
+
 struct hobObjectListItem {
     u16 nextIndex;                     /* 0x00 */
     u16 padding;                       /* 0x02 */
@@ -15,6 +17,7 @@ struct hobObjectListItem {
 
 void initNpcBookkeepingTables(void);
 u8   isHobObjectLoaded(char*);
+void releaseMeshAsset(struct D_main_bss_801394E8_type*);
 struct object_entry *getHobObjectByName(u8*);
 void meshdef1_offset_convert(struct meshdef1*, u32, u32, u32, u32);
 void meshdef0_offset_convert(struct meshdef0*, u32, u32, u32, u32);
