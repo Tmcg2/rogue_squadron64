@@ -265,7 +265,8 @@ segments:
       - [0x38240, data,    "main/38240"]
       - [0x38250, data,    "main/38250"]
       - [0x383C0, data,    "main/383C0"]
-      - [0x39460, data,    "main/39460"]
+      - [0x38440, data,    "main/38440"] # 1D000.c
+      - [0x38460, data,    "main/38460"] # 1EE30.c
       - [0x394E0, .data,    "main/24570"]
       - [0x398F0, data,    "main/398F0"]
       - [0x39900, databin, "main/gspF3DEXMainData"]

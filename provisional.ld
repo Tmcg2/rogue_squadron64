@@ -283,7 +283,8 @@ SECTIONS
         build/asm/data/main/38240.data.o(.data);
         build/asm/data/main/38250.data.o(.data);
         build/asm/data/main/383C0.data.o(.data);
-        build/asm/data/main/39460.data.o(.data);
+        build/asm/data/main/38440.data.o(.data);
+        build/asm/data/main/38460.data.o(.data);
         build/src/main/24570.o(.data);
         build/asm/data/main/398F0.data.o(.data);
         build/asm/data/main/gspF3DEXMainData.o(.data);

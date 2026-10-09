@@ -41,6 +41,7 @@ void enqueueMeshForDeferredRelease(struct meshdef1*);
 s32  frameStartReset(void);
 s32  waitForPrevFrameDone(void);
 s32  drawFrameProfilerBars(void);
+void computeFrameDeltaTime(void);
 s32  timeSnapshotFiller(struct timeSnapshotFiller_arg0*);
 void bufferArbiterProducerScanWait(void);
 s32  submitGfxFrame(void);
