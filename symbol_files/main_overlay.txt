@@ -430,8 +430,6 @@ tickSongSequence  = 0x80095ADC;
 advanceSongRegion = 0x80095244;
 
 // Mission/DAT/HUD/Account renames (batches 18-22, 2026-05-11)
-// craft + level → secondary weapon id
-getSecondaryWeaponForCraftLevel = 0x800C6728;
 // sets D_80111254 (unused in practice)
 setDmaSlotMaxTxStepSize         = 0x80005938;
 // switch/case on image type, parses headers
@@ -877,8 +875,6 @@ unlinkTextureMaterialList        = 0x80021F78;
 tickAudioChannel                 = 0x8008BC10;
 // iterates 0x17C-stride active-channel array at 0x8013D880 (count at byte 0x80141AD0), calling tickAudioChannel for each populated slot. Outer MusyX sequencer tick.
 tickAllAudioChannels             = 0x8008C9AC;
-// initializes 0xF80-byte HUD struct
-initHudStruct                    = 0x800C0084;
 // parses DAT file Type 0 (spawn positions)
 parseDatSpawnPositions           = 0x80065790;
 // sets up NPC update function pointers (DAT Type 6)
@@ -907,8 +903,6 @@ getAccountDataPtr            = 0x8006EE5C;
 setupAssetDma                = 0x80004E70;
 // teardown for asset-loading DMAs
 teardownAssetDma             = 0x80004C70;
-// sibling of getAvailableShipsForLevel; differs in some minor ways, also returns a u32 bitmask of craft available for given level (per docs/unsorted_thoughts)
-getAvailableShipsForLevelAlt = 0x800C6234;
 // (idx 0..7) — 8-way switch returning 0/1: tests per-craft availability against gGameSettings.flags + per-level table at 0x800A05D0 (stride 0x30). Called from func_8006B000 etc.
 isCraftAvailableByIdx        = 0x8006B180;
 
@@ -1330,10 +1324,6 @@ submitSceneNodeRender       = 0x80010014;
 
 // called by runIdleFramesAndLoadSaveData before save load — zeroes gGameSettings(0x30), D_80130B10(0x28), missionStats(0x10)
 resetGameSettingsAndMissionStats     = 0x8006E53C;
-
-// HUD + asset helpers (cross-referenced with sister-repo docs)
-// returns "planet" asset id for text-crawl pan-down (per docs/unsorted_thoughts/func_800C6900.c) — 0xFF for levels without text crawl
-getPlanetAssetForLevel = 0x800C6900;
 
 // Batch 39: high-frequency vec3/struct helpers + NPC slot list pop (2026-05-11)
 // These are tiny utility functions called 100+ times across the codebase —
@@ -1776,11 +1766,6 @@ destroyNpcSlotChain = 0x8003F0C8;
 // covering the highest-caller unnamed funcs after batch 70. Each is a thin
 // wrapper, simple state-machine accessor, or refcount/cleanup primitive.
 
-// Default empty handler — literal `jr ra` only. Used wherever the engine
-// stores a function pointer needing a no-op fallback.
-// 17 callers: empty `jr ra` — default/stub callback
-noopHandler = 0x800EFD6C;
-
 // NPC slot table accessors. Together with the existing getNpcContextByIndex
 // (0x8004013C) and getNpcContextField8 (0x8004015C), these complete the
 // gNpcSlotList[idx] = {data*, next_idx} accessor family.
@@ -1885,12 +1870,6 @@ noopHandler_800825C0 = 0x800825C0;
 noopHandler_80092388 = 0x80092388;
 // pure jr-ra stub (Factor 5 audio)
 noopHandler_80099C44 = 0x80099C44;
-// pure jr-ra stub
-noopHandler_800DFB84 = 0x800DFB84;
-// pure jr-ra stub (adjacent to noopHandler at 0x800EFD6C)
-noopHandler_800EFD64 = 0x800EFD64;
-// pure jr-ra stub
-noopHandler_800FBBA0 = 0x800FBBA0;
 
 // "return 1" stubs (jr ra + addiu v0, zero, 1). Used as default-success
 // callbacks where a non-zero return means "handled, continue".
@@ -2678,7 +2657,6 @@ evaluateVoiceModulatorRecordZero             = 0x80084AE8;
 evaluateVoiceModulatorRecordOne              = 0x80084B08;
 evaluateVoiceModulatorRecordTwo              = 0x80084B28;
 evaluateVoiceModulatorRecordThree            = 0x80084B48;
-commitHudInstancePendingState                = 0x800FEE28;
 attachDebrisModelVariant                     = 0x8006C9C0;
 updateDestructionDebrisNpc                   = 0x8006CBB0;
 applyAccountUnlocksToSettings                = 0x8006E018;
@@ -3304,8 +3282,6 @@ D_main_800186E0 = 0x800186E0; // type:f32
 gspF3DEXTextStart     = 0x80024A10; // size:0x1FA0 name_end:gspF3DEXTextEnd
 // - boot config struct; renamed from D_80037560 (2026-05-11)
 gBootConfig           = 0x80037560; // size:0x50
-// cutscene asset path entries (per docs/cutscenes/cutscenes.md)
-gCutsceneAssetPaths   = 0x800AF92C; // 32 x 0x5C
 // ptr to cuts_13D8_active_count entries of struct D_800B1900_type
 gCutsceneEntries      = 0x800B1900;
 // ptr to currently loaded cuts_file_constant

@@ -1,5 +1,4 @@
 func_800EA01C = 0x800EA01C;
-noopHandler = 0x800EFD6C;
 func_8334B334 = 0x8334B334;
 func_boot_A4000688 = 0xA4000688;
 func_boot_A4000690 = 0xA4000690;

@@ -151,11 +151,12 @@ fake_func_800AF6A8 = 0x800AF6A8; // segment:cinematic_overlay type:u32
 ////////////////////////////////////////////////////////////////////////////////
 
 gCutsceneIdMappingTable = 0x800AF7B4; // type:u32 size:0x178 segment:cinematic_overlay
+// cutscene asset path entries (per docs/cutscenes/cutscenes.md)
 // type_size:0x5C count:0x20
-D_800AF92C = 0x800AF92C; // type:u32 size:0xB80 segment:cinematic_overlay
+gCutsceneAssetPaths     = 0x800AF92C; // type:u32 size:0xB80 segment:cinematic_overlay
 // type_size:0x14 count:0x20
-D_800B04AC = 0x800B04AC; // type:u32 size:0x280 segment:cinematic_overlay
+D_800B04AC              = 0x800B04AC; // type:u32 size:0x280 segment:cinematic_overlay
 // type_size:0xA0 count:0x03
-D_800B072C = 0x800B072C; // type:u32 size:0x1E0 segment:cinematic_overlay
+D_800B072C              = 0x800B072C; // type:u32 size:0x1E0 segment:cinematic_overlay
 
 cutsceneTypeStrings = 0x800AF6B0; // type:u32 size:0x0C segment:cinematic_overlay
