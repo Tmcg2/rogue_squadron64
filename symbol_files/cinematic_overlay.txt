@@ -98,6 +98,7 @@ shouldShowCutsceneForLevelStage     = 0x800AE928; // segment:cinematic_overlay
 // no side effects).
 // 2 callers: (npc_type_id u8) → const char* or NULL
 getAssetNameForNpcType              = 0x800AE98C; // segment:cinematic_overlay
+getCutsceneRuntimeContext           = 0x800AEA18; // segment:cinematic_overlay
 cuts_0058_bubble_sort               = 0x800AEA28; // segment:cinematic_overlay
 // pure jr-ra stub
 noopHandler_800AEB30                = 0x800AEB30; // segment:cinematic_overlay

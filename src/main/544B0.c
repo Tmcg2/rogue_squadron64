@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/544B0.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/544B0", trackResourceListWithMappingTables);
 
 INCLUDE_ASM("asm/nonmatchings/main/544B0", dispatchOverlaySetupByParentAssetName);

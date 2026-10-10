@@ -4,6 +4,7 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
+void initAllPlayerSlots(void);
 struct ui_element *getPlayerSlotFieldAt34(u16, u16);
 void setPlayerSlotEntryRGB(u16, u16, struct rgba*);
 void clearPlayerSlotPointerAndFlag(u16);

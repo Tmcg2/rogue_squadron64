@@ -102,6 +102,7 @@ s32   pollDmaSlotStep(s32);
 struct manifest_entry *find_manifest_entry(s32, u8*, u32);
 s32   pushEventToRingBuffer(union D_80111100_type*);
 s32   subscribeEventHandler(s32*);
+s32   findManifestEntryByName(char*);
 s32   freeManifestSegmentAssets(s32);
 void  noopHandler_80004FC8(void);
 void  noopHandler_80004FD0(void);

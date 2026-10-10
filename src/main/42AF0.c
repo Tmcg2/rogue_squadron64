@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/42AF0.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", allocAndInitDoublyLinkedNodePool12);
 
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", rasterizeEdgeXSpansAscending);

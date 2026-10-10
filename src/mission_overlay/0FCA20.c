@@ -235,7 +235,7 @@ void resetSecondaryWeaponCount(void) {
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", getActiveHudInstanceTargetPosition);
 
-s32 func_mission_overlay_800FEECC(void) {
+s32 isHudSecondaryWeaponActive(void) {
     s32 var_a0;
 
     var_a0 = 0;

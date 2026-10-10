@@ -3,6 +3,7 @@
 
 #include "PR/ultratypes.h"
 
+void clearSceneBssRegion(u8);
 void clearDeferredClearRequest(void);
 
 #endif

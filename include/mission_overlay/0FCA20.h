@@ -9,7 +9,7 @@ void teardownHudInstancesAndUnbindNpcs(void);
 u8   refreshPlayerSecondaryWeaponHud(u8);
 void resetTransientPlayerStateFlags(void);
 void resetSecondaryWeaponCount(void);
-s32  func_mission_overlay_800FEECC(void);
+s32  isHudSecondaryWeaponActive(void);
 u8   getHudSecondaryWeponCount(void);
 
 #endif

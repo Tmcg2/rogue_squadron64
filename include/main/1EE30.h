@@ -35,6 +35,8 @@ struct D_main_bss_80128F08 {
     u8    texture_name[16]; /* 0x14 */
 }; // size 0x24
 
+void  destroyTextureLUTs(void);
+void  freeTextureDataSlot(u16);
 u16   decodeRdpFormatFlags(u16);
 u16   decodeRdpSizeFlags(u16);
 void  resetMaterialPool(void);
@@ -48,12 +50,14 @@ s32   unlinkTextureMaterialList(u16);
 void  tickTextureMaterialExpiry(void);
 struct DisplayListBuffer *findAndUnlinkSmallestEntry(void);
 struct MaterialPoolEntry *popMaterialNodeIntoBucket(u16);
-s32   registerHmtTextureInTable(struct material_entry*, struct texture_entry*, u32);
+u16   parseHmtMaterials(s32, struct material_entry*, struct texture_entry*, u8, u8);
+u16   registerHmtTextureInTable(struct material_entry*, struct texture_entry*, u8);
 u8   *getTextureDataByMaterialId(u16);
 s32   returnOne_80023334(void);
 s32   returnOne_8002335C(void);
 u16   getTextureAttrBySlot(u16);
 s32   unpackTlutToRgbaBytes(u16, u8*, u8, u8, u8);
 s32   shiftTlutEntryWithinChunk(u16, u8, u8, s8);
+s32   getLoadedTextureCount(void);
 
 #endif

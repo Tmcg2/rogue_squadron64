@@ -414,7 +414,7 @@ char *getAssetNameForNpcType(u8 datSubType) {
 INCLUDE_ASM("asm/nonmatchings/cinematic_overlay/1381D0", getAssetNameForNpcType);
 #endif
 
-Vec3f *func_cinematic_overlay_800AEA18(void) {
+Vec3f *getCutsceneRuntimeContext(void) {
     return D_cinematic_overlay_800B1A08;
 }
 

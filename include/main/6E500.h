@@ -4,6 +4,7 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
+void runIdleFramesAndLoadSaveData(void);
 void loadDefaultHighScores(void);
 void highScoreBubbleSort(u8);
 void applyAccountUnlocksToSettings(void);
@@ -24,6 +25,7 @@ void unlockMissleUpgradeOnLevelCompletion(u8);
 struct account_data *getAccountDataPtr(u8);
 void copyAccountRecordAndMarkActive(struct account_data*, u8);
 void clearAccountRecordAndMarkInactive(u8);
+s32  isViModeTypePal(void);
 void cycleIdleDemoId(void);
 s32  classifySaveStateFromInput(s32);
 void persistSaveDataBody(void);

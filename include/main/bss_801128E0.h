@@ -13,6 +13,7 @@ extern u32 D_main_bss_8011A838;
 extern u32 D_main_bss_8011A83C;
 extern s16 D_main_bss_8011A848;
 extern u8  D_main_bss_8011A860[];
+extern u16 D_main_bss_8011A8B4;
 extern s32 D_main_bss_80128E90;
 extern s32 D_main_bss_80128E94;
 extern OSViMode D_main_bss_80128D50[];

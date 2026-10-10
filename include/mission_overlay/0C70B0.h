@@ -3,4 +3,6 @@
 
 #include "PR/ultratypes.h"
 
+f32 getConfigFloatValue(void);
+
 #endif

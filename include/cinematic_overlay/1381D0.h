@@ -101,7 +101,7 @@ f32    computeCutsceneScreenScale(u32);
 void   dispatchCinematicFromMainLoop(u8*, u8);
 u8     shouldShowCutsceneForLevelStage(u8, u8);
 char  *getAssetNameForNpcType(u8);
-Vec3f *func_cinematic_overlay_800AEA18(void);
+Vec3f *getCutsceneRuntimeContext(void);
 void   cuts_0058_bubble_sort(struct cuts_file_constant*);
 void   noopHandler_800AEB30(void);
 void   freeCutsceneResources(void);

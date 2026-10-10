@@ -1,10 +1,5 @@
-getCutsceneRuntimeContext = 0x800AEA18;
-func_800BF358 = 0x800BF358;
-func_800BF3A4 = 0x800BF3A4;
 func_800EA01C = 0x800EA01C;
 noopHandler = 0x800EFD6C;
-func_800FA6A4 = 0x800FA6A4;
-isHudSecondaryWeaponActive = 0x800FEECC;
 func_8334B334 = 0x8334B334;
 func_boot_A4000688 = 0xA4000688;
 func_boot_A4000690 = 0xA4000690;

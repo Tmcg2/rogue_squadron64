@@ -5,6 +5,7 @@
 #include "common_types.h"
 
 void decrypt_ns_hmt(u8*, s32, u32);
+void applyLevelScreenAndCameraSettings(void);
 s32  isCraftAvailableByIdx(s32);
 s32  getLevelCutsceneActorCallbackPrimary(void);
 s32  getLevelCutsceneActorCallbackSecondary(void);

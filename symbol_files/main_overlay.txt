@@ -2679,7 +2679,6 @@ evaluateVoiceModulatorRecordOne              = 0x80084B08;
 evaluateVoiceModulatorRecordTwo              = 0x80084B28;
 evaluateVoiceModulatorRecordThree            = 0x80084B48;
 commitHudInstancePendingState                = 0x800FEE28;
-isHudSecondaryWeaponActive                   = 0x800FEECC;
 attachDebrisModelVariant                     = 0x8006C9C0;
 updateDestructionDebrisNpc                   = 0x8006CBB0;
 applyAccountUnlocksToSettings                = 0x8006E018;
@@ -2987,7 +2986,6 @@ lv4_setMissionFlagB                = 0x80103C40;
 lv9_triggerEventOnPlayerProximity  = 0x80104CCC;
 lv9_resetProximityTriggerState     = 0x80104F6C;
 lvb_advanceComplexObjectiveStages  = 0x8010695C;
-getCutsceneRuntimeContext          = 0x800AEA18;
 
 // === batch11 sweep-3: funcs_4/12/35/1/6/5/49/2/7/48/34
 renderLitTexturedMeshFaces             = 0x8000F624;

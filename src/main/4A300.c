@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/4A300.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/4A300", flushPendingGridCellTiles);
 
 INCLUDE_ASM("asm/nonmatchings/main/4A300", emitGridCellTileStrip);

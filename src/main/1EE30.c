@@ -2,6 +2,7 @@
 
 #include "compiler/gcc/memory.h"
 
+#include "main/bss_801128E0.h"
 #include "main/01720.h"
 #include "main/08510.h"
 #include "main/1EE30.h"
@@ -319,7 +320,31 @@ u16 getTextureLUTFieldAtA(u16 arg0) {
     return D_main_bss_80128F08[arg0].height;
 }
 
+#if 0
+s32 releaseTextureLutEntry(u16 arg0) {
+    u16 var_a1;
+    u16 temp_a0_2;
+    u16 temp_v0_2;
+
+    if (arg0 != 0) {
+        temp_v0_2 = D_main_bss_8011A444[arg0].material_type;
+        if (temp_v0_2 != 0) {
+            D_main_bss_8011A444[arg0].material_type = 0;
+            if (temp_v0_2 & 1) {
+                temp_a0_2 = D_main_bss_8011A444[arg0].D_80128F08_index;
+                for (var_a1 = 0; var_a1 < D_main_bss_8011A8B4; var_a1++) {
+                    if (!((D_main_bss_8011A444[var_a1].material_type == 0) || (D_main_bss_8011A444[var_a1].D_80128F08_index != temp_a0_2))) return 1;
+                }
+                freeTextureDataSlot(temp_a0_2);
+            }
+            return 1;
+        }
+    }
+    return 0;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", releaseTextureLutEntry);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", initTextureMaterialPools);
 
@@ -338,7 +363,16 @@ s32 getTextureDimsBySlot(u16 arg0, u16 *arg1, u16 *arg2) {
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", parseHmtMaterials);
 
-INCLUDE_ASM("asm/nonmatchings/main/1EE30", registerHmtTextureInTable);
+u16 registerHmtTextureInTable(struct material_entry *arg0, struct texture_entry *arg1, u8 arg2) {
+    s32 var_a0;
+    struct D_main_bss_8011A444 *var_v1;
+
+    for (var_a0 = 0; var_a0 < D_main_bss_8011A8B4; var_a0++) {
+        var_v1 = &D_main_bss_8011A444[var_a0];
+        if (var_v1->material_type == 0) break;
+    }
+    return parseHmtMaterials(var_a0, arg0, arg1, arg2, 0U);
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", findMatchingTextureRecursive);
 
