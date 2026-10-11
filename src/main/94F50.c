@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "main/832A0.h"
+#include "main/84830.h"
 #include "main/94F50.h"
 
 // Interim BSS externs

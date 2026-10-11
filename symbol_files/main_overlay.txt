@@ -2203,8 +2203,7 @@ npcShieldGeneratorUpdate             = 0x80081350; // defined:true
 rs_crc32                             = 0x800824F8; // defined:true
 make_crc32_lut                       = 0x80082544; // defined:true
 model_animation_offset_convert       = 0x80082BD0; // defined:true
-// May be in-lined rather than unused?
-unusedRand                           = 0x80083C70; // defined:true
+inlinedRand                          = 0x80083C70; // defined:true
 loadSpeechFile                       = 0x8009BA38; // defined:true
 
 // Real functions missed by splat
@@ -2639,7 +2638,6 @@ clearObjectPoolStateFlag                     = 0x800820E4;
 npcSpawnInitTimedEffect                      = 0x800820F0;
 npcSpawnInitMarkActive                       = 0x8008221C;
 isCheatCodeIndexAllowed                      = 0x800824B8;
-audioSeqMallocZero                           = 0x80083C28;
 audioSeqFree                                 = 0x80083C50;
 lookupSineFromAngleTable                     = 0x80083C9C;
 setTrackVoiceTickBudget                      = 0x80083D20;
@@ -2804,7 +2802,6 @@ runMusyXTaskLocked                           = 0x8008E904;
 initMusyXEngine                              = 0x8008E940;
 shutdownMusyXEngine                          = 0x8008ECA4;
 musyxNoopStub                                = 0x8008ED00;
-serviceAudioOutputBuffers                    = 0x8008ED6C;
 buildSongTempoSchedule                       = 0x8008EEC0;
 allocateSongChannelArray                     = 0x8008F0A0;
 setupSongRenderBuffers                       = 0x8008F2FC;
@@ -3043,7 +3040,6 @@ startStageTimerAndAdvance              = 0x801092E4;
 triggerObjectiveCompleteWithVoiceLines = 0x80109324;
 triggerObjectiveVoiceLineOnce          = 0x801093DC;
 enableObjectiveBooleanRange            = 0x801095DC;
-runAiAudioStreamPlaybackLoop           = 0x8008ED70;
 loadOrSaveEepromRecord                 = 0x80006934;
 loadOrSaveAllEepromRecords             = 0x80006A9C;
 checkServiceWorkerStackGuard           = 0x80006DEC;
@@ -3231,6 +3227,12 @@ allocateNpcMeshVertexBuffer = 0x8007A870;
 
 fake_func_8007C298                = 0x8007C298; // defined:true type:u32
 initNpcTexturedEffectFromTemplate = 0x8007C2A0;
+
+fake_func_80083C28 = 0x80083C28; // defined:true type:u32
+audioSeqMallocZero = 0x80083C30;
+
+fake_func_8008ED6C           = 0x8008ED6C; // defined:true type:u32
+runAiAudioStreamPlaybackLoop = 0x8008ED70;
 
 fake_func_80082268      = 0x80082268; // defined:true type:u32
 // (input_str, mode) — CRCs input via make_crc32_lut + rs_crc32(8), looks up in gCheatCodeCrc32Table at 0x800A0ED0, sets/clears bit (1 << matched_idx) in gActiveCheatFlags (0x80130B58). Special case: if "Naboo unlocked" bit pre-set, calls load_naboo_starfighter

@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "main/832A0.h"
+#include "main/8F970.h"
 #include "main/9A850.h"
 
 void transformVec3ByAffineMatrix(Mat4x3 arg0, Vec3f arg1, Vec3f arg2) {

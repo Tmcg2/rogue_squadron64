@@ -10,7 +10,7 @@
 #include "main/3F160.h"
 #include "main/55AF0.h"
 #include "main/6C310.h"
-#include "main/832A0.h"
+#include "main/84830.h"
 #include "main/98960.h"
 #include "mission_overlay/0B4EC0.h"
 #include "mission_overlay/0FAE50.h"
