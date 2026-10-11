@@ -84,7 +84,12 @@ void audioSeqMallocZero(void *arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", audioSeqFree);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", inlinedRand);
+u16 inlinedRand(void) {
+    u32 temp_lo;
+
+    D_main_800A0F54 *= 0xA8351D63;
+    return (D_main_800A0F54 >> 6);
+}
 
 s16 lookupSineFromAngleTable(s32 arg0) {
     u32 temp_v1;
@@ -229,7 +234,17 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", musyxQuerySequenceLocked);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", setVoiceParamByHandle);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", setVoiceParamByHandleLocked);
+s32 setVoiceParamByHandleLocked(s32 arg0, u8 arg1) {
+    s32 var_s0;
+
+    var_s0 = -1;
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        var_s0 = setVoiceParamByHandle(arg0, arg1);
+        factor5MutexRelease();
+    }
+    return var_s0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", applyVoiceCmdByHandle);
 
@@ -251,7 +266,17 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", spreadVoiceKeyTransposeLocked);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", spreadVoicePanVolumeAcrossChain);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", safeLookup3DSoundEntry);
+s32 safeLookup3DSoundEntry(s32 arg0, u16 arg1) {
+    s32 var_s0;
+
+    var_s0 = -1;
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        var_s0 = spreadVoicePanVolumeAcrossChain(arg0, arg1);
+        factor5MutexRelease();
+    }
+    return var_s0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", spreadVoiceParamPairLocked);
 
@@ -263,7 +288,17 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", spreadVoiceParamLockedVariant);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", flagVoiceChainForStop);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", stopVoiceByHandleLocked);
+s32 stopVoiceByHandleLocked(u32 arg0) {
+    s32 var_s0;
+
+    var_s0 = -1;
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        var_s0 = flagVoiceChainForStop(arg0);
+        factor5MutexRelease();
+    }
+    return var_s0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", shiftChannelStreamLeft8);
 
@@ -379,7 +414,15 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", tickAllAudioChannels);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", tickAudioSequencerFrame);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", tickMusyXIfActive);
+void tickMusyXIfActive(void) {
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        tickActiveSongs();
+        tickAndReap3DAudioVoices();
+        stopAllSynthVoices(0);
+        factor5MutexRelease();
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", releaseSynthVoice);
 
@@ -395,7 +438,13 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", setMusyXVoiceTickGate);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", dispatchAudioCommand);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", playSimpleAudioCmd);
+void playSimpleAudioCmd(u8 arg0, u16 arg1, u8 arg2) {
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        dispatchAudioCommand(arg0, arg1, arg2, 0U, 0U);
+        factor5MutexRelease();
+    }
+}
 
 void applyMusicOrSfxVolume(u8 arg0, u16 arg1, u8 arg2, u8 arg3) {
     if (gMusyXActiveFlag != 0) {
@@ -414,7 +463,13 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", isAudioFaderRampActive);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", setupAudioFaderRamp);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", setAudioFaderRampLocked);
+void setAudioFaderRampLocked(u8 arg0, u16 arg1, u8 arg2) {
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        setupAudioFaderRamp(arg0, arg1, arg2);
+        factor5MutexRelease();
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", setAudioFaderState);
 
@@ -426,9 +481,19 @@ INCLUDE_ASM("asm/nonmatchings/main/84830", clearMusyXSequencerState);
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", getMusyXStateTableIfActive);
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", syncMusyXIfActive);
+void syncMusyXIfActive(void) {
+    if (gMusyXActiveFlag != 0) {
+        tickAudioBufferUpdate();
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/main/84830", runMusyXTaskLocked);
+void runMusyXTaskLocked(void) {
+    if (gMusyXActiveFlag != 0) {
+        factor5MutexAcquire();
+        freeAudioScratchBuffer();
+        factor5MutexRelease();
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/84830", initMusyXEngine);
 

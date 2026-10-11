@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/97D20.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/97D20", resetSongSubsystemCounter);
 
 INCLUDE_ASM("asm/nonmatchings/main/97D20", bindMacroIdsToSoundGroup);
