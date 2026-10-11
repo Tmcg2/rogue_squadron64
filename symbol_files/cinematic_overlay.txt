@@ -140,6 +140,10 @@ cinematicDeactivator                = 0x800AF60C; // segment:cinematic_overlay
 getCinematicStateSubObject          = 0x800AF65C; // segment:cinematic_overlay
 // computes interpolation ratio from byte counter / float threshold
 cinematicInterpRatio                = 0x800AF668; // segment:cinematic_overlay
+// ptr to cuts_13D8_active_count entries of struct D_800B1900_type
+gCutsceneEntries                    = 0x800B1900; // segment:cinematic_overlay
+// ptr to currently loaded cuts_file_constant
+gCurrentCutsceneFile                = 0x800B1904; // segment:cinematic_overlay
 
 
 

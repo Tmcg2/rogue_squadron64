@@ -1300,7 +1300,10 @@ demoStep = 0x80109AE0; // type:u32 segment:mission_overlay
 D_mission_overlay_80109AE4 = 0x80109AE4; // type:char* size:0x18  segment:mission_overlay
 // type_size:0x18 count:0x12
 D_mission_overlay_80109B00 = 0x80109B00; //            size:0x1B0 segment:mission_overlay
-D_mission_overlay_80109CB0 = 0x80109CB0; // type:char* size:0x24  segment:mission_overlay
+gPlayerCraftAssetPaths     = 0x80109CB0; // type:char* size:0x24  segment:mission_overlay
+
+// - per-weapon "ov_2_*" overlay-image asset path strings per docs/unsorted_thoughts
+gSecondaryWeaponAssetPaths = 0x80109CD4; // type:char* segment:mission_overlay
 
 secondaryWeaponRingColors   = 0x80109CE4; // type:u32 size:0xC  segment:mission_overlay
 secondaryWeaponSymbolColors = 0x80109CF0; // type:u32 size:0xC  segment:mission_overlay
@@ -1319,9 +1322,9 @@ D_mission_overlay_80109F24 = 0x80109F24; // type:u32 size:0x58 segment:mission_o
 
 D_mission_overlay_80109F7C = 0x80109F7C; // type:u32 size:0x58 segment:mission_overlay
 
-D_mission_overlay_80109FF8 = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
-D_mission_overlay_8010A028 = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
-D_mission_overlay_8010A058 = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
+gRadarPaletteNormal        = 0x80109FF8; // type:u32 size:0x30 segment:mission_overlay
+gRadarPaletteInverted      = 0x8010A028; // type:u32 size:0x30 segment:mission_overlay
+gRadarPaletteAtSt          = 0x8010A058; // type:u32 size:0x30 segment:mission_overlay
 D_mission_overlay_8010A090 = 0x8010A090; // type:f32           segment:mission_overlay
 D_mission_overlay_8010A120 = 0x8010A120; // type:f32 size:0x24 segment:mission_overlay
 // 9 Vec3fs
@@ -1408,6 +1411,8 @@ D_mission_overlay_8010B6B0 = 0x8010B6B0; // type:u32 size:0x4 segment:mission_ov
 demoInputs = 0x8010BCA0; // type:u32 size:0x4 segment:mission_overlay
 // type_size:0x6 count:4
 D_mission_overlay_8010BFB0 = 0x8010BFB0; // type:OSContPad size:0x18 segment:mission_overlay
+// - Pointer to radar HUD struct (CI4 octagonal image + meshdef + dot backups) per docs/hud_stuff
+gRadar                     = 0x8010BFE0; // type:u32                 segment:mission_overlay
 
 simpleCheckHandles = 0x8010C6E0; // type:u32 size:0x300 segment:mission_overlay
 

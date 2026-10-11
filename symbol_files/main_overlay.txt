@@ -3282,10 +3282,6 @@ D_main_800186E0 = 0x800186E0; // type:f32
 gspF3DEXTextStart     = 0x80024A10; // size:0x1FA0 name_end:gspF3DEXTextEnd
 // - boot config struct; renamed from D_80037560 (2026-05-11)
 gBootConfig           = 0x80037560; // size:0x50
-// ptr to cuts_13D8_active_count entries of struct D_800B1900_type
-gCutsceneEntries      = 0x800B1900;
-// ptr to currently loaded cuts_file_constant
-gCurrentCutsceneFile  = 0x800B1904;
 // - currently-loaded overlay id (0=in-mission/1=menus/2=cinematic per docs/unsorted_thoughts)
 gCurrentLoadedOverlay = 0x800375B0; // type:u32 size:0x4
 D_main_80037620       = 0x80037620; // type:u32 size:0x4
@@ -3483,57 +3479,6 @@ dmaSlotMutex         = 0x80110A70; // type:u8
 // type_size:0x50 count:0x04
 // - array of {manifest_entry*, entry_count} per segment; renamed from D_80110A80 (2026-05-11)
 gManifestTable                   = 0x80110A80; // size:0x140
-// - 16-entry RGB radar palette (normal) per docs/hud_stuff
-gRadarPaletteNormal              = 0x80109FF8; // size:0x30
-// - 16-entry RGB radar palette (height-inverted) per docs/hud_stuff
-gRadarPaletteInverted            = 0x8010A028; // size:0x30
-// - 16-entry RGB radar palette (AT-ST level) per docs/hud_stuff
-gRadarPaletteAtSt                = 0x8010A058; // size:0x30
-// - radar HUD struct (CI4 octagonal image + meshdef + dot backups) per docs/hud_stuff
-gRadar                           = 0x8010BFE0; // size:0xDD4
-// - D_800CE730_type menu state struct (title/entries/sub-type/xy_offsets/scalers etc per docs/menus/menus.md)
-gCurrentMenuData                 = 0x800CE730; // size:0xF8
-// - per-craft "ov_*" asset path strings per docs/unsorted_thoughts (used by choosePlayerCraftAssets)
-gPlayerCraftAssetPaths           = 0x80109CB0; // type:char*
-// - per-weapon "ov_2_*" overlay-image asset path strings per docs/unsorted_thoughts
-gSecondaryWeaponAssetPaths       = 0x80109CD4; // type:char*
-// gSecondaryWeaponTextIds was claimed at 0x800A5840 per docs/unsorted_thoughts but
-// that address is actually the asciz string "trl2" (mission_overlay rodata). The
-// real text-id mapping is probably elsewhere; doc was stale. Leaving unnamed.
-// - index into gSecondaryWeaponStringSlots, set by buildSecondaryWeaponString
-gCurrentSecondaryWeaponStringIdx = 0x800CC6E8; // type:u8
-// array of enum PlayerCraft - hangar bay populated craft list (first entry is 0, NOT X-Wing) per docs/unsorted_thoughts
-gHangarCraftList                 = 0x800CC3F0; // type:u8
-// array - intermediate bay-number → index map (into gHangarCraftList and gCraftSelectScreenData) per docs/unsorted_thoughts
-gHangarBayToCraftIdx             = 0x800CC404; // type:u8
-// array of enum PlayerCraft - which craft is currently parked in each bay per docs/unsorted_thoughts
-gHangarBayCraftAssign            = 0x800CC40C; // type:u8
-// - array of pointers to 0xFFFF-terminated voice-line-id lists, picked by bay-index per docs/unsorted_thoughts
-gCraftVoiceLineLists             = 0x800CC4F8;
-// - Millennium Falcon availability flag per docs/unsorted_thoughts
-gFalconAvailable                 = 0x800CD6CD; // type:u8
-// - TIE Interceptor availability flag per docs/unsorted_thoughts
-gTieInterceptorAvailable         = 0x800CD6CE; // type:u8
-// - Naboo Starfighter availability flag per docs/unsorted_thoughts
-gNabooStarfighterAvail           = 0x800CD6CF; // type:u8
-// - bitmask of craft available for currently-selected level per docs/unsorted_thoughts
-gAvailableCraftBitsForLevel      = 0x800CD6D0; // type:u32
-// - = gHangarBayToCraftIdx[gHangarCurrentBay] per docs/unsorted_thoughts
-gHangarCurrentBayCraft           = 0x800CD6E4; // type:u8
-// - currently-looked-at hangar bay index per docs/unsorted_thoughts
-gHangarCurrentBay                = 0x800CD6E8; // type:u8
-// - hangar camera orbit angle accumulator. Each frame func_800ADB70 (hangarTickCameraOrbit) adds (gHangarCameraOrbitDelta / const_at_800A56DC) to this value, producing the continuous-glide camera angle toward the current bay's target.
-gHangarCameraOrbitAccum          = 0x800CD6F4; // type:f32
-// - cached target-angle (or target-position) float for the current bay. Read from gHangarBayDescriptorArrayPtr[gHangarCurrentBayCraft].field_8->field_14 each tick.
-gHangarCameraOrbitTargetCache    = 0x800CD710; // type:f32
-// - pointer to per-bay descriptor array. Stride is 0x278 (632) bytes per bay. Each entry's +0x8 points to a sub-struct whose +0x14 is the target float used by the orbit interpolator (see hangarTickCameraOrbit at 0x800ADB70).
-gHangarBayDescriptorArrayPtr     = 0x800CDA5C;
-// - array of mission-objective text IDs (4 per level, 0-padded if fewer) per docs/hud_stuff
-gMissionObjectiveTextIds         = 0x80109D2C; // type:u16
-// - 4 entries × 0x30B strings; current visible slot selected by gCurrentSecondaryWeaponStringIdx
-gSecondaryWeaponStringSlots      = 0x800CD540; // size:0xC0
-// - level enum to play per demoId (per docs/unsorted_thoughts)
-dLevelByDemoId                   = 0x800CD404; // type:u8 size:0x6
 // type_size:0x18 count:0x10
 D_main_80110BC0           = 0x80110BC0; // size:0x180
 // type_size:0x74 count:0x08

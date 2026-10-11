@@ -56,8 +56,8 @@ Vec3f *D_cinematic_overlay_800B1A08;
 extern u8  D_cinematic_overlay_800B0B1E;
 extern u16 D_cinematic_overlay_800B0B20;
 extern struct D_cinematic_overlay_800B0D00_type  D_cinematic_overlay_800B0D00[0x40];
-extern struct D_cinematic_overlay_800B1900_type *D_cinematic_overlay_800B1900;
-extern struct cuts_file_constant *D_cinematic_overlay_800B1904;
+extern struct D_cinematic_overlay_800B1900_type *gCutsceneEntries;
+extern struct cuts_file_constant *gCurrentCutsceneFile;
 extern Vec3f *D_cinematic_overlay_800B1A08;
 extern s32 D_cinematic_overlay_800B1A10[];
 extern s32 D_cinematic_overlay_800B1A20[];
@@ -459,18 +459,18 @@ void tickCutsceneNpcSlots(struct cuts_file_constant *arg0) {
     u32 var_s3;
 
     for (var_s3 = 0; var_s3 < arg0->unk13D8_active_count; var_s3++) {
-        temp_s0 = D_cinematic_overlay_800B1900[var_s3].unk0B8;
+        temp_s0 = gCutsceneEntries[var_s3].unk0B8;
         if (temp_s0 == 0xFFFF) continue;
         temp_s1 = getNextSlotNpcTypeId(temp_s0);
         if (temp_s1 != 0xFFFF) {
             sp10[0] =  0.0f;
             sp10[1] = -0.1f;
             sp10[2] = -0.4f;
-            transformVec3ByMat34(D_cinematic_overlay_800B1900[var_s3].unk088, sp10, sp20);
+            transformVec3ByMat34(gCutsceneEntries[var_s3].unk088, sp10, sp20);
             setNpcForwardVectorByIndex(temp_s1, sp20);
         } else {
             destroyNpcSlotChain(temp_s0);
-            D_cinematic_overlay_800B1900[var_s3].unk0B8 = temp_s1;
+            gCutsceneEntries[var_s3].unk0B8 = temp_s1;
         }
     }
 }
