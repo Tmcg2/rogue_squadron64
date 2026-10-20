@@ -149,7 +149,7 @@ SECTIONS
         build/src/main/1D000.o(.text);
         build/src/main/1EE30.o(.text);
         build/src/main/24570.o(.text);
-        build/asm/main/24D30.o(.text);
+        build/src/main/24D30.o(.text);
         build/asm/main/25480.o(.text);
         build/asm/data/main/gspF3DEXMainText.o(.text);
         build/src/zlib/adler32.o(.text);
@@ -653,7 +653,7 @@ SECTIONS
         build/src/main/1A410.o(.data);
         build/src/main/1D000.o(.data);
         build/src/main/1EE30.o(.data);
-        build/asm/main/24D30.o(.data);
+        build/src/main/24D30.o(.data);
         build/asm/main/25480.o(.data);
         build/asm/data/main/gspF3DEXMainText.o(.data);
         build/src/zlib/adler32.o(.data);

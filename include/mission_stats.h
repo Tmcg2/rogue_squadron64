@@ -1,6 +1,8 @@
 #ifndef MISSION_STATS_H
 #define MISSION_STATS_H
 
+#include "PR/ultratypes.h"
+
 struct asset_medal_info {
     /* 0x00 */ f32 completion_time;
     /* 0x04 */ u16 enemies_destroyed;

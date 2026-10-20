@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "mission_overlay/100A00.h"
+
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/100A00", resolveCraftAnimationNodeHandles);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/100A00", applyCraftAnimationKeyframePose);

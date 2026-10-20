@@ -33,6 +33,6 @@ void resetEffectSequenceState(void);
 void freeEffectModelInstancePool(void);
 void requestCameraSnapToTrackedAnchor(void);
 void beginCameraTrackedTransition(void);
-s32  isCameraTransitionIdle(void);
+u8   isCameraTransitionIdle(void);
 
 #endif

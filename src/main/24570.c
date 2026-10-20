@@ -321,8 +321,10 @@ Gfx *emitProfilerBarSegment(Gfx *arg0, u32 arg1, s16 arg2, u8 arg3, u8 arg4, u8 
     u32 var_s3;
 
     if (D_main_80038CE0 != 0) {
-        huh = u64DivU64((u64)arg1 * 0x3B9ACA00, osClockRate);
-        var_s3 = u64DivU64(huh * 32, 0x32DCD5);
+        // While this is EXTREMELY close, its calling the wrong division function, which makes sense
+        // But explicitly calling u64divu64 messes up a bunch of things so who knows what's really going on
+        huh = (u64)arg1 * 0x3B9ACA00 / osClockRate;
+        var_s3 = (huh * 32) / 0x32DCD5;
         if (var_s3 >= 0x141U) {
             var_s3 = 0x140;
         }

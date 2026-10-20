@@ -11,18 +11,15 @@ f32 constMinusSinfApprox(f32 arg0) {
     return M_HALF_PI_F - sinfApprox(arg0);
 }
 
-#if 0
 f32 atan2Approx(f32 arg0, f32 arg1) {
     f32 temp_fa0;
-    f32 temp_fa0_2;
-    f32 temp_fa0_3;
     f32 temp_fa1;
 
-    temp_fa0_2 = (arg0 * arg0) + (arg1 * arg1);
-    if (temp_fa0_2 > 0.0f) {
-        temp_fa0_3 = sqrtf(temp_fa0_2);
-        temp_fa1 = arg1 / temp_fa0_3;
-        temp_fa0 = arg0 / temp_fa0_3;
+    temp_fa0 = (arg0 * arg0) + (arg1 * arg1);
+    if (temp_fa0 > 0.0f) {
+        temp_fa0 = sqrtf(temp_fa0);
+        temp_fa1 = arg1 / temp_fa0;
+        temp_fa0 = arg0 / temp_fa0;
         if (fabs((f64) temp_fa0) < fabs((f64) temp_fa1)) {
             if (temp_fa0 >= 0.0f) {
                 if (temp_fa1 >= 0.0f) {
@@ -48,9 +45,6 @@ f32 atan2Approx(f32 arg0, f32 arg1) {
     }
     return 0.0f;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/1D000", atan2Approx);
-#endif
 
 #if 0
 void mat3x3InverseInto(Mat4x3 arg0, Mat4x3 arg1) {

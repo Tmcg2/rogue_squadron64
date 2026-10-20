@@ -2,6 +2,7 @@
 #define MAIN_24570_H
 
 #include "PR/os.h"
+#include "PR/mbi.h"
 
 #include "common_types.h"
 

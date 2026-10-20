@@ -134,7 +134,44 @@ u8 configurePlayerSecondaryWeaponHud(u8 arg0, u8 arg1, u8 arg2, u8 arg3) {
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", configurePlayerSecondaryWeaponHud);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", resetHudInstancesAndUnbindNpcs);
+void resetHudInstancesAndUnbindNpcs(void) {
+    u8 var_s1;
+    struct hud_struct *temp_s0;
+    struct hud_struct *temp_v1;
+
+    for (var_s1 = 0; var_s1 < 2; var_s1++) {
+        temp_v1 = &D_mission_overlay_8010CA30[var_s1];
+        if ((temp_v1->secondaryWeapon == SECONDARY_WEAPON_SEEKER_MISSILES) || (temp_v1->secondaryWeapon == SECONDARY_WEAPON_SEEKER_TORPEDOS)) {
+            if (temp_v1->unk210 != 0) {
+                destroyNpcSlotChain(temp_v1->unk212);
+            }
+        }
+        temp_s0 = &D_mission_overlay_8010CA30[var_s1];
+        if (temp_s0->unk274 != 0) {
+            factor5RemoveListNode(&D_mission_overlay_8010CA30[var_s1].node);
+            temp_s0->unk274 = 0;
+        }
+        switch (temp_s0->secondaryWeapon) {
+            case SECONDARY_WEAPON_SEEKER_MISSILES:
+            case SECONDARY_WEAPON_SEEKER_TORPEDOS:
+                temp_s0->secondaryWeaponState = 0;
+                temp_s0->unk210 = 0;
+                temp_s0->unk211 = 0;
+                break;
+            case SECONDARY_WEAPON_ION_CANNON:
+            case SECONDARY_WEAPON_MISSLES:
+            case SECONDARY_WEAPON_BOMBS:
+            case SECONDARY_WEAPON_PROTON_TORPEDOS:
+                temp_s0->secondaryWeaponState = 0;
+                break;
+        }
+        if ((getPlayerVehicleId(0) == CRAFT_XWING) && !(isWeaponSlotReady(0))) {
+            temp_s0->alpha_scaling = 0.0f;
+        } else {
+            temp_s0->alpha_scaling = 1.0f;
+        }
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0FCA20", findNearestTargetableNpcInRange);
 

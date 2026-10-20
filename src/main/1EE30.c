@@ -4,6 +4,7 @@
 
 #include "main/bss_801128E0.h"
 #include "main/01720.h"
+#include "main/02420.h"
 #include "main/08510.h"
 #include "main/1EE30.h"
 
@@ -17,7 +18,23 @@ u16 D_main_bss_80128F04;
 u16 bass_pad1_1EE30;
 struct D_main_bss_80128F08 *D_main_bss_80128F08;
 
-INCLUDE_ASM("asm/nonmatchings/main/1EE30", initTextureLUTAndAllocBuffers);
+void initTextureLUTAndAllocBuffers(u16 arg0, u16 arg1) {
+    s32 var_v1;
+
+    D_main_bss_80128F04 = arg1;
+    D_main_bss_80128EF0 = arg0;
+    D_main_bss_80128F08 = rs_malloc(arg0 * sizeof(struct D_main_bss_80128F08), 0U);
+    D_main_bss_80128EFC = rs_malloc(D_main_bss_80128F04 * sizeof(u16*), 0U);
+    D_main_bss_80128F00 = rs_malloc(D_main_bss_80128EF0 * sizeof(struct MaterialPoolEntry*), 0U);
+    for (var_v1 = 0; var_v1 < D_main_bss_80128EF0; var_v1++) {
+        D_main_bss_80128F08[var_v1].unk00 = 0;
+    }
+    for (var_v1 = 0; var_v1 < D_main_bss_80128F04; var_v1++) {
+        D_main_bss_80128EFC[var_v1] = NULL;
+    }
+    D_main_bss_8011A7D8 = D_main_bss_8011A850;
+    D_main_bss_8011A7D0 = D_main_bss_8011A854;
+}
 
 void destroyTextureLUTs(void) {
     rs_free(D_main_bss_80128F08);
@@ -346,7 +363,33 @@ s32 releaseTextureLutEntry(u16 arg0) {
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", releaseTextureLutEntry);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/main/1EE30", initTextureMaterialPools);
+s32 initTextureMaterialPools(void) {
+    s32 var_v1;
+    u16 *var_a0_2;
+    u16 why, why_the_second;
+
+    why = D_main_bss_80128EF0;
+    why_the_second = D_main_bss_80128F04;
+    D_main_bss_80128EF0 = why;
+    D_main_bss_80128F04 = why_the_second;
+    D_main_bss_80128F08 = rs_malloc(D_main_bss_80128EF0 * 9 * sizeof(struct D_main_bss_80128F08*), 0U);
+    D_main_bss_80128EFC = rs_malloc(D_main_bss_80128F04 * sizeof(u16*), 0U);
+    D_main_bss_80128F00 = rs_malloc(D_main_bss_80128EF0 * sizeof(struct MaterialPoolEntry*), 0U);
+    for (var_v1 = 0; var_v1 < D_main_bss_80128EF0; var_v1++) {
+        D_main_bss_80128F08[var_v1].unk00 = 0;
+    }
+    for (var_v1 = 0; var_v1 < D_main_bss_80128F04; var_v1++) {
+        D_main_bss_80128EFC[var_v1] = 0;
+    }
+    D_main_bss_8011A7D8 = D_main_bss_8011A850;
+    D_main_bss_8011A7D0 = D_main_bss_8011A854;
+    buildMaterialFreeList();
+    var_a0_2 = &D_main_bss_8011A8B4; // ???
+    for (var_v1 = 1; var_v1 < *var_a0_2; var_v1++) {
+        D_main_bss_8011A444[var_v1].material_type = 0;
+    }
+    return 1;
+}
 
 s32 getTextureDimsBySlot(u16 arg0, u16 *arg1, u16 *arg2) {
     u32 temp_a0_2;
@@ -488,7 +531,9 @@ s32 shiftTlutEntryWithinChunk(u16 arg0, u8 arg1, u8 arg2, s8 arg3) {
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/1EE30", getLoadedTextureCount);
+s32 getLoadedTextureCount(void) {
+    return D_main_bss_8011A7D0 - D_main_bss_8011A7D8;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/1EE30", fake_func_80023968);
 

@@ -16,6 +16,7 @@ s32  beginSceneRenderFrame(s32);
 void clearPendingViChanges(void);
 void applyPendingViChanges(void);
 void swapBufferWithViMode(void);
+void selectAndApplyViMode(void);
 s32  computeFramebufferByteSize(void);
 void readBufferSwapState(s32*, s32*, s32*);
 void bufferArbiterProducerMark(void);

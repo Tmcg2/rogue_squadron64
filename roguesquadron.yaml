@@ -124,7 +124,9 @@ segments:
       - [0x1D000, c,     "main/1D000"]
       - [0x1EE30, c,     "main/1EE30"]
       - [0x24570, c,     "main/24570"]
-      - [0x24D30, asm,     "main/24D30"]
+      - [0x24D30, c,     "main/24D30"]
+      # For some reason, this file doesn't compile correctly when in INCLUDE_ASM form
+      # I speculate the `sd` commands in it are being treated as psuedo commands
       - [0x25480, asm,     "main/25480"]
       # I'm not actually 100% what to call this.
       # There's definitely more than one set of ucodes in this binary (probably non/FIFO) but I don't know how to split them up

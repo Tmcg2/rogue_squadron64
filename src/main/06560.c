@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/06560.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/06560", initMemoryPack);
 
 INCLUDE_ASM("asm/nonmatchings/main/06560", writeSaveBodyToEeprom);

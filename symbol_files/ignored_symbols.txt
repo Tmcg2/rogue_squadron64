@@ -20,6 +20,3 @@ D_80050C58 = 0x80050C58; // ignore:true
 D_80051288 = 0x80051288; // ignore:true
 D_8009EC44 = 0x8009EC44; // ignore:true
 D_FFF0000F = 0xFFF0000F; // ignore:true
-
-func_80007064 = 0x80007064; // ignore:true
-func_800E9B10 = 0x800E9B10; // ignore:true

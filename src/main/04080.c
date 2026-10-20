@@ -383,7 +383,7 @@ s32 get_asset_size_extra(s32 arg0, u8 *arg1) {
 
     if (arg0 == -1) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
-            if (D_gManifestTable[var_s0].one == 0) continue;
+            if (gManifestTable[var_s0].one == 0) continue;
 
             var_v0 = find_manifest_entry(var_s0, arg1, 0U);
             if (var_v0 != NULL) {
@@ -402,7 +402,7 @@ tyler:
         size = 0;
     } else {
         var_a0 = 0;
-        if ((D_gManifestTable[arg0].unk4C != 0) && (var_a1->compressed_size != -1U)) {
+        if ((gManifestTable[arg0].unk4C != 0) && (var_a1->compressed_size != -1U)) {
             var_a0 = ((var_a1->flags & 0x44) == 0) << 6;
         }
         if ((var_a1->flags & 4) != 0) {
@@ -454,7 +454,7 @@ s32 get_manifest_entry_type(u32 arg0, u8 *entry_name) {
 
     if (arg0 == -1U) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
-            if (D_gManifestTable[var_s0].one == 0) continue;
+            if (gManifestTable[var_s0].one == 0) continue;
             entry = find_manifest_entry(var_s0, entry_name, 1);
             if (entry != NULL) {
                 arg0 = var_s0;

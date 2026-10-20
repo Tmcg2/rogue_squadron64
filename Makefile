@@ -16,14 +16,15 @@ MODERNASN := $(PYTHON) $(TOOLSDIR)/modern-asn64.py $(AS)
 INCLUDE_DIRS := -I ./include/ -I ./ultralib/include/
 DEFINES      := -DINCLUDE_ASM_USE_MACRO_INC -D_LANGUAGE_C
 CPPFLAGS     := -E -lang-c
-CFLAGS       := -quiet -O2 -G0 -mips3 -mhard-float
+OPTFLAGS     = -O2
+CFLAGS       = -quiet $(OPTFLAGS) -G0 -mips3 -mhard-float
 ASFLAGS      := -EB -mabi=32 -mfp32 -mgp32 -mtune=vr4300 -march=vr4300 -mips3 -G0 -I./include
 
 COMPILERSPATH := $(TOOLSDIR)/compilers
 GCC281SN      := $(COMPILERSPATH)/gcc281sn/cc1n64.exe
 GCC272SN0001  := $(COMPILERSPATH)/gcc272sn0001/cc1n64.exe
 
-N64CC := $(GCC281SN)
+N64CC = $(GCC281SN)
 
 C_DIRS    := $(shell find src -type d)
 C_FILES   := $(foreach dir,$(C_DIRS),$(wildcard $(dir)/*.c))
@@ -62,6 +63,8 @@ build/src/main/01850.s: N64CC = $(GCC272SN0001)
 build/src/main/02420.s: N64CC = $(GCC272SN0001)
 build/src/main/03290.s: N64CC = $(GCC272SN0001)
 build/src/main/04030.s: N64CC = $(GCC272SN0001)
+build/src/main/08510.s: N64CC = $(GCC272SN0001)
+build/src/main/08510.s: OPTFLAGS = -O3
 build/src/main/1A410.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: CFLAGS += -ffast-math
@@ -71,7 +74,7 @@ build/src/main/84830.s: N64CC = $(GCC272SN0001)
 build/src/main/94F50.s: N64CC = $(GCC272SN0001)
 build/src/main/9A850.s: N64CC = $(GCC272SN0001)
 build/src/zlib/%.s: N64CC = $(GCC272SN0001)
-build/src/zlib/%.s: CFLAGS = -quiet -O3 -G0 -mips3
+build/src/zlib/%.s: OPTFLAGS = -O3
 
 build/src/%.i: src/%.c | $(BUILD_DIRS)
 	$(CPP) $(INCLUDE_DIRS) $(DEFINES) $(CPPFLAGS) $< -o $@

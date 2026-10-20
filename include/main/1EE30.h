@@ -22,8 +22,7 @@ struct MaterialPoolEntry {
 }; // size 0x18
 
 struct D_main_bss_80128F08 {
-    u8    unk00;            /* 0x00 */
-    u8    unk01;            /* 0x01 */
+    u16   unk00;            /* 0x00 */
     u8    unk02;            /* 0x02 */
     u8    unk03;            /* 0x03 */
     u32   unk04;            /* 0x04 */
@@ -35,6 +34,7 @@ struct D_main_bss_80128F08 {
     u8    texture_name[16]; /* 0x14 */
 }; // size 0x24
 
+void  initTextureLUTAndAllocBuffers(u16, u16);
 void  destroyTextureLUTs(void);
 void  freeTextureDataSlot(u16);
 u16   decodeRdpFormatFlags(u16);
@@ -45,6 +45,7 @@ s32   createMaterialPool(void);
 u16   getTextureLUTFieldAt8(u16);
 u16   getTextureLUTFieldAtA(u16);
 s32   releaseTextureLutEntry(u16);
+s32   initTextureMaterialPools(void);
 s32   getTextureDimsBySlot(u16, u16*, u16*);
 s32   unlinkTextureMaterialList(u16);
 void  tickTextureMaterialExpiry(void);

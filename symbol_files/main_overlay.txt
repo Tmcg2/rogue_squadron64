@@ -3084,8 +3084,6 @@ setVideoReadyFlag  = 0x80003380;
 
 fake_func_80003424 = 0x80003424; // defined:true type:u32
 
-// Annoyingly the fake function here, when interpreted as real coode, contains a reference
-// to func_80007064 which isn't real. This causes a real function (func_8000703C) to get split in two
 fake_func_8000537C    = 0x8000537C; // defined:true type:u32
 // (base_ptr, size) — initializes rs_malloc heap: stores base at gRsHeapBase, creates head/tail free-list nodes, stores total_free at gRsHeapTotalFree, max_alloc at gRsHeapMaxAlloc
 initRsMallocHeap      = 0x80005380;
@@ -3538,9 +3536,11 @@ gNpcContextArray           = 0x80130BB8; // size:0x04
 gNpcContextArrayPtrs       = 0x80130BBC; // size:0x04
 // - next open slot in gNpcContextArray
 gNpcNextOpenSlot           = 0x80130BC8; // size:0x04
+D_main_bss_80136DC0        = 0x80136DC0; // size:0x58
 hmpFile                    = 0x80136FC4; // type:u32
 // - ptr to stride-12 doubly-linked node pool (entry: {h:prev, h:next, w:val0 at +8}) allocated by allocAndInitDoublyLinkedNodePool12 (0x80041EF0); 4 readers in funcs_10 DAT cluster.
 gDoublyLinkedNodePool12    = 0x80136FCC; // type:u32 size:0x4
+D_main_bss_80137450        = 0x80137450; // size:0x58
 gPlayers                   = 0x80137DB8; // size:0x2A0
 
 gObjectiveCounts   = 0x80138060; // type:u32

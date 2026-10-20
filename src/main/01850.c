@@ -2,6 +2,7 @@
 
 #include "PR/os.h"
 
+#include "main/bss_801128E0.h"
 #include "main/01850.h"
 
 // Interim BSS externs
@@ -32,10 +33,6 @@ extern OSThread gVideoThread;
 // D_main_bss_8010F8B0, 0x400
 // D_main_bss_8010FCB0, 0x228
 // D_main_bss_8010FED8, 0x08
-
-// Externs that belong to other files
-// Ideally tese get delete at some point
-extern u8 D_main_bss_801143B0[0x2000]; // video thread stack
 
 u8 isPreNmiPending(void) {
     return D_main_bss_8010D210;

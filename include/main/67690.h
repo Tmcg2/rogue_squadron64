@@ -8,7 +8,9 @@ void applySpeechVolumeScalar(f32);
 void tickSpeechSubsystem(f32);
 void resetSpeechSubsystem(void);
 void finalizeCurrentSpeechBuffer(void);
+void clearSpeechActiveFlags(void);
 void beginSpeechTimingWindow(void);
 void endSpeechTimingWindow(void);
+s32  isSpeechBusyOrQueued(void);
 
 #endif

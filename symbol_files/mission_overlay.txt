@@ -749,8 +749,6 @@ runDestructionPhaseSequence             = 0x800E8A40; // segment:mission_overlay
 tickCraftWithPhasedDestruction          = 0x800E8EDC; // segment:mission_overlay
 // NPC spawn/init: copies HP from child template, sets health + detail level
 initNpcHealthAndDetailFromChild         = 0x800E9A84; // segment:mission_overlay
-// inits an object's anim substruct + detail level
-initObjectAnimAndDetail                 = 0x800E9B10; // segment:mission_overlay
 // selects a destruction sound by object state and plays it (3D)
 playStateGatedDestroySound              = 0x800E9BF4; // segment:mission_overlay
 // NPC spawn/init: setNpcHealth then motion/anim/detail, state byte +0xFA
@@ -1096,9 +1094,6 @@ fake_func_800AE3E4 = 0x800AE3E4; // segment:mission_overlay type:u32
 fake_func_800B42BC = 0x800B42BC; // segment:mission_overlay type:u32
 // real function is playerXwingInit
 
-// Annoyingly the fake function here, when interpreted as real coode, contains a reference
-// to func_800E9B10 which isn't real. This causes a real function (func_800E9AE0) to get
-// split in two
 fake_func_800B58B4 = 0x800B58B4; // segment:mission_overlay type:u32
 // real function is playerAwingInit
 
@@ -1136,8 +1131,8 @@ fake_func_800DD2C4 = 0x800DD2C4; // segment:mission_overlay type:u32
 
 fake_func_800DFB8C = 0x800DFB8C; // segment:mission_overlay type:u32
 
-fake_func_800E406C = 0x800E406C; // segment:mission_overlay type:u32
-func_mission_overlay_800E4070      = 0x800E4070; // segment:mission_overlay
+fake_func_800E406C            = 0x800E406C; // segment:mission_overlay type:u32
+func_mission_overlay_800E4070 = 0x800E4070; // segment:mission_overlay
 
 fake_func_800E447C = 0x800E447C; // segment:mission_overlay type:u32
 
@@ -1145,8 +1140,8 @@ fake_func_800E71C8 = 0x800E71C8; // segment:mission_overlay type:u32
 
 fake_func_800E8A34 = 0x800E8A34; // segment:mission_overlay type:u32
 
-fake_func_800E9AD8 = 0x800E9AD8; // segment:mission_overlay type:u32
-func_mission_overlay_800E9AE0      = 0x800E9AE0; // segment:mission_overlay
+fake_func_800E9AD8      = 0x800E9AD8; // segment:mission_overlay type:u32
+initObjectAnimAndDetail = 0x800E9AE0; // segment:mission_overlay
 
 fake_func_800EC10C = 0x800EC10C; // segment:mission_overlay type:u32
 

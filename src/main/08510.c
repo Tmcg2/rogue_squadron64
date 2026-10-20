@@ -1,19 +1,42 @@
 #include "common.h"
 
+#include "main/bss_801128E0.h"
 #include "main/08510.h"
 #include "main/1EE30.h"
 
 // Interim BSS externs
 extern struct DisplayListBuffer *D_main_bss_801163B0;
 
-INCLUDE_ASM("asm/nonmatchings/main/08510", registerSiCallback);
+s32 registerSiCallback(void (*arg0)()) {
+    s32 var_a1;
 
-INCLUDE_ASM("asm/nonmatchings/main/08510", findAndZeroTableSlotMatching);
+    for (var_a1 = 0; var_a1 < 4; var_a1++) {
+        if (D_main_bss_8011A8A4[var_a1] != NULL) continue;
+        D_main_bss_8011A8A4[var_a1] = arg0;
+        return 1;
+    }
+    return 0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/main/08510", clearFourWordTable);
+void findAndZeroTableSlotMatching(void (*arg0)(void)) {
+    s32 var_a1;
 
-#if 0
-// I strongly suspect this file is compiled with O3, and that this function gets inlined
+    for (var_a1 = 0; var_a1 < 4; var_a1++) {
+        if (D_main_bss_8011A8A4[var_a1] == arg0) {
+            D_main_bss_8011A8A4[var_a1] = NULL;
+            break;
+        }
+    }
+}
+
+void clearFourWordTable(void) {
+    s32 var_a1;
+
+    for (var_a1 = 3; var_a1 >= 0; var_a1--) {
+        D_main_bss_8011A8A4[var_a1] = NULL;
+    }
+}
+
 void heapFreeListInsert(struct DisplayListBuffer *arg0) {
     struct DisplayListBuffer *var_v1;
 
@@ -32,13 +55,9 @@ void heapFreeListInsert(struct DisplayListBuffer *arg0) {
         D_main_bss_801163B0->prev = NULL;
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/08510", heapFreeListInsert);
-#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/08510", heapWalker);
 
-#if 0
 s32 countDisplayListChunks(void) {
     s32 blah;
     struct DisplayListBuffer *var_v1;
@@ -51,35 +70,20 @@ s32 countDisplayListChunks(void) {
     }
     return blah;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/main/08510", countDisplayListChunks);
-#endif
 
 #if 0
+// https://decomp.me/scratch/d5Kij
+// Register allocation issues
+// Also, something about the inlining of heapFreeListInsert causes the stack popping
+// to occur in the `jr ra` delay slot, which is weird to see for a file compiled with
+// GCC 2.7.2. Outside of this file, I've only seen that when using GCC 2.8.1
 struct DisplayListBuffer *reclaimDisplayListChunk(void) {
     struct DisplayListBuffer *temp_a0;
-    struct DisplayListBuffer *temp_v0;
-    struct DisplayListBuffer *temp_v0_2;
-    struct DisplayListBuffer *var_v1;
 
     temp_a0 = D_main_bss_801163B0;
-    if (temp_a0 == NULL) {
-        temp_v0 = findAndUnlinkSmallestEntry();
-        heapFreeListInsert(temp_v0);
-        // if (temp_v0 != NULL) {
-        //     var_v1 = temp_v0;
-        //     if (temp_v0->next != NULL) {
-        //         do {
-        //             var_v1 = var_v1->next;
-        //         } while (var_v1->next != NULL);
-        //     }
-        //     var_v1->next = D_main_bss_801163B0;
-        //     if (D_main_bss_801163B0 != NULL) {
-        //         D_main_bss_801163B0->prev = var_v1;
-        //     }
-        //     D_main_bss_801163B0 = temp_v0;
-        //     temp_v0->prev = NULL;
-        // }
+    if (D_main_bss_801163B0 == NULL) {
+        heapFreeListInsert(findAndUnlinkSmallestEntry());
+        temp_a0 = D_main_bss_801163B0;
     }
     D_main_bss_801163B0 = D_main_bss_801163B0->next;
     if (D_main_bss_801163B0 != NULL) {

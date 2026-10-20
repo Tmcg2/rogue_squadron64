@@ -61,7 +61,7 @@ void beginCameraTrackedTransition(void) {
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ADF80", advanceCameraTransitionOnCue);
 
-s32 isCameraTransitionIdle(void) {
+u8 isCameraTransitionIdle(void) {
     return ((D_mission_overlay_8010B6E8.unk00 == 0) || (D_mission_overlay_8010B6E8.unk00 == 4));
 }
 

@@ -13,7 +13,7 @@ OSMesgQueue  D_main_8010FF50;
 OSMesg       D_main_8010FF68;
 u32          bss_padding;
 OSThread     D_main_8010FF70;
-u32          D_main_8010FF70_stack[0x100];
+u8           D_main_8010FF70_stack[0x400];
 struct D_main_80110520 D_main_80110520[4];
 volatile u8  D_main_bss_80110740;
 volatile u8  D_main_bss_80110741;
@@ -139,7 +139,7 @@ void startSiPollingThread(void) {
         D_main_80110520[var_a1].unk6B = 0;
     }
     D_main_bss_80110741 = 0;
-    osCreateThread(&D_main_8010FF70, 0, siServiceThread, NULL, D_main_80110520, 0x76);
+    osCreateThread(&D_main_8010FF70, 0, siServiceThread, NULL, (u32)D_main_8010FF70_stack + sizeof(D_main_8010FF70_stack), 0x76);
     osStartThread(&D_main_8010FF70);
     registerSiCallback(wakeSerialThreadOnSi);
 }

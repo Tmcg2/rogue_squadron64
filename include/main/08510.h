@@ -32,14 +32,23 @@ struct timeSnapshotFiller_arg0 {
 
 extern struct D_main_bss_8011A444 *D_main_bss_8011A444;
 
-void registerSiCallback(void (*)(void));
+s32  registerSiCallback(void (*)(void));
+void findAndZeroTableSlotMatching(void (*)(void));
+void clearFourWordTable(void);
 void heapFreeListInsert(struct DisplayListBuffer*);
+void heapWalker(void);
 s32  countDisplayListChunks(void);
 struct DisplayListBuffer *reclaimDisplayListChunk(void);
 Gfx *allocateDisplayListBuffer(void);
+void drainMeshReleaseQueue(void);
 void enqueueMeshForDeferredRelease(struct meshdef1*);
+Gfx *emitAllocatedDLCommand(Gfx*, u32);
+void emitColorFillRect(void);
+s32  disableScreenColorOverlay(void);
 s32  frameStartReset(void);
 s32  waitForPrevFrameDone(void);
+s32  beginFrameDLChunk(void);
+s32  initRenderStateArrays(void);
 s32  drawFrameProfilerBars(void);
 void computeFrameDeltaTime(void);
 s32  timeSnapshotFiller(struct timeSnapshotFiller_arg0*);
@@ -49,5 +58,6 @@ s32  selectRenderPresetByIndex(u8);
 s32  selectSecondaryPresetByIndex(u8);
 s32  setMissionLevelInitByte(s8);
 s32  resetMaterialPoolWrapper(void);
+s32  freeRenderSubsystemResources(void);
 
 #endif
