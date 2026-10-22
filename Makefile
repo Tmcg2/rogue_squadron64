@@ -61,6 +61,8 @@ $(GCC272SN0001):
 
 build/src/main/01850.s: N64CC = $(GCC272SN0001)
 build/src/main/02420.s: N64CC = $(GCC272SN0001)
+build/src/main/031B0.s: N64CC = $(GCC272SN0001)
+build/src/main/031B0.s: OPTFLAGS = -O3
 build/src/main/03290.s: N64CC = $(GCC272SN0001)
 build/src/main/04030.s: N64CC = $(GCC272SN0001)
 build/src/main/08510.s: N64CC = $(GCC272SN0001)
@@ -70,6 +72,8 @@ build/src/main/1D000.s: N64CC = $(GCC272SN0001)
 build/src/main/1D000.s: CFLAGS += -ffast-math
 build/src/main/1EE30.s: N64CC = $(GCC272SN0001)
 build/src/main/24570.s: N64CC = $(GCC272SN0001)
+build/src/main/24D30.s: N64CC = $(GCC272SN0001)
+build/src/main/24D30.s: OPTFLAGS = -O3
 build/src/main/84830.s: N64CC = $(GCC272SN0001)
 build/src/main/94F50.s: N64CC = $(GCC272SN0001)
 build/src/main/9A850.s: N64CC = $(GCC272SN0001)

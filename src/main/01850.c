@@ -4,6 +4,8 @@
 
 #include "main/bss_801128E0.h"
 #include "main/01850.h"
+#include "main/033C0.h"
+#include "main/04080.h"
 
 // Interim BSS externs
 // This stuff very messy because I don't want to keep going back to 8010D200.bss.s
@@ -16,14 +18,14 @@ extern u8 D_main_bss_8010D211[7]; // I bet this is really padding
 extern OSThread gIdleThread;
 extern OSThread gVideoThread;
 // D_main_8010D580, 0x18
-// D_main_8010D598, 0x4
+extern OSMesg D_main_8010D598;
 // D_main_bss_8010D59C, 0x804
 // D_main_8010DDA0, 0x1B0
 // D_main_bss_8010DF50, 0x80
 // D_main_8010DFD0, 0x4
 // D_main_bss_8010DFD4, 0x2
 // D_main_bss_8010DFD6, 0x2
-// D_main_8010DFD8, 0x30
+extern OSMesgQueue D_main_8010DFD8;
 // D_main_bss_8010E008, 0x8
 // D_main_bss_8010E010, 0x80
 // D_main_bss_8010E090, 0x818
@@ -50,9 +52,29 @@ INCLUDE_ASM("asm/nonmatchings/main/01850", thread3_video_handle);
 
 INCLUDE_ASM("asm/nonmatchings/main/01850", runVideoFrameTick);
 
-INCLUDE_ASM("asm/nonmatchings/main/01850", main);
+INCLUDE_ASM("asm/nonmatchings/main/01850", rs_main);
 
-INCLUDE_ASM("asm/nonmatchings/main/01850", preNmiResetThread);
+void preNmiResetThread(void) {
+    osCreateMesgQueue(&D_main_8010DFD8, &D_main_8010D598, 1);
+    osSetEventMesg(0xEU, &D_main_8010DFD8, NULL);
+    osRecvMesg(&D_main_8010DFD8, NULL, 1);
+    D_main_bss_8010D210 = 1;
+    switch (osTvType) {                             /* irregular */
+    case OS_TV_PAL:
+        osViSetMode(&osViModeTable[OS_VI_PAL_LPN1]);
+        break;
+    case OS_TV_NTSC:
+        osViSetMode(&osViModeTable[OS_VI_NTSC_LPN1]);
+        break;
+    case OS_TV_MPAL:
+        osViSetMode(&osViModeTable[OS_VI_MPAL_LPN1]);
+        break;
+    }
+    osViBlack(1U);
+    noopHandler_80004FD0();
+    initRumblePakSlots();
+    while(1);
+}
 
 void idle_thread_handle(void) {
     osCreateViManager(0xFE);

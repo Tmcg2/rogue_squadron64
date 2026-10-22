@@ -4,8 +4,7 @@
 #include "main/08510.h"
 #include "main/24570.h"
 
-// Interim BSS externs, remove when BSS for this file is matchable
-extern u32 D_main_bss_80128F10;
+u32 D_main_bss_80128F10;
 
 struct RenderModes {
     u16 c0;

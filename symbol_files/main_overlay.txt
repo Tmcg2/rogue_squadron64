@@ -2116,7 +2116,7 @@ getVoiceTxtStringPtr = 0x80055A20;
 
 loadOverlay                          = 0x80000B20; // defined:true
 thread3_video_handle                 = 0x80001088; // defined:true
-main                                 = 0x8000161C; // defined:true
+rs_main                              = 0x8000161C; // defined:true
 idle_thread_handle                   = 0x800017A0; // defined:true
 rs_malloc                            = 0x80001ACC; // defined:true
 rs_free                              = 0x80001C98; // defined:true
@@ -3513,6 +3513,7 @@ D_main_801128D0      = 0x801128D0; // type:u32
 gServiceWorkerNextId = 0x801128D4; // type:u32
 // - set but never read (per docs/dma_linked_list)
 D_main_801128D8      = 0x801128D8; // type:u16
+D_main_bss_80128F28  = 0x80128F28; // type:u16 size:0x800
 D_main_801132C0      = 0x801132C0; // size:0x1000
 D_main_8011A420      = 0x8011A420; // type:OSMesgQueue size:0x18
 D_main_8011A7E8      = 0x8011A7E8; // type:OSMesgQueue size:0x18

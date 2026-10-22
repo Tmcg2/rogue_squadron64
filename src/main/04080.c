@@ -456,11 +456,7 @@ s32 get_manifest_entry_type(u32 arg0, u8 *entry_name) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
             if (gManifestTable[var_s0].one == 0) continue;
             entry = find_manifest_entry(var_s0, entry_name, 1);
-            if (entry != NULL) {
-                arg0 = var_s0;
-                goto why;
-                break;
-            }
+            if (entry != NULL) {goto why;}
         }
         entry = NULL;
     } else {

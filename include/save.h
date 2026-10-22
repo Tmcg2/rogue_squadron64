@@ -51,6 +51,16 @@ struct D_8013A5C0_type {
     u8  unkAC;                            /* 0xAC */
 }; // size 0xB0
 
+struct gamesave_asset {
+    /* 0x00 */ u32 game_code;
+    /* 0x04 */ u32 save_file_size;
+    /* 0x08 */ u32 save_data_size;
+    /* 0x0C */ u16 company_code;
+    /* 0x0E */ u16 data_copy_count;
+    /* 0x10 */ char game_name[16]; // Not ASCII, its some N64 specific encoding. Translated its "RS64"
+}; // size 0x20
+
 extern struct D_8013A5C0_type gSaveDataBody; // 0x8013A5C0
+extern struct gamesave_asset gGamesaveAsset; // 0x801126C0
 
 #endif

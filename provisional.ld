@@ -1180,7 +1180,8 @@ SECTIONS
         build/src/main/07800.o(.bss);
         build/asm/data/main/801128E0.bss.o(.bss);
         build/src/main/1EE30.o(.bss);
-        build/asm/data/main/80128F10.bss.o(.bss);
+        build/src/main/24570.o(.bss);
+        build/src/main/24D30.o(.bss);
         build/src/zlib/inftrees.o(.bss);
         build/asm/data/libultra/io/conteepread.bss.o(.bss);
         build/asm/data/libultra/io/controller.bss.o(.bss);
