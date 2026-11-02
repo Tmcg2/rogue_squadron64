@@ -40,11 +40,11 @@ u8 *D_main_bss_80110D44;
 s32 D_main_bss_80110D48;
 s32 D_main_bss_80110D4C;
 u8 *D_main_bss_80110D50;
-s32 D_main_bss_80110D54;
+OSId D_main_bss_80110D54;
 u32 bss_pad8_04080;
 u32 bss_pad9_04080;
 struct D_80110D60_type D_main_bss_80110D60[8];
-union  D_80111100_type gServiceWorkerMesgBuf[8];
+struct D_80111100_type gServiceWorkerMesgBuf[8];
 u32 D_main_bss_80111240;
 s32 D_main_bss_80111244;
 s32 D_main_bss_80111248;
@@ -232,7 +232,7 @@ struct manifest_entry *find_manifest_entry(s32 idx, u8 *entry_name) {
 INCLUDE_ASM("asm/nonmatchings/main/04080", find_manifest_entry);
 #endif
 
-s32 pushEventToRingBuffer(union D_80111100_type *arg0) {
+s32 pushEventToRingBuffer(struct D_80111100_type *arg0) {
     s32 temp_a2;
     s32 temp_v1;
     s32 var_v0;
@@ -248,15 +248,15 @@ s32 pushEventToRingBuffer(union D_80111100_type *arg0) {
     D_main_bss_80110D60[temp_a2].unk02 = 0;
     D_main_bss_80110D60[temp_a2].unk04 = arg0;
     D_main_bss_80110D60[temp_a2].unk01 = 1;
-    switch (arg0->flag_8000.unk01) {
+    switch (arg0->flagtype.as_struct.type) {
     case 0:
         D_main_bss_80110D60[temp_a2].unk00 = 0;
         break;
     case 1:
-        D_main_bss_80110D60[temp_a2].unk00 = arg0->flag_8000.unk01;
+        D_main_bss_80110D60[temp_a2].unk00 = arg0->flagtype.as_struct.type;
         break;
     case 2:
-        D_main_bss_80110D60[temp_a2].unk00 = arg0->flag_8000.unk01;
+        D_main_bss_80110D60[temp_a2].unk00 = arg0->flagtype.as_struct.type;
         D_main_bss_80110D60[temp_a2].unk08 = 0;
         D_main_bss_80110D60[temp_a2].unk48[0] = 0;
     default:
@@ -267,19 +267,16 @@ s32 pushEventToRingBuffer(union D_80111100_type *arg0) {
 
 s32 subscribeEventHandler(s32 *arg0) {
     s32 var_a2;
-    struct D_80110BC0_type *temp_a0;
-    struct D_80110BC0_type *var_v1;
-    struct D_80110D60_type *temp_v0;
 
     for (var_a2 = 0; var_a2 < 0x10; var_a2++) {
         if (D_main_80110BC0[var_a2].unk00 == 0) break;
     }
     if (D_main_80110BC0[var_a2].unk00 == 0) {
         D_main_80110BC0[var_a2].unk00 = 1;
-        D_main_80110BC0[var_a2].manfiest = (struct manifest_entry *) D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.source;
-        D_main_80110BC0[var_a2].unk0C = D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.size;
+        D_main_80110BC0[var_a2].manfiest = (struct manifest_entry *) D_main_bss_80110D60[D_main_bss_80111240].unk04->source;
+        D_main_80110BC0[var_a2].unk0C = D_main_bss_80110D60[D_main_bss_80111240].unk04->size;
         D_main_80110BC0[var_a2].unk08 = 0;
-        D_main_80110BC0[var_a2].unk10 = D_main_bss_80110D60[D_main_bss_80111240].unk04->flag_8000.offset;
+        D_main_80110BC0[var_a2].unk10 = D_main_bss_80110D60[D_main_bss_80111240].unk04->offset;
         D_main_80110BC0[var_a2].unk14 = 0;
         *arg0 = var_a2;
     }
@@ -370,7 +367,32 @@ s32 freeManifestSegmentAssets(s32 arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", findAssetAcrossSegments);
 
+#if 0
+// Stack diffs >:(
+s32 teardownAssetDma(s32 arg0, void *arg1) {
+    s32 temp_a3;
+    struct D_80111100_type *temp_v0;
+    struct D_80111100_type sp10;
+
+    temp_a3 = D_main_bss_80111248;
+    D_main_bss_80111248 = (D_main_bss_80111248 + 1) % 8;
+    D_main_bss_80111250 -= 1;
+    gServiceWorkerMesgBuf[temp_a3].flagtype.as_short = 0x8001;
+    gServiceWorkerMesgBuf[temp_a3].next = &sp10;
+    gServiceWorkerMesgBuf[temp_a3].unk14 = arg0;
+    gServiceWorkerMesgBuf[temp_a3].source = arg1;
+    sp10.flagtype.as_short = 0x80FF;
+    sendServiceMessage(arg0, D_main_bss_80110D54, &gServiceWorkerMesgBuf[temp_a3], 1);
+    do {
+        temp_v0 = recvServiceMessage(arg0);
+        if (temp_v0->flagtype.as_short == 0x80FF) break;
+        postMessageToServiceWorker(arg0, temp_v0);
+    } while (temp_v0->flagtype.as_short != 0x80FF);
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/04080", teardownAssetDma);
+#endif
 
 #if 0
 s32 get_asset_size_extra(s32 arg0, u8 *arg1) {
@@ -417,7 +439,43 @@ tyler:
 INCLUDE_ASM("asm/nonmatchings/main/04080", get_asset_size_extra);
 #endif
 
+#if 0
+// Stack diffs >:(
+// https://decomp.me/scratch/AZDSA
+u8 setupAssetDma(OSId arg0, struct D_80111100_type *arg1, void *arg2, u32 arg3, u32 arg4, void *arg5) {
+    s32 temp_a1;
+    struct D_80111100_type *temp_v0;
+    struct D_80111100_type sp10;
+
+    temp_a1 = D_main_bss_80111248;
+    D_main_bss_80111248 = (D_main_bss_80111248 + 1) % 8;
+    D_main_bss_80111250 -= 1;
+    gServiceWorkerMesgBuf[temp_a1].flagtype.as_short = 0x8002;
+    gServiceWorkerMesgBuf[temp_a1].unk14 = arg0;
+    gServiceWorkerMesgBuf[temp_a1].source = arg2;
+    gServiceWorkerMesgBuf[temp_a1].offset = arg3;
+    gServiceWorkerMesgBuf[temp_a1].size = arg4;
+    gServiceWorkerMesgBuf[temp_a1].destination = arg5;
+    if (arg1 == NULL) {
+        gServiceWorkerMesgBuf[temp_a1].next = &sp10;
+        sp10.flagtype.as_short = 0x80FF;
+        sendServiceMessage(arg0, D_main_bss_80110D54, &gServiceWorkerMesgBuf[temp_a1], 1);
+        do {
+            temp_v0 = recvServiceMessage(arg0);
+            if (temp_v0->flagtype.as_short == 0x80FF) break;
+            postMessageToServiceWorker(arg0, temp_v0);
+        } while (temp_v0->flagtype.as_short != 0x80FF);
+        yieldThreadRet1(arg0);
+        return getServiceMessagePayload(temp_v0);
+    }
+    arg1->flagtype.as_short = 0xFFFF;
+    gServiceWorkerMesgBuf[temp_a1].next = arg1;
+    sendServiceMessage(arg0, D_main_bss_80110D54, &gServiceWorkerMesgBuf[temp_a1], 1);
+    return 0;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/04080", setupAssetDma);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/04080", spillArgsNoopHandler);
 

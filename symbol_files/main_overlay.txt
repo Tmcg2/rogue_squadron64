@@ -3096,7 +3096,7 @@ fake_func_8000595C = 0x8000595C; // defined:true type:u32
 
 fake_func_80006BFC = 0x80006BFC; // defined:true type:u32
 
-fake_func_8000737C = 0x8000737C; // defined:true type:u32
+fake_func_80007378 = 0x80007378; // defined:true type:u32
 // (callback, intervalUnits) → creates mq+thread+osTimer for periodic callback. Stores callback at 0x801128E0, spawns periodicCallbackWorker (prio 0x14), osSetTimer with period = 46875*intervalUnits cycles
 installPeriodicCallback = 0x80007380;
 // worker thread for installPeriodicCallback: osRecvMesg(BLOCK) → osYieldThread → LOOKUP_FUNC(*0x801128E0) → loop

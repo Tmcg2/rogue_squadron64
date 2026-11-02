@@ -91,7 +91,32 @@ OSMesg recvServiceMessage(OSId arg0) {
     return var_s0->mesg2[0];
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/07800", sendServiceMessage);
+s32 sendServiceMessage(OSId arg0, OSId arg1, struct D_80111100_type *arg2, s32 arg3) {
+    OSMesgQueue *var_a0;
+    s32 var_v0;
+    struct D_801128D0_type *var_a1;
+    struct D_801128D0_type *var_s0;
+    u16 temp_a0;
+
+    var_s0 = D_main_801128D0;
+    while (var_s0 != NULL) {
+        if (var_s0->theadId == arg1) break;
+        var_s0 = var_s0->next;
+    }
+    var_a1 = D_main_801128D0;
+    while (var_a1 != NULL) {
+        if (var_a1->theadId == arg0) break;
+        var_a1 = var_a1->next;
+    }
+    arg2->unk04 = 0;
+    arg2->unk08 = &var_a1->mq;
+    arg2->unk02 = D_main_801128D8++;
+    while (1) {
+        if (osSendMesg(&var_s0->mq, arg2, 0) != -1) break;
+        if (!(arg3 & 1)) return 0;
+    }
+    return 1;
+}
 
 struct blah {
     u32 unk0;
@@ -157,7 +182,7 @@ s32 setServiceWorkerPriority(OSId arg0, u8 arg1) {
     return 1;
 }
 
-s32 yieldThreadRet1(s32 unused) {
+s32 yieldThreadRet1(OSId unused) {
     osYieldThread();
     return 1;
 }
@@ -188,6 +213,8 @@ s32 restartServiceWorker(OSId arg0) {
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/07800", getServiceMessagePayload);
+u32 getServiceMessagePayload(struct D_80111100_type *arg0) {
+    return arg0->unk0C;
+}
 
-INCLUDE_ASM("asm/nonmatchings/main/07800", fake_func_8000737C);
+INCLUDE_ASM("asm/nonmatchings/main/07800", fake_func_80007378);

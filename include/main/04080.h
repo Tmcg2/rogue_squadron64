@@ -35,75 +35,50 @@ struct D_80110BC0_type {
     u32 unk14;                       /* 0x14 */
 }; // size = 0x18
 
-union D_80111100_type {
-    struct {
-        u8  flags;                   /* 0x00 */
-        u8  unk01;                   /* 0x01 */
-        u16 unk02;                   /* 0x02 */
-        u32 unk04;                   /* 0x04 */
-        u32 unk08;                   /* 0x08 */
-        u32 unk0C;                   /* 0x0C */
-        union D_80111100_type *next; /* 0x10 */
-        u16 unk14;                   /* 0x14 */
-        u16 unk16;                   /* 0x16 */
-        void *source;                /* 0x18 */
-        u32 offset;                  /* 0x1C */
-        u16 size;                    /* 0x20 */
-        u16 pad22;                   /* 0x22 */
-        void *destination;           /* 0x24 */
-    } flag_8000;
-    struct {
-        u8  flags;                   /* 0x00 */
-        u8  unk01;                   /* 0x01 */
-        u16 unk02;                   /* 0x02 */
-        u32 unk04;                   /* 0x04 */
-        u32 unk08;                   /* 0x08 */
-        u32 unk0C;                   /* 0x0C */
-        union D_80111100_type *next; /* 0x10 */
-        u32 unk14;                   /* 0x14 */
-        void *source;                /* 0x18 */
-        u32 offset;                  /* 0x1C */
-        u16 size;                    /* 0x20 */
-        u16 pad22;                   /* 0x22 */
-        void *destination;           /* 0x24 */
-    } flag_8001;
-    struct {
-        u8  flags;                   /* 0x00 */
-        u8  unk01;                   /* 0x01 */
-        u16 unk02;                   /* 0x02 */
-        u32 unk04;                   /* 0x04 */
-        u32 unk08;                   /* 0x08 */
-        u32 unk0C;                   /* 0x0C */
-        union D_80111100_type *next; /* 0x10 */
-        u32 unk14;                   /* 0x14 */
-        void *source;                /* 0x18 */
-        u32 offset;                  /* 0x1C */
-        u16 size;                    /* 0x20 */
-        u16 pad22;                   /* 0x22 */
-        void *destination;           /* 0x24 */
-    } flag_8002;
+struct D_80111100_type {
+    union {
+        struct {
+            u8 flag;              /* 0x00 */
+            u8 type;              /* 0x01 */
+        } as_struct;
+        u16 as_short;             /* 0x00 */
+    } flagtype;                   /* 0x00 */
+    u16 unk02;                    /* 0x02 */
+    u8  unk04;                    /* 0x04 */
+    OSMesgQueue *unk08;           /* 0x08 */
+    u32 unk0C;                    /* 0x0C */
+    struct D_80111100_type *next; /* 0x10 */
+    OSId unk14;                   /* 0x14 */
+    void *source;                 /* 0x18 */
+    u32 offset;                   /* 0x1C */
+    u16 size;                     /* 0x20 */
+    u16 unk22;                    /* 0x22 */
+    void *destination;            /* 0x24 */
 }; // size = 0x28
 
 struct D_80110D60_type {
-    u8       unk00;     /* 0x00 */
-    u8       unk01;     /* 0x01 */
-    u16      unk02;     /* 0x02 */
-    union D_80111100_type *unk04; /* 0x04 */
-    u16      unk08;     /* 0x08 */
-    u16      unk0A;     /* 0x0A */
-    u32      unk0C;     /* 0x08 */
-    z_stream stream;    /* 0x10 */
-    u32      unk48[11]; /* 0x48 */
+    u8       unk00;                /* 0x00 */
+    u8       unk01;                /* 0x01 */
+    u16      unk02;                /* 0x02 */
+    struct D_80111100_type *unk04; /* 0x04 */
+    u16      unk08;                /* 0x08 */
+    u16      unk0A;                /* 0x0A */
+    u32      unk0C;                /* 0x08 */
+    z_stream stream;               /* 0x10 */
+    u32      unk48[11];            /* 0x48 */
 }; // size = 0x74
 
 s32   submitDmaSlot(u8*, u8*, s32);
 void  waitDmaSlotComplete(s32);
 s32   pollDmaSlotStep(s32);
 struct manifest_entry *find_manifest_entry(s32, u8*, u32);
-s32   pushEventToRingBuffer(union D_80111100_type*);
+s32   pushEventToRingBuffer(struct D_80111100_type*);
 s32   subscribeEventHandler(s32*);
 s32   findManifestEntryByName(char*);
 s32   freeManifestSegmentAssets(s32);
+s32   findAssetAcrossSegments(OSId, struct D_80111100_type*, s32, char *, u16);
+s32   teardownAssetDma(OSId, void*);
+u8    setupAssetDma(OSId, struct D_80111100_type*, void*, u32, u32, void*);
 void  noopHandler_80004FC8(void);
 void  noopHandler_80004FD0(void);
 s32   setManifestEntryName(s32, u8*);
@@ -153,11 +128,11 @@ extern u8 *D_main_bss_80110D44;
 extern s32 D_main_bss_80110D48;
 extern s32 D_main_bss_80110D4C;
 extern u8 *D_main_bss_80110D50;
-extern s32 D_main_bss_80110D54;
+extern OSId D_main_bss_80110D54;
 extern u32 bss_pad8_04080;
 extern u32 bss_pad9_04080;
 extern struct D_80110D60_type D_main_bss_80110D60[8];
-extern union  D_80111100_type gServiceWorkerMesgBuf[8];
+extern struct D_80111100_type gServiceWorkerMesgBuf[8];
 extern u32 D_main_bss_80111240;
 extern s32 D_main_bss_80111244;
 extern s32 D_main_bss_80111248;

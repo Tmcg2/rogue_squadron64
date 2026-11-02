@@ -2,7 +2,7 @@
 #define MAIN_08510_H
 
 #include "PR/ultratypes.h"
-#include "PR/gbi.h"
+#include "PR/mbi.h"
 
 #include "hob.h"
 
@@ -30,6 +30,20 @@ struct timeSnapshotFiller_arg0 {
     f32 unk24; /* 0x24 */
 }; // size 0x28
 
+struct D_main_bss_80117C08_type {
+    struct D_main_bss_80117C08_type *next; /* 0x00 */
+    Gfx  *dl;                                     /* 0x04 */
+    Mtx  *mtx;                                    /* 0x08 */
+    UNIDENTIFIED_TYPE *unk0C;                     /* 0x0C */
+    u8    unk10;                                  /* 0x10 */
+    u8    pad11[3];                               /* 0x11 I do not trust the compiler to put this padding here */
+}; // size 0x14
+
+struct D_main_bss_8011D498_type {
+    struct D_main_bss_80117C08_type *unk000[0x40]; /* 0x000 */
+    struct D_main_bss_80117C08_type *unk100[0x20]; /* 0x100 */
+}; // size 0x180
+
 extern struct D_main_bss_8011A444 *D_main_bss_8011A444;
 
 s32  registerSiCallback(void (*)(void));
@@ -40,8 +54,13 @@ void heapWalker(void);
 s32  countDisplayListChunks(void);
 struct DisplayListBuffer *reclaimDisplayListChunk(void);
 Gfx *allocateDisplayListBuffer(void);
+Gfx *allocDLBlockToFillRectList(void);
+Gfx *allocDLBlockToListB(void);
+Gfx *allocDLBlockToListC(void);
+Gfx *allocDLBlockToListD(void);
 void drainMeshReleaseQueue(void);
 void enqueueMeshForDeferredRelease(struct meshdef1*);
+void recordDeferredDrawRefVariant(Gfx*, s32, u32);
 Gfx *emitAllocatedDLCommand(Gfx*, u32);
 void emitColorFillRect(void);
 s32  disableScreenColorOverlay(void);
@@ -54,6 +73,7 @@ void computeFrameDeltaTime(void);
 s32  timeSnapshotFiller(struct timeSnapshotFiller_arg0*);
 void bufferArbiterProducerScanWait(void);
 s32  submitGfxFrame(void);
+Gfx *reserveAndEmitDLEntry(Gfx*, u32);
 s32  selectRenderPresetByIndex(u8);
 s32  selectSecondaryPresetByIndex(u8);
 s32  setMissionLevelInitByte(s8);

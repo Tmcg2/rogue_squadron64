@@ -24,20 +24,20 @@ struct global_terrain_light_object {
 
 struct light_object {
     f32 rgb_intensity[3]; /* 0x00 */
-    u8 active;            /* 0x0C */
-    u8 mode;              /* 0x0D */
-    u8 intesity_boost;    /* 0x0E */
-    u8 unk0F;             /* 0x0F */
+    u8  active;           /* 0x0C */
+    u8  mode;             /* 0x0D */
+    u8  intesity_boost;   /* 0x0E */
+    u8  unk0F;            /* 0x0F */
     f32 location[3];      /* 0x10 */
     f32 size_scale;       /* 0x1C */
 }; // size = 0x20
 
 struct lighting_data {
-    u32  light_object_count;                /* 0x00 This is the number of `light_object`s + the `global_terrain_light_object` */
-    struct rgba terrain_shadow_color;              /* 0x04 */
-    struct rgba world_light_color;                 /* 0x08 */
+    u32 light_object_count;                 /* 0x00 This is the number of `light_object`s + the `global_terrain_light_object` */
+    struct rgba terrain_shadow_color;       /* 0x04 */
+    struct rgba world_light_color;          /* 0x08 */
     struct global_terrain_light_object glo; /* 0x0C */
-    struct light_object lights[];           /* 0x2C */
+    struct light_object lights[1];          /* 0x2C In reality this has a variable size, giving it a size of 1 to satsify GCC */
 };
 
 struct hmp_header {
@@ -49,7 +49,7 @@ struct hmp_header {
     struct lighting_data *light_data; /* 0x20 */
     u16   width;                      /* 0x24 */
     u16   height;                     /* 0x26 */
-    u16   tile_indices[];             /* 0x28 */
+    u16   tile_indices[1];            /* 0x28 In reality this has a variable size, giving it a size of 1 to satsify GCC */
 }; // size = 0x28
 
 struct hmp_context {

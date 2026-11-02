@@ -3,6 +3,8 @@
 
 #include "PR/os.h"
 
+#include "main/04080.h"
+
 struct D_801128D0_type {
     OSId theadId;                 /* 0x000 */
     u8 threadPrio;                /* 0x004 */
@@ -22,15 +24,17 @@ struct D_801128D0_type {
 s32    initServiceRegistry(void);
 s32    returnTrueServiceStub(void);
 s32    startServiceWorker(OSId);
-s32   checkServiceWorkerStackGuard(OSId);
+s32    checkServiceWorkerStackGuard(OSId);
 s32    peekServiceMessage(OSId);
 OSMesg tryRecvServiceMessage(OSId);
 OSMesg recvServiceMessage(OSId);
 s32    postMessageToServiceWorker(OSId, OSMesg);
 s32    unregisterServiceWorker(OSId);
+s32    sendServiceMessage(OSId, OSId, struct D_80111100_type*, s32);
 s32    setServiceWorkerPriority(OSId, u8);
-s32    yieldThreadRet1(s32);
+s32    yieldThreadRet1(OSId);
 s32    stopServiceWorker(OSId);
 s32    restartServiceWorker(OSId);
+u32    getServiceMessagePayload(struct D_80111100_type*);
 
 #endif
