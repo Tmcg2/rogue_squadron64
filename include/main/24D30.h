@@ -8,5 +8,7 @@
 Gfx *flushDebugTextOverlay(Gfx*);
 void queueDebugTextGlyph(u16, u16, s8);
 void setDebugTextCursor(s32, s32);
+void drawDebugTextString(u8*);
+void loadDebugAssets(OSId);
 
 #endif

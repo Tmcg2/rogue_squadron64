@@ -6,7 +6,7 @@
 
 #include "hob.h"
 
-#include "main/bss_80139010.h"
+#include "main/bss_80139020.h"
 
 struct hobObjectListItem {
     u16 nextIndex;                     /* 0x00 */

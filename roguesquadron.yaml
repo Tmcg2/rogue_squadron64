@@ -92,7 +92,7 @@ segments:
       - [0x013F0, rodata,  "main/013F0"]
       - [0x01410, .rodata,  "main/1D000"]
       - [0x01590, .rodata,  "main/1EE30"]
-      - [0x01600, rodata,  "main/01600"] # 24D30.c
+      - [0x01600, .rodata,  "main/24D30"]
       - [0x01670, .rodata,  "zlib/inflate"]
       - [0x016B0, .rodata,  "zlib/infblock"]
       - [0x016E0, .rodata,  "zlib/infcodes"]
@@ -270,7 +270,7 @@ segments:
       - [0x38440, data,    "main/38440"] # 1D000.c
       - [0x38460, data,    "main/38460"] # 1EE30.c
       - [0x394E0, .data,    "main/24570"]
-      - [0x398F0, data,    "main/398F0"] # 24D30.c
+      - [0x398F0, .data,    "main/24D30"]
       - [0x39900, databin, "main/gspF3DEXMainData"]
       - [0x39A00, .data,    "zlib/infblock"]
       # I'm a little confused by something here...
@@ -756,8 +756,11 @@ segments:
       - {type: bss, vram: 0x80130B10, name: "main/80130B10"              }
       - {type: .bss, vram: 0x80130BB0, name: "main/3F160"                }
       - {type: bss, vram: 0x80130BD0, name: "main/80130BD0"              }
+      - {type: bss, vram: 0x80138E60, name: "main/80130C10"              } # 42AF0.c
+      - {type: bss, vram: 0x80138E60, name: "main/80136FD0"              }
       - {type: .bss, vram: 0x80138E60, name: "main/562A0"                }
-      - {type: bss, vram: 0x80139010, name: "main/80139010"              }
+      - {type: .bss, vram: 0x80139010, name: "main/56630"                }
+      - {type: bss, vram: 0x80139020, name: "main/80139020"              }
       - {type: bss, vram: 0x80153420, name: "main/80153420"              } # 9BB60
 
   - [0x1000000]

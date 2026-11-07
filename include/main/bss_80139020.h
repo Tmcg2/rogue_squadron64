@@ -1,5 +1,5 @@
-#ifndef BSS_80139010_H
-#define BSS_80139010_H
+#ifndef BSS_80139020_H
+#define BSS_80139020_H
 
 #include "PR/ultratypes.h"
 #include "common_types.h"

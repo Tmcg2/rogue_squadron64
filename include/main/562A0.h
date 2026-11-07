@@ -17,6 +17,7 @@ void  loadGameOrFrontTxtFile(u8*);
 char *getGameOrFrontText(s32 textId);
 void  freeTxtFile(void);
 void  loadVoiceTxtFile(u8*);
+void  getVoiceText(s32);
 char *getVoiceTxtStringPtr(void);
 
 #endif

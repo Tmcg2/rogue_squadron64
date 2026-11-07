@@ -1,15 +1,220 @@
 #include "common.h"
 
-#include "main/bss_80130BD0.h"
+#include "hmp.h"
+
+#include "main/192E0.h"
+#include "main/1D000.h"
 #include "main/42AF0.h"
 
-INCLUDE_ASM("asm/nonmatchings/main/42AF0", allocAndInitDoublyLinkedNodePool12);
+extern f32 D_main_bss_80130C50;
+extern f32 D_main_bss_80130C54;
+extern f32 D_main_bss_80130C58;
+extern s16 D_main_bss_80130C70[0x50];
+extern s16 D_main_bss_80130D10[0x50];
+extern s8  D_main_bss_80130DB0[0x40][0x40];
+extern s8  D_main_bss_80131DB0[0x40][0x40];
+extern struct hmp_context D_main_bss_80136DC0;
+extern u16 D_main_bss_80136FC0;
+extern struct hmp_header *hmpFile;
+extern u16 D_main_bss_80136FC8;
+extern struct hmp_related_linked_list *gDoublyLinkedNodePool12;
 
+void allocAndInitDoublyLinkedNodePool12(s32 arg0) {
+    u16 why;
+    s32 var_v1;
+
+    gDoublyLinkedNodePool12 = rs_malloc(arg0 * sizeof(struct hmp_related_linked_list), 0U);
+    for (var_v1 = 0; var_v1 < arg0; var_v1++) {
+        gDoublyLinkedNodePool12[var_v1].prev = var_v1 - 1;
+        gDoublyLinkedNodePool12[var_v1].next = var_v1 + 1;
+        gDoublyLinkedNodePool12[var_v1].ukn08 = 0;
+    }
+    why = 0xFFFF;
+    D_main_bss_80136FC8 = why;
+    D_main_bss_80136FC0 = 0;
+    gDoublyLinkedNodePool12[arg0 - 1].next = why;
+    gDoublyLinkedNodePool12[0].prev = why;
+}
+
+#if 0
+// FPU register allocation diffs  >:(
+s32 rasterizeEdgeXSpansAscending(Vec3f arg0, Vec3f arg1, s32 arg2) {
+    f32 temp_ft0;
+    s32 var_a3;
+    s32 why1, why2;
+
+    if (arg1[2] > arg0[2]) {
+        why1 = arg0[2];
+        why2 = arg1[2];
+        temp_ft0 = (arg1[2] - arg0[2]);
+        temp_ft0 = (arg1[0] - arg0[0]) / temp_ft0;
+        if (temp_ft0 < 0.0f) {
+            for (var_a3 = why1; var_a3 < why2; var_a3++) {
+                D_main_bss_80130C70[arg2++] = arg0[0] + ((var_a3 + 1) - arg0[2]) * temp_ft0;
+            }
+            D_main_bss_80130C70[arg2] = arg1[0];
+        } else {
+            if ((arg2 == 0) || (arg0[0] < D_main_bss_80130C70[arg2])) {
+                D_main_bss_80130C70[arg2] = arg0[0];
+            }
+            for (var_a3 = why1 + 1; var_a3 <= why2; var_a3++) {
+                D_main_bss_80130C70[++arg2] = arg0[0] + (var_a3 - arg0[2]) * temp_ft0;
+            }
+        }
+    }
+    return arg2;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", rasterizeEdgeXSpansAscending);
+#endif
 
+#if 0
+// FPU register allocation diffs  >:(
+s32 rasterizeEdgeXSpansDescending(Vec3f arg0, Vec3f arg1, s32 arg2) {
+    f32 temp_ft0;
+    s32 var_a3;
+    s32 why1, why2;
+
+    if (arg1[2] > arg0[2]) {
+        why1 = arg0[2];
+        why2 = arg1[2];
+        temp_ft0 = (arg1[2] - arg0[2]);
+        temp_ft0 = (arg1[0] - arg0[0]) / temp_ft0;
+        if (temp_ft0 < 0.0f) {
+            if ((arg2 == 0) || (arg0[0] < D_main_bss_80130D10[arg2])) {
+                D_main_bss_80130D10[arg2] = arg0[0];
+            }
+            for (var_a3 = why1 + 1; var_a3 <= why2; var_a3++) {
+                D_main_bss_80130D10[++arg2] = arg0[0] + (var_a3 - arg0[2]) * temp_ft0;
+            }
+        } else {
+            for (var_a3 = why1; var_a3 < why2; var_a3++) {
+                D_main_bss_80130D10[arg2++] = arg0[0] + ((var_a3 + 1) - arg0[2]) * temp_ft0;
+            }
+            D_main_bss_80130D10[arg2] = arg1[0];
+        }
+    }
+    return arg2;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", rasterizeEdgeXSpansDescending);
+#endif
 
+#if 0
+// DOES NOT MATCH!!
+// Require a lot more work, but is in a decent state as-is
+void scanConvertTriangleToSpanTable(Vec3f arg0, Vec3f arg1, Vec3f arg2, f32 arg3) {
+    Vec3f sp10;
+    Vec3f sp20;
+    Vec3f sp30;
+    f32 *temp_v0;
+    f32 temp_fs0;
+    f32 temp_ft0;
+    f32 var_fs0;
+    f32 var_fv0;
+    f32 var_fv1;
+    s32 var_a0_2;
+    s32 temp_ft4;
+    s32 temp_t3;
+    s32 var_a1_2;
+    s32 var_s0;
+
+    while (arg1[2] < arg0[2]) {
+        temp_v0 = arg0;
+        arg0 = arg1;
+        arg1 = arg2;
+        arg2 = temp_v0;
+    }
+    sp10[0] = arg1[0] - arg0[0];
+    sp10[1] = arg1[1] - arg0[1];
+    sp10[2] = arg1[2] - arg0[2];
+    sp20[0] = arg2[0] - arg0[0];
+    sp20[1] = arg2[1] - arg0[1];
+    sp20[2] = arg2[2] - arg0[2];
+    vec3Cross(sp30, sp10, sp20);
+    normalize_vector(sp30);
+    if ((sp30[1] < 0.2) && (sp30[1] > -0.2)) {
+        var_fs0 = (sp10[2] * sp20[0]) - (sp10[0] * sp20[2]);
+        if (var_fs0 < 0.0f) {
+            var_fs0 = -var_fs0;
+        }
+        if (((var_fs0 < 10.0f) && (var_fs0 > -10.0f))) return;
+    }
+    temp_fs0 = (-arg0[0] * sp30[0]) + (-arg0[1] * sp30[1]) + (-arg0[2] * sp30[2]);
+    if (arg2[2] < arg1[2]) {
+        if ((((arg1[0] - arg0[0]) / (arg1[2] - arg0[2])) - ((arg2[0] - arg0[0]) / (arg2[2] - arg0[2]))) < 0.0f) {
+            var_s0 = rasterizeEdgeXSpansAscending(arg0, arg1, 0);
+            rasterizeEdgeXSpansDescending(arg2, arg1, rasterizeEdgeXSpansDescending(arg0, arg2, 0));
+        } else {
+            var_s0 = rasterizeEdgeXSpansAscending(arg2, arg1, rasterizeEdgeXSpansAscending(arg0, arg2, 0));
+            rasterizeEdgeXSpansDescending(arg0, arg1, 0);
+        }
+    } else if ((((arg2[0] -  arg0[0]) / (arg2[2] - arg0[2])) - ((arg1[0] -  arg0[0]) / (arg1[2] - arg0[2]))) < 0.0f) {
+        var_s0 = rasterizeEdgeXSpansAscending(arg0, arg2, 0);
+        rasterizeEdgeXSpansDescending(arg1, arg2, rasterizeEdgeXSpansDescending(arg0, arg1, 0));
+    } else {
+        var_s0 = rasterizeEdgeXSpansAscending(arg1, arg2, rasterizeEdgeXSpansAscending(arg0, arg1, 0));
+        rasterizeEdgeXSpansDescending(arg0, arg2, 0);
+    }
+    temp_ft4 = (s32) arg0[2];
+    temp_t3 = temp_ft4 + var_s0;
+    if (sp30[1] > 0.0f) {
+        for (var_a1_2 = temp_ft4; var_a1_2 <= temp_t3; var_a1_2++) {
+            for (var_a0_2 = D_main_bss_80130C70[var_a1_2]; var_a0_2 <= D_main_bss_80130D10[var_a1_2]; var_a0_2++) {
+                temp_ft0 = -temp_fs0 / sp30[1];
+                if (sp30[0] > 0.0f) {
+                    var_fv0 = (f32) (var_a0_2 + 1);
+                } else {
+                    var_fv0 = (f32) var_a0_2;
+                }
+                temp_ft0 -= (sp30[0] * var_fv0) / sp30[1];
+                if (sp30[2] > 0.0f) {
+                    var_fv0 = (f32) (var_a1_2 + 1);
+                } else {
+                    var_fv0 = (f32) var_a1_2;
+                }
+                temp_ft0 -= (sp30[2] * var_fv0) / sp30[1];
+                temp_ft0 *= arg3;
+                temp_ft0 = (s32) temp_ft0;
+                if (temp_ft0 > 127.0f) {
+                    temp_ft0 = 127.0f;
+                } else if (temp_ft0 < -128.0f) {
+                    temp_ft0 = -128.0f;
+                }
+                D_main_bss_80131DB0[var_a1_2][var_a0_2] = temp_ft0;
+            }
+        }
+    } else {
+        for (var_a1_2 = temp_ft4; var_a1_2 <= temp_t3; var_a1_2++) {
+            for (var_a0_2 = D_main_bss_80130C70[var_a1_2]; var_a0_2 <= D_main_bss_80130D10[var_a1_2]; var_a0_2++) {
+                temp_ft0 = -temp_fs0 / sp30[1];
+                if (sp30[0] > 0.0f) {
+                    var_fv0 = (f32) (var_a0_2 + 1);
+                } else {
+                    var_fv0 = (f32) var_a0_2;
+                }
+                temp_ft0 -= (sp30[0] * var_fv0) / sp30[1];
+                if (sp30[2] > 0.0f) {
+                    var_fv0 = (f32) (var_a1_2 + 1);
+                } else {
+                    var_fv0 = (f32) var_a1_2;
+                }
+                temp_ft0 -= (sp30[2] * var_fv0) / sp30[1];
+                temp_ft0 *= arg3;
+                temp_ft0 = (s32) temp_ft0;
+                if (temp_ft0 > 127.0f) {
+                    temp_ft0 = 127.0f;
+                } else if (temp_ft0 < -128.0f) {
+                    temp_ft0 = -128.0f;
+                }
+                D_main_bss_80130DB0[var_a1_2][var_a0_2] = temp_ft0;
+            }
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", scanConvertTriangleToSpanTable);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/42AF0", binPolygonIntoTerrainGrid);
 

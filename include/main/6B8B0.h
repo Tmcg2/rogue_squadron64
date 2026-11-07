@@ -7,6 +7,8 @@
 void decrypt_ns_hmt(u8*, s32, u32);
 void applyLevelScreenAndCameraSettings(void);
 s32  isCraftAvailableByIdx(s32);
+u16  getBootConfigField12(void);
+u16  getBootConfigField14(void);
 s32  getLevelCutsceneActorCallbackPrimary(void);
 s32  getLevelCutsceneActorCallbackSecondary(void);
 s32  getLevelExpansionMemoryBudget(void);

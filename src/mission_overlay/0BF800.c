@@ -8,7 +8,7 @@
 
 #include "main/data_9E9D0.h"
 #include "main/bss_80130B10.h"
-#include "main/bss_80130BD0.h"
+#include "main/bss_80136FD0.h"
 #include "main/04030.h"
 #include "main/64EA0.h"
 #include "main/6E500.h"

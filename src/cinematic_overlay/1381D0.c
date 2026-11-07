@@ -9,8 +9,8 @@
 #include "game_settings.h"
 #include "levels.h"
 
-#include "main/bss_80130BD0.h"
-#include "main/bss_80139010.h"
+#include "main/bss_80136FD0.h"
+#include "main/bss_80139020.h"
 #include "main/02420.h"
 #include "main/08120.h"
 #include "main/08510.h"

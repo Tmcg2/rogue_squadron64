@@ -4,7 +4,7 @@
 #include "PR/ultratypes.h"
 #include "common_types.h"
 
-#include "main/bss_80139010.h"
+#include "main/bss_80139020.h"
 
 struct D_mission_overlay_8010B6E0_type {
     Vec3f  unk00; /* 0x00 */
