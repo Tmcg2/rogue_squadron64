@@ -761,6 +761,8 @@ segments:
       - {type: .bss, vram: 0x80138E60, name: "main/562A0"                }
       - {type: .bss, vram: 0x80139010, name: "main/56630"                }
       - {type: bss, vram: 0x80139020, name: "main/80139020"              }
+      - {type: .bss, vram: 0x80139750, name: "main/5FA70"                }
+      - {type: bss, vram: 0x80139870, name: "main/80139870"              }
       - {type: bss, vram: 0x80153420, name: "main/80153420"              } # 9BB60
 
   - [0x1000000]

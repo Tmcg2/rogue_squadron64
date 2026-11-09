@@ -1,5 +1,8 @@
 #include "common.h"
 
+#include "main/bss_80139020.h"
+
+#include "main/55AF0.h"
 #include "main/5D220.h"
 
 u8 D_main_8009ECF0[] = {
@@ -79,7 +82,14 @@ INCLUDE_ASM("asm/nonmatchings/main/5D220", spawnByteAnimDebrisDefault);
 
 INCLUDE_ASM("asm/nonmatchings/main/5D220", spawnByteAnimDebrisWithParam);
 
+#if 0
+// Text matches, cannot fully match due to the string literal being used in `loadWeaponsHobObjects` too
+void loadTieBomberSprite(void) {
+    D_main_bss_80139738 = loadAndRelocateAsset("weapon_spr/tie_bomb", NULL, 0U);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/main/5D220", loadTieBomberSprite);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/main/5D220", findNpcAlongDirectionRay);
 

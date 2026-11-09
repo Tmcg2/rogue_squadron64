@@ -20,7 +20,7 @@ struct someFontThing {
     u8 unk01D;                       /* 0x01D */
     u8 unk01E;                       /* 0x01E */
     u8 unk01F;                       /* 0x01F */
-    UNIDENTIFIED_TYPE *unk020;       /* 0x020 */
+    char *unk020;                    /* 0x020 */
     u16 *unk024;                     /* 0x024 */
     u16 *unk028;                     /* 0x028 */
     u32 unk02C;                      /* 0x02C */

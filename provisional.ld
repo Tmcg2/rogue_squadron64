@@ -1208,6 +1208,8 @@ SECTIONS
         build/src/main/562A0.o(.bss);
         build/src/main/56630.o(.bss);
         build/asm/data/main/80139020.bss.o(.bss);
+        build/src/main/5FA70.o(.bss);
+        build/asm/data/main/80139870.bss.o(.bss);
         build/asm/data/main/80153420.bss.o(.bss);
         main_bss_BSS_END = .;
         main_bss_BSS_SIZE = ABSOLUTE(main_bss_BSS_END - main_bss_BSS_START);

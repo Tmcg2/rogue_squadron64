@@ -65,6 +65,7 @@ Gfx *emitAllocatedDLCommand(Gfx*, u32);
 void emitColorFillRect(void);
 s32  disableScreenColorOverlay(void);
 s32  frameStartReset(void);
+s32  clearStructPair2C30(struct meshdef1*);
 s32  waitForPrevFrameDone(void);
 s32  beginFrameDLChunk(void);
 s32  initRenderStateArrays(void);

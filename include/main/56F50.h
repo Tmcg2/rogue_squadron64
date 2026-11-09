@@ -17,12 +17,15 @@ struct hobObjectListItem {
 
 void initNpcBookkeepingTables(void);
 u8   isHobObjectLoaded(char*);
+void applyRgbaTintToMeshVertices(struct D_main_bss_801394E8_type*, struct rgba*);
 void releaseMeshAsset(struct D_main_bss_801394E8_type*);
 struct object_entry *getHobObjectByName(u8*);
 void meshdef1_offset_convert(struct meshdef1*, u32, u32, u32, u32);
 void meshdef0_offset_convert(struct meshdef0*, u32, u32, u32, u32);
-void applyMeshdef1AnimColors(struct meshdef1*, u32);
+void applyMeshdef1AnimColors(struct meshdef1*, Vec3f);
 void freeAllHobFiles(void);
+struct D_main_bss_801394E8_type *createMeshInstanceFromSource(struct object_entry*, struct D_main_bss_801394E8_type*);
+void setMaterialFlagByIdInMeshTree(struct meshdef1*, u16, u16);
 void recursivelyReleaseMeshTree(struct meshdef0*);
 void walkMeshdef0TreeApplyAnimColors(struct meshdef0*, u32);
 void walkListAndUpdateFlagsAt0xC(struct meshdef1*, u32, u32);

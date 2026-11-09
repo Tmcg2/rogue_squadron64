@@ -16,8 +16,8 @@ struct D_main_bss_801394E8_type {
 }; // size = 0xB4
 
 extern struct D_main_bss_801394E8_type *D_main_bss_801394E8;
-extern u16 D_main_bss_80139560[];
-extern u32 gPreviousButtonsPressed[];
-extern u32 gNewButtonsPressed[];
+extern u16 D_main_bss_80139560[0x20];
+extern struct object_entry *D_main_bss_801395E0[0xF];
+extern u16 D_main_bss_80139738;
 
 #endif
