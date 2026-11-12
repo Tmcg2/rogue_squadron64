@@ -329,7 +329,7 @@ segments:
       - [0x3BB60, .rodata,  "main/5D220"]
       - [0x3BDC0, .rodata,  "main/5FA70"]
       - [0x3BF00, .rodata,  "main/61290"]
-      - [0x3C010, rodata,  "main/3C010"]
+      - [0x3C010, rodata,  "main/3C010"] # 61FC0.c
       - [0x3C430, .rodata,  "main/65540"]
       - [0x3CE60, .rodata,  "main/66660"]
       - [0x3CEE0, .rodata,  "main/66FB0"]
@@ -763,6 +763,8 @@ segments:
       - {type: bss, vram: 0x80139020, name: "main/80139020"              }
       - {type: .bss, vram: 0x80139750, name: "main/5FA70"                }
       - {type: bss, vram: 0x80139870, name: "main/80139870"              }
+      - {type: .bss, vram: 0x80139960, name: "main/61FC0"                }
+      - {type: bss, vram: 0x80139990, name: "main/80139990"              }
       - {type: bss, vram: 0x80153420, name: "main/80153420"              } # 9BB60
 
   - [0x1000000]

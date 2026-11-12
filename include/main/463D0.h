@@ -2,6 +2,7 @@
 #define MAIN_463D0_H
 
 #include "PR/ultratypes.h"
+#include "hmp.h"
 
 void initGridLayerFromLevelData(struct hmp_context*, s32);
 void updateGridLayerScroll(f32);

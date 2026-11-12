@@ -3,7 +3,7 @@
 #include "game_settings.h"
 
 #include "main/bss_80130B10.h"
-#include "main/bss_80139870.h"
+#include "main/bss_80139990.h"
 #include "main/033C0.h"
 #include "main/7A8E0.h"
 

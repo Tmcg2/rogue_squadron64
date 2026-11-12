@@ -3,7 +3,7 @@
 #include "main/02420.h"
 #include "main/64EA0.h"
 
-void insertLookupEntry(struct some_ui_list_root *arg0, struct ui_element *arg1, u8 arg2) {
+void insertLookupEntry(struct some_ui_list_root *arg0, struct ui_element_mk2 *arg1, u8 arg2) {
     u8 var_t0;
     u8 var_t1;
 
@@ -27,7 +27,7 @@ void insertLookupEntry(struct some_ui_list_root *arg0, struct ui_element *arg1, 
     arg0->size++;
 }
 
-void removeLookupTableEntry(struct some_ui_list_root *arg0, struct ui_element *arg1) {
+void removeLookupTableEntry(struct some_ui_list_root *arg0, struct ui_element_mk2 *arg1) {
     u8 var_a2;
     u8 var_a3;
 
@@ -47,14 +47,14 @@ void removeLookupTableEntry(struct some_ui_list_root *arg0, struct ui_element *a
     }
 }
 
-struct ui_element *rebuildActiveDisplayObjectList(struct some_ui_list_root *arg0) {
+struct ui_element_mk2 *rebuildActiveDisplayObjectList(struct some_ui_list_root *arg0) {
     u8 var_a1;
     u8 var_a2;
-    struct ui_element *temp_s0;
-    struct ui_element *temp_s1;
-    struct ui_element **temp_v0;
+    struct ui_element_mk2 *temp_s0;
+    struct ui_element_mk2 *temp_s1;
+    struct ui_element_mk2 **temp_v0;
 
-    temp_v0 = rs_malloc(0x100 * sizeof(struct ui_element*), 0U);
+    temp_v0 = rs_malloc(0x100 * sizeof(struct ui_element_mk2*), 0U);
     temp_v0[0] = NULL;
     var_a1 = 0;
     for (var_a2 = 0; var_a2 < arg0->size; var_a2++) {
@@ -102,7 +102,7 @@ void destroyLookupTable(struct some_ui_list_root *arg0) {
     rs_free(arg0);
 }
 
-u32 getLookupEntryField5(struct some_ui_list_root *arg0, struct ui_element *arg1) {
+u32 getLookupEntryField5(struct some_ui_list_root *arg0, struct ui_element_mk2 *arg1) {
     u8 var_a2;
 
     for (var_a2 = 0; var_a2 < arg0->size; var_a2++) {
@@ -111,7 +111,7 @@ u32 getLookupEntryField5(struct some_ui_list_root *arg0, struct ui_element *arg1
     return 0;
 }
 
-void setLookupEntryField5ByKey(struct some_ui_list_root *arg0, struct ui_element *arg1, u8 arg2) {
+void setLookupEntryField5ByKey(struct some_ui_list_root *arg0, struct ui_element_mk2 *arg1, u8 arg2) {
     u8 var_a2;
 
     for (var_a2 = 0; var_a2 < arg0->size; var_a2++) {
@@ -122,7 +122,7 @@ void setLookupEntryField5ByKey(struct some_ui_list_root *arg0, struct ui_element
     }
 }
 
-void relocateLookupEntryToNewKey(struct some_ui_list_root *arg0, struct ui_element *arg1, u8 arg2) {
+void relocateLookupEntryToNewKey(struct some_ui_list_root *arg0, struct ui_element_mk2 *arg1, u8 arg2) {
     u8 var_a0;
     u8 temp_s1;
 

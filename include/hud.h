@@ -26,8 +26,25 @@ struct ui_element {
     struct rgba rgba;                    /* 0x2C */
 }; // size = 0x30
 
+struct ui_element_mk2 {
+    struct ui_element *prev;             /* 0x00 */
+    struct ui_element *next;             /* 0x04 */
+    u16 texture_count;                   /* 0x08 These seem to control whether the UI element is visible or not, somehow */
+    u16 unknown0A;                       /* 0x0A */
+    u16 *texture_id_pointer;             /* 0x0C */
+    struct xy_offset *xy_offset_pointer; /* 0x10 */
+    u32 flags;                           /* 0x14 */
+    f32 xpos;                            /* 0x18 */
+    f32 ypos;                            /* 0x1C */
+    f32 zero;                            /* 0x20 zpos?, maybe padding */
+    f32 width_scale;                     /* 0x24 */
+    f32 height_scale;                    /* 0x28 */
+    struct rgba rgba;                    /* 0x2C */
+    u16 unk30;                           /* 0x30 */
+}; // size = 0x34
+
 struct some_ui_list_entry {
-    struct ui_element *elem; /* 0x0 */
+    struct ui_element_mk2 *elem; /* 0x0 */
     u8 priority;             /* 0x4 */
     u8 active;               /* 0x5 */
     u16 pad;                 /* 0x6 */
