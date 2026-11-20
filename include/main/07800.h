@@ -23,6 +23,7 @@ struct D_801128D0_type {
 
 s32    initServiceRegistry(void);
 s32    returnTrueServiceStub(void);
+s32    registerServiceWorker(u16, s32, u8, void (*)(OSId*));
 s32    startServiceWorker(OSId);
 s32    checkServiceWorkerStackGuard(OSId);
 s32    peekServiceMessage(OSId);

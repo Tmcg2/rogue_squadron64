@@ -11,8 +11,8 @@ INCLUDE_ASM("asm/nonmatchings/main/06170", initPiDmaWorker);
 
 INCLUDE_ASM("asm/nonmatchings/main/06170", dispatchPendingPiDmaToWorker);
 
-void getAssetRamAddress(s32 arg0) {
-    resolveAssetRamAddress(arg0);
+u8 *getAssetRamAddress(s32 arg0) {
+    return resolveAssetRamAddress(arg0);
 }
 
 s32 setDmaSlotMaxTxStepSize(s32 arg0) {

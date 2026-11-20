@@ -140,7 +140,7 @@ struct func_800C0084_type {
             /* 0xCD8 */ u32 vertex_counts[2];
             /* 0xCE0 */ float some_float;
             /* 0xCE4 */ void *facegroup_pointer;
-            /* 0xCE8 */ void *vertext_pointers[2];
+            /* 0xCE8 */ void *vertex_pointers[2];
             /* 0xCF0 */ u32 unk2C[12];
         } mini_meshdef1;
         // struct meshdef1 mini_meshdef1

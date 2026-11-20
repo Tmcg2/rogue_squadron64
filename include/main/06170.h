@@ -5,7 +5,7 @@
 
 s32  initPiDmaWorker(void);
 u8   dispatchPendingPiDmaToWorker(s32);
-void getAssetRamAddress(s32);
+u8  *getAssetRamAddress(s32);
 s32  setDmaSlotMaxTxStepSize(s32);
 
 #endif

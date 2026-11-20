@@ -3,6 +3,7 @@
 
 #include "PR/os.h"
 
+#include "game_settings.h"
 #include "hud.h"
 #include "textures.h"
 
@@ -10,6 +11,8 @@
 #include "main/08120.h"
 #include "main/1EE30.h"
 #include "main/55AF0.h"
+#include "main/562A0.h"
+#include "main/61FC0.h"
 #include "main/64EA0.h"
 #include "menu_overlay/115E00.h"
 #include "menu_overlay/12CA40.h"
@@ -18,6 +21,8 @@
 extern struct ui_element bridgeShipBlueprints[9];
 extern u16 bridgeShipBlueprintTextureIds[8]; // This would make it undersized by 1, what gives?
 extern struct xy_offset D_menu_overlay_800CDF80[9];
+extern struct some_ui_list_root *D_menu_overlay_800CDCDC;
+extern struct bridge_mini_hob bridgeBlueLightHobs[7];
 
 struct rgba bridgeYellowColor = {
     0xE1, 0xAF, 0x00, 0xFF
@@ -109,7 +114,98 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", tickMenuTransitionState);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", runScriptedCraftCinematicEvent);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", initMenuWidgetArray);
+void initMenuWidgetArray(void) {
+    u32 var_a1;
+    u32 var_s1;
+    Vec3f *temp_v0;
+    struct bridge_mini_hob *var_s0;
+
+    for (var_s1 = 0; var_s1 < 7; var_s1++) {
+        var_s0 = &bridgeBlueLightHobs[var_s1];
+        var_s0->mini_meshdef1.unk0C = 0x09000009;
+        var_s0->mini_meshdef0.next_meshdef0_pointer = \
+        var_s0->mini_meshdef0.prev_meshdef0_pointer = \
+        var_s0->mini_meshdef0.unknown_meshdef0_pointer0 = \
+        var_s0->mini_meshdef0.unknown_meshdef0_pointer1 = NULL;
+        var_s0->mini_meshdef0.meshdef1_pointer = &var_s0->mini_meshdef1;
+        var_s0->mini_meshdef1.vertex_counts[0] = 3;
+        var_s0->mini_meshdef0.two_floats[0] = 0.0f;
+        var_s0->mini_meshdef1.prev_meshdef1_pointer = NULL;
+        var_s0->mini_meshdef1.next_meshdef1_pointer = NULL;
+        var_s0->mini_meshdef1.facegroup_pointer = &var_s0->facegroup;
+        var_s0->mini_meshdef1.unk08 = 0;
+        var_s0->mini_meshdef1.some_float = 0.0f;
+        var_s0->mini_meshdef1.unk10 = 0;
+        var_s0->mini_meshdef1.vertex_counts[1] = 0;
+        var_s0->mini_meshdef1.vertex_pointers[0] = var_s0->vertices;
+        var_s0->mini_meshdef1.vertex_pointers[1] = NULL;
+        clearStructPair2C30(&var_s0->mini_meshdef1);
+        var_s0->facegroup.face_offset = (struct face *) &var_s0->face;
+        var_s0->face.flags = 0x10;
+        var_s0->facegroup.prev_facegroup = NULL;
+        var_s0->facegroup.next_facegroup = NULL;
+        var_s0->facegroup.face_count = 1;
+        var_s0->face.stuffed_data = 0x080C5000;
+        var_s0->face.material_index = 0;
+        var_s0->face.flags |= 0x82;
+        var_s0->face.material_index = 0;
+        for (var_a1 = 0; var_a1 < 3; var_a1++) {
+            var_s0->face.vertex_indices[var_a1] = var_a1;
+        }
+        if (var_s1 == 0) {
+            var_s0->face.vertex_colors[0].r = 0xB4;
+            var_s0->face.vertex_colors[0].g = 0xB4;
+            var_s0->face.vertex_colors[0].b = 0xF5;
+            var_s0->face.vertex_colors[0].a = 0;
+            var_s0->face.vertex_colors[1].r = 0xB4;
+            var_s0->face.vertex_colors[1].g = 0xB4;
+            var_s0->face.vertex_colors[1].b = 0xF5;
+            var_s0->face.vertex_colors[1].a = 0;
+            var_s0->face.vertex_colors[2].r = 0;
+            var_s0->face.vertex_colors[2].g = 0;
+            var_s0->face.vertex_colors[2].b = 0xA0;
+            var_s0->face.vertex_colors[2].a = 0;
+        } else {
+            if (var_s1 < 4U) {
+                var_s0->face.vertex_colors[0].r = 0xFF;
+                var_s0->face.vertex_colors[0].g = 0xFF;
+                var_s0->face.vertex_colors[0].b = 0xFF;
+                var_s0->face.vertex_colors[0].a = 0;
+                var_s0->face.vertex_colors[1].r = 0xFF;
+                var_s0->face.vertex_colors[1].g = 0xFF;
+                var_s0->face.vertex_colors[1].b = 0xFF;
+                var_s0->face.vertex_colors[1].a = 0;
+                var_s0->face.vertex_colors[2].r = 0x50;
+                var_s0->face.vertex_colors[2].g = 0x50;
+                var_s0->face.vertex_colors[2].b = 0xFF;
+                var_s0->face.vertex_colors[2].a = 0xC8;
+            } else {
+                var_s0->face.vertex_colors[0].r = 0;
+                var_s0->face.vertex_colors[0].g = 0;
+                var_s0->face.vertex_colors[0].b = 0x37;
+                var_s0->face.vertex_colors[0].a = 0;
+                var_s0->face.vertex_colors[1].r = 0;
+                var_s0->face.vertex_colors[1].g = 0;
+                var_s0->face.vertex_colors[1].b = 0x37;
+                var_s0->face.vertex_colors[1].a = 0;
+                var_s0->face.vertex_colors[2].r = 0x1E;
+                var_s0->face.vertex_colors[2].g = 0x1E;
+                var_s0->face.vertex_colors[2].b = 0xE1;
+                var_s0->face.vertex_colors[2].a = 0x9B;
+            }
+        }
+        temp_v0 = var_s0->mini_meshdef1.vertex_pointers[0];
+        temp_v0[0][0] = 1.0f;
+        temp_v0[0][1] = -2.0f;
+        temp_v0[0][2] = 0;
+        temp_v0[1][0] = -1.0f;
+        temp_v0[1][1] = -2.0f;
+        temp_v0[1][2] = 0;
+        temp_v0[2][0] = 0;
+        temp_v0[2][1] = 0;
+        temp_v0[2][2] = 0;
+    }
+}
 
 void bridgeLoadShipBlueprints(struct some_ui_list_root *arg0) {
     char sp10[0x20];
@@ -192,13 +288,69 @@ void layoutMenuTextRow(struct some_ui_list_root *arg0, u8 arg1) {
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", layoutMenuTextRow);
 #endif
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/115E00", D_menu_overlay_800A5BA4);
+void printLevelSelectWeaponText(u8 arg0) {
+    char sp20[0x100];
+    u16 var_v1_2;
+    s32 temp_a0;
+    s32 var_s1;
+    u8 var_v1;
+    char *temp_s3;
+    char *temp_s4;
+    char *temp_s5;
+    char *var_s0;
+    char *var_s2;
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", printLevelSelectWeaponText);
+    var_s1 = 0;
+    temp_a0 = getAvailablePlayerCraftFlagsIgnoreUnlocks(arg0);
+    for (var_v1 = 0; var_v1 < 9; var_v1++) {
+        if (temp_a0 & (1 << var_v1)) {
+            var_s1 += 1;
+        }
+    }
+    temp_s5 = getGameOrFrontText(0x48);
+    if (ADVANCED_BLASTERS_UNLOCKED) {
+        var_s2 = getGameOrFrontText(0x4B);
+    } else {
+        var_s2 = "";
+    }
+    temp_s4 = getGameOrFrontText(0x4D);
+    temp_s3 = getGameOrFrontText(0x4A);
+    if (ADVANCED_SHIELD_UNLOCKED) {
+        var_s0 = getGameOrFrontText(0x4B);
+    } else {
+        var_s0 = "";
+    }
+    sprintf(sp20, "%s%s%s\n%s%s%s", temp_s5, var_s2, temp_s4, temp_s3, var_s0, getGameOrFrontText(0x4C));
+    if (var_s1 == 1) {
+        var_v1_2 = -3;
+    } else {
+        var_v1_2 = -0x30;
+    }
+    setPlayerSlotAnimationFlag(2U, sp20, 1U, -0x100, var_v1_2);
+    setPlayerSlotEntryRGB(2U, 1U, &bridgeWhiteColor);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", startSlotLoopAnimWithVoiceSync);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", setupPlayerCraftDisplayAnim);
+void setupPlayerCraftDisplayAnim(void) {
+    u8 var_s2;
+
+    setPlayerSlotAnimationFlag(0U, "XX", 6U, -0x100, 0x72);
+    setPlayerSlotAnimationFlag(0U, "XX", 9U, -0x100, 0x72);
+    samplePlayerAnimChannel(0U, 6U, 1.0f);
+    samplePlayerAnimChannel(0U, 9U, 1.0f);
+    relocateLookupEntryToNewKey(D_menu_overlay_800CDCDC, getPlayerSlotFieldAt34(0U, 6U), 0x19U);
+    relocateLookupEntryToNewKey(D_menu_overlay_800CDCDC, getPlayerSlotFieldAt34(0U, 9U), 0x19U);
+    setPlayerSlotAnimationFlag(0U, "{", 4U, -0x100, 0x76);
+    setPlayerSlotAnimationFlag(0U, "{", 7U, -0x100, 0x76);
+    setPlayerSlotAnimationFlag(0U, "}", 5U, -0x100, 0x76);
+    setPlayerSlotAnimationFlag(0U, "}", 8U, -0x100, 0x76);
+    for (var_s2 = 4; var_s2 < 0xA; var_s2++) {
+        activateAnimationKeyframe(0U, var_s2, 0U);
+        setPlayerSlotEntryRGB(0U, var_s2, &bridgeWhiteColor);
+        samplePlayerAnimChannel(0U, var_s2, 1.0f);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", applyPlayerSlotAnimChannelKeyframe);
 

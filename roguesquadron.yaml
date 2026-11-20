@@ -678,7 +678,7 @@ segments:
       - [0x001331E0, c,       "menu_overlay/1331E0"]
       - [0x00133580, data,    "menu_overlay/110410"]
       - [0x00133890, .data,    "menu_overlay/115E00"]
-      - [0x001339F0, data,    "menu_overlay/1197D0"]
+      - [0x001339F0, .data,    "menu_overlay/1197D0"]
       - [0x00133A10, data,    "menu_overlay/11B970"]
       - [0x00134450, data,    "menu_overlay/12CA40"]
       - [0x00134610, data,    "menu_overlay/intro_crawl_handling"]

@@ -16,7 +16,7 @@ void resetPlayerSlotChannelTransform(u16);
 char *getPlayerSlotLookupBase(u8);
 struct ui_element_mk2 *getPlayerSlotFieldAt34(u16, u16);
 void resetPlayerSlotAllChannels(u16, u8);
-struct ui_element *setPlayerSlotAnimationFlag(u16, char*, u16, s16, s32);
+struct ui_element *setPlayerSlotAnimationFlag(u16, char*, u16, s16, s16);
 void setMenuOverlayHeaderState(s8, s16, s16);
 void setMenuOverlayHeaderCallback(s16 (*)(s16));
 void setPlayerSlotEntryRGB(u16, u16, struct rgba*);

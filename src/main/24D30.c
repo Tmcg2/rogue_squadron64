@@ -186,7 +186,7 @@ void loadDebugAssets(OSId arg0) {
         sp40.width = temp_s0_2->image_pixel_width;
         sp40.height = temp_s0_2->image_pixel_height;
         sp40.one = 1;
-        sp40.flags_type = temp_s0_2->flags | 0x4000;
+        sp40.flags_type = temp_s0_2->flags_type.as_u8.flags | 0x4000;
         sp40.transparency_color.r = 0;
         sp40.transparency_color.g = 0;
         sp40.transparency_color.b = 0;

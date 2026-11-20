@@ -3,6 +3,7 @@
 #include "game_settings.h"
 
 #include "main/562A0.h"
+#include "main/61FC0.h"
 #include "menu_overlay/11B970.h"
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBKasan);
@@ -647,7 +648,16 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", freeMenuScreenState);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateMenuElementTimedPosition);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyCraftSlotAnimations);
+void applyCraftSlotAnimations(f32 arg0) {
+    f32 temp_fv0;
+    s32 var_s0;
+    u8 temp_s0;
+
+    temp_s0 = arg0 * 254.0f;
+    activateAnimationKeyframe(8U, 1U, temp_s0);
+    activateAnimationKeyframe(8U, 2U, temp_s0);
+    activateAnimationKeyframe(8U, 3U, temp_s0);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMaterialFadeTargetIfIdle);
 
@@ -663,4 +673,8 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickSongAssetLoadWorker);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", fake_func_800C5898);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A7550);
+const u32 rodata_junk_11B970[] = {
+    0xAC680000,
+    0xAC690004,
+    0xAC6A0008,
+};

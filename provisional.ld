@@ -1044,7 +1044,7 @@ SECTIONS
         menu_overlay_DATA_START = .;
         build/asm/data/menu_overlay/110410.data.o(.data);
         build/src/menu_overlay/115E00.o(.data);
-        build/asm/data/menu_overlay/1197D0.data.o(.data);
+        build/src/menu_overlay/1197D0.o(.data);
         build/asm/data/menu_overlay/11B970.data.o(.data);
         build/asm/data/menu_overlay/12CA40.data.o(.data);
         build/src/menu_overlay/jfif_handling.o(.data);

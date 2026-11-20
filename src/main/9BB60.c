@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/9BB60.h"
+
 INCLUDE_ASM("asm/nonmatchings/main/9BB60", findVoiceSlotByAge);
 
 INCLUDE_ASM("asm/nonmatchings/main/9BB60", allocAndConfigureNewVoice);

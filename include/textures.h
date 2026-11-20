@@ -4,6 +4,7 @@
 #include "PR/ultratypes.h"
 
 #include "common_types.h"
+#include "hud.h"
 
 struct material_entry {
     u16 material_type;      /* 0x00 1 = has texture, 2 = no texture */
@@ -34,13 +35,36 @@ struct full_image_header {
 };
 
 struct partial_image_header {
-    u8  flags;                      /* 0x0 */ 
-    u8  type;                       /* 0x1 */
+    union {
+        struct {
+            u8 flags;
+            u8 type;
+        } as_u8;
+        u16 as_u16;
+    } flags_type;
+    // u16 flags_type;                 /* 0x0 */ 
     u8  always_0;                   /* 0x2 */
     u8  bit_depth;                  /* 0x3 */
     u16 image_pixel_width;          /* 0x4 */
     u16 image_pixel_height;         /* 0x6 */
     struct rgba transparency_color; /* 0x8 */
 }; // size 0xC
+
+struct some_texture_context {
+    u16 width;                          /* 0x00 */
+    u16 height;                         /* 0x02 */
+    u16 unk04;                          /* 0x04 */
+    u16 unk06;                          /* 0x06 */
+    u32 unk08;                          /* 0x08 */
+    struct ui_element *unk0C;           /* 0x0C */
+    struct partial_image_header *unk10; /* 0x10 Some functions indicate that this should point to something 0x10 bytes big, but a partial header is only 0xC bytes big */
+    u16 *unk14;                         /* 0x14 */
+    u8 unk18;                           /* 0x18 */
+    u8 pad19[0x1C - 0x19];              /* 0x19 I don't trust the compiler to put this here */
+    u32 unk1C;                          /* 0x1C */
+    u8 pad20[0x34 - 0x20];              /* 0x20 */
+    s16 unk34;                          /* 0x34 */
+    s16 unk36;                          /* 0x36 */
+}; // size 0x38
 
 #endif

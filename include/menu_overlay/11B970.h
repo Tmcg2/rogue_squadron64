@@ -5,5 +5,6 @@
 
 char *getPlayerRankString(s32);
 void  getControllerSettingsTitle(char*);
+void  applyCraftSlotAnimations(f32);
 
 #endif

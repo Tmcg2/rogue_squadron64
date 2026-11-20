@@ -70,7 +70,7 @@ struct meshdef1 {
     u32 vertex_counts[2];                   /* 0x14 */
     f32 some_float;                         /* 0x1C */
     struct facegroup *facegroup_pointer;    /* 0x20 */
-    struct vertex *vertext_pointers[2];     /* 0x24 */
+    struct vertex *vertex_pointers[2];      /* 0x24 */
     f32 unk2C[12];                          /* 0x2C */
 }; // size 0x5C
 

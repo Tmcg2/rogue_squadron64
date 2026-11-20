@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "main/bss_80130BD0.h"
+
 #include "main/02420.h"
 #include "main/64EA0.h"
 
@@ -142,8 +144,30 @@ void relocateLookupEntryToNewKey(struct some_ui_list_root *arg0, struct ui_eleme
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/main/64EA0", load_asset_with_malloc_flags);
+void *load_asset_with_malloc_flags(char *arg0, u16 arg1) {
+    u32 temp_v0;
+    void *temp_s2;
+    void *temp_v0_2;
 
-INCLUDE_ASM("asm/nonmatchings/main/64EA0", load_asset);
+    temp_v0 = get_asset_size_extra(D_main_bss_80137CFC, arg0);
+    temp_s2 = rs_malloc(temp_v0, arg1);
+    temp_v0_2 = findAssetAcrossSegments(D_main_bss_80138920, NULL, D_main_bss_80137CFC, arg0, 0U);
+    setupAssetDma(D_main_bss_80138920, NULL, temp_v0_2, 0U, temp_v0, temp_s2);
+    teardownAssetDma(D_main_bss_80138920, temp_v0_2);
+    return temp_s2;
+}
+
+void *load_asset(char *arg0) {
+    u32 temp_v0;
+    void *temp_s2;
+    void *temp_v0_2;
+
+    temp_v0 = get_asset_size_extra(D_main_bss_80137CFC, arg0);
+    temp_s2 = rs_malloc(temp_v0, 0U);
+    temp_v0_2 = findAssetAcrossSegments(D_main_bss_80138920, NULL, D_main_bss_80137CFC, arg0, 0U);
+    setupAssetDma(D_main_bss_80138920, NULL, temp_v0_2, 0U, temp_v0, temp_s2);
+    teardownAssetDma(D_main_bss_80138920, temp_v0_2);
+    return temp_s2;
+}
 
 INCLUDE_ASM("asm/nonmatchings/main/64EA0", fake_func_80064934);
