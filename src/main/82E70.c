@@ -58,10 +58,10 @@ static u8 D_main_800A0F44[] = {
 
 // Credit to this match goes to inspectredc
 // https://decomp.me/scratch/PuezA
-s32 applyCheatCodeFromInput(u8 *arg0, u8 arg1, s8 *arg2) {
+u8 applyCheatCodeFromInput(u8 *arg0, u8 arg1, u8 *arg2) {
     u8 var_s2;
     u8 var_s4;
-    s32 var_v1;
+    u8 var_v1;
     u32 *crc32LUT;
     u32 temp_a0;
     u32 var_a1;

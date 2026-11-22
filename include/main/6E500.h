@@ -15,6 +15,7 @@ s32  getActiveAccountsBitmask(void);
 s32  getAccountUnk51(void);
 void initPlayerMissionStateFromSettings(void);
 void initializeNumLives(void);
+void parseAccountDataBytes(struct account_data*, u8*);
 struct EliteRogueData *getSaveScratchBufferPtr(void);
 u8   findUnusedAccountId(void);
 void resetMixerVolumesAndFlags(void);

@@ -3,8 +3,9 @@
 
 #include "PR/ultratypes.h"
 
+u8   applyCheatCodeFromInput(u8*, u8, u8*);
 u8   isCheatCodeIndexAllowed(u8);
-u32 *make_crc32_lut(void);
 u32  rs_crc32(u32*, u8*, u32);
+u32 *make_crc32_lut(void);
 
 #endif

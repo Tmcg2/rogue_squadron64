@@ -1,10 +1,40 @@
 #include "common.h"
 
+#include "cheat_codes.h"
 #include "game_settings.h"
 
+#include "main/bss_80130BD0.h"
+
+#include "main/02420.h"
+#include "main/07800.h"
+#include "main/192E0.h"
 #include "main/562A0.h"
 #include "main/61FC0.h"
+#include "main/64EA0.h"
+#include "main/66FB0.h"
+#include "main/6E500.h"
+#include "main/84830.h"
+#include "main/82E70.h"
+#include "menu_overlay/1197D0.h"
 #include "menu_overlay/11B970.h"
+
+// Interim BSS externs
+extern struct some_ui_list_root *D_menu_overlay_800CF078;
+extern struct some_ui_list_root *D_menu_overlay_800CF07C;
+extern struct some_texture_context *D_menu_overlay_800CF104;
+extern struct some_texture_context *D_menu_overlay_800CF110;
+extern struct ui_element D_menu_overlay_800CF120;
+extern s8 D_menu_overlay_800CF150;
+extern struct ui_element *D_menu_overlay_800CFE2C;
+extern struct ui_element *D_menu_overlay_800CFE30;
+extern struct some_texture_context *D_menu_overlay_800CFE38;
+
+// Interim Data externs
+extern struct rgba mainMenuBlackColor;
+extern struct rgba mainMenuGreyColor;
+extern struct rgba mainMenuBrightYellowColor;
+extern struct some_biography_thing D_menu_overlay_800CC89C[6];
+extern OSId D_menu_overlay_800CCE18;
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuBKasan);
 
@@ -374,7 +404,81 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6854);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateShipPartAnimation);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", buildHudAmmoReadout);
+void buildHudAmmoReadout(void) {
+    char sp10[0x10];
+    u16 var_a3;
+    u16 var_a2;
+    s32 var_a2_2;
+    struct ui_element *temp_v0_2;
+
+    D_menu_overlay_800CF104 = loadNamedTextureDescriptor("logo", 0x40U, 0x20U, 0U);
+    temp_v0_2 = getStructField0xC(D_menu_overlay_800CF104);
+    temp_v0_2->flags |= 3;
+    temp_v0_2->width_scale = temp_v0_2->height_scale = 1.075f;
+    setChildPosFromI16Pair(D_menu_overlay_800CF104, -0xD0, -0xC5);
+    insertLookupEntry(D_menu_overlay_800CF078, temp_v0_2, 0x23U);
+    zmemcpy(&D_menu_overlay_800CF120, temp_v0_2, sizeof(struct ui_element));
+    D_menu_overlay_800CF120.xpos = temp_v0_2->xpos + 5.0f;
+    D_menu_overlay_800CF120.ypos = temp_v0_2->ypos + 5.0f;
+    D_menu_overlay_800CF120.rgba.r = 0;
+    D_menu_overlay_800CF120.rgba.g = 0;
+    D_menu_overlay_800CF120.rgba.b = 0;
+    D_menu_overlay_800CF120.rgba.a = 0;
+    D_menu_overlay_800CF120.texture_id_pointer = rs_malloc(temp_v0_2->texture_count * 2 * temp_v0_2->unknown0A, 0U);
+    zmemcpy(D_menu_overlay_800CF120.texture_id_pointer, temp_v0_2->texture_id_pointer, temp_v0_2->texture_count * 2 * temp_v0_2->unknown0A);
+    for (var_a3 = 0; var_a3 < temp_v0_2->unknown0A - 1; var_a3++) {
+        for (var_a2 = 0; var_a2 < temp_v0_2->texture_count - 1; var_a2++) {
+            D_menu_overlay_800CF120.texture_id_pointer[(var_a3 * temp_v0_2->texture_count) + var_a2] = 0xFFFF;
+        }
+    }
+    insertLookupEntry(D_menu_overlay_800CF078, &D_menu_overlay_800CF120, 0x25U);
+    // I wish it was written like this
+    // var_a2_2 = 0;
+    // if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_ICHHELD) {
+    //     var_a2_2 = 1;
+    // }
+    var_a2_2 = (gGameSettings.cheatCodeFlags[0] >> 7) & 1;
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_PSYLOCK) {
+        var_a2_2 = 2;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_WUTZI) {
+        var_a2_2 = 3;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_BERGLOWE) {
+        var_a2_2 = 4;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_TIECK) {
+        var_a2_2 = 5;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_RUDIBUBI) {
+        var_a2_2 = 6;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_CHIPPIE) {
+        var_a2_2 = 7;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_TOBIASS) {
+        var_a2_2 = 8;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_SIRHISS) {
+        var_a2_2 = 9;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_HARDROCK) {
+        var_a2_2 = 0xA;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_THBPILOT) {
+        var_a2_2 = 0xB;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_FLYDODGE) {
+        var_a2_2 = 0xC;
+    }
+    sprintf(&sp10, "the_head%d", var_a2_2);
+    D_menu_overlay_800CF110 = loadNamedTextureDescriptor(&sp10, 0x20U, 0x20U, 0U);
+    temp_v0_2 = getStructField0xC(D_menu_overlay_800CF110);
+    temp_v0_2->flags |= 3;
+    temp_v0_2->width_scale = 0.8f;
+    setChildPosFromI16Pair(D_menu_overlay_800CF110, 0x83, -0x86);
+    insertLookupEntry(D_menu_overlay_800CF078, temp_v0_2, 0x22U);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", readAccountForSelectionScreen);
 
@@ -388,11 +492,33 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cycleAccountLabelText);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateBannerOscillation);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setupCraftAnimationFlagSet);
+void setupCraftAnimationFlagSet(u8 *arg0) {
+    char sp18[0x40];
+    u8 sp58[4];
+    u8 var_a1;
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6964);
-
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6970);
+    sp58[0] = sp58[1] = sp58[2] = sp58[3] = 0;
+    if (arg0 != NULL) {
+        for (var_a1 = 0; var_a1 < 0x13; var_a1++) {
+            sp58[arg0[var_a1]]++;
+        }
+    }
+    sprintf(&sp18, "~%d\n\n~~~~~~~~~%d\n\n~~~~~~~~%d", sp58[3], sp58[2], sp58[1]);
+    // wtf is up with this string?
+    setPlayerSlotAnimationFlag(8U, "\04\n\n\n\03\n\n\n\02", 1U, -0x74, -0x7F);
+    setPlayerSlotAnimationFlag(8U, sp18, 2U, -0x7C, -0x7F);
+    setPlayerSlotAnimationFlag(8U, sp18, 3U, -0x7B, -0x7D);
+    relocateLookupEntryToNewKey(D_menu_overlay_800CF078, getPlayerSlotFieldAt34(8U, 1U), 0xFU);
+    relocateLookupEntryToNewKey(D_menu_overlay_800CF078, getPlayerSlotFieldAt34(8U, 2U), 0xAU);
+    relocateLookupEntryToNewKey(D_menu_overlay_800CF078, getPlayerSlotFieldAt34(8U, 3U), 0xCU);
+    setPlayerSlotEntryRGB(8U, 1U, &mainMenuGreyColor);
+    setPlayerSlotEntryRGB(8U, 2U, &mainMenuGreyColor);
+    setPlayerSlotEntryRGB(8U, 3U, &mainMenuBlackColor);
+    samplePlayerAnimChannel(8U, 1U, 1.0f);
+    samplePlayerAnimChannel(8U, 2U, 1.2f);
+    samplePlayerAnimChannel(8U, 3U, 1.2f);
+    applyCraftSlotAnimations(0.0f);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initVwingHudAndSlotState);
 
@@ -524,7 +650,47 @@ INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6E98);
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6E9C);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickMenuOptionEntry);
+void tickMenuOptionEntry(u8 arg0) {
+    u8 var_a1;
+    u8 var_v1;
+    f32 var_fs0;
+    f32 var_fs1;
+    struct ui_element_mk2 *temp_s3;
+
+    if (arg0 != 0) {
+        var_v1 = 9;
+    } else {
+        var_v1 = 8;
+    }
+    if (arg0 != 0) {
+        var_a1 = 0xA;
+    } else {
+        var_a1 = 0x10;
+    }
+    if (arg0 != 0) {
+        var_fs1 = 0.48f;
+    } else {
+        var_fs1 = 1.0f;
+    }
+    if (arg0 != 0) {
+        var_fs0 = 212.0f;
+    } else {
+        var_fs0 = 160.0f;
+    }
+    if (gGameSettings.unk16 != 0) {
+        temp_s3 = getPlayerSlotFieldAt34(var_v1, var_a1);
+        setMenuOverlayHeaderState(2, 0x200, 0);
+        setPlayerSlotAnimationFlag(var_v1, getGameOrFrontText(0xBE), var_a1, (var_fs0 + -256.0f), 0xBE);
+        setPlayerSlotEntryRGB(var_v1, var_a1, &mainMenuBrightYellowColor);
+        samplePlayerAnimChannel(var_v1, var_a1, var_fs1);
+        if (arg0 != 0) {
+            temp_s3->height_scale *= 1.2f;
+        }
+        activateAnimationKeyframe(var_v1, var_a1, 0xFE);
+    } else {
+        activateAnimationKeyframe(var_v1, var_a1, 0);
+    }
+}
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", D_menu_overlay_800A6EB8);
 
@@ -536,7 +702,49 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", animateMenuSceneTransform);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMenuObjectColorPreset);
 
+#if 0
+// Text is matching (for reasons), rodata won't match because "medal_sh" is used by multiple functions
+void createMenuTextLabels(u8 arg0) {
+    char *var_a0;
+    struct some_texture_context *temp_v0;
+    struct ui_element *temp_v0_2;
+    struct ui_element *temp_v0_3;
+    struct ui_element *why;
+    u8 why2_son_of_why;
+    s8 var_v0;
+
+    if (arg0) {
+        var_a0 = "rebel_sh";
+    } else {
+        var_a0 = "medal_sh";
+    }
+    D_menu_overlay_800CFE38 = loadNamedTextureDescriptor(var_a0, 0x40U, 0x40U, 1U);
+    D_menu_overlay_800CFE2C = getStructField0xC(D_menu_overlay_800CFE38);
+    D_menu_overlay_800CFE2C->flags |= 0x08C00003;
+    D_menu_overlay_800CFE2C->rgba.r = 0xA;
+    D_menu_overlay_800CFE2C->rgba.g = 0;
+    D_menu_overlay_800CFE2C->rgba.b = 0;
+    why = D_menu_overlay_800CFE2C;
+    if (!arg0) {
+        var_v0 = -0x38U;
+    } else {
+        // I don't get how this matches and I hate it
+        why2_son_of_why = 0x40;
+        var_v0 = -1U;
+    }
+    why->rgba.a = var_v0;
+    insertLookupEntry(D_menu_overlay_800CF07C, D_menu_overlay_800CFE2C, 0xFU);
+    D_menu_overlay_800CFE30 = getStructField0xC(loadNamedTextureDescriptor("medal_sh", why2_son_of_why, why2_son_of_why, 1U));
+    D_menu_overlay_800CFE30->flags |= 0x02400003;
+    D_menu_overlay_800CFE30->rgba.r = 0;
+    D_menu_overlay_800CFE30->rgba.g = 0;
+    D_menu_overlay_800CFE30->rgba.b = 0;
+    D_menu_overlay_800CFE30->rgba.a = 0xFF;
+    insertLookupEntry(D_menu_overlay_800CF078, D_menu_overlay_800CFE30, 0xFU);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createMenuTextLabels);
+#endif
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/11B970", strMenuMedalSh);
 
@@ -592,11 +800,25 @@ char *getPlayerRankString(s32 arg0) {
     return getGameOrFrontText(arg0 + 0x92);
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", shutdownMenuMessagingAndSpeech);
+void shutdownMenuMessagingAndSpeech(u8 arg0) {
+    shutdownFormatMessageWorker();
+    if (arg0) {
+        finalizeCurrentSpeechBuffer();
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioA);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", preloadMenuMusicSetA);
+void preloadMenuMusicSetA(void) {
+    parseLoadedSndSection(0xCU);
+    parseLoadedSndSection(0x1DU);
+    loadSongAssetByName(D_main_bss_80138920, 0x1C);
+    loadSongAssetByName(D_main_bss_80138920, 0x35);
+    loadSongAssetByName(D_main_bss_80138920, 0x36);
+    loadSongAssetByName(D_main_bss_80138920, 0x37);
+    playSimpleAudioCmd(0x7FU, 0x32U, 0xFEU);
+    playSimpleAudioCmd(0x78U, 0x32U, 0xFDU);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", cueMenuScreenAudioB);
 
@@ -626,9 +848,35 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initCraftPreviewEffectWithRa
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuElementScrollAnimParams);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", applyMenuCheatCode);
+void applyMenuCheatCode(char *arg0) {
+    u8 sp10;
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", getCraftStatIfThresholdMet);
+    sp10 = 0;
+    switch (applyCheatCodeFromInput(arg0, 0U, &sp10)) {
+        case 0:
+            bsearchFactor5TableByU16Key(0x67, 0x6E, 0x40);
+            break;
+        case 1:
+            bsearchFactor5TableByU16Key(0x18, 0x5F, 0x40);
+            break;
+        default:
+            break;
+    }
+    if (sp10 != 0) {
+        serializeSettingsToSaveAndPersist();
+    }
+}
+
+s16 getCraftStatIfThresholdMet(s16 arg0) {
+    s16 var_a2;
+
+    if (D_menu_overlay_800CC89C[D_menu_overlay_800CF150].unk16 > arg0) {
+        var_a2 = D_menu_overlay_800CC89C[D_menu_overlay_800CF150].unk14;
+    } else {
+        var_a2 = 0;
+    }
+    return var_a2;
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", resetMenuSelectionGlobalState);
 
@@ -638,7 +886,18 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createUiSpriteAt);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateUiSpriteScrollAndAlpha);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMenuAnimGroupFrame);
+void setMenuAnimGroupFrame(f32 arg0) {
+    u8 var_s0;
+    u8 var_s1;
+
+    var_s1 = arg0 * 254.0f;
+    for (var_s0 = 0; var_s0 < 4; var_s0++) {
+        activateAnimationKeyframe(5U, var_s0, var_s1);
+    }
+    for (var_s0 = 2; var_s0 < 0x10; var_s0++) {
+        activateAnimationKeyframe(8U, var_s0, var_s1);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", createMenuTextElement);
 
@@ -646,7 +905,37 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", allocMenuScreenState);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", freeMenuScreenState);
 
+#if 0
+// Close, something about the `if` statement at the bottom is being picky
+void updateMenuElementTimedPosition(f32 arg0, u8 arg1) {
+    u8  var_a2;
+    f32 why;
+    f32 temp_ft0;
+    f32 temp_fv1;
+
+    if (arg0 > 0.05f) {
+        temp_ft0 = arg0 * 1.675f;
+        temp_fv1 = (temp_ft0 * 512.0f) / 640.0f;
+        D_menu_overlay_800CFE2C->width_scale = temp_fv1;
+        if (arg1 != 0) {
+            D_menu_overlay_800CFE2C->width_scale = temp_fv1 * 1.075f;
+        }
+        D_menu_overlay_800CFE2C->height_scale = temp_ft0;
+        if (arg1 != 0) {
+            D_menu_overlay_800CFE2C->height_scale = temp_ft0 * 1.075f;
+        }
+        setChildPosFromI16Pair(D_menu_overlay_800CFE38, ((D_menu_overlay_800CFE2C->width_scale * -128.0f) + 14.0f), ((D_menu_overlay_800CFE2C->height_scale * -128.0f) + 18.0f));
+    }
+    if (!(arg0 > 0.05f)) {
+        var_a2 = 0;
+    } else {
+        var_a2 = 1;
+    }
+    setLookupEntryField5ByKey(D_menu_overlay_800CF07C, D_menu_overlay_800CFE2C, var_a2);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", updateMenuElementTimedPosition);
+#endif
 
 void applyCraftSlotAnimations(f32 arg0) {
     f32 temp_fv0;
@@ -661,13 +950,22 @@ void applyCraftSlotAnimations(f32 arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setMaterialFadeTargetIfIdle);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", setCraftMaterialTextureByName);
+void setCraftMaterialTextureByName(u8 arg0, char *arg1) {
+    setMaterialTextureByName(arg0, arg1, 0.0f);
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initMenuBackdropAndPickRandom);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", initSongAssetLoadWorker);
+void initSongAssetLoadWorker(u8 arg0) {
+    D_menu_overlay_800CCE18 = registerServiceWorker(4U, 0x800, arg0, tickSongAssetLoadWorker);
+    startServiceWorker(D_menu_overlay_800CCE18);
+}
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", shutdownSongAssetLoadWorker);
+void shutdownSongAssetLoadWorker(void) {
+    if (D_menu_overlay_800CCE18 != -1) {
+        unregisterServiceWorker(D_menu_overlay_800CCE18);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/11B970", tickSongAssetLoadWorker);
 

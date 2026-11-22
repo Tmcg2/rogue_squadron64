@@ -16,6 +16,7 @@ struct hobObjectListItem {
 }; // size = 0xC
 
 void initNpcBookkeepingTables(void);
+void load_hmt_and_hob(char*, Vec3f, u32, u32);
 u8   isHobObjectLoaded(char*);
 void applyRgbaTintToMeshVertices(struct D_main_bss_801394E8_type*, struct rgba*);
 void releaseMeshAsset(struct D_main_bss_801394E8_type*);
