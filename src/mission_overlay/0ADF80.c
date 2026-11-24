@@ -50,16 +50,20 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ADF80", beginCameraViewTransition
 void requestCameraSnapToTrackedAnchor(void) {
     D_mission_overlay_8010B6E8.unk00 = 4;
     computeTrackedObjectWorldAnchor(&D_mission_overlay_8010B6E8);
-    D_mission_overlay_8010B6E8.unk50 = 0;
+    D_mission_overlay_8010B6E8.unk4C = 0;
 }
 
 void beginCameraTrackedTransition(void) {
     D_mission_overlay_8010B6E8.unk00 = 3;
     computeTrackedObjectWorldAnchor(&D_mission_overlay_8010B6E8);
-    D_mission_overlay_8010B6E8.unk50 = 0;
+    D_mission_overlay_8010B6E8.unk4C = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0ADF80", advanceCameraTransitionOnCue);
+void advanceCameraTransitionOnCue(s32 arg0) {
+    if ((D_mission_overlay_8010B6E8.unk00 == 3) && (D_mission_overlay_8010B6E8.unk50 == arg0)) {
+        D_mission_overlay_8010B6E8.unk00 = 4;
+    }
+}
 
 u8 isCameraTransitionIdle(void) {
     return ((D_mission_overlay_8010B6E8.unk00 == 0) || (D_mission_overlay_8010B6E8.unk00 == 4));

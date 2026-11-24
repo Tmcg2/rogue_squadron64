@@ -15,7 +15,7 @@ u32  isAudioFaderRampActive(u8);
 void setupAudioFaderRamp(u8, u16, u8);
 void setAudioFaderRampLocked(u8, u16, u8);
 void setAudioFaderState(u8, u8);
-s32  anyAudioSlotActive(void);
+u8   anyAudioSlotActive(void);
 void resetMusyXEngineState(s32);
 void syncMusyXIfActive(void);
 void runMusyXTaskLocked(void);

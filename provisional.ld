@@ -857,7 +857,7 @@ SECTIONS
         build/src/mission_overlay/0AB2D0.o(.data);
         build/asm/data/mission_overlay/0AB6E0.data.o(.data);
         build/asm/data/mission_overlay/0ADF80.data.o(.data);
-        build/asm/data/mission_overlay/0AEFF0.data.o(.data);
+        build/src/mission_overlay/0AEFF0.o(.data);
         build/asm/data/mission_overlay/0B4EC0.data.o(.data);
         build/asm/data/mission_overlay/0B64C0.data.o(.data);
         build/asm/data/mission_overlay/0B81D0.data.o(.data);
@@ -1024,6 +1024,7 @@ SECTIONS
         build/src/menu_overlay/12CA40.o(.rodata);
         build/src/menu_overlay/jfif_handling.o(.rodata);
         build/src/menu_overlay/intro_crawl_handling.o(.rodata);
+        build/src/menu_overlay/132FA0.o(.rodata);
         build/src/menu_overlay/1331E0.o(.rodata);
         build/asm/data/menu_overlay/10EDA0.rodata.o(.rodata);
         . = ALIGN(., 16);
@@ -1037,6 +1038,7 @@ SECTIONS
         build/src/menu_overlay/12CA40.o(.text);
         build/src/menu_overlay/jfif_handling.o(.text);
         build/src/menu_overlay/intro_crawl_handling.o(.text);
+        build/src/menu_overlay/132FA0.o(.text);
         build/src/menu_overlay/1331E0.o(.text);
         . = ALIGN(., 16);
         menu_overlay_TEXT_END = .;

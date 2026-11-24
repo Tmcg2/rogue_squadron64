@@ -21,10 +21,13 @@ struct bridge_mini_hob {
     Vec3f vertices[3];                   /* 0xD8 */
 }; // size = 0xFC
 
+void initCraftSelectScreen(s32, s32, s32);
+s32  tickCraftSelectScreen(void);
 void initMenuWidgetArray(void);
 void bridgeLoadShipBlueprints(struct some_ui_list_root*);
 void printLevelSelectWeaponText(u8);
 void setupPlayerCraftDisplayAnim(void);
+void drainAudioAndFinalizeSpeechBuffer(void);
 void layoutMenuTextRow(struct some_ui_list_root*, u8);
 
 #endif

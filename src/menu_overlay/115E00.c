@@ -14,10 +14,14 @@
 #include "main/562A0.h"
 #include "main/61FC0.h"
 #include "main/64EA0.h"
+#include "main/67690.h"
+#include "main/84830.h"
 #include "menu_overlay/115E00.h"
+#include "menu_overlay/1197D0.h"
 #include "menu_overlay/12CA40.h"
 
 // Interim BSS externs
+extern u8 D_menu_overlay_800CDC80[0x5C]; // This is really a struct of some kind, until I actually need its internal for match I'm going to leave it as an array
 extern struct ui_element bridgeShipBlueprints[9];
 extern u16 bridgeShipBlueprintTextureIds[8]; // This would make it undersized by 1, what gives?
 extern struct xy_offset D_menu_overlay_800CDF80[9];
@@ -354,7 +358,16 @@ void setupPlayerCraftDisplayAnim(void) {
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", applyPlayerSlotAnimChannelKeyframe);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", drainAudioAndFinalizeSpeechBuffer);
+void drainAudioAndFinalizeSpeechBuffer(void) {
+    tickMusyXIfActive();
+    do {
+
+    } while (!(anyAudioSlotActive()));
+    bufferArbiterProducerScanWait();
+    destroyPlayerShipRecord(D_menu_overlay_800CDCDC, &D_menu_overlay_800CDC80);
+    shutdownFormatMessageWorker();
+    finalizeCurrentSpeechBuffer();
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/115E00", tickTimedScreenFadeFloat);
 

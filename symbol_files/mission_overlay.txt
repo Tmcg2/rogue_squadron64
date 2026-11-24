@@ -1256,8 +1256,8 @@ D_mission_overlay_800A9A38 = 0x800A9A38; // type:f32 size:0x4  segment:mission_o
 
 D_mission_overlay_80109654 = 0x80109654; // type:f32 size:0x18 segment:mission_overlay
 D_mission_overlay_80109670 = 0x80109670; // type:f32 size:0xC  segment:mission_overlay
-D_mission_overlay_80109680 = 0x80109680; // type:f32 size:0x18 segment:mission_overlay
-D_mission_overlay_80109698 = 0x80109698; // type:f32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109680 = 0x80109680; // type:u32 size:0x18 segment:mission_overlay
+D_mission_overlay_80109698 = 0x80109698; // type:u32 size:0x18 segment:mission_overlay
 
 D_mission_overlay_80109710 = 0x80109710; // type:u16 size:0x1A segment:mission_overlay
 D_mission_overlay_80109730 = 0x80109730; // type:f32 size:0xC  segment:mission_overlay

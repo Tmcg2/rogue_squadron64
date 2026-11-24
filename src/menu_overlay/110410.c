@@ -9,17 +9,28 @@
 #include "main/55AF0.h"
 #include "main/562A0.h"
 #include "main/64EA0.h"
+#include "main/66660.h"
+#include "main/67690.h"
 #include "main/6C310.h"
+#include "main/84830.h"
 #include "menu_overlay/110410.h"
+#include "menu_overlay/1197D0.h"
 #include "menu_overlay/12CA40.h"
 
 // Interim Data externs
 extern u8 hangarActiveSecondaryWeaponString;
 
 // Interim BSS externs
+extern struct some_ui_list_root *D_menu_overlay_800CD668;
 extern char hangarSecondaryWeaponStrings[4][0x30];
 extern u8  D_menu_overlay_800CD520[0x20];
 extern u8  D_menu_overlay_800CD6D0;
+extern f32 D_menu_overlay_800CD704;
+extern f32 D_menu_overlay_800CD708;
+extern Vec3f D_menu_overlay_800CD800;
+extern Vec3f D_menu_overlay_800CD810;
+extern Vec3f D_menu_overlay_800CDA60;
+extern Vec3f D_menu_overlay_800CDA70;
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", loadCutsceneAssetsByIndex);
 
@@ -75,7 +86,31 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarInitializeShipShadowHo
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", craftSelectionVoiceLineHelper);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", tickEasedCameraKeyframeBlend);
+s32 tickEasedCameraKeyframeBlend(Vec3f arg0, Vec3f arg1, f32 arg2) {
+    f32 temp_fv0;
+    f32 temp_fv0_2;
+    s32 var_v0;
+
+    if (D_menu_overlay_800CD708 < 1.0f) {
+        D_menu_overlay_800CD708 += (arg2 / 7.5f);
+        if (D_menu_overlay_800CD708 > 1.0f) {
+            D_menu_overlay_800CD708 = 1.0f;
+        }
+    }
+    if (D_menu_overlay_800CD704 < 1.0f) {
+        D_menu_overlay_800CD704 += (arg2 / 5.0f);
+        if (D_menu_overlay_800CD704 >= 1.0f) {
+            D_menu_overlay_800CD704 = 1.0f;
+        }
+    }
+    lerpVec3(D_menu_overlay_800CD810, D_menu_overlay_800CDA60, arg0, quadraticEaseInOut(D_menu_overlay_800CD708));
+    lerpVec3(D_menu_overlay_800CD800, D_menu_overlay_800CDA70, arg1, quadraticEaseInOut(D_menu_overlay_800CD704));
+    var_v0 = 0;
+    if ((D_menu_overlay_800CD704 >= 1.0f) && (D_menu_overlay_800CD708 >= 1.0f)) {
+        var_v0 = 1;
+    }
+    return var_v0;
+}
 
 #if 0
 
@@ -149,7 +184,25 @@ const u16 bridgeSecondaryWeaponTextIds[] = {
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", hangarGenerateSecondaryWeaponString);
 #endif
 
+#if 0
+// The type of this variable is unknown, but also doesn't matter to this function
+// The .text section of this function is fine as-is
+extern u8 D_menu_overlay_800CD670;
+void gracefulMenuShutdown(void) {
+    s32 var_v0;
+
+    tickMusyXIfActive();
+    do {
+
+    } while (!(anyAudioSlotActive()));
+    bufferArbiterProducerScanWait();
+    destroyPlayerShipRecord(D_menu_overlay_800CD668, &D_menu_overlay_800CD670);
+    for (var_v0 = 7; var_v0 >= 0; var_v0--) {}
+    finalizeCurrentSpeechBuffer();
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", gracefulMenuShutdown);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/110410", extractTextBeforeFmtChar);
 

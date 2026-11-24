@@ -345,7 +345,7 @@ s32 isPlayerShipActive(void) {
     return D_menu_overlay_800CC85C != NULL;
 }
 
-void destroyPlayerShipRecord(struct some_ui_list_root *arg0) {
+void destroyPlayerShipRecord(struct some_ui_list_root *arg0, UNIDENTIFIED_TYPE *arg1) {
     if (D_menu_overlay_800CC85C != NULL) {
         removeLookupTableEntry(arg0, D_menu_overlay_800CC85C->unk0C);
         D_menu_overlay_800CC85C = NULL;

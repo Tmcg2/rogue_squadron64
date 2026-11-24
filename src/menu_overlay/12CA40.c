@@ -1,6 +1,7 @@
 #include "common.h"
 #include "common_variables.h"
 
+#include "cheat_codes.h"
 #include "crafts.h"
 #include "levels.h"
 #include "secondary_weapons.h"
@@ -8,11 +9,55 @@
 #include "game_settings.h"
 #include "mission_state.h"
 
+#include "main/bss_80136FD0.h"
+
+#include "main/08510.h"
+#include "main/1D000.h"
+#include "menu_overlay/110410.h"
+#include "menu_overlay/115E00.h"
 #include "menu_overlay/12CA40.h"
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", menuOverlayInit);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", drawRadarIcon);
+s32 drawRadarIcon(struct GameSettings *arg0, s32 arg1) {
+    s32 temp_v0;
+    u32 var_a2;
+    u32 var_a3;
+
+    var_a2 = gMissionState.maxUnlockedLevel;
+    if (var_a2 >= 0x10U) {
+        var_a2 = 0xF;
+    }
+    if (gGameSettings.cheatCodeFlags[0] & CHEAT_MASK_GAMEFLO) {
+        var_a2 = 0xF;
+    }
+    if (BEGGARS_CANYON_UNLOCKED || (gGameSettings.cheatCodeFlags[0] & 0x04000000)) {
+        var_a2 = 0x10;
+    }
+    if (DEATH_STAR_UNLOCKED || (gGameSettings.cheatCodeFlags[0] & 0x08000000)) {
+        var_a2 = 0x11;
+    }
+    if (HOTH_UNLOCKED || (gGameSettings.cheatCodeFlags[0] & 0x10000000)) {
+        var_a2 = 0x12;
+    }
+    if (var_a2 >= arg0->currentLevel) {
+        var_a3 = arg0->currentLevel;
+    } else {
+        var_a3 = var_a2;
+    }
+    initCraftSelectScreen(arg1, 1 << var_a3, (1 << (var_a2 + 1)) - 1);
+    do {
+        temp_v0 = tickCraftSelectScreen();
+    } while (temp_v0 == 0xFFFFFF);
+    drainAudioAndFinalizeSpeechBuffer();
+    if (temp_v0 != 0xFFFFFE) {
+        arg0->currentLevel = temp_v0;
+        arg0->unk02 = 0;
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 INCLUDE_RODATA("asm/nonmatchings/menu_overlay/12CA40", strMenuALPHA);
 
@@ -185,7 +230,30 @@ void unlockLevelsAndCraftsBasedOnMedalsEarned(u8 *medalsPerLevel) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", advanceWrappingPhaseAccumulator);
+f32 advanceWrappingPhaseAccumulator(void) {
+    struct timeSnapshotFiller_arg0 sp10;
+    f32 temp_fv0;
+    f32 var_fs0;
+
+    timeSnapshotFiller(&sp10);
+    var_fs0 = sp10.unk20;
+    D_main_bss_8013889C += 1;
+    temp_fv0 = floatModulo(var_fs0, sp10.unk1C);
+    if (temp_fv0 > 0.0f) {
+        if ((temp_fv0 / sp10.unk1C) < 0.5f) {
+            var_fs0 -= temp_fv0;
+        } else {
+            var_fs0 = (var_fs0 + sp10.unk1C) - temp_fv0;
+        }
+    }
+    if (var_fs0 <= 0.0f) {
+        var_fs0 = 0.016666668f;
+    }
+    if (var_fs0 > 0.16666667f) {
+        var_fs0 = 0.16666667f;
+    }
+    return var_fs0;
+}
 
 s32 getLevelHardwiredDifficulty(u8 levelId) {
     return 0;
@@ -241,7 +309,22 @@ s32 hasKasanMoorDefected(u8 levelId) {
     return levelId < LEVEL_JADEMOON ? 4 : 5;
 }
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/12CA40", runHangarMenuFromOverlay);
+u8 runHangarMenuFromOverlay(struct GameSettings *arg0, u8 arg1, s32 arg2) {
+    u8 temp;
+    s32 temp_v0;
+
+    hangarInitialize(temp = arg1, dDefaultCraftForLevel[arg2], getAvailablePlayerCraftFlagsConsiderUnlocks(arg2), arg2);
+    do {
+        temp_v0 = runHangarSelectionFrame(arg2);
+    } while (temp_v0 == 0xFFFFFF);
+    gracefulMenuShutdown();
+    if (temp_v0 != 0xFFFFFE) {
+        temp = temp_v0;
+        arg0->vehicleId = temp;
+        return 1;
+    }
+    return 0;
+}
 
 u8 getLevelIntroCrawlId(u8 levelId) {
     switch (levelId) {

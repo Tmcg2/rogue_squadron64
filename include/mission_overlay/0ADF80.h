@@ -24,7 +24,8 @@ struct D_mission_overlay_8010B6E8_type {
     u8     unk03; /* 0x03 */
     Mat4x3 unk04; /* 0x04 */
     Vec3f  unk34; /* 0x34 */
-    Vec3f  unk44; /* 0x44 */
+    Vec3f  unk44; /* 0x40 */
+    u32    unk4C; /* 0x4C */
     u32    unk50; /* 0x50 */
 }; // size 0x54(?)
 

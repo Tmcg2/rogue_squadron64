@@ -20,7 +20,7 @@ void  initTextTextureTarget(void);
 s32   accumulateShipThrottleCharge(struct some_ui_list_root*, UNIDENTIFIED_TYPE*, f32);
 f32   computeThrottleChargeFraction(void);
 s32   isPlayerShipActive(void);
-void  destroyPlayerShipRecord(struct some_ui_list_root*);
+void  destroyPlayerShipRecord(struct some_ui_list_root*, UNIDENTIFIED_TYPE*);
 struct some_texture_context *spawnProjectileObject(u16, u16, u16, u32);
 void  copyMorphTargetVertices(struct some_texture_context*, struct some_texture_context*, u16);
 char *buildPrefixedAssetName(char*);

@@ -2,6 +2,11 @@
 #include "common_variables.h"
 
 #include "main/08120.h"
+#include "main/1D000.h"
+
+// Interim BSS externs
+extern Mat4x3 D_menu_overlay_800CFFB0;
+extern Mat4x3 D_menu_overlay_800D039C;
 
 /* RO/Data, uncomment when ro/data matching is possible
 s8 *gPostIntroCrawlCraftObjectNames[4][4] = {
@@ -115,22 +120,23 @@ INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", freeModelViewe
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", releaseModelViewerModelAssets);
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", setModelViewerObjectTransform);
+Mat4x3 *setModelViewerObjectTransform(f32 arg0) {
+    initVec4TripletFromArgs(D_menu_overlay_800CFFB0, 0.625f, 0.625f, 1.0f);
+    addVec3At0x24(D_menu_overlay_800CFFB0, 0.0f, arg0, 0.0f);
+    mat3x3InverseInto(D_menu_overlay_800D039C, D_menu_overlay_800CFFB0);
+    return D_menu_overlay_800CFFB0;
+}
 
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", runMusyXTaskWrapper);
+void runMusyXTaskWrapper(void) {
+    runMusyXTaskLocked();
+}
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", appendNodeToListTail);
 
 INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", appendNodeToListHead);
 
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A7BC4);
-
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", tickMultiPartVoiceLine);
-
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", mallocVoiceLineStruct);
-
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", setVoiceLineLoopFlag);
-
-INCLUDE_ASM("asm/nonmatchings/menu_overlay/intro_crawl_handling", fake_func_800CC038);
-
-INCLUDE_RODATA("asm/nonmatchings/menu_overlay/intro_crawl_handling", D_menu_overlay_800A7BD4);
+// DO NOT DELETE ME I AM REQUIRED FOR MATCHING
+const u32 rodata_junk_intro_crawl_handling[] = {
+    0x000520C0,
+    0x00832021,
+};
