@@ -165,6 +165,24 @@ with open(input_filename, mode="r") as input_file:
         elif identifier[-1] == ":": # Labels
             # Nothing to do here, but it might be handy to have in the future
             label_name: str = identifier[:-1]
+            # The instruction after a cop1 compare instruction can be the target of a jump/branch.
+            # In such cases, no "#nop" is emitted and the _line_ after the compare instruction will be the jump/branch label
+            # If the next _instruction_ is a bc1t/f(l), we need add a "nop", but no "nop" is emitted by GCC, causing the normal
+            # cop1 compare -> #nop detcetion to not trigger
+            # ```
+            #     c.lt.s	$f0,$f2
+            # $L71:
+            #     .set	noreorder
+            #     .set	nomacro
+            #     bc1fl	$L63
+            #     move	$6,$0
+            # ```
+            # This is over agressive as written and may possibly cause problems down the road,
+            # but all assembly files with the line triplet (cop1 comp, label, nop) have a cop1 branch as the next instruction.
+            # So for my purposes, the aggressiveness is acceptable
+            prev_instruction_tokens: List[str] = get_line_tokens(input_lines[prev_instruction_index])
+            if prev_instruction_tokens[0] in compare_mnemonics:
+                line = f"{line}\n\tnop\n"
             pass
         else: # Macros or instructions
             is_instruction = True

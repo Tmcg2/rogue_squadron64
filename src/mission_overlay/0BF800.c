@@ -74,9 +74,9 @@ void func_mission_overlay_800BEC00(void) {
     applyVolumeSettingsToMixer();
     setRngSeed(1);
     demoStep = 0;
-    D_main_bss_80130B88->stick_x = 0;
-    D_main_bss_80130B88->stick_y = 0;
-    D_main_bss_80130B88->button = 0;
+    D_main_bss_80130B88[0].stick_x = 0;
+    D_main_bss_80130B88[0].stick_y = 0;
+    D_main_bss_80130B88[0].button = 0;
     demoInputs->stick_x = 0;
     demoInputs->stick_y = 0;
     demoInputs->button = 0;

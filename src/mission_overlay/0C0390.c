@@ -9,9 +9,13 @@
 #include "secondary_weapons.h"
 
 #include "main/bss_80130B10.h"
+#include "main/bss_80130BD0.h"
+
+#include "main/04080.h"
 #include "main/3F160.h"
 #include "mission_overlay/0BF800.h"
 #include "mission_overlay/0C0390.h"
+#include "mission_overlay/0C4DB0.h"
 
 u16 D_mission_overlay_8010BFD0;
 u16 bss_pad0_0C0390;
@@ -162,7 +166,36 @@ INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", findHudElementExtremes);
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", handleHUD);
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", evalPauseMenuInputMode);
+// !! NOTE !! This function required making changes to modern-asn64 to match properly
+s32 evalPauseMenuInputMode(s32 arg0, s32 arg1) {
+    s32 var_a2;
+
+    var_a2 = 0;
+    switch (arg1) {
+    case 0:
+        var_a2 = (D_main_bss_80130B88[arg0].button & U_JPAD) | (D_mission_overlay_8010BDD8[arg0][1] > 0.4f);
+        break;
+    case 1:
+        var_a2 = (D_main_bss_80130B88[arg0].button & D_JPAD) | (D_mission_overlay_8010BDD8[arg0][1] < -0.4f);
+        break;
+    case 2:
+        var_a2 = (D_main_bss_80130B88[arg0].button & L_JPAD) | (D_mission_overlay_8010BDD8[arg0][0] < -0.4f);
+        break;
+    case 3:
+        var_a2 = (D_main_bss_80130B88[arg0].button & R_JPAD) | (D_mission_overlay_8010BDD8[arg0][0] > 0.4f);
+        break;
+    case 4:
+        var_a2 = D_main_bss_80130B88[arg0].button & B_BUTTON;
+        break;
+    case 5:
+        var_a2 = D_main_bss_80130B88[arg0].button & START_BUTTON;
+        break;
+    case 6:
+        var_a2 = D_main_bss_80130B88[arg0].button & A_BUTTON;
+        break;
+    }
+    return var_a2 != 0;
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", initOrUpdatePauseScreenDim);
 
@@ -181,7 +214,10 @@ void spawnHudNpc(void) {
     D_mission_overlay_8010BFD0 = spawnNpcOfType(handleHUD, NULL, 4U, 0x64U);
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", broadcastSceneShutdownAndCleanup);
+void broadcastSceneShutdownAndCleanup(void) {
+    slotDispatcherIter(D_mission_overlay_8010BFD0, 0xC, NULL);
+    getAvailableShipsForLevel();
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", broadcastSceneEventWithPayload);
 
@@ -195,7 +231,26 @@ f32 getPlayerHealthPercentage(s32 arg0) {
     } 
 }
 
-INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", probeNumberedAssetFilename);
+s32 probeNumberedAssetFilename(char *arg0, char *arg1, s32 arg2) {
+    s32 var_a0;
+    char *var_s0;
+    char temp_s2;
+
+    if (arg1 != NULL) {
+        rs_strcpy(arg0, arg1);
+    }
+    var_s0 = arg0;
+    for (var_a0 = 0; arg0[var_a0] != '\0'; var_a0++) {
+        if (arg0[var_a0] == '/') var_s0 = &arg0[var_a0 + 1];
+    }
+    temp_s2 = *var_s0;
+    *var_s0 = arg2 + '0';
+    if (get_manifest_entry_type(D_main_bss_80137CFC, arg0) != 1) {
+        *var_s0 = temp_s2;
+        return 0;
+    }
+    return 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/mission_overlay/0C0390", fake_func_800C41AC);
 
